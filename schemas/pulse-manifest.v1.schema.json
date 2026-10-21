@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://silastron.local/schemas/pulse-manifest.v1.schema.json",
+  "title": "Silastron Security Pulse Manifest v1",
+  "type": "object",
+  "required": ["schema_version", "generated_at", "status", "stale", "fresh"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "generated_at": { "type": "string" },
+    "status": { "enum": ["ok", "degraded", "failed", "unpublished"] },
+    "latest_snapshot": { "type": ["string", "null"] },
+    "latest_ok_snapshot": { "type": ["string", "null"] },
+    "stale": { "type": "boolean" },
+    "fresh": { "type": "boolean" },
+    "publication_state": {
+      "enum": ["published", "not_published"]
+    }
+  }
+}

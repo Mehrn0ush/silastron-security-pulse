@@ -1,0 +1,11 @@
+{
+  "catalogVersion": "2099.01.01-TEST",
+  "dateReleased": "2099-01-01T00:00:00.000Z",
+  "count": 1,
+  "vulnerabilities": [
+    {
+      "cveID": "CVE-2099-0003",
+      "vendorProject": "Fixture Vendor"
+    }
+  ]
+}

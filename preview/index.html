@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; font-src 'none'; object-src 'none'; upgrade-insecure-requests"
+    />
+    <meta name="referrer" content="no-referrer" />
+    <title>Silastron Security Pulse</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header>
+      <p class="eyebrow">Silastron Security Pulse</p>
+      <h1>Public vulnerability intelligence preview</h1>
+      <p class="lede">
+        This page shows a bounded GitHub Pages preview of the Security Pulse
+        snapshot. It is not a statement about Silastron.com exposure, and it
+        does not combine signals into a risk score.
+      </p>
+    </header>
+    <main id="main">
+      <section aria-labelledby="status-heading">
+        <h2 id="status-heading">Publication status</h2>
+        <p id="status-banner" class="banner" role="status" aria-live="polite">
+          Loading publication status.
+        </p>
+        <dl id="status-details" class="meta-list"></dl>
+      </section>
+      <section aria-labelledby="changes-heading">
+        <h2 id="changes-heading">Recent meaningful changes</h2>
+        <p id="changes-note">Waiting for snapshot data.</p>
+        <div class="table-wrap">
+          <table>
+            <caption class="visually-hidden">
+              Recent KEV and CVE changes
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">CVE</th>
+                <th scope="col">Change</th>
+                <th scope="col">KEV</th>
+                <th scope="col">EPSS</th>
+                <th scope="col">Sources</th>
+                <th scope="col">Timestamps</th>
+              </tr>
+            </thead>
+            <tbody id="changes-body"></tbody>
+          </table>
+        </div>
+      </section>
+      <section aria-labelledby="signals-heading">
+        <h2 id="signals-heading">How to read these signals</h2>
+        <ul>
+          <li>
+            <strong>Confirmed exploitation</strong> means CISA listed the CVE in
+            the Known Exploited Vulnerabilities catalog.
+          </li>
+          <li>
+            <strong>EPSS</strong>, when present, is an estimated probability of
+            exploitation, not confirmation.
+          </li>
+          <li>
+            <strong>Severity</strong> is CVSS from the CVE CNA container when
+            available.
+          </li>
+          <li>
+            <strong>Product affectedness</strong> is vendor/product text from
+            KEV and CVE records, not deployment exposure.
+          </li>
+          <li>
+            <strong>Deployment exposure</strong> is not assessed here.
+          </li>
+        </ul>
+      </section>
+    </main>
+    <footer>
+      <p>
+        CVE is a registered trademark of The MITRE Corporation. KEV data is
+        dedicated to the public domain under CC0 1.0. This preview does not
+        modify or represent Silastron.com WordPress content.
+      </p>
+    </footer>
+    <script src="app.js"></script>
+  </body>
+</html>

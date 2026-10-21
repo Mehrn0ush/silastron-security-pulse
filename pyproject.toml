@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "silastron-security-pulse"
+version = "1.0.0"
+description = "Deterministic Security Pulse collection pipeline for Silastron"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [{ name = "Silastron" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = []
+
+[project.scripts]
+silastron-pulse = "silastron_pulse.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+silastron_pulse = ["py.typed"]

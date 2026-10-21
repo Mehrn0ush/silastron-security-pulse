@@ -1,0 +1,30 @@
+{
+  "dataType": "CVE_RECORD",
+  "dataVersion": "5.1",
+  "cveMetadata": {
+    "cveId": "CVE-2099-0002",
+    "state": "PUBLISHED",
+    "assignerShortName": "fixture",
+    "datePublished": "2099-01-02T00:00:00.000Z",
+    "dateUpdated": "2099-01-03T00:00:00.000Z"
+  },
+  "containers": {
+    "cna": {
+      "title": "TEST FIXTURE TWO",
+      "descriptions": [
+        {
+          "lang": "en",
+          "value": "Second synthetic CVE record used only for automated tests."
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Fixture Vendor Two",
+          "product": "Fixture Product Two",
+          "defaultStatus": "unknown",
+          "versions": []
+        }
+      ]
+    }
+  }
+}

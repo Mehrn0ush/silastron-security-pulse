@@ -1,0 +1,22 @@
+{
+  "https_only": true,
+  "hosts": [
+    "www.cisa.gov",
+    "cisa.gov",
+    "www.cve.org",
+    "cve.org",
+    "github.com",
+    "raw.githubusercontent.com",
+    "www.first.org",
+    "api.first.org",
+    "epss.empiricalsecurity.com"
+  ],
+  "preview_link_hosts": [
+    "www.cisa.gov",
+    "cisa.gov",
+    "www.cve.org",
+    "cve.org",
+    "github.com",
+    "www.first.org"
+  ]
+}

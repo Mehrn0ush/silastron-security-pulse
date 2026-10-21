@@ -1,0 +1,18 @@
+{
+  "catalogVersion": "2099.01.01-TEST",
+  "dateReleased": "2099-01-01T00:00:00.000Z",
+  "count": 1,
+  "vulnerabilities": [
+    {
+      "cveID": "CVE-2099-0001",
+      "vendorProject": "<script>alert(1)</script>",
+      "product": "javascript:alert(1)",
+      "vulnerabilityName": "<img src=x onerror=alert(1)>",
+      "dateAdded": "2099-01-01",
+      "shortDescription": "Synthetic XSS fixture. javascript:alert(1) https://evil.example/steal",
+      "requiredAction": "None",
+      "dueDate": "2099-01-15",
+      "notes": "See javascript:alert(1) and data:text/html,hi"
+    }
+  ]
+}
