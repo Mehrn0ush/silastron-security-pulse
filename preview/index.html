@@ -68,8 +68,27 @@
             available.
           </li>
           <li>
+            <strong>Collection outcome</strong> (<code>ok</code>,
+            <code>degraded</code>, or <code>failed</code>) is whether the
+            collector finished. A <code>degraded</code> snapshot succeeded;
+            it is not a failed collection.
+          </li>
+          <li>
+            <strong>Record completeness</strong> is per CVE:
+            <code>complete</code> extracted inventory,
+            <code>partial</code> truncated product/version text, or
+            <code>unavailable</code> enrichment. These are not the collection
+            outcome and are not freshness.
+          </li>
+          <li>
             <strong>Product affectedness</strong> is vendor/product text from
-            KEV and CVE records, not deployment exposure.
+            KEV and CVE records. A complete extracted inventory does not prove
+            complete real-world product coverage or deployment exposure.
+          </li>
+          <li>
+            <strong>Freshness</strong> is computed at viewing time from the
+            snapshot timestamp. It is independent of collection outcome and
+            record completeness.
           </li>
           <li>
             <strong>Deployment exposure</strong> is not assessed here.

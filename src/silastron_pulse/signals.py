@@ -83,7 +83,9 @@ def build_signals(kev: KevRecord, cve: CveRecord, epss: EpssRecord) -> Signals:
         "omitted_version_count": cve.omitted_version_count,
         "note": (
             "Product affectedness is copied from KEV and the CVE CNA container. "
-            "It does not mean a Silastron or customer system is exposed."
+            "A complete extracted inventory does not prove complete real-world "
+            "product coverage, and it does not mean a Silastron or customer "
+            "system is exposed."
             + (
                 f" {cve.omitted_product_count} additional CNA product entries and "
                 f"{cve.omitted_version_count} additional version entries exceeded "

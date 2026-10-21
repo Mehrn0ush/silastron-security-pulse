@@ -9,6 +9,11 @@
 - CVSS is CNA-only. Missing CNA metrics yield `severity.status=unavailable`
   even if a CISA ADP container has a score.
 - Product affectedness is source text, not CPE matching or asset inventory.
+  `records[].completeness=complete` means the extracted CNA/KEV inventory was
+  stored within bounds; it does not prove complete real-world product coverage.
+- `snapshot.status` is collection outcome. A collect that finishes with some
+  truncated version lists is `degraded`, not `failed`. Freshness is computed at
+  viewing time and is independent of both.
 - Deployment exposure is always `not_assessed`.
 - Change detection requires a previously valid snapshot in `pulse-state`. The
   first snapshot shows recent KEV additions, not a diff. A missing previous

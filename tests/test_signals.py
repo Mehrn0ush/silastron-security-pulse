@@ -52,6 +52,10 @@ class SignalTests(unittest.TestCase):
         self.assertEqual(signals["vulnerability_severity"]["status"], "unavailable")
         self.assertEqual(signals["deployment_exposure"]["status"], "not_assessed")
         self.assertIsNone(signals["composite_risk_score"])
+        self.assertIn(
+            "complete extracted inventory does not prove complete real-world",
+            signals["product_affectedness"]["note"],
+        )
 
     def test_epss_is_never_treated_as_confirmation(self) -> None:
         epss = EpssRecord(

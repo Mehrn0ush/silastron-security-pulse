@@ -528,9 +528,12 @@ def _build_snapshot(
             "source_state_revision": source_state_revision,
         },
         "consumer_note": (
-            "This snapshot is public vulnerability intelligence. It does not "
-            "assess whether any Silastron or customer system is affected, "
-            "exposed, or exploited. Confirmed exploitation, estimated "
+            "This snapshot is public vulnerability intelligence. status is "
+            "collection outcome (ok, degraded, or failed), not freshness and "
+            "not per-record completeness. records[].completeness describes "
+            "extracted inventory completeness; a complete extraction does not "
+            "prove complete real-world product affectedness. Freshness must be "
+            "recomputed at viewing time. Confirmed exploitation, estimated "
             "probability, severity, product affectedness, and deployment "
             "exposure are separate signals."
         ),

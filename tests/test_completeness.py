@@ -192,8 +192,17 @@ class CompletenessTests(unittest.TestCase):
                 state_dir=root / "state",
             )
             self.assertEqual(first.status, "degraded")
-            record = next(item for item in first.snapshot["records"] if item["cve_id"] == "CVE-2099-0001")  # type: ignore[index]
+            self.assertNotEqual(first.status, "failed")
+            assert first.snapshot is not None
+            self.assertEqual(first.snapshot["status"], "degraded")
+            self.assertIn(
+                "collection outcome",
+                first.snapshot["consumer_note"],
+            )
+            record = next(item for item in first.snapshot["records"] if item["cve_id"] == "CVE-2099-0001")
             self.assertEqual(record["completeness"], "partial")
+            self.assertGreater(first.snapshot["summary"]["partial_records"], 0)
+            self.assertEqual(first.snapshot["summary"]["unavailable_records"], 0)
             self.assertEqual(len(record["cve"]["products"]), 8)
             fetcher = valid_fetcher(
                 **{many: fetch_result(many, "cve_many_products.json")}

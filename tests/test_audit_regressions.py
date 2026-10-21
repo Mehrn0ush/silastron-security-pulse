@@ -304,6 +304,8 @@ class TimestampAndFreshnessTests(unittest.TestCase):
         self.assertIn("Date.now()", source)
         self.assertNotIn("if (manifest.stale)", source)
         self.assertNotIn("manifest.fresh ? \"yes\"", source.replace("Fresh at viewing time", ""))
+        self.assertIn("Freshness is evaluated at viewing time", source)
+        self.assertIn("independent of record completeness", source)
 
 
 class TruncationAndRetryTests(unittest.TestCase):

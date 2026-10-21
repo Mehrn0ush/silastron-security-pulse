@@ -127,8 +127,10 @@
       } else {
         kev.textContent = "Not listed";
       }
-      if (row.completeness && row.completeness !== "complete") {
-        kev.appendChild(document.createTextNode(" · " + asText(row.completeness)));
+      if (row.completeness === "unavailable") {
+        kev.appendChild(document.createTextNode(" · enrichment unavailable"));
+      } else if (row.completeness === "partial") {
+        kev.appendChild(document.createTextNode(" · partial extracted inventory"));
         if (row.omitted_product_count || row.omitted_version_count) {
           kev.appendChild(
             document.createTextNode(
@@ -141,7 +143,7 @@
           );
         }
       } else if (row.partial) {
-        kev.appendChild(document.createTextNode(" · partial"));
+        kev.appendChild(document.createTextNode(" · partial extracted inventory"));
       }
       var product = document.createElement("div");
       product.textContent =
@@ -221,34 +223,33 @@
         manifest.stale_after_hours || 36,
         Date.now()
       );
-      var infoState = "verified";
+      var collectionOutcome = manifest.status;
       if (freshness.invalid) {
-        infoState = "unavailable";
         setBanner(
           "unavailable",
           "Snapshot timestamps are invalid. Do not treat this page as intelligence."
         );
       } else if (freshness.stale) {
-        infoState = "stale";
         setBanner(
           "stale",
           "The published snapshot is stale at viewing time. Do not treat it as a fresh collection."
         );
-      } else if (manifest.status === "degraded") {
-        infoState = "partial";
+      } else if (collectionOutcome === "degraded") {
         setBanner(
           "warn",
-          "The published snapshot is partial. Some CVE enrichments were unavailable or truncated."
+          "Collection succeeded with incomplete extracted inventories or unavailable enrichments. This is not a failed collection."
         );
-      } else if (manifest.status === "ok") {
-        infoState = "verified";
-        setBanner("ok", "Published snapshot is available and fresh at viewing time.");
+      } else if (collectionOutcome === "ok") {
+        setBanner(
+          "ok",
+          "Collection succeeded. Freshness is evaluated at viewing time and is independent of record completeness."
+        );
+      } else if (collectionOutcome === "failed") {
+        setBanner("unavailable", "Collection failed. No successful snapshot is shown.");
       } else {
-        infoState = "unavailable";
         setBanner("unavailable", "Published snapshot is unavailable.");
       }
-      appendMeta("Status", manifest.status);
-      appendMeta("Information state", infoState);
+      appendMeta("Collection outcome", collectionOutcome);
       appendMeta("Fresh at viewing time", freshness.fresh ? "yes" : "no");
       appendMeta("Stale at viewing time", freshness.stale ? "yes" : "no");
       appendMeta(
@@ -261,9 +262,9 @@
       appendMeta("Collection completed at", preview && preview.collection_completed_at);
       appendMeta("Record count", manifest.record_count);
       var summary = (preview && preview.summary) || {};
-      appendMeta("Complete records", summary.complete_records);
-      appendMeta("Partial records", summary.partial_records);
-      appendMeta("Unavailable records", summary.unavailable_records);
+      appendMeta("Complete extracted inventories", summary.complete_records);
+      appendMeta("Partial extracted inventories", summary.partial_records);
+      appendMeta("Unavailable enrichments", summary.unavailable_records);
       var sources = (preview && preview.sources) || manifest.sources || {};
       var kev = sources.kev || {};
       var cve = sources.cve || {};
