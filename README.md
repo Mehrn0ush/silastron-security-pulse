@@ -21,6 +21,7 @@ severity, product affectedness, and deployment exposure into a risk score.
 
 - [Architecture](docs/architecture.md)
 - [Collection-state architecture](docs/collection-state.md)
+- [CVE List V5 synchronization](docs/cve-sync.md)
 - [Audit finding status](docs/audit-findings.md)
 - [Source integration contracts](docs/source-contracts.md)
 - [Data schemas](docs/schemas.md)

@@ -43,8 +43,8 @@ Publication time stored: `dateReleased`
 | Terms of use | https://www.cve.org/Legal/TermsOfUse | VERIFIED |
 | Single-record fetch | `https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/{year}/{n}xxx/{CVE-ID}.json` | VERIFIED live fetch of CVE-2021-44228 on 2026-10-21 |
 | Official download methods | git clone or large release zips | VERIFIED; not used because they are large upstream datasets |
-| Latest change window | `https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/delta.json` | VERIFIED 2026-10-21 HTTP 200, 680 bytes |
-| Official catch-up log | `https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/deltaLog.json` | VERIFIED 2026-10-21 HTTP 200, 29,860,127 bytes — too large for the default 15 MB bound |
+| Latest change window | `https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/delta.json` | VERIFIED 2026-10-21 HTTP 200, **4,123 bytes**; current ~7-minute window only |
+| Official catch-up log | `https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/deltaLog.json` | VERIFIED 2026-10-21 HEAD Content-Length **29,863,282**; GET 17.94s; ~30-day rolling windows. Fetched when ≤ 40 MB after HEAD |
 
 ### License — VERIFIED
 
@@ -64,18 +64,21 @@ embed that attribution. The CC0 pull request on cvelistV5 is **not merged**.
 - GitHub raw rate limits for 1,700+ sequential fetches are **UNVERIFIED** in
   production. Collection retries 429/5xx with exponential backoff and
   Retry-After, then fails closed on excess failures.
-- Incremental strategy **VERIFIED** against official distribution on 2026-10-21:
-  git/zip rejected as large datasets; `delta.json` used as the current window;
-  `deltaLog.json` attempted within byte limits (expected to fail closed at 30 MB
-  and mark completeness incomplete); If-None-Match revalidation of KEV CVE IDs
-  provides catch-up when the log cannot be loaded. Cached records are never
-  presented as verified after a failed refetch.
+- Incremental strategy **VERIFIED** against official distribution on 2026-10-21.
+  See [cve-sync.md](cve-sync.md). git clone ≈ 3.02 GB and midnight zip =
+  639.61 MB are rejected for a KEV-only subset. `delta.json` is the current
+  window only. `deltaLog.json` (29.86 MB, ~30-day catch-up) is HEADed then
+  fetched when it fits 40 MB; KEV ∩ 24h was 7 IDs. Oversized logs are not
+  re-downloaded. Incomplete catch-up fails closed. A gap older than the log
+  triggers a one-time KEV-subset resync. Per-CVE If-None-Match of the full
+  KEV set is not the scheduled incremental path.
 
-### CVE Services API — UNVERIFIED for this pipeline
+### CVE Services API — not used
 
-Swagger describes `GET https://cveawg.mitre.org/api/cve/{id}` as accessible to
-all users. This pipeline does **not** use it. Unauthenticated bulk enrichment
-rate limits were not verified against a first-party policy page.
+Live `GET https://cveawg.mitre.org/api/cve/CVE-2021-44228` on 2026-10-21 returned
+HTTP 200, 18,335 bytes, `RateLimit-Limit: 25000`. Bulk `GET /cve` is
+Secretariat-only. The API is therefore still one request per KEV ID and adds a
+host this pipeline does not allowlist. It is not used.
 
 ## 3. FIRST EPSS — BLOCKED for publication
 

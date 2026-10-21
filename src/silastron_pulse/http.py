@@ -29,6 +29,16 @@ class FetchResult:
     retrieved_at: str
     etag: str | None = None
     not_modified: bool = False
+    content_length: int | None = None
+
+
+@dataclass(frozen=True)
+class HeadResult:
+    requested_url: str
+    status_code: int
+    retrieved_at: str
+    etag: str | None = None
+    content_length: int | None = None
 
 
 class Fetcher(Protocol):
@@ -39,6 +49,9 @@ class Fetcher(Protocol):
         max_bytes: int,
         etag: str | None = None,
     ) -> FetchResult:
+        ...
+
+    def head(self, url: str) -> HeadResult:
         ...
 
 
@@ -166,12 +179,91 @@ class HttpsFetcher:
         except OSError as exc:
             raise FetchError(f"I/O error fetching {safe}: {exc}", retryable=True) from exc
 
+    def head(self, url: str) -> HeadResult:
+        last_error: FetchError | None = None
+        for attempt in range(self._max_attempts):
+            try:
+                return self._head_once(url)
+            except FetchError as exc:
+                last_error = exc
+                if not exc.retryable or attempt + 1 >= self._max_attempts:
+                    raise
+                delay = exc.retry_after
+                if delay is None:
+                    delay = self._backoff_seconds * (2**attempt)
+                self._sleep(max(0.0, delay))
+        raise last_error or FetchError(f"Failed HEAD {url}")
+
+    def _head_once(self, url: str) -> HeadResult:
+        safe = sanitize_https_url(url, hosts=self._hosts)
+        if safe is None:
+            raise FetchError(f"URL is not on the HTTPS allowlist: {url!r}")
+        self._throttle()
+        handler = _AllowlistRedirectHandler(self._hosts, self._max_redirects)
+        opener = build_opener(handler)
+        request = Request(
+            safe,
+            headers={"User-Agent": self._user_agent, "Accept": "application/json"},
+            method="HEAD",
+        )
+        retrieved_at = format_datetime(self._clock.now())
+        try:
+            with opener.open(request, timeout=self._timeout) as response:
+                headers = getattr(response, "headers", {})
+                etag = headers.get("ETag") if headers is not None else None
+                length_raw = headers.get("Content-Length") if headers is not None else None
+                length = None
+                if length_raw:
+                    try:
+                        length = int(length_raw)
+                    except ValueError:
+                        length = None
+                try:
+                    response.read(2048)  # type: ignore[attr-defined]
+                except OSError:
+                    pass
+                status_code = getattr(response, "status", 200) or 200
+                if status_code != 200:
+                    raise FetchError(
+                        f"HTTP {status_code} HEAD {safe}",
+                        retryable=status_code in RETRYABLE_STATUS,
+                        status_code=status_code,
+                    )
+                return HeadResult(
+                    requested_url=safe,
+                    status_code=status_code,
+                    retrieved_at=retrieved_at,
+                    etag=etag,
+                    content_length=length,
+                )
+        except FetchError:
+            raise
+        except HTTPError as exc:
+            retry_after = _retry_after(exc.headers)
+            raise FetchError(
+                f"HTTP {exc.code} HEAD {safe}",
+                retryable=exc.code in RETRYABLE_STATUS,
+                retry_after=retry_after,
+                status_code=exc.code,
+            ) from exc
+        except URLError as exc:
+            raise FetchError(f"Network error HEAD {safe}: {exc.reason}", retryable=True) from exc
+        except (TimeoutError, OSError) as exc:
+            raise FetchError(f"I/O error HEAD {safe}: {exc}", retryable=True) from exc
+
 
 def _result_from_response(response: object, safe: str, retrieved_at: str, max_bytes: int, hosts: frozenset[str]) -> FetchResult:
     status_code = getattr(response, "status", 200) or 200
     headers = getattr(response, "headers", {})
     content_type = headers.get("Content-Type", "") if headers is not None else ""
     etag = headers.get("ETag") if headers is not None else None
+    length_raw = headers.get("Content-Length") if headers is not None else None
+    length = None
+    if length_raw:
+        try:
+            length = int(length_raw)
+        except ValueError:
+            length = None
     final_url = response.geturl()  # type: ignore[attr-defined]
     body = _read_bounded(response, max_bytes=max_bytes)
     final_safe = sanitize_https_url(final_url, hosts=hosts)
@@ -188,6 +280,7 @@ def _result_from_response(response: object, safe: str, retrieved_at: str, max_by
         retrieved_at=retrieved_at,
         etag=etag,
         not_modified=False,
+        content_length=length if length is not None else len(body),
     )
 
 
@@ -250,6 +343,24 @@ class MapFetcher:
             raise FetchError(f"Response exceeded max bytes {max_bytes}")
         return result
 
+    def head(self, url: str) -> HeadResult:
+        self.calls.append((url, "HEAD"))
+        if url not in self._mapping:
+            raise FetchError(f"No fixture for {url}")
+        result = self._mapping[url]
+        if isinstance(result, Exception):
+            raise result
+        length = result.content_length
+        if length is None:
+            length = len(result.body)
+        return HeadResult(
+            requested_url=url,
+            status_code=result.status_code,
+            retrieved_at=result.retrieved_at,
+            etag=result.etag,
+            content_length=length,
+        )
+
 
 class ScriptedFetcher:
     """Test double: queued responses per URL, including retryable failures."""
@@ -275,6 +386,25 @@ class ScriptedFetcher:
         if len(result.body) > max_bytes and not result.not_modified:
             raise FetchError(f"Response exceeded max bytes {max_bytes}")
         return result
+
+    def head(self, url: str) -> HeadResult:
+        self.calls.append((url, "HEAD"))
+        queue = self._mapping.get(url)
+        if not queue:
+            raise FetchError(f"No fixture remaining for {url}")
+        result = queue.pop(0)
+        if isinstance(result, Exception):
+            raise result
+        length = result.content_length
+        if length is None:
+            length = len(result.body)
+        return HeadResult(
+            requested_url=url,
+            status_code=result.status_code,
+            retrieved_at=result.retrieved_at,
+            etag=result.etag,
+            content_length=length,
+        )
 
 
 class RetryingFetcher:
@@ -313,3 +443,44 @@ class RetryingFetcher:
                     delay = self._backoff_seconds * (2**attempt)
                 self._sleep(max(0.0, delay))
         raise last_error or FetchError(f"Failed fetching {url}")
+
+    def head(self, url: str) -> HeadResult:
+        last_error: FetchError | None = None
+        for attempt in range(self._max_attempts):
+            try:
+                return self._inner.head(url)
+            except FetchError as exc:
+                last_error = exc
+                if not exc.retryable or attempt + 1 >= self._max_attempts:
+                    raise
+                delay = exc.retry_after
+                if delay is None:
+                    delay = self._backoff_seconds * (2**attempt)
+                self._sleep(max(0.0, delay))
+        raise last_error or FetchError(f"Failed HEAD {url}")
+
+
+class CountingFetcher:
+    """Record GET/HEAD counts and successful response body bytes."""
+
+    def __init__(self, inner: Fetcher) -> None:
+        self._inner = inner
+        self.bytes_received = 0
+        self.get_count = 0
+        self.head_count = 0
+
+    def get(
+        self,
+        url: str,
+        *,
+        max_bytes: int,
+        etag: str | None = None,
+    ) -> FetchResult:
+        self.get_count += 1
+        result = self._inner.get(url, max_bytes=max_bytes, etag=etag)
+        self.bytes_received += len(result.body)
+        return result
+
+    def head(self, url: str) -> HeadResult:
+        self.head_count += 1
+        return self._inner.head(url)

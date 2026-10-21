@@ -1,16 +1,10 @@
 """CVE List V5 enrichment for selected KEV identifiers only.
 
-Incremental strategy (evaluated against official cvelistV5 distribution):
-
-- Full git clone / release zips are official but too large to store or fetch
-  on every run.
-- `cves/deltaLog.json` is the official change index. When the log covers the
-  period since the last stored fetchTime, only KEV ∩ (new ∪ updated) plus
-  cache misses are fetched.
-- If the delta log is missing, gapped, or unusable, each cached KEV CVE is
-  revalidated with If-None-Match instead of an unconditional body download.
-- A failed refetch is marked unavailable. Cached bytes are never presented as
-  a verified current record.
+Initial sync fetches the KEV subset from raw GitHub (not the 640 MB midnight
+zip or 3 GB git clone). Incremental sync uses official delta.json identity
+plus deltaLog.json catch-up. Per-CVE If-None-Match of the full KEV set is not
+the scheduled path. Incomplete catch-up fails closed instead of publishing
+unverified cache.
 """
 
 from __future__ import annotations
@@ -19,7 +13,12 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, replace
 from typing import Any
 
-from silastron_pulse.adapters.delta import fetch_delta_index
+from silastron_pulse.adapters.delta import (
+    compare_fetch_times,
+    fetch_delta_log,
+    fetch_latest_window,
+    parse_fetch_time,
+)
 from silastron_pulse.config import PulseConfig
 from silastron_pulse.constants import CVE_PARSER_VERSION, MITRE_CVE_ATTRIBUTION
 from silastron_pulse.errors import CorrelationError, FetchError, ValidationError
@@ -40,6 +39,11 @@ class CveEnrichment:
     delta_fetch_time: str | None = None
     fetched_ids: tuple[str, ...] = ()
     reused_ids: tuple[str, ...] = ()
+    delta_log_etag: str | None = None
+    delta_log_bytes: int | None = None
+    delta_log_skipped: bool = False
+    delta_sha256: str | None = None
+    delta_log_sha256: str | None = None
 
 
 def enrich_cves(
@@ -59,34 +63,92 @@ def enrich_cves(
     cached_records = cached_records or {}
     index_records = cache_index.get("records") if isinstance(cache_index.get("records"), dict) else {}
     since = cache_index.get("delta_fetch_time") if isinstance(cache_index.get("delta_fetch_time"), str) else None
-    delta = None
+    stored_delta_sha = (
+        cache_index.get("delta_sha256") if isinstance(cache_index.get("delta_sha256"), str) else None
+    )
+    window = fetch_latest_window(fetcher, config)
+    log = None
     strategy = "full"
+    incomplete_reason: str | None = None
+    changed_ids: frozenset[str] = frozenset()
+
     if index_records:
-        delta = fetch_delta_index(fetcher, config, since=since)
-        if delta is not None and delta.complete_since:
-            strategy = "delta"
+        if window is None or not window.latest_fetch_time:
+            strategy = "failed"
+            incomplete_reason = "CVE List V5 delta.json is unavailable; refusing incomplete CVE sync"
+        elif not since:
+            strategy = "resync"
         else:
-            strategy = "etag"
+            order = compare_fetch_times(window.latest_fetch_time, since)
+            if order == "invalid":
+                strategy = "failed"
+                incomplete_reason = "CVE List V5 fetchTime is unparseable; refusing incomplete CVE sync"
+            elif order == "older":
+                strategy = "failed"
+                incomplete_reason = (
+                    "CVE List V5 delta.json fetchTime is older than the stored watermark; "
+                    "refusing a stale identity that could hide later CVE changes"
+                )
+            elif order == "equal":
+                if stored_delta_sha and window.content_sha256 == stored_delta_sha:
+                    strategy = "unchanged"
+                    changed_ids = frozenset()
+                else:
+                    # Same fetchTime can still list different IDs if the window
+                    # was rewritten. Apply this window; do not skip on time alone.
+                    strategy = "delta"
+                    changed_ids = window.changed_ids
+            else:
+                log = fetch_delta_log(
+                    fetcher,
+                    config,
+                    since=since,
+                    previous_etag=cache_index.get("delta_log_etag")
+                    if isinstance(cache_index.get("delta_log_etag"), str)
+                    else None,
+                    previous_bytes=cache_index.get("delta_log_bytes")
+                    if isinstance(cache_index.get("delta_log_bytes"), int)
+                    else None,
+                    previous_skipped=bool(cache_index.get("delta_log_skipped")),
+                )
+                if log.skipped:
+                    strategy = "failed"
+                    incomplete_reason = log.reason or (
+                        "CVE List V5 deltaLog.json is incomplete; refusing to treat cached CVE records as current"
+                    )
+                elif not log.complete_since:
+                    earliest_dt = parse_fetch_time(log.earliest_fetch_time)
+                    since_dt = parse_fetch_time(since)
+                    if earliest_dt is not None and since_dt is not None and earliest_dt > since_dt:
+                        strategy = "resync"
+                    else:
+                        strategy = "failed"
+                        incomplete_reason = log.reason or (
+                            "CVE List V5 deltaLog.json does not cover the stored fetchTime"
+                        )
+                else:
+                    strategy = "delta"
+                    changed_ids = log.changed_ids | window.changed_ids
+
+    if strategy == "failed":
+        return _failed_enrichment(
+            unique_ids,
+            incomplete_reason or "CVE synchronization is incomplete",
+            window=window,
+            log=log,
+        )
 
     to_fetch: dict[str, str | None] = {}
     reused: dict[str, CveRecord] = {}
     for cve_id in unique_ids:
         cached = cached_records.get(cve_id)
-        index_row = index_records.get(cve_id) if isinstance(index_records.get(cve_id), dict) else {}
-        etag = index_row.get("etag") or (cached or {}).get("etag")
-        if strategy == "full" or cached is None or (cached or {}).get("status") != "ok":
-            to_fetch[cve_id] = None if strategy != "etag" else etag
-            continue
-        if strategy == "delta":
-            if cve_id in delta.changed_ids:  # type: ignore[union-attr]
-                to_fetch[cve_id] = None
-            else:
-                reused[cve_id] = cve_record_from_dict(cached, cached=True)
-            continue
-        if delta and cve_id in delta.changed_ids:
+        if strategy in {"full", "resync"} or cached is None or (cached or {}).get("status") != "ok":
             to_fetch[cve_id] = None
-        else:
-            to_fetch[cve_id] = etag
+            continue
+        if strategy == "delta" and cve_id in changed_ids:
+            to_fetch[cve_id] = None
+            continue
+        reused[cve_id] = cve_record_from_dict(cached, cached=True)
 
     records: dict[str, CveRecord] = dict(reused)
     if to_fetch:
@@ -98,10 +160,10 @@ def enrich_cves(
                     cve_id,
                     fetcher,
                     config,
-                    etag=etag,
+                    etag=None,
                     cached=cached_records.get(cve_id),
                 )
-                for cve_id, etag in to_fetch.items()
+                for cve_id in to_fetch
             }
             for cve_id, future in futures.items():
                 records[cve_id] = future.result()
@@ -115,17 +177,13 @@ def enrich_cves(
             f"CVE enrichment failure threshold exceeded "
             f"({failures}/{len(unique_ids)})"
         )
-    elif failures or truncated or strategy == "etag":
+    elif failures or truncated:
         status = "degraded"
         parts = []
         if failures:
             parts.append(f"{failures} CVE records could not be enriched")
         if truncated:
             parts.append(f"{truncated} CVE records have truncated fields")
-        if strategy == "etag" and delta is None:
-            parts.append("deltaLog unavailable; used If-None-Match revalidation")
-        elif strategy == "etag":
-            parts.append("deltaLog incomplete since last fetchTime; used If-None-Match revalidation")
         error = "; ".join(parts)
     else:
         status = "ok"
@@ -137,8 +195,10 @@ def enrich_cves(
         f"{cve_id}:{records[cve_id].record_sha256}" for cve_id in sorted(records)
     )
     source_revision = None
-    if delta and delta.latest_fetch_time:
-        source_revision = delta.latest_fetch_time
+    if window and window.latest_fetch_time:
+        source_revision = window.latest_fetch_time
+    elif log and log.latest_fetch_time:
+        source_revision = log.latest_fetch_time
     elif digest_material:
         source_revision = sha256_bytes(digest_material.encode("utf-8"))[:16]
     notes = MITRE_CVE_ATTRIBUTION
@@ -167,9 +227,55 @@ def enrich_cves(
         meta=meta,
         records=records,
         strategy=strategy,
-        delta_fetch_time=(delta.latest_fetch_time if delta else None),
+        delta_fetch_time=(window.latest_fetch_time if window else None),
         fetched_ids=tuple(sorted(to_fetch)),
         reused_ids=tuple(sorted(reused)),
+        delta_log_etag=(log.etag if log else None),
+        delta_log_bytes=(log.content_length if log else None),
+        delta_log_skipped=(log.skipped if log else False),
+        delta_sha256=(window.content_sha256 if window else None),
+        delta_log_sha256=(log.content_sha256 if log else None),
+    )
+
+
+def _failed_enrichment(
+    unique_ids: list[str],
+    error: str,
+    *,
+    window: Any,
+    log: Any,
+) -> CveEnrichment:
+    records = {
+        cve_id: _unavailable(cve_id, cvelist_v5_raw_url(cve_id), error) for cve_id in unique_ids
+    }
+    meta = SourceMeta(
+        id="cve-list-v5",
+        name="CVE List V5",
+        status="failed",
+        url="https://github.com/CVEProject/cvelistV5",
+        retrieved_at=None,
+        source_published_at=None,
+        source_updated_at=None,
+        source_revision=window.latest_fetch_time if window else None,
+        parser_version=CVE_PARSER_VERSION,
+        schema_version="CVE Record Format 5.x (dataVersion on each record)",
+        license="CVE Program Terms of Use",
+        content_sha256=None,
+        notes=MITRE_CVE_ATTRIBUTION,
+        error=error,
+    )
+    return CveEnrichment(
+        meta=meta,
+        records=records,
+        strategy="failed",
+        delta_fetch_time=window.latest_fetch_time if window else None,
+        fetched_ids=(),
+        reused_ids=(),
+        delta_log_etag=log.etag if log else None,
+        delta_log_bytes=log.content_length if log else None,
+        delta_log_skipped=True,
+        delta_sha256=window.content_sha256 if window else None,
+        delta_log_sha256=log.content_sha256 if log else None,
     )
 
 

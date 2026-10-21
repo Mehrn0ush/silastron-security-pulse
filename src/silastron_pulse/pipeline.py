@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -24,7 +25,7 @@ from silastron_pulse.constants import (
 )
 from silastron_pulse.diff import detect_changes
 from silastron_pulse.errors import FetchError, ValidationError
-from silastron_pulse.http import Fetcher, HttpsFetcher
+from silastron_pulse.http import CountingFetcher, Fetcher, HttpsFetcher
 from silastron_pulse.ids import cvelist_v5_relpath
 from silastron_pulse.jsonutil import sha256_bytes
 from silastron_pulse.lock import CollectionLock
@@ -79,12 +80,14 @@ def collect(
         if state is not None
         else _NullLock()
     )
+    started = time.monotonic()
+    counting = fetcher if isinstance(fetcher, CountingFetcher) else CountingFetcher(fetcher)
 
     try:
         with lock_ctx:
             return _collect_locked(
                 config=config,
-                fetcher=fetcher,
+                fetcher=counting,
                 generated_at=generated_at,
                 now=now,
                 status_path=status_path,
@@ -93,19 +96,25 @@ def collect(
                 published_dir=published_dir,
                 state=state,
                 collector_commit_sha=collector_commit_sha,
+                started=started,
             )
     except (FetchError, ValidationError, OSError) as exc:
         write_collection_status(
             status_path,
-            {
-                "status": "failed",
-                "generated_at": generated_at,
-                "snapshot_id": None,
-                "record_count": 0,
-                "candidate": None,
-                "promoted": False,
-                "error": str(exc),
-            },
+            _run_metrics(
+                counting,
+                started,
+                {
+                    "status": "failed",
+                    "generated_at": generated_at,
+                    "snapshot_id": None,
+                    "record_count": 0,
+                    "candidate": None,
+                    "promoted": False,
+                    "collector_commit_sha": collector_commit_sha,
+                    "error": str(exc),
+                },
+            ),
         )
         return CollectionResult(status="failed", snapshot=None, error=str(exc))
 
@@ -116,6 +125,15 @@ class _NullLock:
 
     def __exit__(self, *args: object) -> None:
         return None
+
+
+def _run_metrics(fetcher: Fetcher, started: float, payload: dict[str, Any]) -> dict[str, Any]:
+    payload = dict(payload)
+    payload["duration_ms"] = max(0, int((time.monotonic() - started) * 1000))
+    payload["bytes_transferred"] = int(getattr(fetcher, "bytes_received", 0) or 0)
+    payload["http_gets"] = int(getattr(fetcher, "get_count", 0) or 0)
+    payload["http_heads"] = int(getattr(fetcher, "head_count", 0) or 0)
+    return payload
 
 
 def _collect_locked(
@@ -130,6 +148,7 @@ def _collect_locked(
     published_dir: Path | None,
     state: PulseState | None,
     collector_commit_sha: str | None,
+    started: float,
 ) -> CollectionResult:
     output_dir = config.output_dir
     previous = _load_previous(
@@ -148,7 +167,28 @@ def _collect_locked(
         cached_records=cached_records,
     )
     if cve.meta.status == "failed":
-        raise ValidationError(cve.meta.error or "CVE enrichment failed")
+        error = cve.meta.error or "CVE enrichment failed"
+        write_collection_status(
+            status_path,
+            _run_metrics(
+                fetcher,
+                started,
+                {
+                    "status": "failed",
+                    "generated_at": generated_at,
+                    "snapshot_id": None,
+                    "record_count": 0,
+                    "candidate": None,
+                    "promoted": False,
+                    "collector_commit_sha": collector_commit_sha,
+                    "cve_strategy": cve.strategy,
+                    "cve_delta_sha256": cve.delta_sha256,
+                    "cve_delta_log_sha256": cve.delta_log_sha256,
+                    "error": error,
+                },
+            ),
+        )
+        return CollectionResult(status="failed", snapshot=None, error=error)
     epss = collect_epss([record.cve_id for record in kev.records], enabled=False)
     entries = _build_entries(kev, cve, epss)
     if previous:
@@ -157,6 +197,18 @@ def _collect_locked(
     else:
         changes = ChangeSet()
     source_state_revision = _source_revision(kev, cve)
+    metrics = _run_metrics(
+        fetcher,
+        started,
+        {
+            "cve_strategy": cve.strategy,
+            "collector_commit_sha": collector_commit_sha,
+            "kev_content_sha256": kev.meta.content_sha256,
+            "cve_delta_sha256": cve.delta_sha256,
+            "cve_delta_log_sha256": cve.delta_log_sha256,
+            "cve_records_sha256": cve.meta.content_sha256,
+        },
+    )
     snapshot = _build_snapshot(
         generated_at=generated_at,
         kev=kev,
@@ -167,6 +219,7 @@ def _collect_locked(
         config=config,
         collector_commit_sha=collector_commit_sha,
         source_state_revision=source_state_revision,
+        metrics=metrics,
     )
     validate_snapshot(snapshot)
     candidate_path = output_dir / "candidate.json"
@@ -181,6 +234,13 @@ def _collect_locked(
         "pipeline_version": PACKAGE_VERSION,
         "status": snapshot["status"],
         "cve_strategy": cve.strategy,
+        "kev_content_sha256": kev.meta.content_sha256,
+        "cve_delta_sha256": cve.delta_sha256,
+        "cve_delta_log_sha256": cve.delta_log_sha256,
+        "bytes_transferred": metrics["bytes_transferred"],
+        "http_gets": metrics["http_gets"],
+        "http_heads": metrics["http_heads"],
+        "duration_ms": metrics["duration_ms"],
     }
     atomic_write_json(output_dir / "candidate.meta.json", meta)
     if state is not None:
@@ -197,6 +257,14 @@ def _collect_locked(
             "content_sha256": digest,
             "collector_commit_sha": collector_commit_sha,
             "source_state_revision": source_state_revision,
+            "cve_strategy": cve.strategy,
+            "kev_content_sha256": kev.meta.content_sha256,
+            "cve_delta_sha256": cve.delta_sha256,
+            "cve_delta_log_sha256": cve.delta_log_sha256,
+            "bytes_transferred": metrics["bytes_transferred"],
+            "http_gets": metrics["http_gets"],
+            "http_heads": metrics["http_heads"],
+            "duration_ms": metrics["duration_ms"],
             "error": None,
         },
     )
@@ -220,6 +288,10 @@ def _collect_locked(
                 "candidate": str(candidate_path),
                 "promoted": True,
                 "content_sha256": digest,
+                "collector_commit_sha": collector_commit_sha,
+                "cve_strategy": cve.strategy,
+                "bytes_transferred": metrics["bytes_transferred"],
+                "duration_ms": metrics["duration_ms"],
                 "error": None,
             },
         )
@@ -286,6 +358,11 @@ def _persist_state(
 ) -> None:
     cve_index = {
         "delta_fetch_time": cve.delta_fetch_time,
+        "delta_sha256": cve.delta_sha256,
+        "delta_log_sha256": cve.delta_log_sha256,
+        "delta_log_etag": cve.delta_log_etag,
+        "delta_log_bytes": cve.delta_log_bytes,
+        "delta_log_skipped": cve.delta_log_skipped,
         "updated_at": generated_at,
         "strategy": cve.strategy,
         "records": {
@@ -358,6 +435,7 @@ def _build_snapshot(
     config: PulseConfig,
     collector_commit_sha: str | None,
     source_state_revision: str,
+    metrics: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     records = [entries[key].to_dict() for key in sorted(entries)]
     status = "ok"
@@ -388,6 +466,14 @@ def _build_snapshot(
         "cve_strategy": cve.strategy,
         "cve_fetched": len(cve.fetched_ids),
         "cve_reused": len(cve.reused_ids),
+        "cve_delta_sha256": cve.delta_sha256,
+        "cve_delta_log_sha256": cve.delta_log_sha256,
+        "kev_content_sha256": kev.meta.content_sha256,
+        "bytes_transferred": (metrics or {}).get("bytes_transferred"),
+        "http_gets": (metrics or {}).get("http_gets"),
+        "http_heads": (metrics or {}).get("http_heads"),
+        "duration_ms": (metrics or {}).get("duration_ms"),
+        "collector_commit_sha": collector_commit_sha,
     }
     return {
         "schema_version": SNAPSHOT_SCHEMA_VERSION,

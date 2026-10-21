@@ -6,7 +6,7 @@ versioned JSON. There is no database, queue, or WordPress integration.
 ```
 CISA KEV JSON ──► KEV adapter ──► selected CVE IDs
                                       │
-CVE List V5 delta.json / ETag / raw ──┴──► CVE adapter
+CVE List V5 delta.json / deltaLog / raw ─┴──► CVE adapter
                                       │
 FIRST EPSS ──► disabled adapter ──────┘
                                       │

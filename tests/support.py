@@ -6,7 +6,7 @@ from pathlib import Path
 
 from silastron_pulse.clock import FrozenClock
 from silastron_pulse.config import PulseConfig
-from silastron_pulse.constants import KEV_JSON_URL
+from silastron_pulse.constants import CVE_DELTA_JSON_URL, KEV_JSON_URL
 from silastron_pulse.http import FetchResult, MapFetcher
 from silastron_pulse.ids import cvelist_v5_raw_url
 
@@ -43,6 +43,7 @@ def valid_fetcher(**overrides: FetchResult | Exception) -> MapFetcher:
         cvelist_v5_raw_url("CVE-2099-0002"): fetch_result(
             cvelist_v5_raw_url("CVE-2099-0002"), "cve_2099_0002.json"
         ),
+        CVE_DELTA_JSON_URL: fetch_result(CVE_DELTA_JSON_URL, "delta_initial.json"),
     }
     mapping.update(overrides)
     return MapFetcher(mapping)

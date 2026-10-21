@@ -1,0 +1,11 @@
+{
+  "fetchTime": "2099-01-08T00:00:00Z",
+  "numberOfChanges": 1,
+  "new": [],
+  "updated": [
+    {
+      "cveId": "CVE-2099-0001"
+    }
+  ],
+  "error": []
+}

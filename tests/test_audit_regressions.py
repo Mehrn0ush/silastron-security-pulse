@@ -8,7 +8,7 @@ import unittest
 from datetime import datetime, timezone
 from pathlib import Path
 
-from silastron_pulse.adapters.cve import enrich_cves, parse_cve_record
+from silastron_pulse.adapters.cve import _fetch_one, parse_cve_record
 from silastron_pulse.adapters.kev import parse_kev_catalog
 from silastron_pulse.constants import CVE_DELTA_JSON_URL, CVE_DELTA_LOG_URL, KEV_JSON_URL
 from silastron_pulse.diff import detect_changes
@@ -112,6 +112,7 @@ class CveRevisionTests(unittest.TestCase):
                 state_dir=root / "state",
             )
             assert second.snapshot is not None
+            self.assertEqual(second.snapshot["summary"]["cve_strategy"], "delta")
             self.assertIn("CVE-2099-0001", second.snapshot["changes"]["changed_cve_information"])
             record = next(item for item in second.snapshot["records"] if item["cve_id"] == "CVE-2099-0001")
             self.assertEqual(record["cve"]["date_updated"], "2099-01-11T00:00:00.000Z")
@@ -278,18 +279,15 @@ class TimestampAndFreshnessTests(unittest.TestCase):
                     ]
                 }
             )
-            reused = enrich_cves(
-                [record["cve_id"]],
+            reused = _fetch_one(
+                record["cve_id"],
                 fetcher,
                 config,
-                cache_index={
-                    "records": {record["cve_id"]: {"etag": '"abc"', "status": "ok"}},
-                    "delta_fetch_time": "2099-01-10T12:00:00Z",
-                },
-                cached_records={record["cve_id"]: cached},
+                etag='"abc"',
+                cached=cached,
             )
-            self.assertEqual(reused.records[record["cve_id"]].retrieved_at, record["retrieved_at"])
-            self.assertEqual(reused.records[record["cve_id"]].last_checked_at, "2099-01-10T13:00:00Z")
+            self.assertEqual(reused.retrieved_at, record["retrieved_at"])
+            self.assertEqual(reused.last_checked_at, "2099-01-10T13:00:00Z")
 
     def test_preview_computes_freshness_at_viewing_time(self) -> None:
         viewed = datetime(2099, 1, 12, 1, tzinfo=timezone.utc)

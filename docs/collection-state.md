@@ -20,7 +20,7 @@ versioned JSON documents. A dedicated branch gives:
 source/manifest.json          # committed last; presence means source state exists
 source/kev/meta.json
 source/kev/catalog.json
-source/cve/index.json         # etags, sha256, retrieved_at, delta fetchTime
+source/cve/index.json         # delta fetchTime, log ETag/size/skip, per-CVE etags
 source/cve/records/CVE-*.json
 candidates/latest.json        # last successful candidate snapshot
 candidates/latest.meta.json   # collector SHA, source revision, content sha256
@@ -40,9 +40,10 @@ a crash mid-write does not claim that source state is complete.
 1. **Collect** (manual `workflow_dispatch` on `main`) checks out collector code
    and `pulse-state`, takes a filesystem lock, loads the previous valid
    snapshot from `published/latest.json` or `candidates/latest.json`, fetches
-   KEV, incrementally enriches CVE List V5, writes `dist/candidate.json`,
+   KEV, incrementally enriches CVE List V5 (`delta.json` / `deltaLog.json`,
+   not a per-CVE poll of the full KEV set), writes `dist/candidate.json`,
    commits `source/` and `candidates/` to `pulse-state`, and uploads artifact
-   `pulse-candidate`.
+   `pulse-candidate`. See [cve-sync.md](cve-sync.md).
 2. **Publish** requires `collect_run_id`. It verifies repository, Collect
    workflow identity, `main`, success, head SHA, artifact name, expiry, and
    SHA-256 digest. It copies the actual last published snapshot from

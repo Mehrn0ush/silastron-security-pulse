@@ -14,12 +14,28 @@ def format_datetime(value: datetime) -> str:
 
 
 def parse_generated_at(value: str) -> datetime:
-    for fmt in ("%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%dT%H:%M:%S.%fZ"):
-        try:
-            return datetime.strptime(value, fmt).replace(tzinfo=timezone.utc)
-        except ValueError:
-            continue
-    raise ValueError(f"Invalid generated_at timestamp: {value!r}")
+    parsed = parse_source_timestamp(value)
+    if parsed is None:
+        raise ValueError(f"Invalid generated_at timestamp: {value!r}")
+    return parsed
+
+
+def parse_source_timestamp(value: str | None) -> datetime | None:
+    """Parse official source timestamps, including fractional UTC fetchTime values."""
+    if not value or not isinstance(value, str):
+        return None
+    raw = value.strip()
+    if not raw:
+        return None
+    if raw.endswith("Z"):
+        raw = raw[:-1] + "+00:00"
+    try:
+        parsed = datetime.fromisoformat(raw)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
 
 
 class Clock(Protocol):

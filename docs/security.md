@@ -13,7 +13,8 @@
 | HTTPS only | `sanitize_https_url` rejects other schemes |
 | Host allowlist | Hardcoded; not configurable via environment |
 | Redirects | Max 3; off-allowlist redirects fail |
-| Timeouts and size limits | HTTP timeout, max bytes, max JSON depth, max records |
+| Timeouts and size limits | HTTP timeout, KEV/CVE/delta byte caps, max JSON depth, max records |
+| Oversized deltaLog | HEAD first; GET skipped when Content-Length exceeds `max_delta_bytes` |
 | No secrets | No API keys; no WordPress credentials |
 | No third-party JS | Preview uses local `app.js` / `styles.css` only |
 | XSS | Preview uses `textContent` and `createElement`; CSP meta tag |
