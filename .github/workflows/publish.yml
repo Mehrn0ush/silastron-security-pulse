@@ -1,0 +1,211 @@
+name: Publish GitHub Pages
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type PUBLISH to deploy the selected collect artifact
+        required: true
+        type: string
+      collect_run_id:
+        description: GitHub Actions run ID of a successful Collect workflow
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build Pages artifact
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && github.event.inputs.confirm == 'PUBLISH'
+    outputs:
+      digest: ${{ steps.digest.outputs.digest }}
+      snapshot_id: ${{ steps.digest.outputs.snapshot_id }}
+    steps:
+      - name: Checkout publisher
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Checkout pulse-state
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: pulse-state
+          path: pulse-state
+
+      - name: Set up Python
+        uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+        with:
+          python-version: "3.12"
+
+      - name: Verify collect run identity
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.inputs.collect_run_id }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          if [ -z "${RUN_ID}" ]; then
+            echo "collect_run_id is required"
+            exit 1
+          fi
+          gh api "repos/${REPO}/actions/runs/${RUN_ID}" > /tmp/collect-run.json
+          gh api "repos/${REPO}/actions/runs/${RUN_ID}/artifacts" > /tmp/collect-artifacts.json
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          run = json.loads(Path("/tmp/collect-run.json").read_text())
+          artifacts = json.loads(Path("/tmp/collect-artifacts.json").read_text())
+          items = artifacts.get("artifacts") or []
+          pulse = next((item for item in items if item.get("name") == "pulse-candidate"), None)
+          Path("/tmp/collect-artifact.json").write_text(json.dumps(pulse or {}))
+          print(json.dumps({"id": run.get("id"), "path": run.get("path"), "head_sha": run.get("head_sha"), "conclusion": run.get("conclusion")}, indent=2))
+          PY
+
+      - name: Download collect artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: pulse-candidate
+          path: dist
+          github-token: ${{ github.token }}
+          run-id: ${{ github.event.inputs.collect_run_id }}
+
+      - name: Verify artifact digest and binding
+        id: digest
+        env:
+          PYTHONPATH: src
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          from silastron_pulse.jsonutil import sha256_bytes
+          from silastron_pulse.verify_run import verify_collect_run
+          candidate = Path("dist/candidate.json").read_bytes()
+          meta = json.loads(Path("dist/candidate.meta.json").read_text())
+          run = json.loads(Path("/tmp/collect-run.json").read_text())
+          run["repository_full_name"] = os.environ["REPO"]
+          artifact = json.loads(Path("/tmp/collect-artifact.json").read_text())
+          digest = sha256_bytes(candidate)
+          verify_collect_run(
+              run,
+              expected_repository=os.environ["REPO"],
+              expected_branch="main",
+              expected_head_sha=run.get("head_sha"),
+              artifact=artifact,
+              candidate_bytes=candidate,
+              expected_digest=meta.get("content_sha256"),
+          )
+          if meta.get("content_sha256") != digest:
+              raise SystemExit("candidate.meta.json digest mismatch")
+          snapshot = json.loads(candidate)
+          binding = snapshot.get("binding") or {}
+          if binding.get("collector_commit_sha") != run.get("head_sha"):
+              raise SystemExit("Candidate collector SHA does not match collect run head SHA")
+          if binding.get("source_state_revision") != meta.get("source_state_revision"):
+              raise SystemExit("Candidate source-state revision does not match metadata")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
+              handle.write(f"digest={digest}\n")
+              handle.write(f"snapshot_id={snapshot['snapshot_id']}\n")
+          print(digest)
+          PY
+
+      - name: Promote snapshot into site data
+        env:
+          PYTHONPATH: src
+        run: |
+          set -euo pipefail
+          python -m silastron_pulse validate dist/candidate.json
+          mkdir -p _site/data
+          if [ -f pulse-state/published/latest.json ]; then
+            mkdir -p _site/data/snapshots
+            cp -a pulse-state/published/. _site/data/
+          fi
+          python -m silastron_pulse promote \
+            --candidate dist/candidate.json \
+            --published-dir _site/data \
+            --expected-digest "${{ steps.digest.outputs.digest }}" \
+            --expected-collector-sha "$(python -c 'import json; print(json.load(open("/tmp/collect-run.json"))["head_sha"])')"
+          cp preview/index.html preview/styles.css preview/app.js _site/
+          python -m silastron_pulse validate _site/data/manifest.json
+          python -m silastron_pulse validate _site/data/latest.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          manifest = json.loads(Path("_site/data/manifest.json").read_text())
+          if manifest.get("status") not in {"ok", "degraded"}:
+              raise SystemExit("Refusing to publish a non-ok snapshot")
+          if not Path("_site/data/latest.json").exists():
+              raise SystemExit("latest.json missing")
+          PY
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+        with:
+          path: _site
+
+      - name: Upload published state snapshot
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: pulse-published
+          path: _site/data
+          if-no-files-found: error
+          retention-days: 14
+
+  deploy:
+    name: Deploy Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+      contents: read
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
+
+  persist-published:
+    name: Persist published snapshot to pulse-state
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - name: Checkout pulse-state
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: pulse-state
+          path: pulse-state
+
+      - name: Download published data
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: pulse-published
+          path: published-data
+
+      - name: Commit published snapshot
+        run: |
+          set -euo pipefail
+          mkdir -p pulse-state/published
+          cp -a published-data/. pulse-state/published/
+          cd pulse-state
+          git add published
+          if git diff --cached --quiet; then
+            echo "Published state already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "publish ${{ needs.build.outputs.snapshot_id }}"
+          git push origin HEAD:pulse-state

@@ -1,0 +1,13 @@
+{
+  "fetchTime": "2026-10-21T09:40:14.219Z",
+  "numberOfChanges": 1,
+  "new": [],
+  "updated": [
+    {
+      "cveId": "CVE-2021-44228",
+      "cveOrgLink": "https://www.cve.org/CVERecord?id=CVE-2021-44228",
+      "githubLink": "https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/2021/44xxx/CVE-2021-44228.json",
+      "dateUpdated": "2026-10-21T09:30:37.179Z"
+    }
+  ]
+}

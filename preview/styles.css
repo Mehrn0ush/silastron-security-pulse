@@ -1,0 +1,129 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f4f1ea;
+  --fg: #1b1b1b;
+  --muted: #4a4a4a;
+  --card: #fffdf8;
+  --accent: #1f4b3a;
+  --danger: #8a1f1f;
+  --warn: #7a4b00;
+  --border: #d4cbb8;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --fg: #f3f3f3;
+    --muted: #c8c8c8;
+    --card: #1c1c1c;
+    --accent: #9ad7bf;
+    --danger: #ffb4b4;
+    --warn: #ffcc80;
+    --border: #3a3a3a;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0 auto;
+  max-width: 72rem;
+  padding: 1.25rem;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.5;
+}
+
+.skip-link {
+  position: absolute;
+  left: -999px;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  background: var(--card);
+  padding: 0.5rem;
+}
+
+.eyebrow {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.lede,
+footer,
+.meta-list {
+  color: var(--muted);
+}
+
+.banner {
+  border: 1px solid var(--border);
+  background: var(--card);
+  padding: 0.9rem 1rem;
+}
+
+.banner.ok {
+  border-color: var(--accent);
+}
+
+.banner.stale,
+.banner.warn {
+  border-color: var(--warn);
+  color: var(--warn);
+}
+
+.banner.unavailable,
+.banner.failed {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.meta-list {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 0.35rem 1rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  vertical-align: top;
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+a[href] {
+  color: var(--accent);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

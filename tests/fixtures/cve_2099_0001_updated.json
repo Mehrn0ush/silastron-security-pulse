@@ -1,0 +1,46 @@
+{
+  "dataType": "CVE_RECORD",
+  "dataVersion": "5.1",
+  "cveMetadata": {
+    "cveId": "CVE-2099-0001",
+    "state": "PUBLISHED",
+    "assignerShortName": "fixture",
+    "datePublished": "2099-01-01T00:00:00.000Z",
+    "dateUpdated": "2099-01-11T00:00:00.000Z"
+  },
+  "containers": {
+    "cna": {
+      "title": "TEST FIXTURE ONLY UPDATED",
+      "descriptions": [
+        {
+          "lang": "en",
+          "value": "Synthetic CVE record used only for automated tests."
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Fixture Vendor",
+          "product": "Fixture Product",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected",
+              "lessThan": "1.1"
+            }
+          ]
+        }
+      ],
+      "metrics": [
+        {
+          "cvssV3_1": {
+            "version": "3.1",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N"
+          }
+        }
+      ]
+    }
+  }
+}

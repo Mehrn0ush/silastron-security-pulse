@@ -1,0 +1,21 @@
+{
+  "dataType": "CVE_RECORD",
+  "dataVersion": "5.1",
+  "cveMetadata": {
+    "cveId": "CVE-2099-0099",
+    "state": "PUBLISHED",
+    "assignerShortName": "fixture",
+    "datePublished": "2099-01-01T00:00:00.000Z",
+    "dateUpdated": "2099-01-01T00:00:00.000Z"
+  },
+  "containers": {
+    "cna": {
+      "descriptions": [
+        {
+          "lang": "en",
+          "value": "This record must not be correlated to CVE-2099-0001."
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "1970-01-01T00:00:00Z",
+  "status": "unpublished",
+  "latest_snapshot": null,
+  "latest_ok_snapshot": null,
+  "stale": true,
+  "fresh": false,
+  "publication_state": "not_published",
+  "message": "No snapshot has been approved for public deployment. This is not a live intelligence feed."
+}

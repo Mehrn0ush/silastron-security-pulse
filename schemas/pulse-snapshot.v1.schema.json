@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://silastron.local/schemas/pulse-snapshot.v1.schema.json",
+  "title": "Silastron Security Pulse Snapshot v1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "snapshot_id",
+    "collection_started_at",
+    "collection_completed_at",
+    "generated_at",
+    "status",
+    "sources",
+    "records",
+    "changes",
+    "composite_risk_score"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "snapshot_id": { "type": "string", "minLength": 8 },
+    "collection_started_at": { "type": "string", "minLength": 20 },
+    "collection_completed_at": { "type": "string", "minLength": 20 },
+    "generated_at": { "type": "string", "minLength": 20 },
+    "status": { "enum": ["ok", "degraded", "failed"] },
+    "composite_risk_score": { "type": "null" },
+    "sources": {
+      "type": "object",
+      "required": ["kev", "cve", "epss"],
+      "properties": {
+        "kev": { "$ref": "#/$defs/sourceMeta" },
+        "cve": { "$ref": "#/$defs/sourceMeta" },
+        "epss": { "$ref": "#/$defs/sourceMeta" }
+      }
+    },
+    "records": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/record" }
+    },
+    "changes": {
+      "type": "object",
+      "required": [
+        "new_kev_entries",
+        "updated_kev_entries",
+        "removed_kev_entries",
+        "changed_cve_information",
+        "epss_changes"
+      ]
+    }
+  },
+  "$defs": {
+    "cveId": {
+      "type": "string",
+      "pattern": "^CVE-[0-9]{4}-[0-9]{4,}$"
+    },
+    "sourceMeta": {
+      "type": "object",
+      "required": ["id", "status", "parser_version", "license"],
+      "properties": {
+        "id": { "type": "string" },
+        "status": {
+          "enum": ["ok", "failed", "disabled", "unavailable", "degraded"]
+        },
+        "parser_version": { "type": "string" },
+        "license": { "type": "string" }
+      }
+    },
+    "record": {
+      "type": "object",
+      "required": ["cve_id", "completeness", "kev", "cve", "epss", "signals", "links"],
+      "properties": {
+        "cve_id": { "$ref": "#/$defs/cveId" },
+        "completeness": { "enum": ["complete", "partial", "unavailable"] },
+        "kev": {
+          "type": "object",
+          "required": ["listed", "cve_id"],
+          "properties": {
+            "listed": { "const": true },
+            "cve_id": { "$ref": "#/$defs/cveId" }
+          }
+        },
+        "signals": {
+          "type": "object",
+          "required": [
+            "confirmed_exploitation",
+            "estimated_exploitation_probability",
+            "vulnerability_severity",
+            "product_affectedness",
+            "deployment_exposure"
+          ]
+        }
+      }
+    }
+  }
+}
