@@ -1,5 +1,7 @@
 name: Publish GitHub Pages
 
+# Comment-only change to reindex GitHub Actions workflow files.
+
 on:
   workflow_dispatch:
     inputs:
