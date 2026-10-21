@@ -163,6 +163,8 @@ class CveRecord:
     last_checked_at: str | None = None
     etag: str | None = None
     truncated_fields: tuple[str, ...] = ()
+    omitted_product_count: int = 0
+    omitted_version_count: int = 0
     cached: bool = False
 
     def comparable(self) -> dict[str, Any]:
@@ -179,6 +181,8 @@ class CveRecord:
             "products": [item.to_dict() for item in self.products],
             "status": self.status,
             "truncated_fields": list(self.truncated_fields),
+            "omitted_product_count": self.omitted_product_count,
+            "omitted_version_count": self.omitted_version_count,
         }
 
     def to_dict(self) -> dict[str, Any]:
@@ -202,6 +206,8 @@ class CveRecord:
             "last_checked_at": self.last_checked_at,
             "etag": self.etag,
             "truncated_fields": list(self.truncated_fields),
+            "omitted_product_count": self.omitted_product_count,
+            "omitted_version_count": self.omitted_version_count,
             "cached": self.cached,
         }
 
@@ -267,15 +273,34 @@ class PulseEntry:
     signals: Signals
     links: dict[str, str]
 
+    def completeness(self) -> str:
+        return record_completeness(kev=self.kev, cve=self.cve)
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "cve_id": self.cve_id,
+            "completeness": self.completeness(),
             "kev": self.kev.to_dict(),
             "cve": self.cve.to_dict(),
             "epss": self.epss.to_dict(),
             "signals": self.signals.to_dict(),
             "links": dict(self.links),
         }
+
+
+def record_completeness(*, kev: KevRecord, cve: CveRecord) -> str:
+    """Record-level completeness: complete, partial, or unavailable."""
+    if cve.status != "ok":
+        return "unavailable"
+    if (
+        cve.truncated_fields
+        or kev.truncated_fields
+        or kev.cwes_incomplete
+        or cve.omitted_product_count
+        or cve.omitted_version_count
+    ):
+        return "partial"
+    return "complete"
 
 
 @dataclass

@@ -32,9 +32,11 @@ def load_json_file(path: Path, *, max_bytes: int, max_depth: int) -> dict[str, A
     return payload
 
 
-def load_snapshot(path: Path, *, max_bytes: int, max_depth: int) -> dict[str, Any]:
+def load_snapshot(
+    path: Path, *, max_bytes: int, max_depth: int, compatible: bool = False
+) -> dict[str, Any]:
     payload = load_json_file(path, max_bytes=max_bytes, max_depth=max_depth)
-    return validate_snapshot(payload)
+    return validate_snapshot(payload, compatible=compatible)
 
 
 def parse_generated_at(value: str) -> datetime:
@@ -276,6 +278,8 @@ def build_preview_document(snapshot: dict[str, Any]) -> dict[str, Any]:
     return {
         "schema_version": PREVIEW_SCHEMA_VERSION,
         "snapshot_id": snapshot["snapshot_id"],
+        "collection_started_at": snapshot.get("collection_started_at"),
+        "collection_completed_at": snapshot.get("collection_completed_at"),
         "generated_at": snapshot["generated_at"],
         "status": snapshot["status"],
         "sources": snapshot.get("sources", {}),
@@ -312,6 +316,10 @@ def _preview_row(record: dict[str, Any], change: str, sources: dict[str, Any]) -
         "epss_score": epss.get("score"),
         "truncated_fields": truncated,
         "partial": bool(truncated) or cve.get("status") != "ok",
+        "completeness": record.get("completeness")
+        or ("unavailable" if cve.get("status") != "ok" else "partial" if truncated else "complete"),
+        "omitted_product_count": cve.get("omitted_product_count") or 0,
+        "omitted_version_count": cve.get("omitted_version_count") or 0,
         "links": {
             "cve_record": links.get("cve_record"),
             "kev_catalog": links.get("kev_catalog"),

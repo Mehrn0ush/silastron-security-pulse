@@ -57,7 +57,11 @@ embed that attribution. The CC0 pull request on cvelistV5 is **not merged**.
 
 - Records update about every 7 minutes in cvelistV5. **VERIFIED** from README.
 - Path layout is `cves/{year}/{sequence//1000}xxx/{CVE-ID}.json`. **VERIFIED**.
-- Enrichment is bounded to KEV CVE IDs, max 3000 records, max 1 MB each.
+- Enrichment is bounded to KEV CVE IDs, max 3000 records, max 3 MB each
+  (covers measured CVE-2024-20481 at 2,293,524 bytes). Storage stores up to
+  200 CNA products and 200 versions per product; omitted counts are recorded
+  and those records are `completeness=partial`. Preview UI does not silently
+  drop that incompleteness.
 - The fetched `cveMetadata.cveId` must equal the requested ID exactly. No
   zero-padding or fuzzy match.
 - CVSS is taken only from the CNA container. ADP scores are not substituted.

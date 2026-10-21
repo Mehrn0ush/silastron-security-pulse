@@ -9,12 +9,15 @@ Measured 2026-10-21 against live cvelistV5:
 - delta.json is the current ~7-minute window (4,123 bytes) and is not a
   historical catch-up log.
 - deltaLog.json is the official rolling ~30-day catch-up index
-  (29,863,282 bytes, 2.44s HEAD, 17.94s GET, 0.086s parse, 2,335 windows
-  from 2026-09-21 to 2026-10-21). KEV ∩ changed was 7 IDs in 24h and 160
-  in 30 days.
+  (~29.88 MB uncompressed). HEAD without gzip reports that uncompressed
+  Content-Length so oversized skip stays conservative. GET uses gzip
+  (~1.73 MB wire / ~4.2s vs ~228s identity). Parse still covers every
+  window after the stored fetchTime. KEV ∩ changed was 7 IDs in 24h and
+  160 in 30 days.
 
-HEAD is used to skip GET when Content-Length exceeds the configured bound
-or when a previous skip recorded the same ETag. The log body is never stored.
+HEAD is used to skip GET when uncompressed Content-Length exceeds the
+configured bound or when a previous skip recorded the same ETag. The log
+body is never stored.
 """
 
 from __future__ import annotations

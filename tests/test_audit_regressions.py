@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import tempfile
 import unittest
+from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -308,7 +309,7 @@ class TimestampAndFreshnessTests(unittest.TestCase):
 class TruncationAndRetryTests(unittest.TestCase):
     def test_product_truncation_is_explicit(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            config = test_config(Path(tmp))
+            config = replace(test_config(Path(tmp)), max_products=8)
             raw = fixture_bytes("cve_many_products.json")
             record = parse_cve_record(
                 json.loads(raw),
@@ -317,7 +318,8 @@ class TruncationAndRetryTests(unittest.TestCase):
                 source_url=cvelist_v5_raw_url("CVE-2099-0001"),
                 config=config,
             )
-            self.assertEqual(len(record.products), config.max_products)
+            self.assertEqual(len(record.products), 8)
+            self.assertEqual(record.omitted_product_count, 4)
             self.assertIn("products", record.truncated_fields)
 
     def test_cwe_truncation_is_explicit(self) -> None:

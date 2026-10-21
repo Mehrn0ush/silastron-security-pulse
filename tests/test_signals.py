@@ -68,6 +68,21 @@ class SignalTests(unittest.TestCase):
             signals["estimated_exploitation_probability"]["basis"],
         )
 
+    def test_omitted_products_mark_affectedness_partial(self) -> None:
+        cve = CveRecord(
+            **{
+                **_cve().__dict__,
+                "omitted_product_count": 12,
+                "omitted_version_count": 4,
+                "truncated_fields": ("products", "versions"),
+            }
+        )
+        signals = build_signals(_kev(), cve, EpssRecord(status="disabled", cve_id="CVE-2099-0001"))
+        affectedness = signals.product_affectedness
+        self.assertEqual(affectedness["status"], "source_asserted_partial")
+        self.assertEqual(affectedness["omitted_product_count"], 12)
+        self.assertIn("12 additional CNA product entries", affectedness["note"])
+
 
 if __name__ == "__main__":
     unittest.main()

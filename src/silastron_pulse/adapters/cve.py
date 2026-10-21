@@ -28,8 +28,6 @@ from silastron_pulse.jsonutil import load_bounded_json, sha256_bytes
 from silastron_pulse.models import CveProduct, CveRecord, CveSeverity, SourceMeta
 from silastron_pulse.sanitize import authoritative_cve_url, clean_text_report
 
-MAX_VERSIONS_PER_PRODUCT = 12
-
 
 @dataclass(frozen=True)
 class CveEnrichment:
@@ -61,6 +59,11 @@ def enrich_cves(
         )
     cache_index = cache_index or {}
     cached_records = cached_records or {}
+    stored_limits = (
+        cache_index.get("storage_limits")
+        if isinstance(cache_index.get("storage_limits"), dict)
+        else None
+    )
     index_records = cache_index.get("records") if isinstance(cache_index.get("records"), dict) else {}
     since = cache_index.get("delta_fetch_time") if isinstance(cache_index.get("delta_fetch_time"), str) else None
     stored_delta_sha = (
@@ -143,6 +146,9 @@ def enrich_cves(
     for cve_id in unique_ids:
         cached = cached_records.get(cve_id)
         if strategy in {"full", "resync"} or cached is None or (cached or {}).get("status") != "ok":
+            to_fetch[cve_id] = None
+            continue
+        if _should_refresh_truncated_cache(cached, config, stored_limits):
             to_fetch[cve_id] = None
             continue
         if strategy == "delta" and cve_id in changed_ids:
@@ -372,7 +378,9 @@ def parse_cve_record(
     description, t_desc = _english_description(cna.get("descriptions"), config)
     if t_desc:
         truncated.append("description")
-    products, t_products = _products(cna.get("affected"), config)
+    products, t_products, omitted_products, omitted_versions = _products(
+        cna.get("affected"), config
+    )
     truncated.extend(t_products)
     severity = _cna_severity(cna.get("metrics"), config)
     return CveRecord(
@@ -394,6 +402,8 @@ def parse_cve_record(
         last_checked_at=retrieved_at,
         etag=etag,
         truncated_fields=tuple(truncated),
+        omitted_product_count=omitted_products,
+        omitted_version_count=omitted_versions,
         cached=False,
     )
 
@@ -438,8 +448,45 @@ def cve_record_from_dict(payload: dict[str, Any], *, cached: bool = False) -> Cv
         last_checked_at=payload.get("last_checked_at"),
         etag=payload.get("etag"),
         truncated_fields=tuple(payload.get("truncated_fields") or ()),
+        omitted_product_count=int(payload.get("omitted_product_count") or 0),
+        omitted_version_count=int(payload.get("omitted_version_count") or 0),
         cached=cached,
     )
+
+
+def storage_limits(config: PulseConfig) -> dict[str, int]:
+    return {
+        "max_products": config.max_products,
+        "max_versions_per_product": config.max_versions_per_product,
+        "max_description_chars": config.max_description_chars,
+        "max_cve_bytes": config.max_cve_bytes,
+    }
+
+
+def _should_refresh_truncated_cache(
+    cached: dict[str, Any],
+    config: PulseConfig,
+    stored_limits: dict[str, Any] | None,
+) -> bool:
+    """Refetch truncated cache only when storage bounds changed, to recover omitted data."""
+    truncated = bool(
+        cached.get("truncated_fields")
+        or cached.get("omitted_product_count")
+        or cached.get("omitted_version_count")
+    )
+    if not truncated:
+        return False
+    current = storage_limits(config)
+    if not stored_limits:
+        return True
+    for key, value in current.items():
+        try:
+            previous = int(stored_limits.get(key))  # type: ignore[arg-type]
+        except (TypeError, ValueError):
+            return True
+        if previous != value:
+            return True
+    return False
 
 
 def _english_description(value: object, config: PulseConfig) -> tuple[str | None, bool]:
@@ -466,23 +513,28 @@ def _english_description(value: object, config: PulseConfig) -> tuple[str | None
     return english or fallback, truncated
 
 
-def _products(value: object, config: PulseConfig) -> tuple[list[CveProduct], list[str]]:
+def _products(
+    value: object, config: PulseConfig
+) -> tuple[list[CveProduct], list[str], int, int]:
     if not isinstance(value, list):
-        return [], []
+        return [], [], 0, 0
+    affected = [item for item in value if isinstance(item, dict)]
+    omitted_products = max(0, len(affected) - config.max_products)
     truncated: list[str] = []
-    if len(value) > config.max_products:
+    if omitted_products:
         truncated.append("products")
+    omitted_versions = 0
     products: list[CveProduct] = []
-    for item in value[: config.max_products]:
-        if not isinstance(item, dict):
-            continue
+    for item in affected[: config.max_products]:
         versions_raw = item.get("versions") if isinstance(item.get("versions"), list) else []
-        if len(versions_raw) > MAX_VERSIONS_PER_PRODUCT and "versions" not in truncated:
-            truncated.append("versions")
+        version_dicts = [row for row in versions_raw if isinstance(row, dict)]
+        extra_versions = max(0, len(version_dicts) - config.max_versions_per_product)
+        if extra_versions:
+            omitted_versions += extra_versions
+            if "versions" not in truncated:
+                truncated.append("versions")
         versions: list[str] = []
-        for version in versions_raw[:MAX_VERSIONS_PER_PRODUCT]:
-            if not isinstance(version, dict):
-                continue
+        for version in version_dicts[: config.max_versions_per_product]:
             label, _ = clean_text_report(version.get("version"), 128)
             status, _ = clean_text_report(version.get("status"), 32)
             less_than, _ = clean_text_report(version.get("lessThan"), 128)
@@ -503,7 +555,7 @@ def _products(value: object, config: PulseConfig) -> tuple[list[CveProduct], lis
                 versions=versions,
             )
         )
-    return products, truncated
+    return products, truncated, omitted_products, omitted_versions
 
 
 def _cna_severity(value: object, config: PulseConfig) -> CveSeverity | None:

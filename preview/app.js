@@ -127,7 +127,20 @@
       } else {
         kev.textContent = "Not listed";
       }
-      if (row.partial) {
+      if (row.completeness && row.completeness !== "complete") {
+        kev.appendChild(document.createTextNode(" · " + asText(row.completeness)));
+        if (row.omitted_product_count || row.omitted_version_count) {
+          kev.appendChild(
+            document.createTextNode(
+              " (" +
+                asText(row.omitted_product_count || 0) +
+                " products omitted, " +
+                asText(row.omitted_version_count || 0) +
+                " versions omitted)"
+            )
+          );
+        }
+      } else if (row.partial) {
         kev.appendChild(document.createTextNode(" · partial"));
       }
       var product = document.createElement("div");
@@ -244,7 +257,13 @@
       );
       appendMeta("Snapshot generated at", manifest.snapshot_generated_at);
       appendMeta("Manifest generated at", manifest.generated_at);
+      appendMeta("Collection started at", preview && preview.collection_started_at);
+      appendMeta("Collection completed at", preview && preview.collection_completed_at);
       appendMeta("Record count", manifest.record_count);
+      var summary = (preview && preview.summary) || {};
+      appendMeta("Complete records", summary.complete_records);
+      appendMeta("Partial records", summary.partial_records);
+      appendMeta("Unavailable records", summary.unavailable_records);
       var sources = (preview && preview.sources) || manifest.sources || {};
       var kev = sources.kev || {};
       var cve = sources.cve || {};

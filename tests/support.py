@@ -4,7 +4,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from silastron_pulse.clock import FrozenClock
+from silastron_pulse.clock import FrozenClock, SteppingClock
 from silastron_pulse.config import PulseConfig
 from silastron_pulse.constants import CVE_DELTA_JSON_URL, KEV_JSON_URL
 from silastron_pulse.http import FetchResult, MapFetcher
@@ -51,6 +51,10 @@ def valid_fetcher(**overrides: FetchResult | Exception) -> MapFetcher:
 
 def frozen_clock() -> FrozenClock:
     return FrozenClock(NOW)
+
+
+def stepping_clock(*, step_seconds: float = 1.0) -> SteppingClock:
+    return SteppingClock(NOW, step_seconds=step_seconds)
 
 
 def load_fixture_json(name: str) -> object:

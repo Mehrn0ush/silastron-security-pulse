@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import threading
 import time
+import zlib
 from dataclasses import dataclass
 from email.utils import parsedate_to_datetime
 from typing import Callable, Protocol
@@ -30,6 +31,7 @@ class FetchResult:
     etag: str | None = None
     not_modified: bool = False
     content_length: int | None = None
+    wire_bytes: int | None = None
 
 
 @dataclass(frozen=True)
@@ -139,6 +141,7 @@ class HttpsFetcher:
         headers = {
             "User-Agent": self._user_agent,
             "Accept": "application/json, text/plain;q=0.8, */*;q=0.1",
+            "Accept-Encoding": "gzip",
         }
         if etag:
             headers["If-None-Match"] = etag
@@ -265,7 +268,9 @@ def _result_from_response(response: object, safe: str, retrieved_at: str, max_by
         except ValueError:
             length = None
     final_url = response.geturl()  # type: ignore[attr-defined]
-    body = _read_bounded(response, max_bytes=max_bytes)
+    encoding = headers.get("Content-Encoding") if headers is not None else None
+    wire = _read_bounded(response, max_bytes=max_bytes)
+    body = decode_http_body(wire, encoding, max_bytes=max_bytes)
     final_safe = sanitize_https_url(final_url, hosts=hosts)
     if final_safe is None:
         raise UnsafeRedirectError(f"Final URL left allowlist: {final_url!r}")
@@ -280,7 +285,8 @@ def _result_from_response(response: object, safe: str, retrieved_at: str, max_by
         retrieved_at=retrieved_at,
         etag=etag,
         not_modified=False,
-        content_length=length if length is not None else len(body),
+        content_length=length if length is not None else len(wire),
+        wire_bytes=len(wire),
     )
 
 
@@ -304,13 +310,43 @@ def _read_bounded(response: object, *, max_bytes: int) -> bytes:
     chunks: list[bytes] = []
     total = 0
     while True:
-        chunk = response.read(64 * 1024)  # type: ignore[attr-defined]
+        chunk = response.read(256 * 1024)  # type: ignore[attr-defined]
         if not chunk:
             break
         total += len(chunk)
         if total > max_bytes:
             raise FetchError(f"Response exceeded max bytes {max_bytes}")
         chunks.append(chunk)
+    return b"".join(chunks)
+
+
+def decode_http_body(body: bytes, content_encoding: str | None, *, max_bytes: int) -> bytes:
+    """Decode gzip payloads while bounding decompressed size."""
+    encoding = (content_encoding or "").lower()
+    if "gzip" not in encoding:
+        if len(body) > max_bytes:
+            raise FetchError(f"Response exceeded max bytes {max_bytes}")
+        return body
+    decoder = zlib.decompressobj(16 + zlib.MAX_WBITS)
+    chunks: list[bytes] = []
+    total = 0
+    view = memoryview(body)
+    offset = 0
+    while offset < len(body):
+        piece = bytes(view[offset : offset + 65536])
+        offset += len(piece)
+        data = decoder.decompress(piece, max_bytes - total + 1)
+        total += len(data)
+        if total > max_bytes:
+            raise FetchError(f"Decompressed response exceeded max bytes {max_bytes}")
+        chunks.append(data)
+        if decoder.unconsumed_tail:
+            raise FetchError(f"Decompressed response exceeded max bytes {max_bytes}")
+    tail = decoder.flush()
+    total += len(tail)
+    if total > max_bytes:
+        raise FetchError(f"Decompressed response exceeded max bytes {max_bytes}")
+    chunks.append(tail)
     return b"".join(chunks)
 
 
@@ -478,7 +514,8 @@ class CountingFetcher:
     ) -> FetchResult:
         self.get_count += 1
         result = self._inner.get(url, max_bytes=max_bytes, etag=etag)
-        self.bytes_received += len(result.body)
+        transferred = result.wire_bytes if result.wire_bytes is not None else len(result.body)
+        self.bytes_received += transferred
         return result
 
     def head(self, url: str) -> HeadResult:

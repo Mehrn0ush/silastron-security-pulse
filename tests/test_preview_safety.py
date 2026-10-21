@@ -41,6 +41,10 @@ class PreviewSafetyTests(unittest.TestCase):
         self.assertIn("Information state", source)
         self.assertNotIn("innerHTML", source)
         self.assertIn("CVELIST_BLOB", source)
+        self.assertIn("completeness", source)
+        self.assertIn("products omitted", source)
+        self.assertIn("Collection started at", source)
+        self.assertIn("Collection completed at", source)
 
 
 if __name__ == "__main__":

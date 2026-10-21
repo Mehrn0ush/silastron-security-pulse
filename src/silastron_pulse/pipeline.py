@@ -11,6 +11,7 @@ from silastron_pulse.adapters.cve import (
     CveEnrichment,
     cve_record_from_dict,
     enrich_cves,
+    storage_limits,
 )
 from silastron_pulse.adapters.epss import collect_epss, unavailable_record
 from silastron_pulse.adapters.kev import KevCatalog, fetch_kev_catalog
@@ -70,7 +71,7 @@ def collect(
         min_interval_ms=config.cve_min_interval_ms,
     )
     now = clock.now()
-    generated_at = format_datetime(now)
+    started_at = format_datetime(now)
     output_dir = config.output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
     status_path = output_dir / "collection-status.json"
@@ -88,8 +89,8 @@ def collect(
             return _collect_locked(
                 config=config,
                 fetcher=counting,
-                generated_at=generated_at,
-                now=now,
+                clock=clock,
+                started_at=started_at,
                 status_path=status_path,
                 previous_snapshot_path=previous_snapshot_path,
                 promote=promote,
@@ -99,6 +100,7 @@ def collect(
                 started=started,
             )
     except (FetchError, ValidationError, OSError) as exc:
+        completed_at = format_datetime(clock.now())
         write_collection_status(
             status_path,
             _run_metrics(
@@ -106,7 +108,9 @@ def collect(
                 started,
                 {
                     "status": "failed",
-                    "generated_at": generated_at,
+                    "collection_started_at": started_at,
+                    "collection_completed_at": completed_at,
+                    "generated_at": completed_at,
                     "snapshot_id": None,
                     "record_count": 0,
                     "candidate": None,
@@ -140,8 +144,8 @@ def _collect_locked(
     *,
     config: PulseConfig,
     fetcher: Fetcher,
-    generated_at: str,
-    now: Any,
+    clock: Clock,
+    started_at: str,
     status_path: Path,
     previous_snapshot_path: Path | None,
     promote: bool,
@@ -168,6 +172,7 @@ def _collect_locked(
     )
     if cve.meta.status == "failed":
         error = cve.meta.error or "CVE enrichment failed"
+        completed_at = format_datetime(clock.now())
         write_collection_status(
             status_path,
             _run_metrics(
@@ -175,7 +180,9 @@ def _collect_locked(
                 started,
                 {
                     "status": "failed",
-                    "generated_at": generated_at,
+                    "collection_started_at": started_at,
+                    "collection_completed_at": completed_at,
+                    "generated_at": completed_at,
                     "snapshot_id": None,
                     "record_count": 0,
                     "candidate": None,
@@ -197,6 +204,9 @@ def _collect_locked(
     else:
         changes = ChangeSet()
     source_state_revision = _source_revision(kev, cve)
+    completed = clock.now()
+    completed_at = format_datetime(completed)
+    generated_at = completed_at
     metrics = _run_metrics(
         fetcher,
         started,
@@ -211,6 +221,8 @@ def _collect_locked(
     )
     snapshot = _build_snapshot(
         generated_at=generated_at,
+        collection_started_at=started_at,
+        collection_completed_at=completed_at,
         kev=kev,
         cve=cve,
         epss_meta=epss.meta,
@@ -227,6 +239,8 @@ def _collect_locked(
     digest = sha256_bytes(candidate_path.read_bytes())
     meta = {
         "snapshot_id": snapshot["snapshot_id"],
+        "collection_started_at": started_at,
+        "collection_completed_at": completed_at,
         "generated_at": generated_at,
         "collector_commit_sha": collector_commit_sha,
         "source_state_revision": source_state_revision,
@@ -244,11 +258,22 @@ def _collect_locked(
     }
     atomic_write_json(output_dir / "candidate.meta.json", meta)
     if state is not None:
-        _persist_state(state, snapshot, meta, kev, cve, generated_at, collector_commit_sha)
+        _persist_state(
+            state,
+            snapshot,
+            meta,
+            kev,
+            cve,
+            generated_at,
+            collector_commit_sha,
+            config,
+        )
     write_collection_status(
         status_path,
         {
             "status": snapshot["status"],
+            "collection_started_at": started_at,
+            "collection_completed_at": completed_at,
             "generated_at": generated_at,
             "snapshot_id": snapshot["snapshot_id"],
             "record_count": len(snapshot["records"]),
@@ -273,7 +298,7 @@ def _collect_locked(
         promote_snapshot(
             snapshot,
             target,
-            now=now,
+            now=completed,
             stale_after_hours=config.stale_after_hours,
             max_bytes=config.max_kev_bytes,
             max_depth=config.max_json_depth,
@@ -282,6 +307,8 @@ def _collect_locked(
             status_path,
             {
                 "status": snapshot["status"],
+                "collection_started_at": started_at,
+                "collection_completed_at": completed_at,
                 "generated_at": generated_at,
                 "snapshot_id": snapshot["snapshot_id"],
                 "record_count": len(snapshot["records"]),
@@ -311,7 +338,10 @@ def _load_previous(
                 f"Previous snapshot is unavailable at {previous_snapshot_path}"
             )
         return load_snapshot(
-            previous_snapshot_path, max_bytes=max_bytes, max_depth=max_depth
+            previous_snapshot_path,
+            max_bytes=max_bytes,
+            max_depth=max_depth,
+            compatible=True,
         )
     if state is not None:
         return state.load_previous_snapshot(
@@ -355,6 +385,7 @@ def _persist_state(
     cve: CveEnrichment,
     generated_at: str,
     collector_commit_sha: str | None,
+    config: PulseConfig,
 ) -> None:
     cve_index = {
         "delta_fetch_time": cve.delta_fetch_time,
@@ -363,6 +394,7 @@ def _persist_state(
         "delta_log_etag": cve.delta_log_etag,
         "delta_log_bytes": cve.delta_log_bytes,
         "delta_log_skipped": cve.delta_log_skipped,
+        "storage_limits": storage_limits(config),
         "updated_at": generated_at,
         "strategy": cve.strategy,
         "records": {
@@ -427,6 +459,8 @@ def _build_entries(
 def _build_snapshot(
     *,
     generated_at: str,
+    collection_started_at: str,
+    collection_completed_at: str,
     kev: KevCatalog,
     cve: CveEnrichment,
     epss_meta: SourceMeta,
@@ -457,6 +491,11 @@ def _build_snapshot(
             1 for item in cve.records.values() if item.status != "ok"
         ),
         "truncated_records": len(truncated_records),
+        "complete_records": sum(1 for item in records if item.get("completeness") == "complete"),
+        "partial_records": sum(1 for item in records if item.get("completeness") == "partial"),
+        "unavailable_records": sum(
+            1 for item in records if item.get("completeness") == "unavailable"
+        ),
         "epss_enabled": False,
         "new_kev_entries": len(changes.new_kev_entries),
         "updated_kev_entries": len(changes.updated_kev_entries),
@@ -478,6 +517,8 @@ def _build_snapshot(
     return {
         "schema_version": SNAPSHOT_SCHEMA_VERSION,
         "snapshot_id": snapshot_id,
+        "collection_started_at": collection_started_at,
+        "collection_completed_at": collection_completed_at,
         "generated_at": generated_at,
         "status": status,
         "pipeline_version": PACKAGE_VERSION,
@@ -503,6 +544,10 @@ def _build_snapshot(
             "max_cve_enrichments": config.max_cve_enrichments,
             "max_preview_changes": config.max_preview_changes,
             "max_preview_recent": config.max_preview_recent,
+            "max_products": config.max_products,
+            "max_versions_per_product": config.max_versions_per_product,
+            "max_description_chars": config.max_description_chars,
+            "max_cve_bytes": config.max_cve_bytes,
             "stale_after_hours": config.stale_after_hours,
         },
         "sources": {

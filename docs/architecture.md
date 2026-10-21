@@ -65,7 +65,10 @@ Persistent layout is documented in [collection-state.md](collection-state.md).
 Each successful collection writes `candidate.json` with:
 
 - `schema_version` `1.0.0`
-- `snapshot_id` derived from KEV content hash and generation time
+- `snapshot_id` derived from KEV content hash and `generated_at`
+  (`generated_at` is collection completion, not fetch start)
+- `collection_started_at` / `collection_completed_at` on the snapshot
+- `records[].completeness`: `complete`, `partial`, or `unavailable`
 - source metadata: URL, retrieval time, publication/update time, revision,
   parser version, license, content hash
 - sorted records keyed by exact CVE ID

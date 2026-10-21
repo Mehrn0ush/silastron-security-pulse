@@ -36,6 +36,7 @@ class PulseConfig:
     max_string_chars: int
     max_description_chars: int
     max_products: int
+    max_versions_per_product: int
     max_preview_changes: int
     max_preview_recent: int
     cve_workers: int
@@ -116,7 +117,13 @@ class PulseConfig:
                 "PULSE_MAX_PRODUCTS",
                 defaults["max_products"],
                 minimum=1,
-                maximum=20,
+                maximum=500,
+            ),
+            max_versions_per_product=_int_env(
+                "PULSE_MAX_VERSIONS_PER_PRODUCT",
+                defaults["max_versions_per_product"],
+                minimum=1,
+                maximum=500,
             ),
             max_preview_changes=_int_env(
                 "PULSE_MAX_PREVIEW_CHANGES",

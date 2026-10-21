@@ -73,14 +73,24 @@ def build_signals(kev: KevRecord, cve: CveRecord, epss: EpssRecord) -> Signals:
         }
         for item in cve.products
     ]
+    omitted = cve.omitted_product_count or cve.omitted_version_count
     affectedness = {
-        "status": "source_asserted",
+        "status": "source_asserted_partial" if omitted else "source_asserted",
         "kev_vendor_project": kev.vendor_project,
         "kev_product": kev.product,
         "cve_products": products,
+        "omitted_product_count": cve.omitted_product_count,
+        "omitted_version_count": cve.omitted_version_count,
         "note": (
             "Product affectedness is copied from KEV and the CVE CNA container. "
             "It does not mean a Silastron or customer system is exposed."
+            + (
+                f" {cve.omitted_product_count} additional CNA product entries and "
+                f"{cve.omitted_version_count} additional version entries exceeded "
+                "the storage bound and were not stored."
+                if omitted
+                else ""
+            )
         ),
     }
     exposure = {

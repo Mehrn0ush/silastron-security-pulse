@@ -9,11 +9,15 @@ from silastron_pulse.errors import ValidationError
 from silastron_pulse.ids import CVE_ID_RE
 
 
-def validate_snapshot(payload: object) -> dict[str, Any]:
+def validate_snapshot(payload: object, *, compatible: bool = False) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValidationError("Snapshot must be a JSON object")
+    if compatible:
+        payload = _backfill_snapshot(payload)
     _require(payload, "schema_version", SNAPSHOT_SCHEMA_VERSION)
     _require_string(payload, "snapshot_id")
+    _require_string(payload, "collection_started_at")
+    _require_string(payload, "collection_completed_at")
     _require_string(payload, "generated_at")
     status = payload.get("status")
     if status not in {"ok", "degraded", "failed"}:
@@ -51,9 +55,24 @@ def validate_snapshot(payload: object) -> dict[str, Any]:
             raise ValidationError(f"{cve_id} is missing KEV listing")
         if kev.get("cve_id") != cve_id:
             raise ValidationError(f"{cve_id} KEV identifier mismatch")
+        completeness = record.get("completeness")
+        if completeness not in {"complete", "partial", "unavailable"}:
+            raise ValidationError(f"{cve_id} completeness must be complete, partial, or unavailable")
         cve = record.get("cve")
         if not isinstance(cve, dict) or cve.get("cve_id") != cve_id:
             raise ValidationError(f"{cve_id} CVE identifier mismatch")
+        cve_status = cve.get("status")
+        truncated = bool(cve.get("truncated_fields") or kev.get("truncated_fields") or kev.get("cwes_incomplete"))
+        omitted = int(cve.get("omitted_product_count") or 0) + int(cve.get("omitted_version_count") or 0)
+        if completeness == "unavailable":
+            if cve_status == "ok":
+                raise ValidationError(f"{cve_id} unavailable completeness requires a non-ok CVE status")
+        elif cve_status != "ok":
+            raise ValidationError(f"{cve_id} non-ok CVE status must be completeness unavailable")
+        if completeness == "complete" and (truncated or omitted):
+            raise ValidationError(f"{cve_id} complete records must not omit or truncate fields")
+        if completeness == "partial" and not truncated and not omitted:
+            raise ValidationError(f"{cve_id} partial records must record truncation or omission")
         signals = record.get("signals")
         if not isinstance(signals, dict):
             raise ValidationError(f"{cve_id} signals are required")
@@ -102,6 +121,44 @@ def validate_manifest(payload: object) -> dict[str, Any]:
     if status in {"ok", "degraded"}:
         _require_string(payload, "latest_snapshot")
         _require_string(payload, "latest_ok_snapshot")
+    return payload
+
+
+def _backfill_snapshot(payload: dict[str, Any]) -> dict[str, Any]:
+    """Accept last-known-good snapshots written before completeness timestamps."""
+    payload = dict(payload)
+    generated = payload.get("generated_at")
+    if not payload.get("collection_started_at") and isinstance(generated, str):
+        payload["collection_started_at"] = generated
+    if not payload.get("collection_completed_at") and isinstance(generated, str):
+        payload["collection_completed_at"] = generated
+    records = payload.get("records")
+    if isinstance(records, list):
+        filled = []
+        for record in records:
+            if not isinstance(record, dict):
+                filled.append(record)
+                continue
+            item = dict(record)
+            if item.get("completeness") not in {"complete", "partial", "unavailable"}:
+                cve = item.get("cve") if isinstance(item.get("cve"), dict) else {}
+                kev = item.get("kev") if isinstance(item.get("kev"), dict) else {}
+                truncated = bool(
+                    (cve or {}).get("truncated_fields")
+                    or (kev or {}).get("truncated_fields")
+                    or (kev or {}).get("cwes_incomplete")
+                )
+                omitted = int((cve or {}).get("omitted_product_count") or 0) + int(
+                    (cve or {}).get("omitted_version_count") or 0
+                )
+                if (cve or {}).get("status") != "ok":
+                    item["completeness"] = "unavailable"
+                elif truncated or omitted:
+                    item["completeness"] = "partial"
+                else:
+                    item["completeness"] = "complete"
+            filled.append(item)
+        payload["records"] = filled
     return payload
 
 

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Protocol
 
 
@@ -56,3 +56,21 @@ class FrozenClock:
 
     def now(self) -> datetime:
         return self._instant
+
+    def advance(self, seconds: float) -> None:
+        self._instant = self._instant + timedelta(seconds=seconds)
+
+
+class SteppingClock:
+    """Advance on each now() call so start and completion timestamps differ."""
+
+    def __init__(self, instant: datetime, *, step_seconds: float = 1.0) -> None:
+        if instant.tzinfo is None:
+            instant = instant.replace(tzinfo=timezone.utc)
+        self._instant = instant.astimezone(timezone.utc)
+        self._step = timedelta(seconds=step_seconds)
+
+    def now(self) -> datetime:
+        current = self._instant
+        self._instant = self._instant + self._step
+        return current

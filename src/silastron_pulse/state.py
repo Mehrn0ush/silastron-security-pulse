@@ -67,7 +67,9 @@ class PulseState:
     ) -> dict[str, Any] | None:
         for path in (self.published_latest_path(), self.candidate_path()):
             if path.exists():
-                return load_snapshot(path, max_bytes=max_bytes, max_depth=max_depth)
+                return load_snapshot(
+                    path, max_bytes=max_bytes, max_depth=max_depth, compatible=True
+                )
         if required:
             raise ValidationError(
                 "Previous snapshot is required because source state exists, "

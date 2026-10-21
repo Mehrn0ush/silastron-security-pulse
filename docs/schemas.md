@@ -19,7 +19,10 @@ Until publication is approved, `preview/data/manifest.json` and
 ## Snapshot v1 required fields
 
 - `schema_version`: `1.0.0`
-- `snapshot_id`, `generated_at`, `status` (`ok` or `degraded`; `failed` is never promoted)
+- `snapshot_id`, `collection_started_at`, `collection_completed_at`, `generated_at`, `status` (`ok` or `degraded`; `failed` is never promoted)
+- `generated_at` equals `collection_completed_at` (snapshot identity time). `collection_started_at` is when fetches began.
+- `records[].completeness`: `complete`, `partial`, or `unavailable`
+- `records[].cve.omitted_product_count` / `omitted_version_count` when storage bounds drop CNA entries
 - `composite_risk_score`: always `null`
 - `sources.kev|cve|epss`: status, parser version, license, retrieval and source timestamps, revision when the source provides one
 - `records[]`: sorted unique `cve_id`

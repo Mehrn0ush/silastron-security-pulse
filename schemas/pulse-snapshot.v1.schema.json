@@ -7,6 +7,8 @@
   "required": [
     "schema_version",
     "snapshot_id",
+    "collection_started_at",
+    "collection_completed_at",
     "generated_at",
     "status",
     "sources",
@@ -17,6 +19,8 @@
   "properties": {
     "schema_version": { "const": "1.0.0" },
     "snapshot_id": { "type": "string", "minLength": 8 },
+    "collection_started_at": { "type": "string", "minLength": 20 },
+    "collection_completed_at": { "type": "string", "minLength": 20 },
     "generated_at": { "type": "string", "minLength": 20 },
     "status": { "enum": ["ok", "degraded", "failed"] },
     "composite_risk_score": { "type": "null" },
@@ -63,9 +67,10 @@
     },
     "record": {
       "type": "object",
-      "required": ["cve_id", "kev", "cve", "epss", "signals", "links"],
+      "required": ["cve_id", "completeness", "kev", "cve", "epss", "signals", "links"],
       "properties": {
         "cve_id": { "$ref": "#/$defs/cveId" },
+        "completeness": { "enum": ["complete", "partial", "unavailable"] },
         "kev": {
           "type": "object",
           "required": ["listed", "cve_id"],
