@@ -43,6 +43,8 @@ Publication time stored: `dateReleased`
 | Terms of use | https://www.cve.org/Legal/TermsOfUse | VERIFIED |
 | Single-record fetch | `https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/{year}/{n}xxx/{CVE-ID}.json` | VERIFIED live fetch of CVE-2021-44228 on 2026-10-21 |
 | Official download methods | git clone or large release zips | VERIFIED; not used because they are large upstream datasets |
+| Latest change window | `https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/delta.json` | VERIFIED 2026-10-21 HTTP 200, 680 bytes |
+| Official catch-up log | `https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/deltaLog.json` | VERIFIED 2026-10-21 HTTP 200, 29,860,127 bytes — too large for the default 15 MB bound |
 
 ### License — VERIFIED
 
@@ -60,7 +62,14 @@ embed that attribution. The CC0 pull request on cvelistV5 is **not merged**.
   zero-padding or fuzzy match.
 - CVSS is taken only from the CNA container. ADP scores are not substituted.
 - GitHub raw rate limits for 1,700+ sequential fetches are **UNVERIFIED** in
-  production. Collection fails closed on excess failures.
+  production. Collection retries 429/5xx with exponential backoff and
+  Retry-After, then fails closed on excess failures.
+- Incremental strategy **VERIFIED** against official distribution on 2026-10-21:
+  git/zip rejected as large datasets; `delta.json` used as the current window;
+  `deltaLog.json` attempted within byte limits (expected to fail closed at 30 MB
+  and mark completeness incomplete); If-None-Match revalidation of KEV CVE IDs
+  provides catch-up when the log cannot be loaded. Cached records are never
+  presented as verified after a failed refetch.
 
 ### CVE Services API — UNVERIFIED for this pipeline
 

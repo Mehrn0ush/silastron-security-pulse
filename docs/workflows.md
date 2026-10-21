@@ -15,23 +15,27 @@ Pull requests never collect live intelligence and never deploy Pages.
 - Trigger: **workflow_dispatch only**
 - Schedule is present only as a commented example and is **not enabled**
 - Runs only from `main`
-- Permissions: `contents: read`
-- Writes `dist/candidate.json` and uploads artifact `pulse-candidate`
-- Does not commit, does not deploy, and does not update `public/data`
-- If collection fails, the job fails and no candidate artifact is uploaded
+- Permissions: `contents: write` (fast-forward `pulse-state` only), `actions: read`
+- Checks out collector code and `pulse-state`
+- Writes `dist/candidate.json` + `candidate.meta.json`, uploads `pulse-candidate`
+- On success, commits `source/` and `candidates/` to `pulse-state`
+- Does not deploy Pages and does not write `published/`
+- If collection fails, the job fails; last-known-good pulse-state is left in place
 
 Do not enable the cron schedule until the repository owner approves source
 contracts and security review.
 
 ## `publish.yml`
 
-- Trigger: workflow_dispatch with `confirm=PUBLISH`
-- Optional `collect_run_id`
+- Trigger: workflow_dispatch with `confirm=PUBLISH` and **required** `collect_run_id`
 - Runs only from `main`
-- Downloads a successful collect artifact, validates, promotes into `_site/data`,
-  copies the static preview, then deploys GitHub Pages
+- Verifies Collect run repository, workflow identity, branch, success, SHA, artifact
+  name, expiry, and digest before promotion
+- Copies actual `pulse-state/published` into the promote directory so replay is
+  compared against last published state
 - Deploy job permissions: `pages: write`, `id-token: write`
-- Uses the `github-pages` environment so branch protection / reviewers can be added
+- Uses the `github-pages` environment (required reviewers are an owner action)
+- After a successful deploy, commits `published/` to `pulse-state`
 - Untrusted pull requests cannot dispatch this on `main`
 
 Do **not** run this workflow until publication is explicitly approved.

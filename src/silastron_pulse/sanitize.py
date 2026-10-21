@@ -17,24 +17,34 @@ CONTROL_CHARS[10] = ord(" ")
 CONTROL_CHARS[13] = ord(" ")
 
 
-def clean_text(value: object, max_chars: int) -> str | None:
+def clean_text_report(value: object, max_chars: int) -> tuple[str | None, bool]:
     if value is None:
-        return None
+        return None, False
     if not isinstance(value, str):
-        return None
+        return None, False
     text = value.translate(CONTROL_CHARS).strip()
     if not text:
-        return None
+        return None, False
     if len(text) > max_chars:
-        text = text[:max_chars].rstrip() + "…"
+        return text[:max_chars].rstrip() + "…", True
+    return text, False
+
+
+def clean_text(value: object, max_chars: int) -> str | None:
+    text, _truncated = clean_text_report(value, max_chars)
     return text
 
 
 def require_text(value: object, field: str, max_chars: int) -> str:
-    text = clean_text(value, max_chars)
+    text, _truncated = require_text_report(value, field, max_chars)
+    return text
+
+
+def require_text_report(value: object, field: str, max_chars: int) -> tuple[str, bool]:
+    text, truncated = clean_text_report(value, max_chars)
     if text is None:
         raise ValueError(f"Missing or empty field: {field}")
-    return text
+    return text, truncated
 
 
 def is_safe_https_url(value: object, hosts: frozenset[str] | None = None) -> bool:

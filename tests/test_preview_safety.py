@@ -34,6 +34,14 @@ class PreviewSafetyTests(unittest.TestCase):
         self.assertEqual(set(policy["hosts"]), set(ALLOWED_HTTPS_HOSTS))
         self.assertEqual(set(policy["preview_link_hosts"]), set(AUTHORITATIVE_LINK_HOSTS))
 
+    def test_preview_does_not_treat_stale_manifest_flag_as_fresh(self) -> None:
+        source = (ROOT / "preview" / "app.js").read_text(encoding="utf-8")
+        self.assertIn("evaluateFreshness", source)
+        self.assertIn("Date.now()", source)
+        self.assertIn("Information state", source)
+        self.assertNotIn("innerHTML", source)
+        self.assertIn("CVELIST_BLOB", source)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -38,6 +38,13 @@ CVE_LIST_V5_RAW_BASE = (
 CVE_LIST_V5_BLOB_BASE = (
     "https://github.com/CVEProject/cvelistV5/blob/main/"
 )
+CVE_DELTA_JSON_URL = (
+    "https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/delta.json"
+)
+CVE_DELTA_LOG_URL = (
+    "https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/deltaLog.json"
+)
+PULSE_STATE_BRANCH = "pulse-state"
 CVE_RECORD_PAGE_TEMPLATE = "https://www.cve.org/CVERecord?id={cve_id}"
 CVE_TERMS_OF_USE_URL = "https://www.cve.org/Legal/TermsOfUse"
 CVE_SCHEMA_DOCS_URL = "https://github.com/CVEProject/cve-schema"
@@ -88,9 +95,12 @@ DEFAULT_LIMITS = {
     "max_products": 8,
     "max_preview_changes": 50,
     "max_preview_recent": 25,
-    "cve_workers": 4,
+    "cve_workers": 2,
     "cve_min_interval_ms": 50,
+    "http_max_attempts": 3,
+    "http_backoff_seconds": 1,
     "stale_after_hours": 36,
+    "max_cwes": 16,
     "max_cve_failures_ratio": 0.05,
     "max_cve_failures_absolute": 25,
 }

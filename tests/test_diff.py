@@ -40,8 +40,18 @@ class DiffTests(unittest.TestCase):
         self.assertEqual(changes.new_kev_entries, ["CVE-2099-0002"])
         self.assertEqual(changes.updated_kev_entries, ["CVE-2099-0001"])
         self.assertEqual(changes.changed_cve_information, ["CVE-2099-0001"])
+        self.assertEqual(changes.removed_kev_entries, [])
         self.assertEqual(changes.epss_changes, [])
         self.assertIs(removed.cve_id, removed.cve_id)
+
+    def test_removed_kev_entries_are_detected(self) -> None:
+        current = self._entries()
+        previous = copy.deepcopy(current)
+        previous_only = previous["CVE-2099-0002"]
+        current.pop("CVE-2099-0002")
+        changes = detect_changes(previous, current)
+        self.assertEqual(changes.removed_kev_entries, ["CVE-2099-0002"])
+        self.assertEqual(previous_only.cve_id, "CVE-2099-0002")
 
     def test_retrieval_only_changes_are_ignored(self) -> None:
         current = self._entries()

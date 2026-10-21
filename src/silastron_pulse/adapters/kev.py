@@ -18,7 +18,11 @@ from silastron_pulse.http import Fetcher
 from silastron_pulse.ids import parse_cve_id, parse_cwe_id
 from silastron_pulse.jsonutil import load_bounded_json, sha256_bytes
 from silastron_pulse.models import KevRecord, SourceMeta
-from silastron_pulse.sanitize import authoritative_kev_url, clean_text, require_text
+from silastron_pulse.sanitize import (
+    authoritative_kev_url,
+    clean_text_report,
+    require_text_report,
+)
 
 
 @dataclass(frozen=True)
@@ -50,8 +54,8 @@ def parse_kev_catalog(
 ) -> KevCatalog:
     if not isinstance(payload, dict):
         raise ValidationError("KEV payload must be a JSON object")
-    catalog_version = clean_text(payload.get("catalogVersion"), config.max_string_chars)
-    date_released = clean_text(payload.get("dateReleased"), 64)
+    catalog_version, _ = clean_text_report(payload.get("catalogVersion"), config.max_string_chars)
+    date_released, _ = clean_text_report(payload.get("dateReleased"), 64)
     count = payload.get("count")
     vulnerabilities = payload.get("vulnerabilities")
     if not catalog_version:
@@ -113,22 +117,47 @@ def _parse_item(item: object, *, index: int, config: PulseConfig) -> KevRecord:
         cve_id = parse_cve_id(item.get("cveID"))
     except ValidationError as exc:
         raise ValidationError(f"KEV vulnerabilities[{index}] {exc}") from exc
+    truncated: list[str] = []
     try:
-        vendor = require_text(item.get("vendorProject"), "vendorProject", config.max_string_chars)
-        product = require_text(item.get("product"), "product", config.max_string_chars)
-        name = require_text(
+        vendor, t_vendor = require_text_report(
+            item.get("vendorProject"), "vendorProject", config.max_string_chars
+        )
+        product, t_product = require_text_report(
+            item.get("product"), "product", config.max_string_chars
+        )
+        name, t_name = require_text_report(
             item.get("vulnerabilityName"), "vulnerabilityName", config.max_string_chars
         )
-        date_added = require_text(item.get("dateAdded"), "dateAdded", 32)
-        description = require_text(
+        date_added, _ = require_text_report(item.get("dateAdded"), "dateAdded", 32)
+        description, t_desc = require_text_report(
             item.get("shortDescription"), "shortDescription", config.max_description_chars
         )
-        action = require_text(
+        action, t_action = require_text_report(
             item.get("requiredAction"), "requiredAction", config.max_description_chars
         )
-        due_date = require_text(item.get("dueDate"), "dueDate", 32)
+        due_date, _ = require_text_report(item.get("dueDate"), "dueDate", 32)
     except ValueError as exc:
         raise ValidationError(f"KEV {cve_id}: {exc}") from exc
+    if t_vendor:
+        truncated.append("vendor_project")
+    if t_product:
+        truncated.append("product")
+    if t_name:
+        truncated.append("vulnerability_name")
+    if t_desc:
+        truncated.append("short_description")
+    if t_action:
+        truncated.append("required_action")
+
+    ransomware, t_ransom = clean_text_report(item.get("knownRansomwareCampaignUse"), 32)
+    triage, t_triage = clean_text_report(item.get("forensicTriage"), 32)
+    notes, t_notes = clean_text_report(item.get("notes"), config.max_description_chars)
+    if t_ransom:
+        truncated.append("known_ransomware_campaign_use")
+    if t_triage:
+        truncated.append("forensic_triage")
+    if t_notes:
+        truncated.append("notes")
 
     cwes_raw = item.get("cwes") or []
     if cwes_raw is None:
@@ -136,11 +165,21 @@ def _parse_item(item: object, *, index: int, config: PulseConfig) -> KevRecord:
     if not isinstance(cwes_raw, list):
         raise ValidationError(f"KEV {cve_id}: cwes must be an array")
     cwes: list[str] = []
+    skipped = 0
     for cwe in cwes_raw:
         parsed = parse_cwe_id(cwe)
         if parsed:
             cwes.append(parsed)
-    cwes = sorted(set(cwes))
+        else:
+            skipped += 1
+    unique = sorted(set(cwes))
+    cwes_incomplete = skipped > 0 or len(unique) > config.max_cwes
+    if len(unique) > config.max_cwes:
+        unique = unique[: config.max_cwes]
+        truncated.append("cwes")
+    if skipped:
+        truncated.append("cwes_unparsed")
+    cwes = unique
 
     comparable = {
         "cveID": cve_id,
@@ -151,12 +190,12 @@ def _parse_item(item: object, *, index: int, config: PulseConfig) -> KevRecord:
         "shortDescription": description,
         "requiredAction": action,
         "dueDate": due_date,
-        "knownRansomwareCampaignUse": clean_text(
-            item.get("knownRansomwareCampaignUse"), 32
-        ),
-        "forensicTriage": clean_text(item.get("forensicTriage"), 32),
-        "notes": clean_text(item.get("notes"), config.max_description_chars),
+        "knownRansomwareCampaignUse": ransomware,
+        "forensicTriage": triage,
+        "notes": notes,
         "cwes": cwes,
+        "truncated_fields": truncated,
+        "cwes_incomplete": cwes_incomplete,
     }
     return KevRecord(
         cve_id=cve_id,
@@ -167,10 +206,12 @@ def _parse_item(item: object, *, index: int, config: PulseConfig) -> KevRecord:
         short_description=description,
         required_action=action,
         due_date=due_date,
-        known_ransomware_campaign_use=comparable["knownRansomwareCampaignUse"],
-        forensic_triage=comparable["forensicTriage"],
-        notes=comparable["notes"],
+        known_ransomware_campaign_use=ransomware,
+        forensic_triage=triage,
+        notes=notes,
         cwes=cwes,
         source_url=authoritative_kev_url(),
         record_sha256=sha256_bytes(json.dumps(comparable, sort_keys=True).encode("utf-8")),
+        truncated_fields=tuple(truncated),
+        cwes_incomplete=cwes_incomplete,
     )

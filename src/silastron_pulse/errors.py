@@ -10,6 +10,19 @@ class PulseError(Exception):
 class FetchError(PulseError):
     """Network, TLS, size, or redirect failure."""
 
+    def __init__(
+        self,
+        message: str,
+        *,
+        retryable: bool = False,
+        retry_after: float | None = None,
+        status_code: int | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.retryable = retryable
+        self.retry_after = retry_after
+        self.status_code = status_code
+
 
 class UnsafeRedirectError(FetchError):
     """Redirect target left the HTTPS host allowlist."""
@@ -25,6 +38,10 @@ class CorrelationError(PulseError):
 
 class PublishGuardError(PulseError):
     """Refused to replace a valid published snapshot."""
+
+
+class ArtifactVerifyError(PublishGuardError):
+    """Collection artifact failed identity or integrity checks."""
 
 
 class SourceDisabledError(PulseError):

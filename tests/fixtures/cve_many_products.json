@@ -1,0 +1,166 @@
+{
+  "dataType": "CVE_RECORD",
+  "dataVersion": "5.1",
+  "cveMetadata": {
+    "cveId": "CVE-2099-0001",
+    "state": "PUBLISHED",
+    "assignerShortName": "fixture",
+    "datePublished": "2099-01-01T00:00:00.000Z",
+    "dateUpdated": "2099-01-02T00:00:00.000Z"
+  },
+  "containers": {
+    "cna": {
+      "title": "TEST FIXTURE ONLY",
+      "descriptions": [
+        {
+          "lang": "en",
+          "value": "Synthetic CVE record used only for automated tests."
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Vendor 0",
+          "product": "Product 0",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "Vendor 1",
+          "product": "Product 1",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "Vendor 2",
+          "product": "Product 2",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "Vendor 3",
+          "product": "Product 3",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "Vendor 4",
+          "product": "Product 4",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "Vendor 5",
+          "product": "Product 5",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "Vendor 6",
+          "product": "Product 6",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "Vendor 7",
+          "product": "Product 7",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "Vendor 8",
+          "product": "Product 8",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "Vendor 9",
+          "product": "Product 9",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "Vendor 10",
+          "product": "Product 10",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        },
+        {
+          "vendor": "Vendor 11",
+          "product": "Product 11",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected"
+            }
+          ]
+        }
+      ],
+      "metrics": [
+        {
+          "cvssV3_1": {
+            "version": "3.1",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N"
+          }
+        }
+      ]
+    }
+  }
+}

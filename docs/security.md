@@ -19,8 +19,10 @@
 | XSS | Preview uses `textContent` and `createElement`; CSP meta tag |
 | Unsafe URLs | `javascript:`, `data:`, credentials, localhost, and non-allowlisted hosts are dropped |
 | Identifier integrity | Exact CVE ID match; mismatch is a correlation failure |
-| Fail closed | Failed collect writes `collection-status.json` and does not promote |
-| Least privilege | Default `contents: read`; Pages write only on the deploy job |
+| Fail closed | Failed collect writes `collection-status.json` and does not rewrite pulse-state |
+| Artifact identity | Publish requires collect run ID, workflow path/name, digest, and SHA binding |
+| Path-restricted links | Preview and `authoritative_href` allow only KEV catalog, CVE.org record, and cvelistV5 blob paths |
+| Least privilege | Collect may write `pulse-state` only; Pages write only on the deploy job |
 | SHA-pinned actions | See docs/workflows.md |
 | No custom crypto | SHA-256 via hashlib only, for content hashing |
 | No PR deploy | Publish and collect ignore pull requests |

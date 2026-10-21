@@ -38,6 +38,10 @@ class PulseConfig:
     max_preview_changes: int
     max_preview_recent: int
     cve_workers: int
+    cve_min_interval_ms: int
+    http_max_attempts: int
+    http_backoff_seconds: int
+    max_cwes: int
     stale_after_hours: int
     max_cve_failures_ratio: float
     max_cve_failures_absolute: int
@@ -124,6 +128,30 @@ class PulseConfig:
                 defaults["cve_workers"],
                 minimum=1,
                 maximum=8,
+            ),
+            cve_min_interval_ms=_int_env(
+                "PULSE_CVE_MIN_INTERVAL_MS",
+                defaults["cve_min_interval_ms"],
+                minimum=0,
+                maximum=2000,
+            ),
+            http_max_attempts=_int_env(
+                "PULSE_HTTP_MAX_ATTEMPTS",
+                defaults["http_max_attempts"],
+                minimum=1,
+                maximum=8,
+            ),
+            http_backoff_seconds=_int_env(
+                "PULSE_HTTP_BACKOFF_SECONDS",
+                defaults["http_backoff_seconds"],
+                minimum=0,
+                maximum=60,
+            ),
+            max_cwes=_int_env(
+                "PULSE_MAX_CWES",
+                defaults["max_cwes"],
+                minimum=1,
+                maximum=64,
             ),
             stale_after_hours=_int_env(
                 "PULSE_STALE_AFTER_HOURS",

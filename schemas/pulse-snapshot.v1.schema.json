@@ -38,6 +38,7 @@
       "required": [
         "new_kev_entries",
         "updated_kev_entries",
+        "removed_kev_entries",
         "changed_cve_information",
         "epss_changes"
       ]

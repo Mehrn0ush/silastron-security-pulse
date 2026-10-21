@@ -6,7 +6,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from silastron_pulse.adapters.cve import CveEnrichment, enrich_cves
+from silastron_pulse.adapters.cve import (
+    CveEnrichment,
+    cve_record_from_dict,
+    enrich_cves,
+)
 from silastron_pulse.adapters.epss import collect_epss, unavailable_record
 from silastron_pulse.adapters.kev import KevCatalog, fetch_kev_catalog
 from silastron_pulse.clock import Clock, SystemClock, format_datetime
@@ -20,16 +24,18 @@ from silastron_pulse.constants import (
 )
 from silastron_pulse.diff import detect_changes
 from silastron_pulse.errors import FetchError, ValidationError
-from silastron_pulse.models import ChangeSet, PulseEntry, SourceMeta
 from silastron_pulse.http import Fetcher, HttpsFetcher
 from silastron_pulse.ids import cvelist_v5_relpath
 from silastron_pulse.jsonutil import sha256_bytes
+from silastron_pulse.lock import CollectionLock
+from silastron_pulse.models import ChangeSet, KevRecord, PulseEntry, Signals, SourceMeta
 from silastron_pulse.sanitize import authoritative_cve_url, authoritative_kev_url
 from silastron_pulse.signals import build_signals
+from silastron_pulse.state import PulseState
 from silastron_pulse.store import (
     atomic_write_json,
+    load_snapshot,
     promote_snapshot,
-    read_optional_snapshot,
     write_collection_status,
 )
 from silastron_pulse.validate import validate_snapshot
@@ -50,84 +56,44 @@ def collect(
     previous_snapshot_path: Path | None = None,
     promote: bool = False,
     published_dir: Path | None = None,
+    state_dir: Path | None = None,
+    collector_commit_sha: str | None = None,
 ) -> CollectionResult:
     clock = clock or SystemClock()
     fetcher = fetcher or HttpsFetcher(
         timeout_seconds=config.http_timeout_seconds,
         max_redirects=config.max_redirects,
         clock=clock,
+        max_attempts=config.http_max_attempts,
+        backoff_seconds=float(config.http_backoff_seconds),
+        min_interval_ms=config.cve_min_interval_ms,
     )
     now = clock.now()
     generated_at = format_datetime(now)
     output_dir = config.output_dir
     output_dir.mkdir(parents=True, exist_ok=True)
     status_path = output_dir / "collection-status.json"
+    state = PulseState(state_dir) if state_dir is not None else None
+    lock_ctx = (
+        CollectionLock(state.root / ".collect.lock")
+        if state is not None
+        else _NullLock()
+    )
 
     try:
-        kev = fetch_kev_catalog(fetcher, config)
-        cve = enrich_cves([record.cve_id for record in kev.records], fetcher, config)
-        if cve.meta.status == "failed":
-            raise ValidationError(cve.meta.error or "CVE enrichment failed")
-        epss = collect_epss([record.cve_id for record in kev.records], enabled=False)
-        entries = _build_entries(kev, cve, epss)
-        previous = read_optional_snapshot(
-            previous_snapshot_path,
-            max_bytes=config.max_kev_bytes,
-            max_depth=config.max_json_depth,
-        )
-        if previous:
-            previous_entries = _entries_from_snapshot(previous)
-            changes = detect_changes(previous_entries, entries)
-        else:
-            # An initial snapshot has no prior Pulse revision to diff against.
-            changes = ChangeSet()
-        snapshot = _build_snapshot(
-            generated_at=generated_at,
-            kev=kev,
-            cve=cve,
-            epss_meta=epss.meta,
-            entries=entries,
-            changes=changes,
-            config=config,
-        )
-        validate_snapshot(snapshot)
-        candidate_path = output_dir / "candidate.json"
-        atomic_write_json(candidate_path, snapshot)
-        write_collection_status(
-            status_path,
-            {
-                "status": snapshot["status"],
-                "generated_at": generated_at,
-                "snapshot_id": snapshot["snapshot_id"],
-                "record_count": len(snapshot["records"]),
-                "candidate": str(candidate_path),
-                "promoted": False,
-                "error": None,
-            },
-        )
-        if promote:
-            target = published_dir or (output_dir / "published")
-            promote_snapshot(
-                snapshot,
-                target,
+        with lock_ctx:
+            return _collect_locked(
+                config=config,
+                fetcher=fetcher,
+                generated_at=generated_at,
                 now=now,
-                stale_after_hours=config.stale_after_hours,
-                max_bytes=config.max_kev_bytes,
-                max_depth=config.max_json_depth,
+                status_path=status_path,
+                previous_snapshot_path=previous_snapshot_path,
+                promote=promote,
+                published_dir=published_dir,
+                state=state,
+                collector_commit_sha=collector_commit_sha,
             )
-            write_collection_status(
-                status_path,
-                {
-                    "status": snapshot["status"],
-                    "generated_at": generated_at,
-                    "snapshot_id": snapshot["snapshot_id"],
-                    "record_count": len(snapshot["records"]),
-                    "candidate": str(candidate_path),
-                    "promoted": True,
-                    "error": None,
-                },
-            )
-        return CollectionResult(status=snapshot["status"], snapshot=snapshot, error=None)
     except (FetchError, ValidationError, OSError) as exc:
         write_collection_status(
             status_path,
@@ -142,6 +108,216 @@ def collect(
             },
         )
         return CollectionResult(status="failed", snapshot=None, error=str(exc))
+
+
+class _NullLock:
+    def __enter__(self) -> "_NullLock":
+        return self
+
+    def __exit__(self, *args: object) -> None:
+        return None
+
+
+def _collect_locked(
+    *,
+    config: PulseConfig,
+    fetcher: Fetcher,
+    generated_at: str,
+    now: Any,
+    status_path: Path,
+    previous_snapshot_path: Path | None,
+    promote: bool,
+    published_dir: Path | None,
+    state: PulseState | None,
+    collector_commit_sha: str | None,
+) -> CollectionResult:
+    output_dir = config.output_dir
+    previous = _load_previous(
+        previous_snapshot_path=previous_snapshot_path,
+        state=state,
+        max_bytes=config.max_kev_bytes,
+        max_depth=config.max_json_depth,
+    )
+    cache_index, cached_records = _load_cve_cache(state, config)
+    kev = fetch_kev_catalog(fetcher, config)
+    cve = enrich_cves(
+        [record.cve_id for record in kev.records],
+        fetcher,
+        config,
+        cache_index=cache_index,
+        cached_records=cached_records,
+    )
+    if cve.meta.status == "failed":
+        raise ValidationError(cve.meta.error or "CVE enrichment failed")
+    epss = collect_epss([record.cve_id for record in kev.records], enabled=False)
+    entries = _build_entries(kev, cve, epss)
+    if previous:
+        previous_entries = _entries_from_snapshot(previous)
+        changes = detect_changes(previous_entries, entries)
+    else:
+        changes = ChangeSet()
+    source_state_revision = _source_revision(kev, cve)
+    snapshot = _build_snapshot(
+        generated_at=generated_at,
+        kev=kev,
+        cve=cve,
+        epss_meta=epss.meta,
+        entries=entries,
+        changes=changes,
+        config=config,
+        collector_commit_sha=collector_commit_sha,
+        source_state_revision=source_state_revision,
+    )
+    validate_snapshot(snapshot)
+    candidate_path = output_dir / "candidate.json"
+    atomic_write_json(candidate_path, snapshot)
+    digest = sha256_bytes(candidate_path.read_bytes())
+    meta = {
+        "snapshot_id": snapshot["snapshot_id"],
+        "generated_at": generated_at,
+        "collector_commit_sha": collector_commit_sha,
+        "source_state_revision": source_state_revision,
+        "content_sha256": digest,
+        "pipeline_version": PACKAGE_VERSION,
+        "status": snapshot["status"],
+        "cve_strategy": cve.strategy,
+    }
+    atomic_write_json(output_dir / "candidate.meta.json", meta)
+    if state is not None:
+        _persist_state(state, snapshot, meta, kev, cve, generated_at, collector_commit_sha)
+    write_collection_status(
+        status_path,
+        {
+            "status": snapshot["status"],
+            "generated_at": generated_at,
+            "snapshot_id": snapshot["snapshot_id"],
+            "record_count": len(snapshot["records"]),
+            "candidate": str(candidate_path),
+            "promoted": False,
+            "content_sha256": digest,
+            "collector_commit_sha": collector_commit_sha,
+            "source_state_revision": source_state_revision,
+            "error": None,
+        },
+    )
+    if promote:
+        target = published_dir or (output_dir / "published")
+        promote_snapshot(
+            snapshot,
+            target,
+            now=now,
+            stale_after_hours=config.stale_after_hours,
+            max_bytes=config.max_kev_bytes,
+            max_depth=config.max_json_depth,
+        )
+        write_collection_status(
+            status_path,
+            {
+                "status": snapshot["status"],
+                "generated_at": generated_at,
+                "snapshot_id": snapshot["snapshot_id"],
+                "record_count": len(snapshot["records"]),
+                "candidate": str(candidate_path),
+                "promoted": True,
+                "content_sha256": digest,
+                "error": None,
+            },
+        )
+    return CollectionResult(status=snapshot["status"], snapshot=snapshot, error=None)
+
+
+def _load_previous(
+    *,
+    previous_snapshot_path: Path | None,
+    state: PulseState | None,
+    max_bytes: int,
+    max_depth: int,
+) -> dict[str, Any] | None:
+    if previous_snapshot_path is not None:
+        if not previous_snapshot_path.exists():
+            raise ValidationError(
+                f"Previous snapshot is unavailable at {previous_snapshot_path}"
+            )
+        return load_snapshot(
+            previous_snapshot_path, max_bytes=max_bytes, max_depth=max_depth
+        )
+    if state is not None:
+        return state.load_previous_snapshot(
+            max_bytes=max_bytes,
+            max_depth=max_depth,
+            required=state.has_source_state(),
+        )
+    return None
+
+
+def _load_cve_cache(
+    state: PulseState | None, config: PulseConfig
+) -> tuple[dict[str, Any] | None, dict[str, dict[str, Any]]]:
+    if state is None or not state.has_source_state():
+        return None, {}
+    index = state.load_cve_index(max_bytes=config.max_kev_bytes, max_depth=config.max_json_depth)
+    cached: dict[str, dict[str, Any]] = {}
+    records = index.get("records") if isinstance(index.get("records"), dict) else {}
+    for cve_id in records:
+        payload = state.load_json(
+            state.cve_record_path(cve_id),
+            max_bytes=config.max_cve_bytes,
+            max_depth=config.max_json_depth,
+        )
+        if payload:
+            cached[cve_id] = payload
+    return index, cached
+
+
+def _source_revision(kev: KevCatalog, cve: CveEnrichment) -> str:
+    kev_rev = kev.meta.source_revision or kev.meta.content_sha256 or "unknown-kev"
+    cve_rev = cve.meta.source_revision or cve.meta.content_sha256 or "unknown-cve"
+    return f"{kev_rev}:{cve_rev}"
+
+
+def _persist_state(
+    state: PulseState,
+    snapshot: dict[str, Any],
+    meta: dict[str, Any],
+    kev: KevCatalog,
+    cve: CveEnrichment,
+    generated_at: str,
+    collector_commit_sha: str | None,
+) -> None:
+    cve_index = {
+        "delta_fetch_time": cve.delta_fetch_time,
+        "updated_at": generated_at,
+        "strategy": cve.strategy,
+        "records": {
+            cve_id: {
+                "sha256": record.record_sha256,
+                "etag": record.etag,
+                "retrieved_at": record.retrieved_at,
+                "date_updated": record.date_updated,
+                "status": record.status,
+            }
+            for cve_id, record in cve.records.items()
+        },
+    }
+    state.write_source(
+        manifest={
+            "schema_version": "1.0.0",
+            "updated_at": generated_at,
+            "collector_commit_sha": collector_commit_sha,
+            "source_state_revision": meta["source_state_revision"],
+            "kev_revision": kev.meta.source_revision,
+            "cve_revision": cve.meta.source_revision,
+            "record_count": len(kev.records),
+        },
+        kev_meta=kev.meta.to_dict(),
+        kev_catalog={
+            "meta": kev.meta.to_dict(),
+            "records": [record.to_dict() for record in kev.records],
+        },
+        cve_index=cve_index,
+        cve_records={cve_id: record.to_dict() for cve_id, record in cve.records.items()},
+    )
+    state.write_candidate(snapshot, meta)
 
 
 def _build_entries(
@@ -180,24 +356,38 @@ def _build_snapshot(
     entries: dict[str, PulseEntry],
     changes: Any,
     config: PulseConfig,
+    collector_commit_sha: str | None,
+    source_state_revision: str,
 ) -> dict[str, Any]:
     records = [entries[key].to_dict() for key in sorted(entries)]
     status = "ok"
     if cve.meta.status == "degraded":
         status = "degraded"
-    material = f"{kev.meta.content_sha256}:{generated_at}:{SNAPSHOT_SCHEMA_VERSION}"
+    material = f"{kev.meta.content_sha256}:{generated_at}:{SNAPSHOT_SCHEMA_VERSION}:{source_state_revision}"
     snapshot_id = f"{generated_at.replace('-', '').replace(':', '')}_{sha256_bytes(material.encode('utf-8'))[:12]}"
+    truncated_records = [
+        item["cve_id"]
+        for item in records
+        if (item.get("cve") or {}).get("truncated_fields")
+        or (item.get("kev") or {}).get("truncated_fields")
+        or (item.get("kev") or {}).get("cwes_incomplete")
+    ]
     summary = {
         "kev_records": len(kev.records),
         "cve_enriched_ok": sum(1 for item in cve.records.values() if item.status == "ok"),
         "cve_unavailable": sum(
             1 for item in cve.records.values() if item.status != "ok"
         ),
+        "truncated_records": len(truncated_records),
         "epss_enabled": False,
         "new_kev_entries": len(changes.new_kev_entries),
         "updated_kev_entries": len(changes.updated_kev_entries),
+        "removed_kev_entries": len(changes.removed_kev_entries),
         "changed_cve_information": len(changes.changed_cve_information),
         "epss_changes": len(changes.epss_changes),
+        "cve_strategy": cve.strategy,
+        "cve_fetched": len(cve.fetched_ids),
+        "cve_reused": len(cve.reused_ids),
     }
     return {
         "schema_version": SNAPSHOT_SCHEMA_VERSION,
@@ -206,6 +396,10 @@ def _build_snapshot(
         "status": status,
         "pipeline_version": PACKAGE_VERSION,
         "composite_risk_score": None,
+        "binding": {
+            "collector_commit_sha": collector_commit_sha,
+            "source_state_revision": source_state_revision,
+        },
         "consumer_note": (
             "This snapshot is public vulnerability intelligence. It does not "
             "assess whether any Silastron or customer system is affected, "
@@ -223,6 +417,7 @@ def _build_snapshot(
             "max_cve_enrichments": config.max_cve_enrichments,
             "max_preview_changes": config.max_preview_changes,
             "max_preview_recent": config.max_preview_recent,
+            "stale_after_hours": config.stale_after_hours,
         },
         "sources": {
             "kev": kev.meta.to_dict(),
@@ -237,31 +432,13 @@ def _build_snapshot(
 
 def _entries_from_snapshot(payload: dict[str, Any]) -> dict[str, PulseEntry]:
     """Rebuild comparable entries from a previous snapshot JSON."""
-    from silastron_pulse.models import (
-        CveProduct,
-        CveRecord,
-        CveSeverity,
-        EpssRecord,
-        KevRecord,
-        PulseEntry,
-        Signals,
-    )
+    from silastron_pulse.models import EpssRecord, PulseEntry
 
     entries: dict[str, PulseEntry] = {}
     for item in payload.get("records", []):
         kev = item["kev"]
         cve = item["cve"]
         epss = item["epss"]
-        severity_raw = cve.get("severity")
-        severity = None
-        if isinstance(severity_raw, dict) and severity_raw.get("base_score") is not None:
-            severity = CveSeverity(
-                source=severity_raw.get("source") or "cve_cna",
-                cvss_version=str(severity_raw.get("cvss_version") or ""),
-                base_score=float(severity_raw["base_score"]),
-                base_severity=severity_raw.get("base_severity"),
-                vector=severity_raw.get("vector"),
-            )
         kev_record = KevRecord(
             cve_id=kev["cve_id"],
             vendor_project=kev["vendor_project"],
@@ -277,32 +454,10 @@ def _entries_from_snapshot(payload: dict[str, Any]) -> dict[str, PulseEntry]:
             cwes=list(kev.get("cwes") or []),
             source_url=kev.get("source_url") or "",
             record_sha256=kev.get("record_sha256") or "",
+            truncated_fields=tuple(kev.get("truncated_fields") or ()),
+            cwes_incomplete=bool(kev.get("cwes_incomplete")),
         )
-        cve_record = CveRecord(
-            cve_id=cve["cve_id"],
-            state=cve.get("state") or "UNKNOWN",
-            data_version=cve.get("data_version"),
-            date_published=cve.get("date_published"),
-            date_updated=cve.get("date_updated"),
-            assigner_short_name=cve.get("assigner_short_name"),
-            title=cve.get("title"),
-            description=cve.get("description"),
-            severity=severity,
-            products=[
-                CveProduct(
-                    vendor=prod.get("vendor"),
-                    product=prod.get("product"),
-                    status=prod.get("status"),
-                    versions=list(prod.get("versions") or []),
-                )
-                for prod in cve.get("products") or []
-            ],
-            source_url=cve.get("source_url") or "",
-            record_page_url=cve.get("record_page_url") or "",
-            record_sha256=cve.get("record_sha256") or "",
-            status=cve.get("status") or "unavailable",
-            error=cve.get("error"),
-        )
+        cve_record = cve_record_from_dict(cve, cached=bool(cve.get("cached")))
         epss_record = EpssRecord(
             status=epss.get("status") or "unavailable",
             cve_id=epss.get("cve_id") or item["cve_id"],

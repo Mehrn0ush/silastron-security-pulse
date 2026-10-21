@@ -74,6 +74,18 @@ def validate_snapshot(payload: object) -> dict[str, Any]:
     changes = payload.get("changes")
     if not isinstance(changes, dict):
         raise ValidationError("Snapshot changes must be an object")
+    for key in (
+        "new_kev_entries",
+        "updated_kev_entries",
+        "removed_kev_entries",
+        "changed_cve_information",
+        "epss_changes",
+    ):
+        if key not in changes or not isinstance(changes[key], list):
+            raise ValidationError(f"Snapshot changes.{key} must be an array")
+    kev_meta = sources.get("kev") or {}
+    if payload["status"] in {"ok", "degraded"} and not kev_meta.get("retrieved_at"):
+        raise ValidationError("Snapshot sources.kev.retrieved_at is required")
     return payload
 
 

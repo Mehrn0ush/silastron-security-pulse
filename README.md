@@ -20,6 +20,8 @@ severity, product affectedness, and deployment exposure into a risk score.
 ## Documentation
 
 - [Architecture](docs/architecture.md)
+- [Collection-state architecture](docs/collection-state.md)
+- [Audit finding status](docs/audit-findings.md)
 - [Source integration contracts](docs/source-contracts.md)
 - [Data schemas](docs/schemas.md)
 - [Local development](docs/local-development.md)

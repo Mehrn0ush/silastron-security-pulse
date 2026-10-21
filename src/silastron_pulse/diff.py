@@ -22,4 +22,7 @@ def detect_changes(
         if previous.epss.comparable() != current.epss.comparable():
             if current.epss.status == "ok" or previous.epss.status == "ok":
                 changes.epss_changes.append(cve_id)
+    for cve_id in sorted(previous_entries):
+        if cve_id not in current_entries:
+            changes.removed_kev_entries.append(cve_id)
     return changes

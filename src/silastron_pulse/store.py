@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from silastron_pulse.clock import format_datetime
+from silastron_pulse.clock import format_datetime, parse_generated_at as parse_clock
 from silastron_pulse.constants import MANIFEST_SCHEMA_VERSION, PREVIEW_SCHEMA_VERSION
 from silastron_pulse.errors import PublishGuardError, ValidationError
 from silastron_pulse.jsonutil import dump_bytes, load_bounded_json
@@ -38,12 +38,10 @@ def load_snapshot(path: Path, *, max_bytes: int, max_depth: int) -> dict[str, An
 
 
 def parse_generated_at(value: str) -> datetime:
-    for fmt in ("%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%dT%H:%M:%S.%fZ"):
-        try:
-            return datetime.strptime(value, fmt).replace(tzinfo=timezone.utc)
-        except ValueError:
-            continue
-    raise ValidationError(f"Invalid generated_at timestamp: {value!r}")
+    try:
+        return parse_clock(value)
+    except ValueError as exc:
+        raise ValidationError(str(exc)) from exc
 
 
 def promote_snapshot(
@@ -54,6 +52,8 @@ def promote_snapshot(
     stale_after_hours: int,
     max_bytes: int,
     max_depth: int,
+    allow_older: bool = False,
+    rollback_of: str | None = None,
 ) -> dict[str, Any]:
     try:
         candidate = validate_snapshot(candidate)
@@ -66,9 +66,21 @@ def promote_snapshot(
 
     published_dir.mkdir(parents=True, exist_ok=True)
     latest_path = published_dir / "latest.json"
+    current = None
     if latest_path.exists():
         current = load_snapshot(latest_path, max_bytes=max_bytes, max_depth=max_depth)
-        _guard_against_regression(current, candidate)
+        _guard_against_regression(
+            current,
+            candidate,
+            published_dir=published_dir,
+            max_bytes=max_bytes,
+            max_depth=max_depth,
+            allow_older=allow_older,
+        )
+        if candidate.get("snapshot_id") == current.get("snapshot_id"):
+            return load_json_file(
+                published_dir / "manifest.json", max_bytes=max_bytes, max_depth=max_depth
+            )
 
     snapshot_name = f"{candidate['snapshot_id']}.json"
     snapshot_path = published_dir / "snapshots" / snapshot_name
@@ -85,25 +97,106 @@ def promote_snapshot(
         snapshot_relpath=f"snapshots/{snapshot_name}",
         now=now,
         stale_after_hours=stale_after_hours,
+        rollback_of=rollback_of,
     )
     atomic_write_json(published_dir / "manifest.json", manifest)
+    _record_history(published_dir, candidate["snapshot_id"])
     validate_manifest(manifest)
     return manifest
 
 
-def _guard_against_regression(current: dict[str, Any], candidate: dict[str, Any]) -> None:
+def rollback_snapshot(
+    published_dir: Path,
+    snapshot_id: str,
+    *,
+    now: datetime,
+    stale_after_hours: int,
+    max_bytes: int,
+    max_depth: int,
+    confirm: str,
+) -> dict[str, Any]:
+    if confirm != "ROLLBACK":
+        raise PublishGuardError("Rollback requires explicit confirm=ROLLBACK")
+    path = published_dir / "snapshots" / f"{snapshot_id}.json"
+    if not path.exists():
+        raise PublishGuardError(f"No archived snapshot {snapshot_id}")
+    candidate = load_snapshot(path, max_bytes=max_bytes, max_depth=max_depth)
+    latest_path = published_dir / "latest.json"
+    previous_id = None
+    if latest_path.exists():
+        current = load_snapshot(latest_path, max_bytes=max_bytes, max_depth=max_depth)
+        previous_id = current["snapshot_id"]
+        if previous_id == snapshot_id:
+            raise PublishGuardError("Published snapshot is already at the requested revision")
+    return promote_snapshot(
+        candidate,
+        published_dir,
+        now=now,
+        stale_after_hours=stale_after_hours,
+        max_bytes=max_bytes,
+        max_depth=max_depth,
+        allow_older=True,
+        rollback_of=previous_id,
+    )
+
+
+def _guard_against_regression(
+    current: dict[str, Any],
+    candidate: dict[str, Any],
+    *,
+    published_dir: Path,
+    max_bytes: int,
+    max_depth: int,
+    allow_older: bool,
+) -> None:
+    if candidate.get("snapshot_id") == current.get("snapshot_id"):
+        return
+    history = _load_history(published_dir, max_bytes=max_bytes, max_depth=max_depth)
+    if candidate["snapshot_id"] in history and not allow_older:
+        raise PublishGuardError(
+            "Refusing to replay a superseded snapshot; use the explicit rollback command"
+        )
     if candidate["status"] == "degraded" and current["status"] == "ok":
-        # Degraded may still be meaningful, but never if it has fewer records.
         if len(candidate["records"]) < len(current["records"]) * 0.9:
             raise PublishGuardError(
                 "Degraded candidate dropped more than 10% of records versus the current snapshot"
             )
     current_ts = parse_generated_at(current["generated_at"])
     candidate_ts = parse_generated_at(candidate["generated_at"])
-    if candidate_ts < current_ts:
+    if candidate_ts < current_ts and not allow_older:
         raise PublishGuardError("Refusing to replace a newer snapshot with an older one")
-    if candidate.get("snapshot_id") == current.get("snapshot_id"):
-        return
+
+
+def _history_path(published_dir: Path) -> Path:
+    return published_dir / "history.json"
+
+
+def _load_history(published_dir: Path, *, max_bytes: int, max_depth: int) -> list[str]:
+    path = _history_path(published_dir)
+    if not path.exists():
+        current = published_dir / "latest.json"
+        if current.exists():
+            snapshot = load_json_file(current, max_bytes=max_bytes, max_depth=max_depth)
+            identity = snapshot.get("snapshot_id")
+            return [identity] if isinstance(identity, str) else []
+        return []
+    payload = load_json_file(path, max_bytes=max_bytes, max_depth=max_depth)
+    ids = payload.get("snapshot_ids") or []
+    return [item for item in ids if isinstance(item, str)]
+
+
+def _record_history(published_dir: Path, snapshot_id: str) -> None:
+    path = _history_path(published_dir)
+    ids: list[str] = []
+    if path.exists():
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            ids = [item for item in payload.get("snapshot_ids") or [] if isinstance(item, str)]
+        except (OSError, json.JSONDecodeError):
+            ids = []
+    if snapshot_id not in ids:
+        ids.append(snapshot_id)
+    atomic_write_json(path, {"snapshot_ids": ids, "current": snapshot_id})
 
 
 def build_manifest(
@@ -112,6 +205,7 @@ def build_manifest(
     snapshot_relpath: str,
     now: datetime,
     stale_after_hours: int,
+    rollback_of: str | None = None,
 ) -> dict[str, Any]:
     generated = parse_generated_at(snapshot["generated_at"])
     age_hours = (now.astimezone(timezone.utc) - generated).total_seconds() / 3600.0
@@ -130,10 +224,13 @@ def build_manifest(
         "stale_after_hours": stale_after_hours,
         "age_hours": round(age_hours, 3),
         "sources": snapshot.get("sources", {}),
-        "publication_state": "published",
+        "publication_state": "rolled_back" if rollback_of else "published",
+        "rollback_of": rollback_of,
         "note": (
-            "Consumers must honor stale=true and must not treat estimated "
-            "signals as confirmed exploitation."
+            "stale/fresh in this file are computed at promote time only. "
+            "Consumers must recompute freshness at viewing time from "
+            "snapshot_generated_at and stale_after_hours. Do not treat "
+            "estimated signals as confirmed exploitation."
         ),
     }
 
@@ -144,17 +241,29 @@ def build_preview_document(snapshot: dict[str, Any]) -> dict[str, Any]:
     for kind, key in (
         ("new_kev_entry", "new_kev_entries"),
         ("updated_kev_entry", "updated_kev_entries"),
+        ("removed_kev_entry", "removed_kev_entries"),
         ("changed_cve_information", "changed_cve_information"),
         ("epss_change", "epss_changes"),
     ):
         for cve_id in changes.get(key, []):
             change_rows.append({"cve_id": cve_id, "change": kind})
     records_by_id = {item["cve_id"]: item for item in snapshot.get("records", [])}
+    sources = snapshot.get("sources") or {}
     preview_changes = []
     for row in change_rows[: snapshot.get("limits", {}).get("max_preview_changes", 50)]:
         record = records_by_id.get(row["cve_id"])
         if record:
-            preview_changes.append(_preview_row(record, row["change"]))
+            preview_changes.append(_preview_row(record, row["change"], sources))
+        elif row["change"] == "removed_kev_entry":
+            preview_changes.append(
+                {
+                    "cve_id": row["cve_id"],
+                    "change": "removed_kev_entry",
+                    "kev_listed": False,
+                    "cve_status": "removed",
+                    "links": {},
+                }
+            )
     recent = []
     sorted_records = sorted(
         snapshot.get("records", []),
@@ -163,7 +272,7 @@ def build_preview_document(snapshot: dict[str, Any]) -> dict[str, Any]:
     )
     limit = snapshot.get("limits", {}).get("max_preview_recent", 25)
     for record in sorted_records[:limit]:
-        recent.append(_preview_row(record, "recent_kev_addition"))
+        recent.append(_preview_row(record, "recent_kev_addition", sources))
     return {
         "schema_version": PREVIEW_SCHEMA_VERSION,
         "snapshot_id": snapshot["snapshot_id"],
@@ -178,12 +287,14 @@ def build_preview_document(snapshot: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _preview_row(record: dict[str, Any], change: str) -> dict[str, Any]:
+def _preview_row(record: dict[str, Any], change: str, sources: dict[str, Any]) -> dict[str, Any]:
     cve = record.get("cve") or {}
     kev = record.get("kev") or {}
     epss = record.get("epss") or {}
     links = record.get("links") or {}
     severity = (cve.get("severity") or {}) if isinstance(cve.get("severity"), dict) else {}
+    kev_source = sources.get("kev") or {}
+    truncated = list(cve.get("truncated_fields") or []) + list(kev.get("truncated_fields") or [])
     return {
         "cve_id": record["cve_id"],
         "change": change,
@@ -199,13 +310,19 @@ def _preview_row(record: dict[str, Any], change: str) -> dict[str, Any]:
         "cvss_base_score": severity.get("base_score"),
         "epss_status": epss.get("status"),
         "epss_score": epss.get("score"),
+        "truncated_fields": truncated,
+        "partial": bool(truncated) or cve.get("status") != "ok",
         "links": {
             "cve_record": links.get("cve_record"),
             "kev_catalog": links.get("kev_catalog"),
             "cvelist_v5": links.get("cvelist_v5"),
         },
-        "retrieved_at": (record.get("sources_retrieved") or {}).get("kev"),
-        "source_published_at": kev.get("date_added"),
+        "kev_retrieved_at": kev_source.get("retrieved_at"),
+        "kev_source_published_at": kev_source.get("source_published_at"),
+        "cve_retrieved_at": cve.get("retrieved_at"),
+        "cve_source_updated_at": cve.get("date_updated"),
+        "retrieved_at": cve.get("retrieved_at") or kev_source.get("retrieved_at"),
+        "source_published_at": kev_source.get("source_published_at") or kev.get("date_added"),
     }
 
 

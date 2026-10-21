@@ -19,13 +19,18 @@ review. The checked-in preview manifest is `unpublished`.
 
 ## Rollback
 
-Promote never deletes previous snapshot files under `snapshots/`. Rollback is:
+Promote never deletes previous snapshot files under `snapshots/`. Replaying a
+superseded snapshot through ordinary promote is rejected. Rollback is explicit:
 
-1. Choose a known-good `snapshots/{id}.json`.
-2. Run promote against that file, or re-deploy a previous Pages artifact.
-3. Do not hand-edit `latest.json`.
-4. If a bad deploy occurred, disable Pages or redeploy the unpublished
-   placeholder until a good snapshot is available.
+```bash
+PYTHONPATH=src python3 -m silastron_pulse rollback \
+  --published-dir published \
+  --snapshot-id '<id>' \
+  --confirm ROLLBACK
+```
+
+Do not hand-edit `latest.json`. If a bad deploy occurred, disable Pages or
+redeploy the unpublished placeholder until a good snapshot is available.
 
 Failed collections leave the last promoted snapshot in place.
 

@@ -13,6 +13,15 @@ def format_datetime(value: datetime) -> str:
     return value.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
+def parse_generated_at(value: str) -> datetime:
+    for fmt in ("%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%dT%H:%M:%S.%fZ"):
+        try:
+            return datetime.strptime(value, fmt).replace(tzinfo=timezone.utc)
+        except ValueError:
+            continue
+    raise ValueError(f"Invalid generated_at timestamp: {value!r}")
+
+
 class Clock(Protocol):
     def now(self) -> datetime:
         ...

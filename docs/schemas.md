@@ -26,7 +26,12 @@ Until publication is approved, `preview/data/manifest.json` and
 - `records[].kev.listed`: always `true` in this pipeline
 - `records[].signals`: five independent objects
 - `records[].links`: constructed HTTPS URLs to CVE.org, CISA KEV, and CVE List V5
-- `changes`: new KEV, updated KEV, changed CVE information, EPSS changes
+- `changes`: new KEV, updated KEV, **removed KEV**, changed CVE information, EPSS changes
+- `binding.collector_commit_sha`, `binding.source_state_revision`
+- `sources.kev.retrieved_at` required on successful snapshots
+
+Consumers must recompute freshness at viewing time from `snapshot_generated_at`
+and `stale_after_hours`. Manifest `stale`/`fresh` are promote-time hints only.
 
 ## Manifest v1
 

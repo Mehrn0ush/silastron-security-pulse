@@ -6,7 +6,14 @@ from urllib.request import Request
 
 from silastron_pulse.constants import ALLOWED_HTTPS_HOSTS
 from silastron_pulse.errors import FetchError, UnsafeRedirectError
-from silastron_pulse.http import FetchResult, HttpsFetcher, MapFetcher, _AllowlistRedirectHandler
+from silastron_pulse.http import (
+    FetchResult,
+    HttpsFetcher,
+    MapFetcher,
+    RetryingFetcher,
+    ScriptedFetcher,
+    _AllowlistRedirectHandler,
+)
 
 
 class HttpTests(unittest.TestCase):
@@ -69,6 +76,14 @@ class HttpTests(unittest.TestCase):
                 {},
                 "https://www.cve.org/again",
             )
+
+    def test_retrying_fetcher_gives_up_on_non_retryable(self) -> None:
+        url = "https://www.cisa.gov/x.json"
+        inner = ScriptedFetcher({url: [FetchError("HTTP 404", retryable=False, status_code=404)]})
+        fetcher = RetryingFetcher(inner, max_attempts=3)
+        with self.assertRaises(FetchError):
+            fetcher.get(url, max_bytes=100)
+        self.assertEqual(len(inner.calls), 1)
 
 
 if __name__ == "__main__":

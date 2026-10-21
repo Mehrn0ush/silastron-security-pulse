@@ -65,6 +65,8 @@ class KevRecord:
     cwes: list[str]
     source_url: str
     record_sha256: str
+    truncated_fields: tuple[str, ...] = ()
+    cwes_incomplete: bool = False
 
     def comparable(self) -> dict[str, Any]:
         return {
@@ -80,6 +82,8 @@ class KevRecord:
             "forensic_triage": self.forensic_triage,
             "notes": self.notes,
             "cwes": list(self.cwes),
+            "truncated_fields": list(self.truncated_fields),
+            "cwes_incomplete": self.cwes_incomplete,
         }
 
     def to_dict(self) -> dict[str, Any]:
@@ -99,6 +103,8 @@ class KevRecord:
             "cwes": list(self.cwes),
             "source_url": self.source_url,
             "record_sha256": self.record_sha256,
+            "truncated_fields": list(self.truncated_fields),
+            "cwes_incomplete": self.cwes_incomplete,
         }
 
 
@@ -153,6 +159,11 @@ class CveRecord:
     record_sha256: str
     status: SourceStatus = "ok"
     error: str | None = None
+    retrieved_at: str | None = None
+    last_checked_at: str | None = None
+    etag: str | None = None
+    truncated_fields: tuple[str, ...] = ()
+    cached: bool = False
 
     def comparable(self) -> dict[str, Any]:
         return {
@@ -167,6 +178,7 @@ class CveRecord:
             "severity": self.severity.to_dict() if self.severity else None,
             "products": [item.to_dict() for item in self.products],
             "status": self.status,
+            "truncated_fields": list(self.truncated_fields),
         }
 
     def to_dict(self) -> dict[str, Any]:
@@ -186,6 +198,11 @@ class CveRecord:
             "record_page_url": self.record_page_url,
             "record_sha256": self.record_sha256,
             "error": self.error,
+            "retrieved_at": self.retrieved_at,
+            "last_checked_at": self.last_checked_at,
+            "etag": self.etag,
+            "truncated_fields": list(self.truncated_fields),
+            "cached": self.cached,
         }
 
 
@@ -265,6 +282,7 @@ class PulseEntry:
 class ChangeSet:
     new_kev_entries: list[str] = field(default_factory=list)
     updated_kev_entries: list[str] = field(default_factory=list)
+    removed_kev_entries: list[str] = field(default_factory=list)
     changed_cve_information: list[str] = field(default_factory=list)
     epss_changes: list[str] = field(default_factory=list)
 
@@ -272,6 +290,7 @@ class ChangeSet:
         return {
             "new_kev_entries": list(self.new_kev_entries),
             "updated_kev_entries": list(self.updated_kev_entries),
+            "removed_kev_entries": list(self.removed_kev_entries),
             "changed_cve_information": list(self.changed_cve_information),
             "epss_changes": list(self.epss_changes),
         }
@@ -280,6 +299,7 @@ class ChangeSet:
         return not (
             self.new_kev_entries
             or self.updated_kev_entries
+            or self.removed_kev_entries
             or self.changed_cve_information
             or self.epss_changes
         )

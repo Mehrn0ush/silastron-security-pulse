@@ -41,6 +41,10 @@ class PipelineTests(unittest.TestCase):
         self.assertTrue(
             snapshot["records"][0]["signals"]["confirmed_exploitation"]["value"]
         )
+        self.assertTrue(snapshot["sources"]["kev"]["retrieved_at"])
+        self.assertTrue(snapshot["sources"]["cve"]["retrieved_at"])
+        self.assertIn("removed_kev_entries", snapshot["changes"])
+        self.assertIn("binding", snapshot)
 
     def test_source_failure_does_not_replace_published_snapshot(self) -> None:
         first = collect(

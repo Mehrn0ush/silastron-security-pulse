@@ -1,14 +1,11 @@
 (function () {
   "use strict";
 
-  var ALLOWED_HOSTS = {
-    "www.cisa.gov": true,
-    "cisa.gov": true,
-    "www.cve.org": true,
-    "cve.org": true,
-    "github.com": true,
-    "www.first.org": true,
-  };
+  var CVE_ID = /^CVE-[0-9]{4}-[0-9]{4,}$/;
+  var CVE_PATH = "/CVERecord";
+  var KEV_PATH = "/known-exploited-vulnerabilities-catalog";
+  var CVELIST_BLOB =
+    /^\/CVEProject\/cvelistV5\/blob\/main\/cves\/[0-9]{4}\/[0-9]+xxx\/CVE-[0-9]{4}-[0-9]{4,}\.json$/;
 
   var statusBanner = document.getElementById("status-banner");
   var statusDetails = document.getElementById("status-details");
@@ -31,6 +28,19 @@
     statusDetails.appendChild(dd);
   }
 
+  function evaluateFreshness(generatedAt, staleAfterHours, nowMs) {
+    var generated = Date.parse(generatedAt);
+    if (!isFinite(generated)) {
+      return { stale: true, fresh: false, ageHours: null, invalid: true };
+    }
+    var ageHours = (nowMs - generated) / 3600000;
+    if (ageHours < 0) {
+      return { stale: true, fresh: false, ageHours: ageHours, invalid: true };
+    }
+    var stale = ageHours > Number(staleAfterHours || 36);
+    return { stale: stale, fresh: !stale, ageHours: ageHours, invalid: false };
+  }
+
   function safeHttpsUrl(value) {
     if (typeof value !== "string") {
       return null;
@@ -46,10 +56,25 @@
       if (parsed.port && parsed.port !== "443") {
         return null;
       }
-      if (!ALLOWED_HOSTS[parsed.hostname]) {
-        return null;
+      var host = parsed.hostname;
+      var path = parsed.pathname || "";
+      if (host === "www.cisa.gov" || host === "cisa.gov") {
+        return path.replace(/\/$/, "") === KEV_PATH ? parsed.href : null;
       }
-      return parsed.href;
+      if (host === "www.cve.org" || host === "cve.org") {
+        if (path !== CVE_PATH) {
+          return null;
+        }
+        var cveId = parsed.searchParams.get("id");
+        if (!cveId || !CVE_ID.test(cveId)) {
+          return null;
+        }
+        return parsed.href;
+      }
+      if (host === "github.com") {
+        return CVELIST_BLOB.test(path) ? parsed.href : null;
+      }
+      return null;
     } catch (err) {
       return null;
     }
@@ -97,9 +122,14 @@
       var change = document.createElement("td");
       change.textContent = asText(row.change);
       var kev = document.createElement("td");
-      kev.textContent = row.kev_listed
-        ? "Listed (" + asText(row.kev_date_added) + ")"
-        : "Not listed";
+      if (row.kev_listed) {
+        kev.textContent = "Listed (" + asText(row.kev_date_added) + ")";
+      } else {
+        kev.textContent = "Not listed";
+      }
+      if (row.partial) {
+        kev.appendChild(document.createTextNode(" · partial"));
+      }
       var product = document.createElement("div");
       product.textContent =
         asText(row.vendor_project) + " / " + asText(row.product);
@@ -116,10 +146,14 @@
       addLink(links, row.links && row.links.cvelist_v5, "CVE List V5");
       var time = document.createElement("td");
       time.textContent =
-        "KEV added " +
-        asText(row.kev_date_added) +
+        "KEV published " +
+        asText(row.kev_source_published_at || row.source_published_at) +
+        "; KEV retrieved " +
+        asText(row.kev_retrieved_at) +
         "; CVE updated " +
-        asText(row.cve_date_updated);
+        asText(row.cve_date_updated || row.cve_source_updated_at) +
+        "; CVE retrieved " +
+        asText(row.cve_retrieved_at || row.retrieved_at);
       tr.appendChild(cve);
       tr.appendChild(change);
       tr.appendChild(kev);
@@ -164,31 +198,60 @@
         );
         appendMeta("Status", "Not published");
         appendMeta("Generated at", manifest.generated_at);
+        appendMeta("Information state", "unavailable");
         changesNote.textContent = "No approved snapshot has been published.";
         renderRows([]);
         return;
       }
-      if (manifest.stale) {
+      var freshness = evaluateFreshness(
+        manifest.snapshot_generated_at || manifest.generated_at,
+        manifest.stale_after_hours || 36,
+        Date.now()
+      );
+      var infoState = "verified";
+      if (freshness.invalid) {
+        infoState = "unavailable";
+        setBanner(
+          "unavailable",
+          "Snapshot timestamps are invalid. Do not treat this page as intelligence."
+        );
+      } else if (freshness.stale) {
+        infoState = "stale";
         setBanner(
           "stale",
-          "The published snapshot is stale. Do not treat it as a fresh collection."
+          "The published snapshot is stale at viewing time. Do not treat it as a fresh collection."
         );
       } else if (manifest.status === "degraded") {
+        infoState = "partial";
         setBanner(
           "warn",
-          "The published snapshot is degraded. Some CVE enrichments were unavailable."
+          "The published snapshot is partial. Some CVE enrichments were unavailable or truncated."
         );
       } else if (manifest.status === "ok") {
-        setBanner("ok", "Published snapshot is available.");
+        infoState = "verified";
+        setBanner("ok", "Published snapshot is available and fresh at viewing time.");
       } else {
+        infoState = "unavailable";
         setBanner("unavailable", "Published snapshot is unavailable.");
       }
       appendMeta("Status", manifest.status);
-      appendMeta("Fresh", manifest.fresh ? "yes" : "no");
-      appendMeta("Stale", manifest.stale ? "yes" : "no");
+      appendMeta("Information state", infoState);
+      appendMeta("Fresh at viewing time", freshness.fresh ? "yes" : "no");
+      appendMeta("Stale at viewing time", freshness.stale ? "yes" : "no");
+      appendMeta(
+        "Age hours at viewing time",
+        freshness.ageHours === null ? "Unavailable" : String(Math.round(freshness.ageHours * 1000) / 1000)
+      );
       appendMeta("Snapshot generated at", manifest.snapshot_generated_at);
       appendMeta("Manifest generated at", manifest.generated_at);
       appendMeta("Record count", manifest.record_count);
+      var sources = (preview && preview.sources) || manifest.sources || {};
+      var kev = sources.kev || {};
+      var cve = sources.cve || {};
+      appendMeta("KEV source published at", kev.source_published_at);
+      appendMeta("KEV retrieved at", kev.retrieved_at);
+      appendMeta("CVE source updated at", cve.source_updated_at);
+      appendMeta("CVE retrieved at", cve.retrieved_at);
       if (!preview) {
         changesNote.textContent = "Preview document unavailable.";
         renderRows([]);

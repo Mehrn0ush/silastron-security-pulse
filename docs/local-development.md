@@ -16,11 +16,12 @@ tests. To collect from the real CISA and CVE List V5 endpoints:
 
 ```bash
 export PYTHONPATH=src
-python3 -m silastron_pulse collect --output-dir dist
+python3 -m silastron_pulse collect --output-dir dist --state-dir /tmp/pulse-state
 ```
 
-That command performs live HTTPS GETs. Do not run it against production
-publication directories until source contracts are approved.
+That command performs live HTTPS GETs. Do not run it until you have read the
+network-cost note in docs/audit-findings.md and docs/limitations.md. Do not
+point it at production publication directories.
 
 ## Local preview
 
@@ -35,7 +36,8 @@ an unpublished placeholder, so the UI must show an unavailable state.
 
 | Command | Effect |
 | --- | --- |
-| `python3 -m silastron_pulse collect --output-dir dist` | Write `candidate.json` |
+| `python3 -m silastron_pulse collect --output-dir dist --state-dir ./pulse-state` | Write candidate + local source state |
+| `python3 -m silastron_pulse rollback --published-dir public/data --snapshot-id ID --confirm ROLLBACK` | Explicit rollback |
 | `python3 -m silastron_pulse validate dist/candidate.json` | Schema/semantic validation |
 | `python3 -m silastron_pulse promote --candidate dist/candidate.json --published-dir public/data` | Atomic replace of published files |
 | `python3 -m silastron_pulse write-unpublished --published-dir public/data` | Restore unpublished placeholders |
