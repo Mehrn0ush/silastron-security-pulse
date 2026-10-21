@@ -1,5 +1,7 @@
 name: CI
 
+# Comment-only change to reindex GitHub Actions workflow files.
+
 on:
   push:
     branches: [main]
