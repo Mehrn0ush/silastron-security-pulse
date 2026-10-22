@@ -15,44 +15,139 @@
     <a class="skip-link" href="#main">Skip to content</a>
     <header>
       <p class="eyebrow">Silastron Security Pulse</p>
-      <h1>Public vulnerability intelligence preview</h1>
+      <h1>Known exploited vulnerability intelligence</h1>
       <p class="lede">
-        This page shows a bounded GitHub Pages preview of the Security Pulse
-        snapshot. It is not a statement about Silastron.com exposure, and it
-        does not combine signals into a risk score.
+        Public CISA KEV and CVE List V5 snapshot. Signals stay separate: this
+        page does not compute a risk score and does not claim Silastron.com or
+        customer exposure.
       </p>
+      <nav class="page-nav" aria-label="Page">
+        <a href="#overview">Overview</a>
+        <a href="#recent">Recently added</a>
+        <a href="#catalog">Catalog search</a>
+        <a href="#signals">How to read</a>
+        <a href="#provenance">Data provenance</a>
+      </nav>
     </header>
     <main id="main">
-      <section aria-labelledby="status-heading">
-        <h2 id="status-heading">Publication status</h2>
-        <p id="status-banner" class="banner" role="status" aria-live="polite">
-          Loading publication status.
+      <p id="status-banner" class="banner" role="status" aria-live="polite">
+        Loading publication status.
+      </p>
+      <noscript>
+        <p class="banner unavailable">
+          JavaScript is required to render the published snapshot. No
+          intelligence is shown without it.
         </p>
-        <dl id="status-details" class="meta-list"></dl>
+      </noscript>
+
+      <section id="overview" aria-labelledby="overview-heading">
+        <h2 id="overview-heading">Overview</h2>
+        <div id="overview-cards" class="cards"></div>
       </section>
-      <section aria-labelledby="changes-heading">
-        <h2 id="changes-heading">Recent meaningful changes</h2>
-        <p id="changes-note">Waiting for snapshot data.</p>
+
+      <section id="recent" aria-labelledby="recent-heading">
+        <h2 id="recent-heading">Recently Added to CISA KEV</h2>
+        <p id="recent-note">Waiting for snapshot data.</p>
         <div class="table-wrap">
           <table>
-            <caption class="visually-hidden">
-              Recent KEV and CVE changes
+            <caption id="recent-caption" class="visually-hidden">
+              Recently added CISA KEV entries
             </caption>
             <thead>
               <tr>
                 <th scope="col">CVE</th>
-                <th scope="col">Change</th>
-                <th scope="col">KEV</th>
+                <th scope="col" id="recent-change-col" hidden>Change</th>
+                <th scope="col">Vendor / product</th>
+                <th scope="col">KEV added</th>
+                <th scope="col">Completeness</th>
+                <th scope="col">CVSS</th>
                 <th scope="col">EPSS</th>
                 <th scope="col">Sources</th>
-                <th scope="col">Timestamps</th>
               </tr>
             </thead>
-            <tbody id="changes-body"></tbody>
+            <tbody id="recent-body"></tbody>
           </table>
         </div>
       </section>
-      <section aria-labelledby="signals-heading">
+
+      <section id="catalog" aria-labelledby="catalog-heading">
+        <h2 id="catalog-heading">Catalog search</h2>
+        <p id="catalog-note">
+          The table above is the bounded preview (most recently added KEV
+          entries). Search of all published records loads
+          <code>data/latest.json</code> from this site. It does not call
+          external APIs.
+        </p>
+        <div class="catalog-controls">
+          <p>
+            <button type="button" id="catalog-load">
+              Load published catalog
+            </button>
+          </p>
+          <p>
+            <label for="catalog-query">Search CVE, vendor, or product</label>
+            <input
+              id="catalog-query"
+              type="search"
+              spellcheck="false"
+              autocomplete="off"
+              disabled
+            />
+          </p>
+          <p>
+            <label for="catalog-completeness">Completeness</label>
+            <select id="catalog-completeness" disabled>
+              <option value="all">All</option>
+              <option value="complete">Complete extracted inventory</option>
+              <option value="partial">Partial extracted inventory</option>
+              <option value="unavailable">Unavailable enrichment</option>
+            </select>
+          </p>
+          <p>
+            <label for="catalog-truncated">Version inventory</label>
+            <select id="catalog-truncated" disabled>
+              <option value="all">All</option>
+              <option value="truncated">Truncated versions</option>
+            </select>
+          </p>
+          <p>
+            <label for="catalog-sort">Sort</label>
+            <select id="catalog-sort" disabled>
+              <option value="kev_date_added">KEV added (newest)</option>
+              <option value="cve_id">CVE ID</option>
+              <option value="vendor_project">Vendor</option>
+              <option value="cvss_base_score">CVSS (available first)</option>
+            </select>
+          </p>
+        </div>
+        <p id="catalog-status" role="status" aria-live="polite"></p>
+        <div class="table-wrap">
+          <table>
+            <caption class="visually-hidden">
+              Published KEV catalog search results
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">CVE</th>
+                <th scope="col">Vendor / product</th>
+                <th scope="col">KEV added</th>
+                <th scope="col">Completeness</th>
+                <th scope="col">CVSS</th>
+                <th scope="col">EPSS</th>
+                <th scope="col">Sources</th>
+              </tr>
+            </thead>
+            <tbody id="catalog-body"></tbody>
+          </table>
+        </div>
+        <p class="pager">
+          <button type="button" id="catalog-prev" disabled>Previous</button>
+          <span id="catalog-page">Catalog not loaded.</span>
+          <button type="button" id="catalog-next" disabled>Next</button>
+        </p>
+      </section>
+
+      <section id="signals" aria-labelledby="signals-heading">
         <h2 id="signals-heading">How to read these signals</h2>
         <ul>
           <li>
@@ -61,11 +156,12 @@
           </li>
           <li>
             <strong>EPSS</strong>, when present, is an estimated probability of
-            exploitation, not confirmation.
+            exploitation, not confirmation. When EPSS is disabled it is not a
+            probability of zero.
           </li>
           <li>
             <strong>Severity</strong> is CVSS from the CVE CNA container when
-            available.
+            available. Missing scores are shown as unavailable, not guessed.
           </li>
           <li>
             <strong>Collection outcome</strong> (<code>ok</code>,
@@ -94,6 +190,16 @@
             <strong>Deployment exposure</strong> is not assessed here.
           </li>
         </ul>
+      </section>
+
+      <section id="provenance" aria-labelledby="provenance-heading">
+        <h2 id="provenance-heading">Data provenance and methodology</h2>
+        <p>
+          Operational timestamps below include catalog publication time, which
+          is not the date a CVE was added to KEV. KEV added dates are shown in
+          the tables.
+        </p>
+        <dl id="status-details" class="meta-list"></dl>
       </section>
     </main>
     <footer>
