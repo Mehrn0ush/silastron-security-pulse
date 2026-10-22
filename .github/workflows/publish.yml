@@ -87,15 +87,17 @@ jobs:
           python - <<'PY'
           import json, os
           from pathlib import Path
-          from silastron_pulse.jsonutil import sha256_bytes
           from silastron_pulse.verify_run import verify_collect_run
           candidate = Path("dist/candidate.json").read_bytes()
           meta = json.loads(Path("dist/candidate.meta.json").read_text())
+          sha256sums = Path("dist/SHA256SUMS").read_text(encoding="utf-8")
           run = json.loads(Path("/tmp/collect-run.json").read_text())
           run["repository_full_name"] = os.environ["REPO"]
           artifact = json.loads(Path("/tmp/collect-artifact.json").read_text())
-          digest = sha256_bytes(candidate)
-          verify_collect_run(
+          # artifact.digest is the GitHub zip-archive SHA-256. Content
+          # integrity is candidate.json versus meta, SHA256SUMS, and
+          # expected_digest. download-artifact verifies the archive.
+          result = verify_collect_run(
               run,
               expected_repository=os.environ["REPO"],
               expected_branch="main",
@@ -103,19 +105,16 @@ jobs:
               artifact=artifact,
               candidate_bytes=candidate,
               expected_digest=meta.get("content_sha256"),
+              metadata=meta,
+              sha256sums_text=sha256sums,
           )
-          if meta.get("content_sha256") != digest:
-              raise SystemExit("candidate.meta.json digest mismatch")
-          snapshot = json.loads(candidate)
-          binding = snapshot.get("binding") or {}
-          if binding.get("collector_commit_sha") != run.get("head_sha"):
-              raise SystemExit("Candidate collector SHA does not match collect run head SHA")
-          if binding.get("source_state_revision") != meta.get("source_state_revision"):
-              raise SystemExit("Candidate source-state revision does not match metadata")
+          snapshot_id = result.get("snapshot_id")
+          if not snapshot_id:
+              raise SystemExit("Candidate snapshot_id is missing")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
-              handle.write(f"digest={digest}\n")
-              handle.write(f"snapshot_id={snapshot['snapshot_id']}\n")
-          print(digest)
+              handle.write(f"digest={result['digest']}\n")
+              handle.write(f"snapshot_id={snapshot_id}\n")
+          print(result["digest"])
           PY
 
       - name: Promote snapshot into site data
@@ -178,7 +177,7 @@ jobs:
 
   persist-published:
     name: Persist published snapshot to pulse-state
-    needs: deploy
+    needs: [build, deploy]
     runs-on: ubuntu-latest
     permissions:
       contents: write

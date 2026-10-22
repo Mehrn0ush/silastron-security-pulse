@@ -190,66 +190,205 @@ class ReplayAndArtifactTests(unittest.TestCase):
             manifest = json.loads((published / "manifest.json").read_text())
             self.assertEqual(manifest["publication_state"], "rolled_back")
 
-    def test_unrelated_collection_artifact_is_rejected(self) -> None:
-        with self.assertRaises(ArtifactVerifyError):
-            verify_collect_run(
-                {
-                    "repository_full_name": "Mehrn0ush/silastron-security-pulse",
-                    "path": ".github/workflows/ci.yml",
-                    "name": "CI",
-                    "head_branch": "main",
-                    "conclusion": "success",
-                    "event": "workflow_dispatch",
-                    "head_sha": "abc",
-                },
-                expected_repository="Mehrn0ush/silastron-security-pulse",
-                expected_branch="main",
-                expected_head_sha="abc",
-                artifact={"name": "pulse-candidate", "digest": "deadbeef"},
-                candidate_bytes=b"{}",
-                expected_digest="deadbeef",
-            )
+    def _run(self, **overrides: object) -> dict:
+        payload = {
+            "id": 39739385294,
+            "repository_full_name": "Mehrn0ush/silastron-security-pulse",
+            "path": ".github/workflows/collect.yml",
+            "name": "Collect",
+            "head_branch": "main",
+            "conclusion": "success",
+            "event": "workflow_dispatch",
+            "head_sha": "abc",
+        }
+        payload.update(overrides)
+        return payload
 
-    def test_artifact_integrity_mismatch_is_rejected(self) -> None:
-        payload = b'{"ok": true}'
+    def _candidate(self, *, head_sha: str = "abc", revision: str = "kev:cve") -> tuple[bytes, str, dict, str]:
+        snapshot = {
+            "snapshot_id": "20261022T071919Z_113d2177d767",
+            "binding": {
+                "collector_commit_sha": head_sha,
+                "source_state_revision": revision,
+            },
+        }
+        payload = json.dumps(snapshot, separators=(",", ":")).encode("utf-8")
         digest = sha256_bytes(payload)
+        metadata = {"content_sha256": digest, "source_state_revision": revision}
+        sha256sums = f"{digest}  candidate.json\n"
+        return payload, digest, metadata, sha256sums
+
+    def test_unrelated_collection_artifact_is_rejected(self) -> None:
+        payload, digest, metadata, sha256sums = self._candidate()
         with self.assertRaises(ArtifactVerifyError):
             verify_collect_run(
-                {
-                    "repository_full_name": "Mehrn0ush/silastron-security-pulse",
-                    "path": ".github/workflows/collect.yml",
-                    "name": "Collect",
-                    "head_branch": "main",
-                    "conclusion": "success",
-                    "event": "workflow_dispatch",
-                    "head_sha": "abc",
-                },
+                self._run(path=".github/workflows/ci.yml", name="CI"),
                 expected_repository="Mehrn0ush/silastron-security-pulse",
                 expected_branch="main",
                 expected_head_sha="abc",
                 artifact={"name": "pulse-candidate", "digest": "sha256:" + ("0" * 64)},
                 candidate_bytes=payload,
                 expected_digest=digest,
+                metadata=metadata,
+                sha256sums_text=sha256sums,
             )
 
-    def test_missing_digest_is_rejected(self) -> None:
+    def test_github_archive_digest_may_differ_from_candidate_content(self) -> None:
+        payload, digest, metadata, sha256sums = self._candidate()
+        result = verify_collect_run(
+            self._run(),
+            expected_repository="Mehrn0ush/silastron-security-pulse",
+            expected_branch="main",
+            expected_head_sha="abc",
+            artifact={
+                "name": "pulse-candidate",
+                "digest": "sha256:" + ("4" * 64),
+                "expired": False,
+            },
+            candidate_bytes=payload,
+            expected_digest=digest,
+            metadata=metadata,
+            sha256sums_text=sha256sums,
+        )
+        self.assertEqual(result["digest"], digest)
+        self.assertNotEqual(result["digest"], "4" * 64)
+        self.assertEqual(result["snapshot_id"], "20261022T071919Z_113d2177d767")
+        self.assertEqual(result["run_id"], 39739385294)
+
+    def test_incorrect_candidate_content_digest_is_rejected(self) -> None:
+        payload, digest, metadata, sha256sums = self._candidate()
         with self.assertRaises(ArtifactVerifyError):
             verify_collect_run(
-                {
-                    "repository_full_name": "Mehrn0ush/silastron-security-pulse",
-                    "name": "Collect",
-                    "head_branch": "main",
-                    "conclusion": "success",
-                    "event": "workflow_dispatch",
-                    "head_sha": "abc",
-                },
+                self._run(),
+                expected_repository="Mehrn0ush/silastron-security-pulse",
+                expected_branch="main",
+                expected_head_sha="abc",
+                artifact={"name": "pulse-candidate", "digest": "sha256:" + ("4" * 64)},
+                candidate_bytes=payload,
+                expected_digest="0" * 64,
+                metadata=metadata,
+                sha256sums_text=sha256sums,
+            )
+        wrong_meta = dict(metadata)
+        wrong_meta["content_sha256"] = "0" * 64
+        with self.assertRaises(ArtifactVerifyError):
+            verify_collect_run(
+                self._run(),
                 expected_repository="Mehrn0ush/silastron-security-pulse",
                 expected_branch="main",
                 expected_head_sha="abc",
                 artifact={"name": "pulse-candidate"},
-                candidate_bytes=b"{}",
-                expected_digest=None,
+                candidate_bytes=payload,
+                expected_digest=digest,
+                metadata=wrong_meta,
+                sha256sums_text=sha256sums,
             )
+        with self.assertRaises(ArtifactVerifyError):
+            verify_collect_run(
+                self._run(),
+                expected_repository="Mehrn0ush/silastron-security-pulse",
+                expected_branch="main",
+                expected_head_sha="abc",
+                artifact={"name": "pulse-candidate"},
+                candidate_bytes=payload,
+                expected_digest=digest,
+                metadata=metadata,
+                sha256sums_text=f"{'0' * 64}  candidate.json\n",
+            )
+
+    def test_incorrect_metadata_binding_is_rejected(self) -> None:
+        payload, digest, metadata, sha256sums = self._candidate(head_sha="abc")
+        with self.assertRaises(ArtifactVerifyError):
+            verify_collect_run(
+                self._run(head_sha="def"),
+                expected_repository="Mehrn0ush/silastron-security-pulse",
+                expected_branch="main",
+                expected_head_sha="def",
+                artifact={"name": "pulse-candidate"},
+                candidate_bytes=payload,
+                expected_digest=digest,
+                metadata=metadata,
+                sha256sums_text=sha256sums,
+            )
+        wrong_meta = dict(metadata)
+        wrong_meta["source_state_revision"] = "other-revision"
+        with self.assertRaises(ArtifactVerifyError):
+            verify_collect_run(
+                self._run(),
+                expected_repository="Mehrn0ush/silastron-security-pulse",
+                expected_branch="main",
+                expected_head_sha="abc",
+                artifact={"name": "pulse-candidate"},
+                candidate_bytes=payload,
+                expected_digest=digest,
+                metadata=wrong_meta,
+                sha256sums_text=sha256sums,
+            )
+
+    def test_missing_digest_is_rejected(self) -> None:
+        payload, _digest, metadata, sha256sums = self._candidate()
+        with self.assertRaises(ArtifactVerifyError):
+            verify_collect_run(
+                self._run(),
+                expected_repository="Mehrn0ush/silastron-security-pulse",
+                expected_branch="main",
+                expected_head_sha="abc",
+                artifact={"name": "pulse-candidate"},
+                candidate_bytes=payload,
+                expected_digest=None,
+                metadata=metadata,
+                sha256sums_text=sha256sums,
+            )
+
+    def test_identical_snapshot_id_promote_is_idempotent(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            snapshot, published = self._published(root)
+            first = json.loads((published / "manifest.json").read_text())
+            again = promote_snapshot(
+                snapshot,
+                published,
+                now=datetime(2099, 1, 10, 13, tzinfo=timezone.utc),
+                stale_after_hours=36,
+                max_bytes=test_config(root).max_kev_bytes,
+                max_depth=test_config(root).max_json_depth,
+            )
+            latest = json.loads((published / "latest.json").read_text())
+            self.assertEqual(latest["snapshot_id"], snapshot["snapshot_id"])
+            self.assertEqual(again["snapshot_id"], first["snapshot_id"])
+
+
+class PublishWorkflowTests(unittest.TestCase):
+    def _job(self, job_id: str) -> str:
+        text = (ROOT / ".github" / "workflows" / "publish.yml").read_text(encoding="utf-8")
+        lines = text.splitlines()
+        start = None
+        for index, line in enumerate(lines):
+            if line == f"  {job_id}:":
+                start = index
+                break
+        self.assertIsNotNone(start, f"job {job_id} missing")
+        end = len(lines)
+        assert start is not None
+        for index in range(start + 1, len(lines)):
+            line = lines[index]
+            if line.startswith("  ") and not line.startswith("    ") and line.endswith(":"):
+                end = index
+                break
+        return "\n".join(lines[start:end])
+
+    def test_persist_published_needs_build_outputs_snapshot_id(self) -> None:
+        build = self._job("build")
+        persist = self._job("persist-published")
+        self.assertIn("snapshot_id: ${{ steps.digest.outputs.snapshot_id }}", build)
+        self.assertIn("needs: [build, deploy]", persist)
+        self.assertIn(
+            'git commit -m "publish ${{ needs.build.outputs.snapshot_id }}"',
+            persist,
+        )
+        self.assertIn("sha256sums_text=sha256sums", build)
+        self.assertIn("metadata=meta", build)
+        self.assertIn("artifact.digest is the GitHub zip-archive SHA-256", build)
 
 
 class TimestampAndFreshnessTests(unittest.TestCase):

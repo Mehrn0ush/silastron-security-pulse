@@ -30,7 +30,11 @@ contracts and security review.
 - Trigger: workflow_dispatch with `confirm=PUBLISH` and **required** `collect_run_id`
 - Runs only from `main`
 - Verifies Collect run repository, workflow identity, branch, success, SHA, artifact
-  name, expiry, and digest before promotion
+  name, expiry, and `candidate.json` content SHA-256 (against `candidate.meta.json`,
+  `SHA256SUMS`, and the expected content digest). GitHub `artifact.digest` is the
+  zip archive hash and is not compared to `candidate.json`.
+- `persist-published` needs `[build, deploy]` so `needs.build.outputs.snapshot_id`
+  is written into the pulse-state commit message after a successful deploy
 - Copies actual `pulse-state/published` into the promote directory so replay is
   compared against last published state
 - Deploy job permissions: `pages: write`, `id-token: write`
