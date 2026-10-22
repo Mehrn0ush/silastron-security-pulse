@@ -1,0 +1,9 @@
+{
+  "collector_commit_sha": "6eae4d990b16ea825ba5f561f67202a7f8d01ee9",
+  "cve_revision": "2026-10-22T06:58:56.379Z",
+  "kev_revision": "2026.10.21",
+  "record_count": 1754,
+  "schema_version": "1.0.0",
+  "source_state_revision": "2026.10.21:2026-10-22T06:58:56.379Z",
+  "updated_at": "2026-10-22T07:19:19Z"
+}

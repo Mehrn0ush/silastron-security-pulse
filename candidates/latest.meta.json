@@ -1,0 +1,19 @@
+{
+  "bytes_transferred": 4146016,
+  "collection_completed_at": "2026-10-22T07:19:19Z",
+  "collection_started_at": "2026-10-22T07:16:54Z",
+  "collector_commit_sha": "6eae4d990b16ea825ba5f561f67202a7f8d01ee9",
+  "content_sha256": "05c9f1425993437e0412010761f4f8a3bf0c035a0d7fae2024d2651a51239cdf",
+  "cve_delta_log_sha256": null,
+  "cve_delta_sha256": "e6ab98c4b838aae55495b6f65151f2695bf8819222c864c2ddeced4c239c7905",
+  "cve_strategy": "full",
+  "duration_ms": 144601,
+  "generated_at": "2026-10-22T07:19:19Z",
+  "http_gets": 1756,
+  "http_heads": 0,
+  "kev_content_sha256": "ef8fffede5c472001da046c7751beb2a3242458896d0ce08da52b30968b8b56b",
+  "pipeline_version": "1.0.0",
+  "snapshot_id": "20261022T071919Z_113d2177d767",
+  "source_state_revision": "2026.10.21:2026-10-22T06:58:56.379Z",
+  "status": "degraded"
+}
