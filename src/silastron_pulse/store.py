@@ -11,7 +11,7 @@ from silastron_pulse.clock import format_datetime, parse_generated_at as parse_c
 from silastron_pulse.constants import MANIFEST_SCHEMA_VERSION, PREVIEW_SCHEMA_VERSION
 from silastron_pulse.diff import publication_comparison
 from silastron_pulse.errors import PublishGuardError, ValidationError
-from silastron_pulse.jsonutil import dump_bytes, load_bounded_json
+from silastron_pulse.jsonutil import dump_bytes, load_bounded_json, sha256_bytes
 from silastron_pulse.lock import ExclusiveLock
 from silastron_pulse.validate import validate_manifest, validate_snapshot
 
@@ -272,6 +272,66 @@ def verify_publication_transition(
         "snapshot_id": incoming_id,
         "compared_to": current_id,
     }
+
+
+PUBLISHED_SITE_FILES = ("latest.json", "manifest.json", "preview.json")
+
+
+def verify_published_site(
+    published_dir: Path,
+    *,
+    max_bytes: int,
+    max_depth: int,
+) -> dict[str, Any]:
+    """Fail closed if published Pages data is missing, invalid, or inconsistent."""
+    for name in PUBLISHED_SITE_FILES:
+        if not (published_dir / name).exists():
+            raise PublishGuardError(f"Published {name} is missing")
+    latest = load_snapshot(
+        published_dir / "latest.json", max_bytes=max_bytes, max_depth=max_depth
+    )
+    if latest.get("status") not in {"ok", "degraded"}:
+        raise PublishGuardError("Published latest.json is not a successful snapshot")
+    manifest = validate_manifest(
+        load_json_file(
+            published_dir / "manifest.json", max_bytes=max_bytes, max_depth=max_depth
+        )
+    )
+    if manifest.get("status") not in {"ok", "degraded"}:
+        raise PublishGuardError("Published manifest is not a successful snapshot")
+    if manifest.get("publication_state") not in {"published", "rolled_back"}:
+        raise PublishGuardError("Published manifest is not in a published state")
+    if manifest.get("snapshot_id") != latest.get("snapshot_id"):
+        raise PublishGuardError("Published manifest snapshot_id does not match latest.json")
+    preview = load_json_file(
+        published_dir / "preview.json", max_bytes=max_bytes, max_depth=max_depth
+    )
+    if preview.get("snapshot_id") != latest.get("snapshot_id"):
+        raise PublishGuardError("Published preview snapshot_id does not match latest.json")
+    return {
+        "snapshot_id": latest["snapshot_id"],
+        "status": latest["status"],
+        "record_count": len(latest.get("records") or []),
+    }
+
+
+def assert_site_data_matches_published(site_data: Path, published_dir: Path) -> None:
+    """Frontend deploy must copy published JSON bytes without rewriting them."""
+    published_files = sorted(
+        path.relative_to(published_dir) for path in published_dir.rglob("*") if path.is_file()
+    )
+    if not published_files:
+        raise PublishGuardError("Published data is empty")
+    for name in PUBLISHED_SITE_FILES:
+        if Path(name) not in published_files:
+            raise PublishGuardError(f"Published {name} is missing")
+    for rel in published_files:
+        left = site_data / rel
+        right = published_dir / rel
+        if not left.exists():
+            raise PublishGuardError(f"Frontend deploy is missing {rel}")
+        if sha256_bytes(left.read_bytes()) != sha256_bytes(right.read_bytes()):
+            raise PublishGuardError(f"Frontend deploy mutated published {rel}")
 
 
 def _history_path(published_dir: Path) -> Path:

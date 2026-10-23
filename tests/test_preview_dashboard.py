@@ -74,6 +74,11 @@ class PreviewDashboardTests(unittest.TestCase):
         self.assertIn("buildRecordDetails", js)
         self.assertIn("short_description", js)
         self.assertIn("Record details", js)
+        self.assertIn("buildRemediation", js)
+        self.assertIn("No verified remediation data", js)
+        self.assertIn("fallbackRemediation", js)
+        self.assertIn("safePublicHttpsUrl", js)
+        self.assertNotIn("loadCatalog();", js.replace("function loadCatalog()", ""))
 
     def test_accessibility_and_responsive_hooks(self) -> None:
         html = (ROOT / "preview" / "index.html").read_text(encoding="utf-8")

@@ -7,6 +7,8 @@ from typing import Any, Literal
 
 SourceStatus = Literal["ok", "failed", "disabled", "unavailable", "degraded"]
 CollectionStatus = Literal["ok", "failed", "degraded"]
+RemediationKind = Literal["required_action", "verified_fix", "mitigation", "reference"]
+RemediationSource = Literal["cisa_kev", "cve_list_v5"]
 
 
 def _omit_none(payload: dict[str, Any]) -> dict[str, Any]:
@@ -109,6 +111,25 @@ class KevRecord:
 
 
 @dataclass(frozen=True)
+class RemediationItem:
+    kind: RemediationKind
+    source: RemediationSource
+    attribution: str
+    text: str | None = None
+    url: str | None = None
+
+    def to_dict(self) -> dict[str, Any]:
+        payload = {
+            "kind": self.kind,
+            "source": self.source,
+            "attribution": self.attribution,
+            "text": self.text,
+            "url": self.url,
+        }
+        return {key: value for key, value in payload.items() if value is not None}
+
+
+@dataclass(frozen=True)
 class CveProduct:
     vendor: str | None
     product: str | None
@@ -166,6 +187,7 @@ class CveRecord:
     omitted_product_count: int = 0
     omitted_version_count: int = 0
     cached: bool = False
+    remediation_items: tuple[RemediationItem, ...] = ()
 
     def comparable(self) -> dict[str, Any]:
         return {
@@ -183,6 +205,7 @@ class CveRecord:
             "truncated_fields": list(self.truncated_fields),
             "omitted_product_count": self.omitted_product_count,
             "omitted_version_count": self.omitted_version_count,
+            "remediation_items": [item.to_dict() for item in self.remediation_items],
         }
 
     def to_dict(self) -> dict[str, Any]:
@@ -209,6 +232,7 @@ class CveRecord:
             "omitted_product_count": self.omitted_product_count,
             "omitted_version_count": self.omitted_version_count,
             "cached": self.cached,
+            "remediation_items": [item.to_dict() for item in self.remediation_items],
         }
 
 
@@ -277,6 +301,8 @@ class PulseEntry:
         return record_completeness(kev=self.kev, cve=self.cve)
 
     def to_dict(self) -> dict[str, Any]:
+        from silastron_pulse.remediation import assemble_remediation
+
         return {
             "cve_id": self.cve_id,
             "completeness": self.completeness(),
@@ -285,6 +311,7 @@ class PulseEntry:
             "epss": self.epss.to_dict(),
             "signals": self.signals.to_dict(),
             "links": dict(self.links),
+            "remediation": assemble_remediation(kev=self.kev, cve=self.cve),
         }
 
 

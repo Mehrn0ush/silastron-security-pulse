@@ -7,6 +7,7 @@ from typing import Any
 from silastron_pulse.constants import MANIFEST_SCHEMA_VERSION, SNAPSHOT_SCHEMA_VERSION
 from silastron_pulse.errors import ValidationError
 from silastron_pulse.ids import CVE_ID_RE
+from silastron_pulse.sanitize import sanitize_public_https_url
 
 
 def validate_snapshot(payload: object, *, compatible: bool = False) -> dict[str, Any]:
@@ -90,6 +91,7 @@ def validate_snapshot(payload: object, *, compatible: bool = False) -> dict[str,
         links = record.get("links")
         if not isinstance(links, dict):
             raise ValidationError(f"{cve_id} links are required")
+        _validate_remediation(cve_id, record.get("remediation"))
     changes = payload.get("changes")
     if not isinstance(changes, dict):
         raise ValidationError("Snapshot changes must be an object")
@@ -163,6 +165,37 @@ def _backfill_snapshot(payload: dict[str, Any]) -> dict[str, Any]:
             filled.append(item)
         payload["records"] = filled
     return payload
+
+
+def _validate_remediation(cve_id: str, value: object) -> None:
+    if value is None:
+        return
+    if not isinstance(value, dict):
+        raise ValidationError(f"{cve_id} remediation must be an object")
+    status = value.get("status")
+    if status not in {"available", "unavailable"}:
+        raise ValidationError(f"{cve_id} remediation.status is invalid")
+    items = value.get("items")
+    if not isinstance(items, list):
+        raise ValidationError(f"{cve_id} remediation.items must be an array")
+    if status == "unavailable" and items:
+        raise ValidationError(f"{cve_id} unavailable remediation must not include items")
+    if status == "available" and not items:
+        raise ValidationError(f"{cve_id} available remediation must include items")
+    kinds = {"required_action", "verified_fix", "mitigation", "reference"}
+    sources = {"cisa_kev", "cve_list_v5"}
+    for index, item in enumerate(items):
+        if not isinstance(item, dict):
+            raise ValidationError(f"{cve_id} remediation.items[{index}] must be an object")
+        if item.get("kind") not in kinds:
+            raise ValidationError(f"{cve_id} remediation.items[{index}] has an invalid kind")
+        if item.get("source") not in sources:
+            raise ValidationError(f"{cve_id} remediation.items[{index}] has an invalid source")
+        if not isinstance(item.get("attribution"), str) or not item["attribution"].strip():
+            raise ValidationError(f"{cve_id} remediation.items[{index}] needs attribution")
+        url = item.get("url")
+        if url is not None and sanitize_public_https_url(url) != url:
+            raise ValidationError(f"{cve_id} remediation.items[{index}] has an unsafe url")
 
 
 def _require(payload: dict[str, Any], key: str, expected: str) -> None:

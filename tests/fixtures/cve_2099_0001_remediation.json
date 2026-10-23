@@ -1,0 +1,80 @@
+{
+  "dataType": "CVE_RECORD",
+  "dataVersion": "5.1",
+  "cveMetadata": {
+    "cveId": "CVE-2099-0001",
+    "state": "PUBLISHED",
+    "assignerShortName": "fixture",
+    "datePublished": "2099-01-01T00:00:00.000Z",
+    "dateUpdated": "2099-01-02T00:00:00.000Z"
+  },
+  "containers": {
+    "cna": {
+      "title": "TEST FIXTURE ONLY",
+      "descriptions": [
+        {
+          "lang": "en",
+          "value": "Synthetic CVE record used only for automated tests. Fixed in 9.9.9 according to this description, which must not become a verified fix."
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Fixture Vendor",
+          "product": "Fixture Product",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "1.0",
+              "status": "affected",
+              "lessThan": "1.1"
+            }
+          ]
+        }
+      ],
+      "metrics": [
+        {
+          "cvssV3_1": {
+            "version": "3.1",
+            "baseScore": 9.8,
+            "baseSeverity": "CRITICAL",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H"
+          }
+        }
+      ],
+      "solutions": [
+        {
+          "lang": "en",
+          "value": "Upgrade to 2.1.0 as documented at https://vendor.example/security/CVE-2099-0001"
+        }
+      ],
+      "workarounds": [
+        {
+          "lang": "en",
+          "value": "Disable the affected component until the vendor patch is applied."
+        }
+      ],
+      "references": [
+        {
+          "url": "https://vendor.example/security/CVE-2099-0001",
+          "name": "Fixed in 2.1.0",
+          "tags": ["vendor-advisory"]
+        },
+        {
+          "url": "https://research.example/writeup",
+          "name": "Patch available",
+          "tags": ["patch"]
+        },
+        {
+          "url": "javascript:alert(1)",
+          "name": "Unsafe",
+          "tags": ["vendor-advisory"]
+        },
+        {
+          "url": "https://third-party.example/advisory",
+          "name": "Third party advisory",
+          "tags": ["third-party-advisory"]
+        }
+      ]
+    }
+  }
+}

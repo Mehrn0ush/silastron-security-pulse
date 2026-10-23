@@ -56,7 +56,7 @@ class CollectWorkflowContractTests(unittest.TestCase):
         self.assertNotIn("id-token: write", text)
 
     def test_runners_are_pinned_to_ubuntu_24_04(self) -> None:
-        for name in ("ci.yml", "collect.yml", "publish.yml"):
+        for name in ("ci.yml", "collect.yml", "publish.yml", "deploy-frontend.yml"):
             text = _workflow(name)
             self.assertIn("runs-on: ubuntu-24.04", text)
             self.assertNotIn("ubuntu-latest", text)
@@ -209,7 +209,7 @@ class SnapshotIntegrityAndEpssTests(unittest.TestCase):
             self.assertIsNone(record["signals"]["estimated_exploitation_probability"]["value"])
 
     def test_collect_and_publish_workflows_do_not_enable_epss(self) -> None:
-        combined = _workflow("collect.yml") + _workflow("publish.yml")
+        combined = _workflow("collect.yml") + _workflow("publish.yml") + _workflow("deploy-frontend.yml")
         self.assertNotIn("REDISTRIBUTION_CLEARED", combined)
         self.assertNotIn("enabled=True", combined)
         self.assertNotIn("EPSS_ENABLED", combined)

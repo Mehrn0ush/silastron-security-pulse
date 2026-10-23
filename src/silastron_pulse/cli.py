@@ -13,12 +13,14 @@ from silastron_pulse.errors import PulseError
 from silastron_pulse.jsonutil import sha256_bytes
 from silastron_pulse.pipeline import collect
 from silastron_pulse.store import (
+    assert_site_data_matches_published,
     atomic_write_json,
     load_snapshot,
     promote_snapshot,
     rollback_snapshot,
     unpublished_status,
     verify_publication_transition,
+    verify_published_site,
 )
 from silastron_pulse.validate import validate_manifest, validate_snapshot
 from silastron_pulse.verify_run import verify_collect_run
@@ -75,6 +77,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     verify_pub.add_argument("--incoming", type=Path, required=True)
     verify_pub.add_argument("--current", type=Path, required=True)
+
+    verify_site = sub.add_parser(
+        "verify-published-site",
+        help="Validate published Pages data without promoting",
+    )
+    verify_site.add_argument("--published-dir", type=Path, required=True)
+    verify_site.add_argument("--site-data", type=Path, default=None)
 
     args = parser.parse_args(argv)
     try:
@@ -170,6 +179,17 @@ def main(argv: list[str] | None = None) -> int:
                 max_depth=config.max_json_depth,
             )
             print("publication transition ok")
+            return 0
+        if args.command == "verify-published-site":
+            config = PulseConfig.from_env(args.published_dir)
+            result = verify_published_site(
+                args.published_dir,
+                max_bytes=config.max_kev_bytes,
+                max_depth=config.max_json_depth,
+            )
+            if args.site_data is not None:
+                assert_site_data_matches_published(args.site_data, args.published_dir)
+            print(json.dumps(result, indent=2))
             return 0
         if args.command == "write-unpublished":
             clock = SystemClock()

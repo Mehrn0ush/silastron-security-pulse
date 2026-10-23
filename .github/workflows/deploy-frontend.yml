@@ -1,0 +1,77 @@
+name: Deploy frontend
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: Type DEPLOY_FRONTEND to ship UI against the current published snapshot
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build frontend Pages artifact
+    runs-on: ubuntu-24.04
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && github.event.inputs.confirm == 'DEPLOY_FRONTEND'
+    steps:
+      - name: Checkout publisher
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+
+      - name: Checkout pulse-state
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: pulse-state
+          path: pulse-state
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Copy published data without promote
+        env:
+          PYTHONPATH: src
+        run: |
+          set -euo pipefail
+          if [ ! -f pulse-state/published/latest.json ]; then
+            echo "Published snapshot is missing"
+            exit 1
+          fi
+          python3 -m silastron_pulse verify-published-site \
+            --published-dir pulse-state/published
+          mkdir -p _site/data
+          cp -a pulse-state/published/. _site/data/
+          cp preview/index.html preview/styles.css preview/app.js _site/
+          python3 -m silastron_pulse verify-published-site \
+            --published-dir pulse-state/published \
+            --site-data _site/data
+          python3 -m silastron_pulse validate _site/data/manifest.json
+          python3 -m silastron_pulse validate _site/data/latest.json
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+        with:
+          path: _site
+
+  deploy:
+    name: Deploy Pages
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+      contents: read
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5

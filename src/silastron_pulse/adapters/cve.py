@@ -25,8 +25,19 @@ from silastron_pulse.errors import CorrelationError, FetchError, ValidationError
 from silastron_pulse.http import Fetcher
 from silastron_pulse.ids import cvelist_v5_raw_url, parse_cve_id, same_cve_id
 from silastron_pulse.jsonutil import load_bounded_json, sha256_bytes
-from silastron_pulse.models import CveProduct, CveRecord, CveSeverity, SourceMeta
-from silastron_pulse.sanitize import authoritative_cve_url, clean_text_report
+from silastron_pulse.models import (
+    CveProduct,
+    CveRecord,
+    CveSeverity,
+    RemediationItem,
+    SourceMeta,
+)
+from silastron_pulse.remediation import MAX_REMEDIATION_ITEMS, extract_https_urls
+from silastron_pulse.sanitize import (
+    authoritative_cve_url,
+    clean_text_report,
+    sanitize_public_https_url,
+)
 
 
 @dataclass(frozen=True)
@@ -140,6 +151,14 @@ def enrich_cves(
             window=window,
             log=log,
         )
+    if strategy in {"unchanged", "delta"} and any(
+        "remediation_items" not in (cached_records.get(cve_id) or {})
+        for cve_id in unique_ids
+    ):
+        # One-time bounded refetch so CNA solutions/workarounds are copied
+        # from CVE List V5 instead of remaining absent in pre-remediation cache.
+        strategy = "resync"
+        changed_ids = frozenset()
 
     to_fetch: dict[str, str | None] = {}
     reused: dict[str, CveRecord] = {}
@@ -383,6 +402,8 @@ def parse_cve_record(
     )
     truncated.extend(t_products)
     severity = _cna_severity(cna.get("metrics"), config)
+    remediation_items, rem_truncated = _cna_remediation(cna, config)
+    truncated.extend(rem_truncated)
     return CveRecord(
         cve_id=expected,
         state=clean_text_report(metadata.get("state"), 32)[0] or "UNKNOWN",
@@ -405,6 +426,7 @@ def parse_cve_record(
         omitted_product_count=omitted_products,
         omitted_version_count=omitted_versions,
         cached=False,
+        remediation_items=tuple(remediation_items),
     )
 
 
@@ -451,6 +473,7 @@ def cve_record_from_dict(payload: dict[str, Any], *, cached: bool = False) -> Cv
         omitted_product_count=int(payload.get("omitted_product_count") or 0),
         omitted_version_count=int(payload.get("omitted_version_count") or 0),
         cached=cached,
+        remediation_items=tuple(_remediation_from_dict(payload.get("remediation_items"))),
     )
 
 
@@ -556,6 +579,142 @@ def _products(
             )
         )
     return products, truncated, omitted_products, omitted_versions
+
+
+def _english_narrative(value: object, config: PulseConfig) -> list[tuple[str, bool]]:
+    if not isinstance(value, list):
+        return []
+    texts: list[tuple[str, bool]] = []
+    for item in value:
+        if not isinstance(item, dict):
+            continue
+        text, truncated = clean_text_report(item.get("value"), config.max_description_chars)
+        if not text:
+            continue
+        lang, _ = clean_text_report(item.get("lang"), 16)
+        lang = (lang or "").lower()
+        if lang.startswith("en") or not lang:
+            texts.append((text, truncated))
+        if len(texts) >= 8:
+            break
+    return texts
+
+
+def _cna_remediation(
+    cna: dict[str, Any], config: PulseConfig
+) -> tuple[list[RemediationItem], list[str]]:
+    """Copy explicit CNA solutions, workarounds, and vendor-advisory URLs only."""
+    items: list[RemediationItem] = []
+    truncated: list[str] = []
+    for text, was_truncated in _english_narrative(cna.get("solutions"), config):
+        items.append(
+            RemediationItem(
+                kind="verified_fix",
+                source="cve_list_v5",
+                attribution="CVE List V5 CNA solutions",
+                text=text,
+            )
+        )
+        for url in extract_https_urls(text):
+            items.append(
+                RemediationItem(
+                    kind="reference",
+                    source="cve_list_v5",
+                    attribution="CVE List V5 CNA solutions",
+                    url=url,
+                )
+            )
+        if was_truncated:
+            truncated.append("solutions")
+    for text, was_truncated in _english_narrative(cna.get("workarounds"), config):
+        items.append(
+            RemediationItem(
+                kind="mitigation",
+                source="cve_list_v5",
+                attribution="CVE List V5 CNA workarounds",
+                text=text,
+            )
+        )
+        for url in extract_https_urls(text):
+            items.append(
+                RemediationItem(
+                    kind="reference",
+                    source="cve_list_v5",
+                    attribution="CVE List V5 CNA workarounds",
+                    url=url,
+                )
+            )
+        if was_truncated:
+            truncated.append("workarounds")
+    references = cna.get("references")
+    if isinstance(references, list):
+        kept = 0
+        for ref in references:
+            if not isinstance(ref, dict):
+                continue
+            tags = [
+                str(tag).lower()
+                for tag in (ref.get("tags") or [])
+                if isinstance(tag, str)
+            ]
+            if "vendor-advisory" not in tags:
+                continue
+            url = sanitize_public_https_url(ref.get("url"))
+            if not url:
+                continue
+            name, _ = clean_text_report(ref.get("name"), 256)
+            items.append(
+                RemediationItem(
+                    kind="reference",
+                    source="cve_list_v5",
+                    attribution="CVE List V5 CNA vendor-advisory",
+                    text=name,
+                    url=url,
+                )
+            )
+            kept += 1
+            if kept >= 16:
+                break
+    unique: list[RemediationItem] = []
+    seen: set[tuple[object, ...]] = set()
+    for item in items:
+        key = (item.kind, item.source, item.attribution, item.text, item.url)
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(item)
+        if len(unique) >= MAX_REMEDIATION_ITEMS:
+            break
+    return unique, truncated
+
+
+def _remediation_from_dict(value: object) -> list[RemediationItem]:
+    if not isinstance(value, list):
+        return []
+    items: list[RemediationItem] = []
+    allowed_kinds = {"required_action", "verified_fix", "mitigation", "reference"}
+    allowed_sources = {"cisa_kev", "cve_list_v5"}
+    for raw in value:
+        if not isinstance(raw, dict):
+            continue
+        kind = raw.get("kind")
+        source = raw.get("source")
+        attribution = raw.get("attribution")
+        if kind not in allowed_kinds or source not in allowed_sources:
+            continue
+        if not isinstance(attribution, str) or not attribution.strip():
+            continue
+        url = raw.get("url")
+        items.append(
+            RemediationItem(
+                kind=kind,
+                source=source,
+                attribution=attribution,
+                text=raw.get("text") if isinstance(raw.get("text"), str) else None,
+                url=sanitize_public_https_url(url) if url else None,
+            )
+        )
+    return items
 
 
 def _cna_severity(value: object, config: PulseConfig) -> CveSeverity | None:
