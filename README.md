@@ -12,9 +12,10 @@ severity, product affectedness, and deployment exposure into a risk score.
 
 ## Status
 
-- Collection workflow: **manual only**. Schedule is not enabled.
-- GitHub Pages publication: **manual only**, requires typing `PUBLISH`, and
-  must not be run until source contracts and security review are approved.
+- Collection workflow: daily at 08:00 UTC plus manual `workflow_dispatch`.
+  Collect does not publish.
+- GitHub Pages publication: **manual only**. Requires `confirm=PUBLISH` and an
+  explicit Collect `collect_run_id`.
 - EPSS: **BLOCKED** for publication. See [docs/source-contracts.md](docs/source-contracts.md).
 
 ## Documentation

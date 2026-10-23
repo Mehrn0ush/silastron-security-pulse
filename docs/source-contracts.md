@@ -108,6 +108,11 @@ that displaying and redistributing EPSS scores in this public JSON feed is
 permitted, then change the blocker in code through a reviewed pull request.
 Do not enable by environment variable.
 
+Remaining technical blockers after a rights decision (do not treat as
+permission): the live FIRST Usage Agreement fragment is gone; daily CSV gzip
+is larger than `max_epss_bytes` (2_000_000); the API `cve` parameter is capped
+at 2000 characters so KEV-sized batches must use the CSV.
+
 ## Correlation policy
 
 - Join key: exact CVE ID string after `CVE-YYYY-NNNN+` validation.

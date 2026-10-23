@@ -200,7 +200,16 @@ def _collect_locked(
     entries = _build_entries(kev, cve, epss)
     if previous:
         previous_entries = _entries_from_snapshot(previous)
-        changes = detect_changes(previous_entries, entries)
+        changes = detect_changes(
+            previous_entries,
+            entries,
+            previous_sources=previous.get("sources"),
+            current_sources={
+                "kev": kev.meta.to_dict(),
+                "cve": cve.meta.to_dict(),
+                "epss": epss.meta.to_dict(),
+            },
+        )
     else:
         changes = ChangeSet()
     source_state_revision = _source_revision(kev, cve)
