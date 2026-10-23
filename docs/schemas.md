@@ -16,6 +16,21 @@ read-only consumers.
 Until publication is approved, `preview/data/manifest.json` and
 `public/data/manifest.json` are `status: unpublished` placeholders.
 
+## Preview `publication_comparison`
+
+Optional object written at promote time. It is **not** `snapshot.changes`.
+
+- `available`: `true` only when the previously published `latest.json` exists,
+  has a different `snapshot_id`, and can be rebuilt into comparable entries
+- `reason`: present when unavailable (`no_previous_published_snapshot`,
+  `incompatible_published_snapshot`, or `same_published_snapshot`)
+- `compared_to_snapshot_id` / `compared_to_generated_at`: previous published
+  snapshot identity
+- `added_count` / `removed_count` / `updated_count`: integers when available,
+  otherwise `null`. Unavailable must not be rendered as zero
+- `rows`: bounded field-level before/after values. Retrieval timestamps are
+  ignored. EPSS is excluded while redistribution remains disabled
+
 ## Snapshot v1 required fields
 
 - `schema_version`: `1.0.0`

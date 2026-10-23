@@ -77,9 +77,12 @@ h2 {
 footer,
 .meta-list,
 #recent-note,
+#changes-note,
 #catalog-note,
 #catalog-status,
-#provenance p {
+#provenance p,
+.empty-state,
+.detail-label {
   color: var(--muted);
 }
 
@@ -291,6 +294,43 @@ a[href] {
   clip: rect(0 0 0 0);
 }
 
+details {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 0.55rem 0.7rem;
+}
+
+details > summary {
+  cursor: pointer;
+  font-weight: 650;
+}
+
+details .meta-list,
+details .diff-table {
+  margin-top: 0.7rem;
+}
+
+.diff-table {
+  min-width: 28rem;
+}
+
+#changes h3 {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 1rem;
+}
+
+.empty-state {
+  margin: 0;
+}
+
+.record-details {
+  font-size: 0.92rem;
+}
+
+#technical-details {
+  margin-top: 1.25rem;
+}
+
 @media (max-width: 40rem) {
   body {
     padding: 0.9rem 0.9rem 2.5rem;
@@ -298,6 +338,15 @@ a[href] {
 
   table {
     min-width: 40rem;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  .page-nav {
+    flex-direction: column;
+    gap: 0.35rem;
   }
 }
 

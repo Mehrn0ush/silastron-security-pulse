@@ -9,6 +9,7 @@ from typing import Any
 
 from silastron_pulse.clock import format_datetime, parse_generated_at as parse_clock
 from silastron_pulse.constants import MANIFEST_SCHEMA_VERSION, PREVIEW_SCHEMA_VERSION
+from silastron_pulse.diff import publication_comparison
 from silastron_pulse.errors import PublishGuardError, ValidationError
 from silastron_pulse.jsonutil import dump_bytes, load_bounded_json
 from silastron_pulse.validate import validate_manifest, validate_snapshot
@@ -92,7 +93,7 @@ def promote_snapshot(
         raise PublishGuardError("Written snapshot did not match candidate")
 
     atomic_write_json(latest_path, candidate)
-    preview = build_preview_document(candidate)
+    preview = build_preview_document(candidate, previous_published=current)
     atomic_write_json(published_dir / "preview.json", preview)
     manifest = build_manifest(
         candidate,
@@ -237,7 +238,11 @@ def build_manifest(
     }
 
 
-def build_preview_document(snapshot: dict[str, Any]) -> dict[str, Any]:
+def build_preview_document(
+    snapshot: dict[str, Any],
+    *,
+    previous_published: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     changes = snapshot.get("changes") or {}
     change_rows = []
     for kind, key in (
@@ -252,7 +257,8 @@ def build_preview_document(snapshot: dict[str, Any]) -> dict[str, Any]:
     records_by_id = {item["cve_id"]: item for item in snapshot.get("records", [])}
     sources = snapshot.get("sources") or {}
     preview_changes = []
-    for row in change_rows[: snapshot.get("limits", {}).get("max_preview_changes", 50)]:
+    max_changes = snapshot.get("limits", {}).get("max_preview_changes", 50)
+    for row in change_rows[:max_changes]:
         record = records_by_id.get(row["cve_id"])
         if record:
             preview_changes.append(_preview_row(record, row["change"], sources))
@@ -275,6 +281,11 @@ def build_preview_document(snapshot: dict[str, Any]) -> dict[str, Any]:
     limit = snapshot.get("limits", {}).get("max_preview_recent", 25)
     for record in sorted_records[:limit]:
         recent.append(_preview_row(record, "recent_kev_addition", sources))
+    comparison = publication_comparison(
+        previous_published,
+        snapshot,
+        max_rows=max_changes,
+    )
     return {
         "schema_version": PREVIEW_SCHEMA_VERSION,
         "snapshot_id": snapshot["snapshot_id"],
@@ -287,6 +298,7 @@ def build_preview_document(snapshot: dict[str, Any]) -> dict[str, Any]:
         "changes_available": bool(change_rows),
         "changes": preview_changes,
         "recent_kev_additions": recent,
+        "publication_comparison": comparison,
         "note": snapshot.get("consumer_note"),
     }
 

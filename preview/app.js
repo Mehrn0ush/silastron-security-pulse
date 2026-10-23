@@ -7,10 +7,45 @@
   var CVELIST_BLOB =
     /^\/CVEProject\/cvelistV5\/blob\/main\/cves\/[0-9]{4}\/[0-9]+xxx\/CVE-[0-9]{4}-[0-9]{4,}\.json$/;
   var PAGE_SIZE = 25;
+  var RECENT_LIMIT = 10;
+  var PRODUCT_DETAIL_LIMIT = 8;
+  var VERSION_DETAIL_LIMIT = 3;
+  var FIELD_LABELS = {
+    vendor_project: "Vendor",
+    product: "Product",
+    vulnerability_name: "Vulnerability name",
+    kev_date_added: "KEV added",
+    required_action: "Required action",
+    due_date: "Due date",
+    cve_state: "CVE state",
+    cve_title: "CVE title",
+    cvss_base_score: "CVSS base score",
+    cvss_base_severity: "CVSS severity",
+    completeness: "Extraction completeness",
+  };
+  var CATEGORY_LABELS = {
+    added_kev: "Newly added KEV entries",
+    removed_kev: "Removed KEV entries",
+    kev_update: "KEV record updates",
+    cve_update: "CVE information updates",
+    cvss_change: "CVSS changes",
+    completeness_change: "Extraction completeness changes",
+  };
+  var CATEGORY_ORDER = [
+    "added_kev",
+    "removed_kev",
+    "cvss_change",
+    "cve_update",
+    "completeness_change",
+    "kev_update",
+  ];
 
   var statusBanner = document.getElementById("status-banner");
   var statusDetails = document.getElementById("status-details");
+  var technicalDetails = document.getElementById("technical-details-list");
   var overviewCards = document.getElementById("overview-cards");
+  var changesNote = document.getElementById("changes-note");
+  var changesBody = document.getElementById("changes-body");
   var recentHeading = document.getElementById("recent-heading");
   var recentNote = document.getElementById("recent-note");
   var recentCaption = document.getElementById("recent-caption");
@@ -22,6 +57,7 @@
   var catalogLoad = document.getElementById("catalog-load");
   var catalogQuery = document.getElementById("catalog-query");
   var catalogCompleteness = document.getElementById("catalog-completeness");
+  var catalogCvss = document.getElementById("catalog-cvss");
   var catalogTruncated = document.getElementById("catalog-truncated");
   var catalogSort = document.getElementById("catalog-sort");
   var catalogPrev = document.getElementById("catalog-prev");
@@ -41,13 +77,20 @@
     return String(value);
   }
 
-  function appendMeta(term, value) {
+  function appendNamedMeta(list, term, value) {
+    if (!list) {
+      return;
+    }
     var dt = document.createElement("dt");
     dt.textContent = term;
     var dd = document.createElement("dd");
     dd.textContent = asText(value);
-    statusDetails.appendChild(dt);
-    statusDetails.appendChild(dd);
+    list.appendChild(dt);
+    list.appendChild(dd);
+  }
+
+  function appendMeta(term, value) {
+    appendNamedMeta(statusDetails, term, value);
   }
 
   function evaluateFreshness(generatedAt, staleAfterHours, nowMs) {
@@ -186,6 +229,13 @@
     return "Unavailable";
   }
 
+  function comparisonCount(value) {
+    if (value === null || value === undefined || value === "") {
+      return "No comparison available";
+    }
+    return String(value);
+  }
+
   function appendCard(term, value, hint) {
     var article = document.createElement("article");
     article.className = "card";
@@ -205,10 +255,70 @@
     overviewCards.appendChild(article);
   }
 
+  function appendTextRow(parent, label, value) {
+    var dt = document.createElement("dt");
+    dt.textContent = label;
+    var dd = document.createElement("dd");
+    dd.textContent = asText(value);
+    parent.appendChild(dt);
+    parent.appendChild(dd);
+  }
+
+  function appendList(parent, items) {
+    if (!items || !items.length) {
+      return;
+    }
+    var list = document.createElement("ul");
+    items.forEach(function (item) {
+      if (item === null || item === undefined || item === "") {
+        return;
+      }
+      var li = document.createElement("li");
+      li.textContent = String(item);
+      list.appendChild(li);
+    });
+    if (list.childNodes.length) {
+      parent.appendChild(list);
+    }
+  }
+
+  function buildRecordDetails(row) {
+    var details = document.createElement("details");
+    var summary = document.createElement("summary");
+    summary.textContent = "Record details";
+    details.appendChild(summary);
+    var list = document.createElement("dl");
+    list.className = "meta-list record-details";
+    appendTextRow(list, "KEV description", row.short_description);
+    appendTextRow(list, "Required action", row.required_action);
+    appendTextRow(list, "Due date", row.due_date);
+    appendTextRow(list, "CVE state", row.cve_state);
+    appendTextRow(list, "CVE description", row.cve_description);
+    appendTextRow(list, "CVSS vector", row.cvss_vector);
+    appendTextRow(list, "Known ransomware campaign use", row.known_ransomware_campaign_use);
+    details.appendChild(list);
+    if (row.cwes && row.cwes.length) {
+      var cweHeading = document.createElement("p");
+      cweHeading.className = "detail-label";
+      cweHeading.textContent = "CWEs";
+      details.appendChild(cweHeading);
+      appendList(details, row.cwes);
+    }
+    if (row.products && row.products.length) {
+      var productHeading = document.createElement("p");
+      productHeading.className = "detail-label";
+      productHeading.textContent = "Extracted CNA products";
+      details.appendChild(productHeading);
+      appendList(details, row.products);
+    }
+    return details;
+  }
+
   function renderRows(tbody, rows, options) {
     tbody.textContent = "";
     var showChange = options && options.showChange;
-    var colSpan = showChange ? 8 : 7;
+    var showDetails = options && options.showDetails;
+    var colSpan = 7 + (showChange ? 1 : 0) + (showDetails ? 1 : 0);
     if (!rows.length) {
       var empty = document.createElement("tr");
       var cell = document.createElement("td");
@@ -267,8 +377,192 @@
       addLink(links, row.links && row.links.kev_catalog, "KEV catalog");
       addLink(links, row.links && row.links.cvelist_v5, "CVE List V5");
       tr.appendChild(links);
+      if (showDetails) {
+        var detailsCell = document.createElement("td");
+        detailsCell.appendChild(buildRecordDetails(row));
+        tr.appendChild(detailsCell);
+      }
       tbody.appendChild(tr);
     });
+  }
+
+  function fieldPair(before, after, key) {
+    var previousValue = before ? before[key] : null;
+    var currentValue = after ? after[key] : null;
+    if (before && after && previousValue === currentValue) {
+      return null;
+    }
+    return {
+      field: FIELD_LABELS[key] || key,
+      previous: before ? previousValue : "Not in previous published snapshot",
+      current: after ? currentValue : "Removed from current published snapshot",
+    };
+  }
+
+  function buildBeforeAfter(row) {
+    var details = document.createElement("details");
+    var summary = document.createElement("summary");
+    summary.textContent = "Before and after";
+    details.appendChild(summary);
+    var table = document.createElement("table");
+    table.className = "diff-table";
+    var caption = document.createElement("caption");
+    caption.className = "visually-hidden";
+    caption.textContent = "Published values before and after for " + asText(row.cve_id);
+    table.appendChild(caption);
+    var thead = document.createElement("thead");
+    var headRow = document.createElement("tr");
+    ["Field", "Previous published", "Current published"].forEach(function (label) {
+      var th = document.createElement("th");
+      th.scope = "col";
+      th.textContent = label;
+      headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+    var tbody = document.createElement("tbody");
+    var keys = row.changed_fields && row.changed_fields.length ? row.changed_fields : Object.keys(FIELD_LABELS);
+    var added = 0;
+    keys.forEach(function (key) {
+      var pair = fieldPair(row.before, row.after, key);
+      if (!pair) {
+        return;
+      }
+      var tr = document.createElement("tr");
+      var field = document.createElement("th");
+      field.scope = "row";
+      field.textContent = pair.field;
+      var previous = document.createElement("td");
+      previous.textContent = asText(pair.previous);
+      var current = document.createElement("td");
+      current.textContent = asText(pair.current);
+      tr.appendChild(field);
+      tr.appendChild(previous);
+      tr.appendChild(current);
+      tbody.appendChild(tr);
+      added += 1;
+    });
+    if (!added) {
+      var empty = document.createElement("tr");
+      var cell = document.createElement("td");
+      cell.colSpan = 3;
+      cell.textContent = row.categories && row.categories.indexOf("added_kev") !== -1
+        ? "Added to the current published snapshot. No previous published values."
+        : row.categories && row.categories.indexOf("removed_kev") !== -1
+          ? "Removed from the current published snapshot."
+          : "No displayable field differences.";
+      empty.appendChild(cell);
+      tbody.appendChild(empty);
+    }
+    table.appendChild(tbody);
+    details.appendChild(table);
+    return details;
+  }
+
+  function renderPublicationComparison(comparison) {
+    changesBody.textContent = "";
+    if (!comparison || comparison.available !== true) {
+      changesNote.textContent =
+        "No comparison available. Baseline unavailable because no immediately preceding published snapshot was retained or the previous published snapshot is incompatible.";
+      var unavailable = document.createElement("p");
+      unavailable.className = "empty-state";
+      unavailable.textContent = "No comparison available";
+      changesBody.appendChild(unavailable);
+      return;
+    }
+    var note =
+      "Published-to-published comparison against snapshot " +
+      asText(comparison.compared_to_snapshot_id) +
+      " generated " +
+      formatInstant(comparison.compared_to_generated_at) +
+      ". Retrieval timestamps are not treated as vulnerability updates. Collect-time candidate diffs are not shown here.";
+    if (comparison.truncated) {
+      note += " Showing a bounded subset of changed records.";
+    }
+    changesNote.textContent = note;
+    var groups = {};
+    CATEGORY_ORDER.forEach(function (key) {
+      groups[key] = [];
+    });
+    (comparison.rows || []).forEach(function (row) {
+      (row.categories || []).forEach(function (category) {
+        if (groups[category]) {
+          groups[category].push(row);
+        }
+      });
+    });
+    var rendered = 0;
+    CATEGORY_ORDER.forEach(function (category) {
+      var rows = groups[category];
+      if (!rows.length) {
+        return;
+      }
+      rendered += 1;
+      var heading = document.createElement("h3");
+      heading.textContent = CATEGORY_LABELS[category] + " (" + String(rows.length) + ")";
+      changesBody.appendChild(heading);
+      var wrap = document.createElement("div");
+      wrap.className = "table-wrap";
+      var table = document.createElement("table");
+      var caption = document.createElement("caption");
+      caption.className = "visually-hidden";
+      caption.textContent = CATEGORY_LABELS[category];
+      table.appendChild(caption);
+      var thead = document.createElement("thead");
+      var headRow = document.createElement("tr");
+      ["CVE", "Categories", "Changed fields", "Sources", "Details"].forEach(function (label) {
+        var th = document.createElement("th");
+        th.scope = "col";
+        th.textContent = label;
+        headRow.appendChild(th);
+      });
+      thead.appendChild(headRow);
+      table.appendChild(thead);
+      var tbody = document.createElement("tbody");
+      rows.forEach(function (row) {
+        var tr = document.createElement("tr");
+        var cve = document.createElement("td");
+        var cveLink = row.links && row.links.cve_record;
+        if (safeHttpsUrl(cveLink)) {
+          addLink(cve, cveLink, asText(row.cve_id));
+        } else {
+          cve.textContent = asText(row.cve_id);
+        }
+        tr.appendChild(cve);
+        var cats = document.createElement("td");
+        cats.textContent = (row.categories || [])
+          .map(function (item) {
+            return CATEGORY_LABELS[item] || item;
+          })
+          .join("; ");
+        tr.appendChild(cats);
+        var fields = document.createElement("td");
+        fields.textContent = (row.changed_fields || [])
+          .map(function (item) {
+            return FIELD_LABELS[item] || item;
+          })
+          .join(", ") || "Not applicable";
+        tr.appendChild(fields);
+        var links = document.createElement("td");
+        addLink(links, row.links && row.links.cve_record, "CVE record");
+        addLink(links, row.links && row.links.kev_catalog, "KEV catalog");
+        addLink(links, row.links && row.links.cvelist_v5, "CVE List V5");
+        tr.appendChild(links);
+        var details = document.createElement("td");
+        details.appendChild(buildBeforeAfter(row));
+        tr.appendChild(details);
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+      changesBody.appendChild(wrap);
+    });
+    if (!rendered) {
+      var empty = document.createElement("p");
+      empty.className = "empty-state";
+      empty.textContent = "No published-to-published record changes.";
+      changesBody.appendChild(empty);
+    }
   }
 
   function compactRecord(record) {
@@ -277,6 +571,7 @@
     var epss = record.epss || {};
     var links = record.links || {};
     var severity = cve.severity && typeof cve.severity === "object" ? cve.severity : {};
+    var products = Array.isArray(cve.products) ? cve.products.slice(0, PRODUCT_DETAIL_LIMIT) : [];
     return {
       cve_id: record.cve_id,
       vendor_project: kev.vendor_project,
@@ -291,8 +586,21 @@
       partial: Boolean((cve.truncated_fields || []).length) || cve.status !== "ok",
       cvss_base_score: severity.base_score,
       severity_status: severity.base_score === null || severity.base_score === undefined ? "unavailable" : "available",
+      cvss_vector: severity.vector,
       epss_status: epss.status,
       epss_score: epss.score,
+      short_description: kev.short_description,
+      required_action: kev.required_action,
+      due_date: kev.due_date,
+      known_ransomware_campaign_use: kev.known_ransomware_campaign_use,
+      cwes: Array.isArray(kev.cwes) ? kev.cwes.slice() : [],
+      cve_state: cve.state,
+      cve_description: cve.description,
+      products: products.map(function (item) {
+        var versions = Array.isArray(item.versions) ? item.versions.slice(0, VERSION_DETAIL_LIMIT) : [];
+        return [item.vendor, item.product, item.status].filter(Boolean).join(" / ") +
+          (versions.length ? " (" + versions.join(", ") + ")" : "");
+      }),
       links: {
         cve_record: links.cve_record,
         kev_catalog: links.kev_catalog,
@@ -301,8 +609,41 @@
     };
   }
 
-  function rowMatches(row, query, completeness, truncated) {
+  function cvssMatches(row, band) {
+    if (band === "all") {
+      return true;
+    }
+    var score = row.cvss_base_score;
+    if (score === null || score === undefined || row.severity_status !== "available") {
+      return band === "unavailable";
+    }
+    var numeric = Number(score);
+    if (!isFinite(numeric)) {
+      return band === "unavailable";
+    }
+    if (band === "unavailable") {
+      return false;
+    }
+    if (band === "critical") {
+      return numeric >= 9;
+    }
+    if (band === "high") {
+      return numeric >= 7 && numeric < 9;
+    }
+    if (band === "medium") {
+      return numeric >= 4 && numeric < 7;
+    }
+    if (band === "low") {
+      return numeric > 0 && numeric < 4;
+    }
+    return true;
+  }
+
+  function rowMatches(row, query, completeness, truncated, cvss) {
     if (completeness !== "all" && row.completeness !== completeness) {
+      return false;
+    }
+    if (!cvssMatches(row, cvss || "all")) {
       return false;
     }
     var isTruncated = (row.truncated_fields || []).indexOf("versions") !== -1 || Number(row.omitted_version_count) > 0;
@@ -357,9 +698,10 @@
     var query = (catalogQuery.value || "").trim().toLowerCase();
     var completeness = catalogCompleteness.value;
     var truncated = catalogTruncated.value;
+    var cvss = catalogCvss ? catalogCvss.value : "all";
     var sorted = sortRows(catalogRows, catalogSort.value);
     filteredCatalog = sorted.filter(function (row) {
-      return rowMatches(row, query, completeness, truncated);
+      return rowMatches(row, query, completeness, truncated, cvss);
     });
     var maxPage = Math.max(0, Math.ceil(filteredCatalog.length / PAGE_SIZE) - 1);
     if (catalogPageIndex > maxPage) {
@@ -369,6 +711,7 @@
     var pageRows = filteredCatalog.slice(start, start + PAGE_SIZE);
     renderRows(catalogBody, pageRows, {
       showChange: false,
+      showDetails: true,
       emptyText: catalogLoaded ? "No published records match this search." : "Catalog not loaded.",
     });
     var pageLabel = catalogLoaded
@@ -391,6 +734,9 @@
     catalogCompleteness.disabled = !enabled;
     catalogTruncated.disabled = !enabled;
     catalogSort.disabled = !enabled;
+    if (catalogCvss) {
+      catalogCvss.disabled = !enabled;
+    }
   }
 
   function loadJson(path) {
@@ -442,6 +788,12 @@
     catalogPageIndex = 0;
     applyCatalogFilters();
   });
+  if (catalogCvss) {
+    catalogCvss.addEventListener("change", function () {
+      catalogPageIndex = 0;
+      applyCatalogFilters();
+    });
+  }
   catalogTruncated.addEventListener("change", function () {
     catalogPageIndex = 0;
     applyCatalogFilters();
@@ -470,6 +822,7 @@
         );
         recentNote.textContent = "Snapshot unavailable.";
         renderRows(recentBody, [], { showChange: false });
+        renderPublicationComparison(null);
         return;
       }
       var publication = manifest.publication_state || manifest.status;
@@ -484,6 +837,7 @@
         appendMeta("Information state", "unavailable");
         recentNote.textContent = "No approved snapshot has been published.";
         renderRows(recentBody, [], { showChange: false });
+        renderPublicationComparison(null);
         catalogLoad.disabled = true;
         return;
       }
@@ -523,42 +877,39 @@
         summary.epss_enabled === false ||
           ((preview && preview.sources && preview.sources.epss && preview.sources.epss.status) === "disabled")
       );
+      var comparison = preview && preview.publication_comparison;
+      var comparisonAvailable = Boolean(comparison && comparison.available === true);
       appendCard(
-        "Latest update",
-        formatInstant(manifest.snapshot_generated_at || manifest.generated_at),
-        "Snapshot generated at. Freshness is computed at viewing time."
-      );
-      appendCard(
-        "Known exploited vulnerabilities",
+        "Known Exploited CVEs",
         manifest.record_count,
-        "CISA KEV entries in this snapshot. Not a count of exposed systems."
+        "CISA KEV entries in this published snapshot. Not a count of exposed systems."
       );
       appendCard(
-        "Collection outcome",
-        collectionOutcome,
-        collectionOutcome === "degraded"
-          ? "Succeeded with limitations. Not a failed collection."
-          : "Collector finish state, not freshness."
+        "New in KEV",
+        comparisonAvailable ? comparisonCount(comparison.added_count) : "No comparison available",
+        comparisonAvailable
+          ? "Added since the previous published snapshot. Not CISA dateAdded recency."
+          : "Baseline unavailable. This is not zero new entries."
       );
       appendCard(
-        "Fresh at viewing time",
-        freshness.invalid ? "Invalid" : freshness.fresh ? "Yes" : "No",
-        "Age " + formatAge(freshness.ageHours) + ". Stale after " + asText(manifest.stale_after_hours || 36) + " hours."
+        "Updated Records",
+        comparisonAvailable ? comparisonCount(comparison.updated_count) : "No comparison available",
+        comparisonAvailable
+          ? "KEV, CVE, CVSS, or completeness changes versus the previous published snapshot."
+          : "Baseline unavailable. This is not zero updates."
       );
       appendCard(
-        "Extracted inventories",
-        asText(summary.complete_records) +
-          " complete / " +
-          asText(summary.partial_records) +
-          " partial / " +
-          asText(summary.unavailable_records) +
-          " unavailable",
-        "Completeness of extracted product/version text, not real-world coverage."
-      );
-      appendCard(
-        "EPSS",
-        epssDisabled ? "Disabled" : asText(preview && preview.sources && preview.sources.epss && preview.sources.epss.status),
-        "Disabled is not a zero probability."
+        "Published Data Freshness",
+        freshness.invalid ? "Invalid" : freshness.fresh ? "Fresh" : "Stale",
+        "Collection " +
+          formatInstant(manifest.snapshot_generated_at) +
+          ". Publication " +
+          formatInstant(manifest.generated_at) +
+          ". Age " +
+          formatAge(freshness.ageHours) +
+          " at viewing time. Stale after " +
+          asText(manifest.stale_after_hours || 36) +
+          " hours."
       );
 
       appendMeta("Collection outcome", collectionOutcome);
@@ -572,6 +923,7 @@
       appendMeta("Manifest generated at", manifest.generated_at);
       appendMeta("Collection started at", preview && preview.collection_started_at);
       appendMeta("Collection completed at", preview && preview.collection_completed_at);
+      appendMeta("Publication timestamp", manifest.generated_at);
       appendMeta("Record count", manifest.record_count);
       appendMeta("Complete extracted inventories", summary.complete_records);
       appendMeta("Partial extracted inventories", summary.partial_records);
@@ -586,32 +938,41 @@
       appendMeta("CVE retrieved at", cve.retrieved_at);
       appendMeta("EPSS source status", epss.status);
       appendMeta("EPSS source note", epss.error || epss.notes);
-      appendMeta("Snapshot ID", manifest.snapshot_id);
+      appendMeta("EPSS redistribution", epssDisabled ? "Disabled is not a zero probability." : asText(epss.status));
       if (preview && preview.note) {
         appendMeta("Consumer note", preview.note);
       }
+      appendNamedMeta(technicalDetails, "Snapshot ID", manifest.snapshot_id);
+      appendNamedMeta(technicalDetails, "Schema version", preview && preview.schema_version);
+      appendNamedMeta(technicalDetails, "Preview schema version", preview && preview.schema_version);
+      appendNamedMeta(technicalDetails, "KEV content digest", kev.content_sha256);
+      appendNamedMeta(technicalDetails, "KEV source revision", kev.source_revision);
+      appendNamedMeta(technicalDetails, "CVE content digest", cve.content_sha256);
+      appendNamedMeta(technicalDetails, "CVE source revision", cve.source_revision);
+      appendNamedMeta(technicalDetails, "CVE strategy", summary.cve_strategy);
+      appendNamedMeta(technicalDetails, "Compared to published snapshot", comparison && comparison.compared_to_snapshot_id);
+      appendNamedMeta(
+        technicalDetails,
+        "Collect-time changes_available",
+        preview && preview.changes_available ? "yes" : "no"
+      );
       if (!preview) {
         recentNote.textContent = "Preview document unavailable.";
         renderRows(recentBody, [], { showChange: false });
+        renderPublicationComparison(null);
         return;
       }
-      if (preview.changes_available) {
-        recentHeading.textContent = "Meaningful changes since the previous snapshot";
-        recentCaption.textContent = "Meaningful changes since the previous snapshot";
-        recentChangeCol.hidden = false;
-        recentNote.textContent =
-          "These rows are snapshot-to-snapshot changes. KEV added is the CISA date_added, not the catalog publication timestamp. EPSS: " +
-          (epssDisabled ? "disabled" : asText(epss.status));
-        renderRows(recentBody, preview.changes || [], { showChange: true });
-      } else {
-        recentHeading.textContent = "Recently Added to CISA KEV";
-        recentCaption.textContent = "Recently Added to CISA KEV";
-        recentChangeCol.hidden = true;
-        recentNote.textContent =
-          "No previous snapshot was available, so this table is not a diff. It lists the most recently added KEV entries in this snapshot. KEV added is CISA date_added, not catalog publication time. EPSS: " +
-          (epssDisabled ? "disabled" : asText(epss.status));
-        renderRows(recentBody, preview.recent_kev_additions || [], { showChange: false });
-      }
+      renderPublicationComparison(comparison);
+      recentHeading.textContent = "Recently Added to CISA KEV";
+      recentCaption.textContent = "Recently Added to CISA KEV";
+      recentChangeCol.hidden = true;
+      recentNote.textContent =
+        "CISA dateAdded recency for this published snapshot, not a published-to-published diff. KEV added is the CISA date_added, not collection or publication time. EPSS: " +
+        (epssDisabled ? "disabled" : asText(epss.status));
+      renderRows(recentBody, (preview.recent_kev_additions || []).slice(0, RECENT_LIMIT), {
+        showChange: false,
+        emptyText: "No recently added KEV entries are available in this snapshot.",
+      });
     })
     .catch(function () {
       setBanner(
@@ -620,5 +981,6 @@
       );
       recentNote.textContent = "Preview failed.";
       renderRows(recentBody, [], { showChange: false });
+      renderPublicationComparison(null);
     });
 })();
