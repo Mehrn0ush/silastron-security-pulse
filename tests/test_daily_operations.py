@@ -55,6 +55,14 @@ class CollectWorkflowContractTests(unittest.TestCase):
         self.assertNotIn("pages: write", text)
         self.assertNotIn("id-token: write", text)
 
+    def test_runners_are_pinned_to_ubuntu_24_04(self) -> None:
+        for name in ("ci.yml", "collect.yml", "publish.yml"):
+            text = _workflow(name)
+            self.assertIn("runs-on: ubuntu-24.04", text)
+            self.assertNotIn("ubuntu-latest", text)
+            self.assertIn("actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09", text)
+            self.assertIn("actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1", text)
+
 
 class PublishIsolationTests(unittest.TestCase):
     def test_publish_stays_manual_and_binds_an_explicit_collect_run(self) -> None:

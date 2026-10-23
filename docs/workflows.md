@@ -50,12 +50,15 @@ an explicit Publish dispatch with that run's `collect_run_id`.
 
 Do **not** run this workflow until publication is explicitly approved.
 
-## Action pins (verified 2026-10-21 via GitHub git refs API)
+Runners are pinned to `ubuntu-24.04` so `ubuntu-latest` cannot silently move
+to Ubuntu 26.
+
+## Action pins (verified 2026-10-23 via GitHub git refs API)
 
 | Action | Tag | SHA |
 | --- | --- | --- |
-| actions/checkout | v4.2.2 | `11bd71901bbe5b1630ceea73d27597364c9af683` |
-| actions/setup-python | v5.6.0 | `a26af69be951a213d495a4c3e4e4022e16d87065` |
+| actions/checkout | v5.1.0 | `fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09` |
+| actions/setup-python | v6.3.0 | `ece7cb06caefa5fff74198d8649806c4678c61a1` |
 | actions/upload-artifact | v4.6.2 | `ea165f8d65b6e75b540449e92b4886f43607fa02` |
 | actions/download-artifact | v4.3.0 | `d3f86a106a0bac45b974a628896c90dbdf5c8093` |
 | actions/upload-pages-artifact | v3.0.1 | `56afc609e74202658d3ffba0e8f6dda462b719fa` |
