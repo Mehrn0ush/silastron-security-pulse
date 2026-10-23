@@ -166,8 +166,42 @@
     }
   }
 
+  var KNOWN_SOURCE_HOSTS = [
+    "www.cisa.gov",
+    "cisa.gov",
+    "www.cve.org",
+    "cve.org",
+    "github.com",
+    "raw.githubusercontent.com",
+    "www.first.org",
+    "api.first.org",
+    "epss.empiricalsecurity.com",
+  ];
+
+  function impersonatesKnownHost(host) {
+    for (var i = 0; i < KNOWN_SOURCE_HOSTS.length; i++) {
+      var trusted = KNOWN_SOURCE_HOSTS[i];
+      if (host === trusted) {
+        continue;
+      }
+      if (host.indexOf(trusted + ".") === 0 || host.indexOf("." + trusted + ".") !== -1) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   function safePublicHttpsUrl(value) {
     if (typeof value !== "string") {
+      return null;
+    }
+    if (
+      value.indexOf("@") !== -1 ||
+      value.indexOf("\\") !== -1 ||
+      value.indexOf("#") !== -1 ||
+      /[^\x20-\x7e]/.test(value) ||
+      /%00|%0a|%0d/i.test(value)
+    ) {
       return null;
     }
     try {
@@ -184,17 +218,35 @@
       if (parsed.hash) {
         return null;
       }
-      var host = parsed.hostname || "";
+      var host = (parsed.hostname || "").toLowerCase();
       if (!host || host === "localhost" || host.slice(-6) === ".local") {
         return null;
       }
-      if (/^\d{1,3}(?:\.\d{1,3}){3}$/.test(host) || host.indexOf(":") !== -1) {
+      if (host.indexOf("xn--") !== -1 || host.indexOf(":") !== -1) {
         return null;
       }
-      if (!/[a-z]/i.test(host) || host.indexOf(".") === -1) {
+      if (/^\d{1,3}(?:\.\d{1,3}){3}$/.test(host)) {
         return null;
       }
-      return parsed.href;
+      var labels = host.split(".");
+      if (labels.length < 2) {
+        return null;
+      }
+      for (var i = 0; i < labels.length; i++) {
+        if (!/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(labels[i])) {
+          return null;
+        }
+      }
+      if (!/[a-z]/.test(host)) {
+        return null;
+      }
+      if (labels.every(function (label) { return /^(?:0x[0-9a-f]+|\d+)$/.test(label); })) {
+        return null;
+      }
+      if (impersonatesKnownHost(host)) {
+        return null;
+      }
+      return "https://" + host + (parsed.pathname || "") + (parsed.search || "");
     } catch (err) {
       return null;
     }

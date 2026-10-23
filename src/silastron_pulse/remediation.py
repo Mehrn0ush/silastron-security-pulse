@@ -83,6 +83,9 @@ def assemble_remediation(*, kev: KevRecord, cve: CveRecord) -> dict[str, Any]:
         "items": [item.to_dict() for item in unique],
         "note": (
             "Remediation is copied from CISA KEV and CVE List V5 CNA fields. "
-            "No verified remediation data does not mean a fix is unavailable."
+            "Verified Fix and Mitigation require CNA solutions or workarounds. "
+            "CNA reference tags are classification hints, not proof of vendor "
+            "ownership. No verified remediation data does not mean a fix is "
+            "unavailable."
         ),
     }

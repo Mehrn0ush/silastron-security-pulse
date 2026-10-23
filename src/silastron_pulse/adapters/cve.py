@@ -603,7 +603,7 @@ def _english_narrative(value: object, config: PulseConfig) -> list[tuple[str, bo
 def _cna_remediation(
     cna: dict[str, Any], config: PulseConfig
 ) -> tuple[list[RemediationItem], list[str]]:
-    """Copy explicit CNA solutions, workarounds, and vendor-advisory URLs only."""
+    """Copy CNA solutions/workarounds as verified evidence; tagged URLs are hints."""
     items: list[RemediationItem] = []
     truncated: list[str] = []
     for text, was_truncated in _english_narrative(cna.get("solutions"), config):
@@ -662,13 +662,11 @@ def _cna_remediation(
             url = sanitize_public_https_url(ref.get("url"))
             if not url:
                 continue
-            name, _ = clean_text_report(ref.get("name"), 256)
             items.append(
                 RemediationItem(
                     kind="reference",
                     source="cve_list_v5",
-                    attribution="CVE List V5 CNA vendor-advisory",
-                    text=name,
+                    attribution="CVE List V5 CNA reference",
                     url=url,
                 )
             )

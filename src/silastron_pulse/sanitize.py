@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import ipaddress
 import re
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlunparse
 
 from silastron_pulse.constants import ALLOWED_HTTPS_HOSTS, AUTHORITATIVE_LINK_HOSTS
 from silastron_pulse.ids import parse_cve_id
@@ -54,6 +54,9 @@ def is_safe_https_url(value: object, hosts: frozenset[str] | None = None) -> boo
 
 
 _IPV4_HOST = re.compile(r"^\d{1,3}(?:\.\d{1,3}){3}$")
+_HOST_LABEL = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$")
+_NUMERIC_LABEL = re.compile(r"^(?:0x[0-9a-f]+|\d+)$")
+_ENCODED_CONTROL = re.compile(r"%00|%0a|%0d", re.IGNORECASE)
 
 
 def sanitize_https_url(
@@ -90,7 +93,15 @@ def sanitize_public_https_url(value: object, *, max_chars: int = 2048) -> str | 
     if not isinstance(value, str):
         return None
     raw = value.strip()
-    if not raw or len(raw) > max_chars or any(ch.isspace() for ch in raw) or "\\" in raw:
+    if (
+        not raw
+        or len(raw) > max_chars
+        or any(ch.isspace() or ord(ch) > 127 for ch in raw)
+        or "\\" in raw
+        or "@" in raw
+        or "#" in raw
+        or _ENCODED_CONTROL.search(raw)
+    ):
         return None
     try:
         parsed = urlparse(raw)
@@ -98,25 +109,49 @@ def sanitize_public_https_url(value: object, *, max_chars: int = 2048) -> str | 
         return None
     if parsed.scheme.lower() != "https":
         return None
-    if parsed.username or parsed.password:
-        return None
-    host = (parsed.hostname or "").lower()
-    if not host or host in {"localhost"} or host.endswith(".local"):
+    if parsed.username or parsed.password or parsed.fragment:
         return None
     if parsed.port not in (None, 443):
         return None
-    if _IPV4_HOST.match(host) or ":" in host:
+    if "@" in (parsed.netloc or ""):
         return None
+    host = (parsed.hostname or "").lower()
+    if not _public_display_host(host):
+        return None
+    return urlunparse(("https", host, parsed.path, "", parsed.query, ""))
+
+
+def _public_display_host(host: str) -> bool:
+    if not host or host in {"localhost"} or host.endswith(".local"):
+        return False
+    if "xn--" in host or ":" in host or _IPV4_HOST.match(host):
+        return False
     try:
         ipaddress.ip_address(host)
-        return None
+        return False
     except ValueError:
         pass
-    if not any(ch.isalpha() for ch in host) or "." not in host:
-        return None
-    if parsed.fragment:
-        return None
-    return parsed.geturl()
+    labels = host.split(".")
+    if len(labels) < 2:
+        return False
+    if any(not _HOST_LABEL.fullmatch(label) for label in labels):
+        return False
+    if not any(ch.isalpha() for ch in host):
+        return False
+    if all(_NUMERIC_LABEL.fullmatch(label) for label in labels):
+        return False
+    return not _impersonates_known_host(host)
+
+
+def _impersonates_known_host(host: str) -> bool:
+    """Reject lookalikes of Pulse source hosts. Not a vendor-domain allowlist."""
+    known = ALLOWED_HTTPS_HOSTS | AUTHORITATIVE_LINK_HOSTS
+    for trusted in known:
+        if host == trusted:
+            continue
+        if host.startswith(trusted + ".") or f".{trusted}." in host:
+            return True
+    return False
 
 
 def authoritative_cve_url(cve_id: str) -> str:

@@ -56,21 +56,72 @@ class RemediationProvenanceTests(unittest.TestCase):
             kinds,
         )
         self.assertIn(
+            ("reference", "cve_list_v5", "CVE List V5 CNA reference"),
+            kinds,
+        )
+        self.assertNotIn(
             ("reference", "cve_list_v5", "CVE List V5 CNA vendor-advisory"),
             kinds,
         )
         advisory = next(
             item
             for item in record.remediation_items
-            if item.attribution == "CVE List V5 CNA vendor-advisory"
+            if item.attribution == "CVE List V5 CNA reference"
         )
         self.assertEqual(advisory.kind, "reference")
-        self.assertEqual(advisory.text, "Fixed in 2.1.0")
+        self.assertIsNone(advisory.text)
         self.assertEqual(advisory.url, "https://vendor.example/security/CVE-2099-0001")
+        self.assertNotIn("official", advisory.attribution.lower())
+        self.assertNotIn("vendor-advisory", advisory.attribution.lower())
         urls = {item.url for item in record.remediation_items if item.url}
         self.assertNotIn("javascript:alert(1)", urls)
         self.assertNotIn("https://research.example/writeup", urls)
         self.assertNotIn("https://third-party.example/advisory", urls)
+        self.assertNotIn("https://cisa.gov.evil.example/advisory", urls)
+        self.assertNotIn("https://xn--80ak6aa92e.com/advisory", urls)
+        self.assertNotIn("https://user:pass@vendor.example/steal", urls)
+        self.assertNotIn("https://0x7f.0x00.0x00.0x01/advisory", urls)
+
+    def test_cna_tag_and_url_title_are_not_verified_or_official(self) -> None:
+        payload = {
+            "dataType": "CVE_RECORD",
+            "dataVersion": "5.1",
+            "cveMetadata": {"cveId": "CVE-2099-0001", "state": "PUBLISHED"},
+            "containers": {
+                "cna": {
+                    "descriptions": [
+                        {
+                            "lang": "en",
+                            "value": "Apply the official vendor patch 3.2.1 immediately.",
+                        }
+                    ],
+                    "references": [
+                        {
+                            "url": "https://untrusted.example/advisory",
+                            "name": "Official vendor advisory — fixed in 3.2.1",
+                            "tags": ["vendor-advisory"],
+                        }
+                    ],
+                }
+            },
+        }
+        raw = json.dumps(payload).encode("utf-8")
+        record = parse_cve_record(
+            payload,
+            expected_cve_id="CVE-2099-0001",
+            raw=raw,
+            source_url=cvelist_v5_raw_url("CVE-2099-0001"),
+            config=test_config(Path(tempfile.mkdtemp())),
+        )
+        kinds = {item.kind for item in record.remediation_items}
+        self.assertEqual(kinds, {"reference"})
+        item = record.remediation_items[0]
+        self.assertEqual(item.attribution, "CVE List V5 CNA reference")
+        self.assertIsNone(item.text)
+        self.assertEqual(item.url, "https://untrusted.example/advisory")
+        self.assertNotIn("official", " ".join(item.attribution.lower() for item in record.remediation_items))
+        self.assertNotIn("verified_fix", kinds)
+        self.assertNotIn("mitigation", kinds)
 
     def test_cvss_affected_ranges_and_descriptions_are_not_verified_fixes(self) -> None:
         raw = fixture_bytes("cve_2099_0001_remediation.json")
@@ -152,6 +203,7 @@ class RemediationProvenanceTests(unittest.TestCase):
         self.assertEqual(action["attribution"], "CISA KEV requiredAction")
         notes = next(item for item in payload["items"] if item["attribution"] == "CISA KEV notes")
         self.assertEqual(notes["kind"], "reference")
+        self.assertIn("classification hints", payload["note"])
 
     def test_collected_snapshot_includes_optional_remediation(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

@@ -73,6 +73,26 @@
           "url": "https://third-party.example/advisory",
           "name": "Third party advisory",
           "tags": ["third-party-advisory"]
+        },
+        {
+          "url": "https://cisa.gov.evil.example/advisory",
+          "name": "Official CISA advisory",
+          "tags": ["vendor-advisory"]
+        },
+        {
+          "url": "https://xn--80ak6aa92e.com/advisory",
+          "name": "Vendor fix",
+          "tags": ["vendor-advisory"]
+        },
+        {
+          "url": "https://user:pass@vendor.example/steal",
+          "name": "Official vendor advisory",
+          "tags": ["vendor-advisory"]
+        },
+        {
+          "url": "https://0x7f.0x00.0x00.0x01/advisory",
+          "name": "Local vendor advisory",
+          "tags": ["vendor-advisory"]
         }
       ]
     }

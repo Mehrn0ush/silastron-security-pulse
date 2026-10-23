@@ -32,13 +32,26 @@ class SanitizeTests(unittest.TestCase):
                 self.assertIsNone(sanitize_https_url(url))
 
     def test_public_display_urls_are_https_and_non_private(self) -> None:
-        self.assertIsNotNone(sanitize_public_https_url("https://vendor.example/advisory"))
+        self.assertEqual(
+            sanitize_public_https_url("https://vendor.example/advisory"),
+            "https://vendor.example/advisory",
+        )
         self.assertIsNone(sanitize_https_url("https://vendor.example/advisory"))
         for url in [
             "https://169.254.169.254/latest/meta-data",
             "https://[::1]/x",
             "https://vendor.example/x#frag",
             "https://not a host.example/x",
+            "https://user:pass@vendor.example/advisory",
+            "https://cisa.gov.evil.example/advisory",
+            "https://www.cisa.gov.attacker.example/advisory",
+            "https://xn--80ak6aa92e.com/advisory",
+            "https://0x7f.0x00.0x00.0x01/advisory",
+            "https://vendor..example/advisory",
+            "https://vendor.example./advisory",
+            "javascript:alert(1)",
+            "data:text/html,hi",
+            "http://vendor.example/advisory",
         ]:
             with self.subTest(url=url):
                 self.assertIsNone(sanitize_public_https_url(url))
