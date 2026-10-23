@@ -45,7 +45,15 @@
         "removed_kev_entries",
         "changed_cve_information",
         "epss_changes"
-      ]
+      ],
+      "properties": {
+        "new_kev_entries": { "type": "array" },
+        "updated_kev_entries": { "type": "array" },
+        "removed_kev_entries": { "type": "array" },
+        "changed_cve_information": { "type": "array" },
+        "epss_changes": { "type": "array" },
+        "source_metadata_changes": { "type": "array" }
+      }
     }
   },
   "$defs": {

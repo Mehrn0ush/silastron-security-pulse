@@ -11,6 +11,7 @@ from silastron_pulse.jsonutil import sha256_bytes
 
 ALLOWED_WORKFLOW_PATHS = {".github/workflows/collect.yml"}
 ALLOWED_WORKFLOW_NAMES = {"Collect"}
+ALLOWED_COLLECT_EVENTS = frozenset({"workflow_dispatch", "schedule"})
 
 
 def _normalize_sha256(value: str | None) -> str | None:
@@ -121,8 +122,10 @@ def verify_collect_run(
     if conclusion != "success":
         raise ArtifactVerifyError(f"Collect run conclusion is {conclusion!r}, not success")
     event = run.get("event")
-    if event not in {None, "workflow_dispatch"}:
-        raise ArtifactVerifyError(f"Collect run event {event!r} is not workflow_dispatch")
+    if event is not None and event not in ALLOWED_COLLECT_EVENTS:
+        raise ArtifactVerifyError(
+            f"Collect run event {event!r} is not workflow_dispatch or schedule"
+        )
     head_sha = run.get("headSha") or run.get("head_sha")
     if not head_sha:
         raise ArtifactVerifyError("Collect run is missing head SHA")

@@ -310,6 +310,7 @@ class ChangeSet:
     removed_kev_entries: list[str] = field(default_factory=list)
     changed_cve_information: list[str] = field(default_factory=list)
     epss_changes: list[str] = field(default_factory=list)
+    source_metadata_changes: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -318,6 +319,7 @@ class ChangeSet:
             "removed_kev_entries": list(self.removed_kev_entries),
             "changed_cve_information": list(self.changed_cve_information),
             "epss_changes": list(self.epss_changes),
+            "source_metadata_changes": list(self.source_metadata_changes),
         }
 
     def is_empty(self) -> bool:
@@ -327,4 +329,5 @@ class ChangeSet:
             or self.removed_kev_entries
             or self.changed_cve_information
             or self.epss_changes
+            or self.source_metadata_changes
         )

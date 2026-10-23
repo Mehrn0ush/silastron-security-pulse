@@ -12,9 +12,12 @@ review. The checked-in preview manifest is `unpublished`.
 
 1. Enable GitHub Pages: Settings → Pages → Source = GitHub Actions.
 2. Protect the `github-pages` environment with required reviewers.
-3. Run `Collect` from `main` via workflow_dispatch.
-4. Inspect the `pulse-candidate` artifact.
-5. Run `Publish GitHub Pages` from `main` with `confirm=PUBLISH`.
+3. Collect runs daily at 08:00 UTC and can also be started from `main` via
+   workflow_dispatch. Inspect the `pulse-candidate` artifact from the Collect
+   run you intend to publish.
+4. Run `Publish GitHub Pages` from `main` with `confirm=PUBLISH` and that
+   Collect run's `collect_run_id`. A newer Collect does not replace the bound
+   artifact.
 6. Confirm `manifest.json` `status` is `ok` or `degraded` and `stale` is false.
 
 ## Rollback

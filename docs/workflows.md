@@ -12,22 +12,28 @@ Pull requests never collect live intelligence and never deploy Pages.
 
 ## `collect.yml`
 
-- Trigger: **workflow_dispatch only**
-- Schedule is present only as a commented example and is **not enabled**
+- Triggers: **workflow_dispatch** and **schedule** `0 8 * * *` (08:00 UTC)
 - Runs only from `main`
+- `concurrency: collect` with `cancel-in-progress: false` so overlapping runs
+  queue instead of cancelling in-progress collection
 - Permissions: `contents: write` (fast-forward `pulse-state` only), `actions: read`
 - Checks out collector code and `pulse-state`
 - Writes `dist/candidate.json` + `candidate.meta.json`, uploads `pulse-candidate`
 - On success, commits `source/` and `candidates/` to `pulse-state`
+- Refuses to commit if `published/` is dirty or staged
 - Does not deploy Pages and does not write `published/`
-- If collection fails, the job fails; last-known-good pulse-state is left in place
+- If collection fails, the job fails before persist; last-known-good pulse-state
+  is left in place
+- HTTP 429/5xx retries remain in `HttpsFetcher`; this workflow does not publish
 
-Do not enable the cron schedule until the repository owner approves source
-contracts and security review.
+A successful scheduled Collect is a candidate only. Publication still requires
+an explicit Publish dispatch with that run's `collect_run_id`.
 
 ## `publish.yml`
 
 - Trigger: workflow_dispatch with `confirm=PUBLISH` and **required** `collect_run_id`
+- No schedule. A newer Collect run is not selected automatically.
+- Accepts Collect runs whose event is `workflow_dispatch` or `schedule`
 - Runs only from `main`
 - Verifies Collect run repository, workflow identity, branch, success, SHA, artifact
   name, expiry, and `candidate.json` content SHA-256 (against `candidate.meta.json`,

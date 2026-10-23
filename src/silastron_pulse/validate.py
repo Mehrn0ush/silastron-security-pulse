@@ -102,6 +102,9 @@ def validate_snapshot(payload: object, *, compatible: bool = False) -> dict[str,
     ):
         if key not in changes or not isinstance(changes[key], list):
             raise ValidationError(f"Snapshot changes.{key} must be an array")
+    extra = changes.get("source_metadata_changes")
+    if extra is not None and not isinstance(extra, list):
+        raise ValidationError("Snapshot changes.source_metadata_changes must be an array")
     kev_meta = sources.get("kev") or {}
     if payload["status"] in {"ok", "degraded"} and not kev_meta.get("retrieved_at"):
         raise ValidationError("Snapshot sources.kev.retrieved_at is required")

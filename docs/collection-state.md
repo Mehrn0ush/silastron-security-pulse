@@ -37,19 +37,21 @@ a crash mid-write does not claim that source state is complete.
 
 ## Lifecycle
 
-1. **Collect** (manual `workflow_dispatch` on `main`) checks out collector code
-   and `pulse-state`, takes a filesystem lock, loads the previous valid
-   snapshot from `published/latest.json` or `candidates/latest.json`, fetches
-   KEV, incrementally enriches CVE List V5 (`delta.json` / `deltaLog.json`,
-   not a per-CVE poll of the full KEV set), writes `dist/candidate.json`,
-   commits `source/` and `candidates/` to `pulse-state`, and uploads artifact
-   `pulse-candidate`. See [cve-sync.md](cve-sync.md).
+1. **Collect** (`workflow_dispatch` or daily `schedule` at 08:00 UTC on `main`)
+   checks out collector code and `pulse-state`, takes a filesystem lock, loads
+   the previous valid snapshot from `published/latest.json` or
+   `candidates/latest.json`, fetches KEV, incrementally enriches CVE List V5
+   (`delta.json` / `deltaLog.json`, not a per-CVE poll of the full KEV set),
+   writes `dist/candidate.json`, commits `source/` and `candidates/` to
+   `pulse-state`, and uploads artifact `pulse-candidate`. It never writes
+   `published/`. See [cve-sync.md](cve-sync.md).
 2. **Publish** requires `collect_run_id`. It verifies repository, Collect
-   workflow identity, `main`, success, head SHA, artifact name, expiry, and
-   SHA-256 digest. It copies the actual last published snapshot from
-   `pulse-state` into the promote directory so stale replay is compared against
-   real published state, then deploys Pages and commits `published/` only after
-   a successful deploy job.
+   workflow identity, `main`, success, `workflow_dispatch` or `schedule`, head
+   SHA, artifact name, expiry, and SHA-256 digest. The selected run is the one
+   named in `collect_run_id`, not the newest Collect. It copies the actual last
+   published snapshot from `pulse-state` into the promote directory so stale
+   replay is compared against real published state, then deploys Pages and
+   commits `published/` only after a successful deploy job.
 3. **Rollback** is `silastron-pulse rollback --confirm ROLLBACK --snapshot-id …`.
    It is the only operation allowed to re-promote a superseded snapshot.
 
