@@ -96,6 +96,34 @@
             "product_affectedness",
             "deployment_exposure"
           ]
+        },
+        "remediation": {
+          "type": "object",
+          "required": ["status", "items"],
+          "properties": {
+            "status": { "enum": ["available", "unavailable"] },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["kind", "source", "attribution"],
+                "properties": {
+                  "kind": {
+                    "enum": [
+                      "required_action",
+                      "verified_fix",
+                      "mitigation",
+                      "reference"
+                    ]
+                  },
+                  "source": { "enum": ["cisa_kev", "cve_list_v5"] },
+                  "attribution": { "type": "string", "minLength": 1 },
+                  "text": { "type": "string" },
+                  "url": { "type": "string" }
+                }
+              }
+            }
+          }
         }
       }
     }

@@ -45,6 +45,14 @@ Optional object written at promote time. It is **not** `snapshot.changes`.
 - `records[].kev.listed`: always `true` in this pipeline
 - `records[].signals`: five independent objects
 - `records[].links`: constructed HTTPS URLs to CVE.org, CISA KEV, and CVE List V5
+- `records[].remediation`: optional evidence object. `status` is `available` or
+  `unavailable`. Items are copied from CISA KEV `requiredAction`/`notes` (and
+  HTTPS URLs found in those fields), CVE List V5 CNA `solutions` (Verified Fix),
+  CNA `workarounds` (Mitigation), and CNA references tagged `vendor-advisory`
+  (Reference). A missing object is valid for snapshots collected before this
+  field existed. Absence of items is not proof that no vendor fix exists. The
+  collector never infers a patch from CVSS, affected-version ranges,
+  descriptions, or untagged CVE reference titles.
 - `changes`: new KEV, updated KEV, **removed KEV**, changed CVE information, EPSS changes
 - `binding.collector_commit_sha`, `binding.source_state_revision`
 - `sources.kev.retrieved_at` required on successful snapshots

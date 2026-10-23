@@ -166,6 +166,40 @@
     }
   }
 
+  function safePublicHttpsUrl(value) {
+    if (typeof value !== "string") {
+      return null;
+    }
+    try {
+      var parsed = new URL(value);
+      if (parsed.protocol !== "https:") {
+        return null;
+      }
+      if (parsed.username || parsed.password) {
+        return null;
+      }
+      if (parsed.port && parsed.port !== "443") {
+        return null;
+      }
+      if (parsed.hash) {
+        return null;
+      }
+      var host = parsed.hostname || "";
+      if (!host || host === "localhost" || host.slice(-6) === ".local") {
+        return null;
+      }
+      if (/^\d{1,3}(?:\.\d{1,3}){3}$/.test(host) || host.indexOf(":") !== -1) {
+        return null;
+      }
+      if (!/[a-z]/i.test(host) || host.indexOf(".") === -1) {
+        return null;
+      }
+      return parsed.href;
+    } catch (err) {
+      return null;
+    }
+  }
+
   function setBanner(kind, message) {
     statusBanner.className = "banner " + kind;
     statusBanner.textContent = message;
@@ -311,7 +345,61 @@
       details.appendChild(productHeading);
       appendList(details, row.products);
     }
+    details.appendChild(buildRemediation(row.remediation));
     return details;
+  }
+
+  var REMEDIATION_LABELS = {
+    required_action: "Required Action",
+    verified_fix: "Verified Fix",
+    mitigation: "Mitigation",
+    reference: "Reference",
+  };
+
+  function buildRemediation(remediation) {
+    var section = document.createElement("div");
+    var heading = document.createElement("p");
+    heading.className = "detail-label";
+    heading.textContent = "Remediation";
+    section.appendChild(heading);
+    var items = remediation && Array.isArray(remediation.items) ? remediation.items : [];
+    if (!remediation || remediation.status !== "available" || !items.length) {
+      var empty = document.createElement("p");
+      empty.textContent = "No verified remediation data";
+      section.appendChild(empty);
+      return section;
+    }
+    var list = document.createElement("ul");
+    items.forEach(function (item) {
+      var li = document.createElement("li");
+      var kind = document.createElement("strong");
+      kind.textContent = REMEDIATION_LABELS[item.kind] || "Reference";
+      li.appendChild(kind);
+      li.appendChild(document.createTextNode(" · " + asText(item.attribution)));
+      if (item.text) {
+        var text = document.createElement("div");
+        text.textContent = asText(item.text);
+        li.appendChild(text);
+      }
+      var url = safePublicHttpsUrl(item.url);
+      if (url) {
+        var linkWrap = document.createElement("div");
+        var anchor = document.createElement("a");
+        anchor.setAttribute("href", url);
+        anchor.setAttribute("rel", "noopener noreferrer");
+        anchor.setAttribute("target", "_blank");
+        anchor.textContent = url;
+        linkWrap.appendChild(anchor);
+        li.appendChild(linkWrap);
+      } else if (item.url) {
+        var unavailable = document.createElement("div");
+        unavailable.textContent = "Reference URL unavailable";
+        li.appendChild(unavailable);
+      }
+      list.appendChild(li);
+    });
+    section.appendChild(list);
+    return section;
   }
 
   function renderRows(tbody, rows, options) {
@@ -565,6 +653,30 @@
     }
   }
 
+  function fallbackRemediation(kev) {
+    var items = [];
+    if (kev.required_action) {
+      items.push({
+        kind: "required_action",
+        source: "cisa_kev",
+        attribution: "CISA KEV requiredAction",
+        text: kev.required_action,
+      });
+    }
+    if (kev.notes) {
+      items.push({
+        kind: "reference",
+        source: "cisa_kev",
+        attribution: "CISA KEV notes",
+        text: kev.notes,
+      });
+    }
+    return {
+      status: items.length ? "available" : "unavailable",
+      items: items,
+    };
+  }
+
   function compactRecord(record) {
     var cve = record.cve || {};
     var kev = record.kev || {};
@@ -601,6 +713,7 @@
         return [item.vendor, item.product, item.status].filter(Boolean).join(" / ") +
           (versions.length ? " (" + versions.join(", ") + ")" : "");
       }),
+      remediation: record.remediation || fallbackRemediation(kev),
       links: {
         cve_record: links.cve_record,
         kev_catalog: links.kev_catalog,

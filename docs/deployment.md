@@ -18,6 +18,9 @@ review. The checked-in preview manifest is `unpublished`.
 4. Run `Publish GitHub Pages` from `main` with `confirm=PUBLISH` and that
    Collect run's `collect_run_id`. A newer Collect does not replace the bound
    artifact.
+5. To ship UI from `main` without republishing intelligence, run
+   `Deploy frontend` with `confirm=DEPLOY_FRONTEND`. It copies the current
+   published snapshot as-is and does not run Collect or Promote.
 6. Confirm `manifest.json` `status` is `ok` or `degraded` and `stale` is false.
 
 ## Rollback

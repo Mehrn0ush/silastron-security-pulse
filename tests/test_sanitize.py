@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import unittest
 
-from silastron_pulse.sanitize import clean_text, sanitize_https_url
+from silastron_pulse.sanitize import clean_text, sanitize_https_url, sanitize_public_https_url
 
 
 class SanitizeTests(unittest.TestCase):
@@ -30,6 +30,18 @@ class SanitizeTests(unittest.TestCase):
         ]:
             with self.subTest(url=url):
                 self.assertIsNone(sanitize_https_url(url))
+
+    def test_public_display_urls_are_https_and_non_private(self) -> None:
+        self.assertIsNotNone(sanitize_public_https_url("https://vendor.example/advisory"))
+        self.assertIsNone(sanitize_https_url("https://vendor.example/advisory"))
+        for url in [
+            "https://169.254.169.254/latest/meta-data",
+            "https://[::1]/x",
+            "https://vendor.example/x#frag",
+            "https://not a host.example/x",
+        ]:
+            with self.subTest(url=url):
+                self.assertIsNone(sanitize_public_https_url(url))
 
 
 if __name__ == "__main__":

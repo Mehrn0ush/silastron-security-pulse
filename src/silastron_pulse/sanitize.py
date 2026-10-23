@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import ipaddress
+import re
 from urllib.parse import urlparse
 
 from silastron_pulse.constants import ALLOWED_HTTPS_HOSTS, AUTHORITATIVE_LINK_HOSTS
@@ -51,6 +53,9 @@ def is_safe_https_url(value: object, hosts: frozenset[str] | None = None) -> boo
     return sanitize_https_url(value, hosts=hosts) is not None
 
 
+_IPV4_HOST = re.compile(r"^\d{1,3}(?:\.\d{1,3}){3}$")
+
+
 def sanitize_https_url(
     value: object, hosts: frozenset[str] | None = None
 ) -> str | None:
@@ -76,6 +81,40 @@ def sanitize_https_url(
     if host not in allowed:
         return None
     if parsed.port not in (None, 443):
+        return None
+    return parsed.geturl()
+
+
+def sanitize_public_https_url(value: object, *, max_chars: int = 2048) -> str | None:
+    """Display-only HTTPS URL. Not a fetch allowlist and not a vendor-host list."""
+    if not isinstance(value, str):
+        return None
+    raw = value.strip()
+    if not raw or len(raw) > max_chars or any(ch.isspace() for ch in raw) or "\\" in raw:
+        return None
+    try:
+        parsed = urlparse(raw)
+    except ValueError:
+        return None
+    if parsed.scheme.lower() != "https":
+        return None
+    if parsed.username or parsed.password:
+        return None
+    host = (parsed.hostname or "").lower()
+    if not host or host in {"localhost"} or host.endswith(".local"):
+        return None
+    if parsed.port not in (None, 443):
+        return None
+    if _IPV4_HOST.match(host) or ":" in host:
+        return None
+    try:
+        ipaddress.ip_address(host)
+        return None
+    except ValueError:
+        pass
+    if not any(ch.isalpha() for ch in host) or "." not in host:
+        return None
+    if parsed.fragment:
         return None
     return parsed.geturl()
 

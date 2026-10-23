@@ -53,6 +53,25 @@ an explicit Publish dispatch with that run's `collect_run_id`.
 
 Do **not** run this workflow until publication is explicitly approved.
 
+## `deploy-frontend.yml`
+
+- Trigger: workflow_dispatch with `confirm=DEPLOY_FRONTEND` from `main` only
+- No schedule, no Collect, no Promote, and no `pulse-state` write
+- Shares `concurrency: pages` / `cancel-in-progress: false` with Publish so
+  the two cannot interleave Pages artifacts
+- Copies `pulse-state/published/` byte-for-byte into `_site/data/`, then copies
+  current `preview/` HTML/CSS/JS
+- `verify-published-site` fails closed if published JSON is missing, invalid,
+  inconsistent, or mutated during the copy
+- Does not recompute `publication_comparison` or change publication timestamps
+- Deploy uses the same `github-pages` environment and `deploy-pages` action as
+  Publish. A failed build does not deploy, so the last-known-good Pages site
+  remains. Because this workflow never persists `published/`, pulse-state is
+  unchanged on success or failure
+
+Use this when UI on `main` should ship against the currently published
+snapshot. Intelligence updates still require Publish.
+
 Runners are pinned to `ubuntu-24.04` so `ubuntu-latest` cannot silently move
 to Ubuntu 26.
 
