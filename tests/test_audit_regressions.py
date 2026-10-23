@@ -389,6 +389,9 @@ class PublishWorkflowTests(unittest.TestCase):
         self.assertIn("sha256sums_text=sha256sums", build)
         self.assertIn("metadata=meta", build)
         self.assertIn("artifact.digest is the GitHub zip-archive SHA-256", build)
+        self.assertIn("verify-publication", persist)
+        self.assertIn("--incoming published-data", persist)
+        self.assertIn("--current pulse-state/published", persist)
 
 
 class TimestampAndFreshnessTests(unittest.TestCase):

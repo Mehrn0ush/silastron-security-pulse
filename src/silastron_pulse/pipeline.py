@@ -24,7 +24,7 @@ from silastron_pulse.constants import (
     PACKAGE_VERSION,
     SNAPSHOT_SCHEMA_VERSION,
 )
-from silastron_pulse.diff import detect_changes
+from silastron_pulse.diff import detect_changes, entries_from_snapshot
 from silastron_pulse.errors import FetchError, ValidationError
 from silastron_pulse.http import CountingFetcher, Fetcher, HttpsFetcher
 from silastron_pulse.ids import cvelist_v5_relpath
@@ -575,56 +575,4 @@ def _build_snapshot(
 
 def _entries_from_snapshot(payload: dict[str, Any]) -> dict[str, PulseEntry]:
     """Rebuild comparable entries from a previous snapshot JSON."""
-    from silastron_pulse.models import EpssRecord, PulseEntry
-
-    entries: dict[str, PulseEntry] = {}
-    for item in payload.get("records", []):
-        kev = item["kev"]
-        cve = item["cve"]
-        epss = item["epss"]
-        kev_record = KevRecord(
-            cve_id=kev["cve_id"],
-            vendor_project=kev["vendor_project"],
-            product=kev["product"],
-            vulnerability_name=kev["vulnerability_name"],
-            date_added=kev["date_added"],
-            short_description=kev["short_description"],
-            required_action=kev["required_action"],
-            due_date=kev["due_date"],
-            known_ransomware_campaign_use=kev.get("known_ransomware_campaign_use"),
-            forensic_triage=kev.get("forensic_triage"),
-            notes=kev.get("notes"),
-            cwes=list(kev.get("cwes") or []),
-            source_url=kev.get("source_url") or "",
-            record_sha256=kev.get("record_sha256") or "",
-            truncated_fields=tuple(kev.get("truncated_fields") or ()),
-            cwes_incomplete=bool(kev.get("cwes_incomplete")),
-        )
-        cve_record = cve_record_from_dict(cve, cached=bool(cve.get("cached")))
-        epss_record = EpssRecord(
-            status=epss.get("status") or "unavailable",
-            cve_id=epss.get("cve_id") or item["cve_id"],
-            score=epss.get("score"),
-            percentile=epss.get("percentile"),
-            score_date=epss.get("score_date"),
-            notes=epss.get("notes"),
-        )
-        signals_raw = item.get("signals") or {}
-        entries[item["cve_id"]] = PulseEntry(
-            cve_id=item["cve_id"],
-            kev=kev_record,
-            cve=cve_record,
-            epss=epss_record,
-            signals=Signals(
-                confirmed_exploitation=signals_raw.get("confirmed_exploitation") or {},
-                estimated_exploitation_probability=signals_raw.get(
-                    "estimated_exploitation_probability"
-                )
-                or {},
-                vulnerability_severity=signals_raw.get("vulnerability_severity") or {},
-                product_affectedness=signals_raw.get("product_affectedness") or {},
-                deployment_exposure=signals_raw.get("deployment_exposure") or {},
-            ),
-            links=item.get("links") or {},
-        )
-    return entries
+    return entries_from_snapshot(payload)

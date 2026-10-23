@@ -18,6 +18,13 @@
 - Change detection requires a previously valid snapshot in `pulse-state`. The
   first snapshot shows recent KEV additions, not a diff. A missing previous
   snapshot after source state exists fails closed.
+- `snapshot.changes` is a collect-time comparison against the previous
+  available snapshot (published latest if present, otherwise the last
+  candidate). The dashboard What's Changed section does **not** use that
+  field. It uses `preview.publication_comparison`, computed at promote time
+  against the previously published `latest.json`. The first published
+  snapshot has no predecessor; the UI reports "No comparison available"
+  rather than treating the catalog as newly added or showing zero changes.
 - GitHub Pages CSP is a meta tag; GitHub may not emit equivalent HTTP headers.
   **UNVERIFIED** on a live Pages hostname because Pages is not deployed.
 - First live collect still performs ~1,754 CVE GETs for the KEV subset.

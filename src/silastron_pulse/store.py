@@ -9,8 +9,10 @@ from typing import Any
 
 from silastron_pulse.clock import format_datetime, parse_generated_at as parse_clock
 from silastron_pulse.constants import MANIFEST_SCHEMA_VERSION, PREVIEW_SCHEMA_VERSION
+from silastron_pulse.diff import publication_comparison
 from silastron_pulse.errors import PublishGuardError, ValidationError
 from silastron_pulse.jsonutil import dump_bytes, load_bounded_json
+from silastron_pulse.lock import ExclusiveLock
 from silastron_pulse.validate import validate_manifest, validate_snapshot
 
 
@@ -46,6 +48,10 @@ def parse_generated_at(value: str) -> datetime:
         raise ValidationError(str(exc)) from exc
 
 
+def promote_lock_path(published_dir: Path) -> Path:
+    return published_dir.parent / f".{published_dir.name}.promote.lock"
+
+
 def promote_snapshot(
     candidate: dict[str, Any],
     published_dir: Path,
@@ -67,6 +73,37 @@ def promote_snapshot(
         raise PublishGuardError("Refusing to publish an empty snapshot")
 
     published_dir.mkdir(parents=True, exist_ok=True)
+    with ExclusiveLock(
+        promote_lock_path(published_dir),
+        conflict=(
+            "Another publish holds this published directory; "
+            "refusing concurrent promote"
+        ),
+        error=PublishGuardError,
+    ):
+        return _promote_snapshot_locked(
+            candidate,
+            published_dir,
+            now=now,
+            stale_after_hours=stale_after_hours,
+            max_bytes=max_bytes,
+            max_depth=max_depth,
+            allow_older=allow_older,
+            rollback_of=rollback_of,
+        )
+
+
+def _promote_snapshot_locked(
+    candidate: dict[str, Any],
+    published_dir: Path,
+    *,
+    now: datetime,
+    stale_after_hours: int,
+    max_bytes: int,
+    max_depth: int,
+    allow_older: bool,
+    rollback_of: str | None,
+) -> dict[str, Any]:
     latest_path = published_dir / "latest.json"
     current = None
     if latest_path.exists():
@@ -92,7 +129,7 @@ def promote_snapshot(
         raise PublishGuardError("Written snapshot did not match candidate")
 
     atomic_write_json(latest_path, candidate)
-    preview = build_preview_document(candidate)
+    preview = build_preview_document(candidate, previous_published=current)
     atomic_write_json(published_dir / "preview.json", preview)
     manifest = build_manifest(
         candidate,
@@ -169,6 +206,74 @@ def _guard_against_regression(
         raise PublishGuardError("Refusing to replace a newer snapshot with an older one")
 
 
+def verify_publication_transition(
+    *,
+    incoming_dir: Path,
+    current_dir: Path,
+    max_bytes: int,
+    max_depth: int,
+) -> dict[str, Any]:
+    """Refuse persist when the comparison baseline is not the live published latest."""
+    incoming_latest = load_snapshot(
+        incoming_dir / "latest.json", max_bytes=max_bytes, max_depth=max_depth
+    )
+    incoming_preview = load_json_file(
+        incoming_dir / "preview.json", max_bytes=max_bytes, max_depth=max_depth
+    )
+    incoming_comparison = incoming_preview.get("publication_comparison")
+    if not isinstance(incoming_comparison, dict):
+        raise PublishGuardError("Incoming preview is missing publication_comparison")
+    incoming_id = incoming_latest.get("snapshot_id")
+    compared_to = incoming_comparison.get("compared_to_snapshot_id")
+    current_latest_path = current_dir / "latest.json"
+    if not current_latest_path.exists():
+        if incoming_comparison.get("available") is True:
+            raise PublishGuardError(
+                "Refusing to persist a published comparison when no published snapshot exists"
+            )
+        if compared_to:
+            raise PublishGuardError(
+                "First persist cannot name a previous published snapshot"
+            )
+        return {"status": "first_publish", "snapshot_id": incoming_id}
+
+    current_latest = load_snapshot(
+        current_latest_path, max_bytes=max_bytes, max_depth=max_depth
+    )
+    current_id = current_latest.get("snapshot_id")
+    if incoming_id == current_id:
+        if incoming_latest != current_latest:
+            raise PublishGuardError(
+                "Idempotent persist cannot replace latest.json for the same snapshot_id"
+            )
+        current_preview_path = current_dir / "preview.json"
+        if current_preview_path.exists():
+            current_preview = load_json_file(
+                current_preview_path, max_bytes=max_bytes, max_depth=max_depth
+            )
+            if current_preview.get("publication_comparison") != incoming_comparison:
+                raise PublishGuardError(
+                    "Idempotent persist cannot change publication_comparison"
+                )
+        return {"status": "idempotent", "snapshot_id": incoming_id}
+
+    if incoming_comparison.get("available") is not True:
+        raise PublishGuardError(
+            "Refusing to replace a published snapshot without an available "
+            "publication_comparison"
+        )
+    if compared_to != current_id:
+        raise PublishGuardError(
+            f"publication_comparison baseline {compared_to!r} is not the "
+            f"current published snapshot {current_id!r}"
+        )
+    return {
+        "status": "successor",
+        "snapshot_id": incoming_id,
+        "compared_to": current_id,
+    }
+
+
 def _history_path(published_dir: Path) -> Path:
     return published_dir / "history.json"
 
@@ -237,7 +342,11 @@ def build_manifest(
     }
 
 
-def build_preview_document(snapshot: dict[str, Any]) -> dict[str, Any]:
+def build_preview_document(
+    snapshot: dict[str, Any],
+    *,
+    previous_published: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     changes = snapshot.get("changes") or {}
     change_rows = []
     for kind, key in (
@@ -252,7 +361,8 @@ def build_preview_document(snapshot: dict[str, Any]) -> dict[str, Any]:
     records_by_id = {item["cve_id"]: item for item in snapshot.get("records", [])}
     sources = snapshot.get("sources") or {}
     preview_changes = []
-    for row in change_rows[: snapshot.get("limits", {}).get("max_preview_changes", 50)]:
+    max_changes = snapshot.get("limits", {}).get("max_preview_changes", 50)
+    for row in change_rows[:max_changes]:
         record = records_by_id.get(row["cve_id"])
         if record:
             preview_changes.append(_preview_row(record, row["change"], sources))
@@ -275,6 +385,11 @@ def build_preview_document(snapshot: dict[str, Any]) -> dict[str, Any]:
     limit = snapshot.get("limits", {}).get("max_preview_recent", 25)
     for record in sorted_records[:limit]:
         recent.append(_preview_row(record, "recent_kev_addition", sources))
+    comparison = publication_comparison(
+        previous_published,
+        snapshot,
+        max_rows=max_changes,
+    )
     return {
         "schema_version": PREVIEW_SCHEMA_VERSION,
         "snapshot_id": snapshot["snapshot_id"],
@@ -287,6 +402,7 @@ def build_preview_document(snapshot: dict[str, Any]) -> dict[str, Any]:
         "changes_available": bool(change_rows),
         "changes": preview_changes,
         "recent_kev_additions": recent,
+        "publication_comparison": comparison,
         "note": snapshot.get("consumer_note"),
     }
 

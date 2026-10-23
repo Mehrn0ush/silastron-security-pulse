@@ -23,10 +23,11 @@
       </p>
       <nav class="page-nav" aria-label="Page">
         <a href="#overview">Overview</a>
+        <a href="#changes">What's changed</a>
         <a href="#recent">Recently added</a>
-        <a href="#catalog">Catalog search</a>
+        <a href="#catalog">Vulnerability explorer</a>
         <a href="#signals">How to read</a>
-        <a href="#provenance">Data provenance</a>
+        <a href="#provenance">Data quality</a>
       </nav>
     </header>
     <main id="main">
@@ -41,8 +42,14 @@
       </noscript>
 
       <section id="overview" aria-labelledby="overview-heading">
-        <h2 id="overview-heading">Overview</h2>
+        <h2 id="overview-heading">Security Pulse Overview</h2>
         <div id="overview-cards" class="cards"></div>
+      </section>
+
+      <section id="changes" aria-labelledby="changes-heading">
+        <h2 id="changes-heading">What's Changed</h2>
+        <p id="changes-note">Waiting for published comparison data.</p>
+        <div id="changes-body"></div>
       </section>
 
       <section id="recent" aria-labelledby="recent-heading">
@@ -71,7 +78,7 @@
       </section>
 
       <section id="catalog" aria-labelledby="catalog-heading">
-        <h2 id="catalog-heading">Catalog search</h2>
+        <h2 id="catalog-heading">Vulnerability explorer</h2>
         <p id="catalog-note">
           The table above is the bounded preview (most recently added KEV
           entries). Search of all published records loads
@@ -101,6 +108,17 @@
               <option value="complete">Complete extracted inventory</option>
               <option value="partial">Partial extracted inventory</option>
               <option value="unavailable">Unavailable enrichment</option>
+            </select>
+          </p>
+          <p>
+            <label for="catalog-cvss">CVSS severity</label>
+            <select id="catalog-cvss" disabled>
+              <option value="all">All</option>
+              <option value="critical">Critical (9.0–10.0)</option>
+              <option value="high">High (7.0–8.9)</option>
+              <option value="medium">Medium (4.0–6.9)</option>
+              <option value="low">Low (0.1–3.9)</option>
+              <option value="unavailable">Score unavailable</option>
             </select>
           </p>
           <p>
@@ -135,6 +153,7 @@
                 <th scope="col">CVSS</th>
                 <th scope="col">EPSS</th>
                 <th scope="col">Sources</th>
+                <th scope="col">Details</th>
               </tr>
             </thead>
             <tbody id="catalog-body"></tbody>
@@ -152,7 +171,8 @@
         <ul>
           <li>
             <strong>Confirmed exploitation</strong> means CISA listed the CVE in
-            the Known Exploited Vulnerabilities catalog.
+            the Known Exploited Vulnerabilities catalog. KEV indicates confirmed
+            historical exploitation, not current exposure.
           </li>
           <li>
             <strong>EPSS</strong>, when present, is an estimated probability of
@@ -162,6 +182,8 @@
           <li>
             <strong>Severity</strong> is CVSS from the CVE CNA container when
             available. Missing scores are shown as unavailable, not guessed.
+            CVSS describes vulnerability severity, not exploitation
+            probability.
           </li>
           <li>
             <strong>Collection outcome</strong> (<code>ok</code>,
@@ -173,8 +195,9 @@
             <strong>Record completeness</strong> is per CVE:
             <code>complete</code> extracted inventory,
             <code>partial</code> truncated product/version text, or
-            <code>unavailable</code> enrichment. These are not the collection
-            outcome and are not freshness.
+            <code>unavailable</code> enrichment. Completeness refers to
+            extracted data, not proof of complete real-world affectedness.
+            These are not the collection outcome and are not freshness.
           </li>
           <li>
             <strong>Product affectedness</strong> is vendor/product text from
@@ -187,6 +210,16 @@
             record completeness.
           </li>
           <li>
+            <strong>What's Changed</strong> compares the current published
+            snapshot to the immediately preceding published snapshot. It is
+            not a collect-time candidate diff and is not CISA's KEV
+            <code>dateAdded</code> list.
+          </li>
+          <li>
+            <strong>No composite risk score</strong> is calculated. Signals
+            stay independent.
+          </li>
+          <li>
             <strong>Deployment exposure</strong> is not assessed here.
           </li>
         </ul>
@@ -197,9 +230,13 @@
         <p>
           Operational timestamps below include catalog publication time, which
           is not the date a CVE was added to KEV. KEV added dates are shown in
-          the tables.
+          the tables. Collection time and publication time are distinct.
         </p>
         <dl id="status-details" class="meta-list"></dl>
+        <details id="technical-details">
+          <summary>Technical details</summary>
+          <dl id="technical-details-list" class="meta-list"></dl>
+        </details>
       </section>
     </main>
     <footer>

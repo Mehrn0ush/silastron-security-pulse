@@ -45,7 +45,10 @@ an explicit Publish dispatch with that run's `collect_run_id`.
   compared against last published state
 - Deploy job permissions: `pages: write`, `id-token: write`
 - Uses the `github-pages` environment (required reviewers are an owner action)
-- After a successful deploy, commits `published/` to `pulse-state`
+- After a successful deploy, verifies that `publication_comparison` still
+  names the live `pulse-state/published/latest.json`, then commits `published/`
+  to `pulse-state`. A stale baseline is refused even if another Publish run
+  already persisted. Workflow `concurrency: pages` is not the only guard.
 - Untrusted pull requests cannot dispatch this on `main`
 
 Do **not** run this workflow until publication is explicitly approved.

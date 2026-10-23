@@ -80,6 +80,16 @@ class PublishIsolationTests(unittest.TestCase):
         self.assertIn("github.event.inputs.collect_run_id", text)
         self.assertNotIn("gh run list", text)
 
+    def test_persist_verifies_comparison_baseline_before_overwrite(self) -> None:
+        text = _workflow("publish.yml")
+        self.assertIn("group: pages", text)
+        self.assertIn("cancel-in-progress: false", text)
+        persist_at = text.find("persist-published:")
+        verify_at = text.find("verify-publication", persist_at)
+        copy_at = text.find("cp -a published-data/.", persist_at)
+        self.assertGreater(verify_at, persist_at)
+        self.assertGreater(copy_at, verify_at)
+
 
 class VerifyScheduledCollectTests(unittest.TestCase):
     def _run(self, **overrides: object) -> dict:
