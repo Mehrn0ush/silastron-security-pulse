@@ -18,6 +18,7 @@ from silastron_pulse.store import (
     promote_snapshot,
     rollback_snapshot,
     unpublished_status,
+    verify_publication_transition,
 )
 from silastron_pulse.validate import validate_manifest, validate_snapshot
 from silastron_pulse.verify_run import verify_collect_run
@@ -67,6 +68,13 @@ def main(argv: list[str] | None = None) -> int:
 
     unpublished = sub.add_parser("write-unpublished", help="Write the unpublished status documents")
     unpublished.add_argument("--published-dir", type=Path, required=True)
+
+    verify_pub = sub.add_parser(
+        "verify-publication",
+        help="Refuse persist when the comparison baseline is stale",
+    )
+    verify_pub.add_argument("--incoming", type=Path, required=True)
+    verify_pub.add_argument("--current", type=Path, required=True)
 
     args = parser.parse_args(argv)
     try:
@@ -152,6 +160,16 @@ def main(argv: list[str] | None = None) -> int:
                 expected_digest=args.expected_digest,
             )
             print(json.dumps(result, indent=2))
+            return 0
+        if args.command == "verify-publication":
+            config = PulseConfig.from_env(args.incoming)
+            verify_publication_transition(
+                incoming_dir=args.incoming,
+                current_dir=args.current,
+                max_bytes=config.max_kev_bytes,
+                max_depth=config.max_json_depth,
+            )
+            print("publication transition ok")
             return 0
         if args.command == "write-unpublished":
             clock = SystemClock()

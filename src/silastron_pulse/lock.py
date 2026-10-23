@@ -6,24 +6,30 @@ import fcntl
 from pathlib import Path
 from types import TracebackType
 
-from silastron_pulse.errors import ValidationError
+from silastron_pulse.errors import PulseError, ValidationError
 
 
-class CollectionLock:
-    def __init__(self, path: Path) -> None:
+class ExclusiveLock:
+    def __init__(
+        self,
+        path: Path,
+        *,
+        conflict: str,
+        error: type[PulseError] = ValidationError,
+    ) -> None:
         self.path = path
+        self.conflict = conflict
+        self.error = error
         self._handle = None
 
-    def __enter__(self) -> "CollectionLock":
+    def __enter__(self) -> "ExclusiveLock":
         self.path.parent.mkdir(parents=True, exist_ok=True)
         handle = open(self.path, "a+", encoding="utf-8")
         try:
             fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError as exc:
             handle.close()
-            raise ValidationError(
-                f"Another collection run holds {self.path}; refusing concurrent update"
-            ) from exc
+            raise self.error(self.conflict) from exc
         handle.seek(0)
         handle.truncate()
         handle.write("locked\n")
@@ -45,3 +51,12 @@ class CollectionLock:
         finally:
             handle.close()
             self._handle = None
+
+
+class CollectionLock(ExclusiveLock):
+    def __init__(self, path: Path) -> None:
+        super().__init__(
+            path,
+            conflict=f"Another collection run holds {path}; refusing concurrent update",
+            error=ValidationError,
+        )

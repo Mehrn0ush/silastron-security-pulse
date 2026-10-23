@@ -183,6 +183,9 @@ jobs:
       contents: write
       actions: read
     steps:
+      - name: Checkout publisher
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+
       - name: Checkout pulse-state
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
         with:
@@ -194,6 +197,15 @@ jobs:
         with:
           name: pulse-published
           path: published-data
+
+      - name: Verify publication transition
+        env:
+          PYTHONPATH: src
+        run: |
+          set -euo pipefail
+          python3 -m silastron_pulse verify-publication \
+            --incoming published-data \
+            --current pulse-state/published
 
       - name: Commit published snapshot
         run: |

@@ -12,6 +12,7 @@ from silastron_pulse.constants import MANIFEST_SCHEMA_VERSION, PREVIEW_SCHEMA_VE
 from silastron_pulse.diff import publication_comparison
 from silastron_pulse.errors import PublishGuardError, ValidationError
 from silastron_pulse.jsonutil import dump_bytes, load_bounded_json
+from silastron_pulse.lock import ExclusiveLock
 from silastron_pulse.validate import validate_manifest, validate_snapshot
 
 
@@ -47,6 +48,10 @@ def parse_generated_at(value: str) -> datetime:
         raise ValidationError(str(exc)) from exc
 
 
+def promote_lock_path(published_dir: Path) -> Path:
+    return published_dir.parent / f".{published_dir.name}.promote.lock"
+
+
 def promote_snapshot(
     candidate: dict[str, Any],
     published_dir: Path,
@@ -68,6 +73,37 @@ def promote_snapshot(
         raise PublishGuardError("Refusing to publish an empty snapshot")
 
     published_dir.mkdir(parents=True, exist_ok=True)
+    with ExclusiveLock(
+        promote_lock_path(published_dir),
+        conflict=(
+            "Another publish holds this published directory; "
+            "refusing concurrent promote"
+        ),
+        error=PublishGuardError,
+    ):
+        return _promote_snapshot_locked(
+            candidate,
+            published_dir,
+            now=now,
+            stale_after_hours=stale_after_hours,
+            max_bytes=max_bytes,
+            max_depth=max_depth,
+            allow_older=allow_older,
+            rollback_of=rollback_of,
+        )
+
+
+def _promote_snapshot_locked(
+    candidate: dict[str, Any],
+    published_dir: Path,
+    *,
+    now: datetime,
+    stale_after_hours: int,
+    max_bytes: int,
+    max_depth: int,
+    allow_older: bool,
+    rollback_of: str | None,
+) -> dict[str, Any]:
     latest_path = published_dir / "latest.json"
     current = None
     if latest_path.exists():
@@ -168,6 +204,74 @@ def _guard_against_regression(
     candidate_ts = parse_generated_at(candidate["generated_at"])
     if candidate_ts < current_ts and not allow_older:
         raise PublishGuardError("Refusing to replace a newer snapshot with an older one")
+
+
+def verify_publication_transition(
+    *,
+    incoming_dir: Path,
+    current_dir: Path,
+    max_bytes: int,
+    max_depth: int,
+) -> dict[str, Any]:
+    """Refuse persist when the comparison baseline is not the live published latest."""
+    incoming_latest = load_snapshot(
+        incoming_dir / "latest.json", max_bytes=max_bytes, max_depth=max_depth
+    )
+    incoming_preview = load_json_file(
+        incoming_dir / "preview.json", max_bytes=max_bytes, max_depth=max_depth
+    )
+    incoming_comparison = incoming_preview.get("publication_comparison")
+    if not isinstance(incoming_comparison, dict):
+        raise PublishGuardError("Incoming preview is missing publication_comparison")
+    incoming_id = incoming_latest.get("snapshot_id")
+    compared_to = incoming_comparison.get("compared_to_snapshot_id")
+    current_latest_path = current_dir / "latest.json"
+    if not current_latest_path.exists():
+        if incoming_comparison.get("available") is True:
+            raise PublishGuardError(
+                "Refusing to persist a published comparison when no published snapshot exists"
+            )
+        if compared_to:
+            raise PublishGuardError(
+                "First persist cannot name a previous published snapshot"
+            )
+        return {"status": "first_publish", "snapshot_id": incoming_id}
+
+    current_latest = load_snapshot(
+        current_latest_path, max_bytes=max_bytes, max_depth=max_depth
+    )
+    current_id = current_latest.get("snapshot_id")
+    if incoming_id == current_id:
+        if incoming_latest != current_latest:
+            raise PublishGuardError(
+                "Idempotent persist cannot replace latest.json for the same snapshot_id"
+            )
+        current_preview_path = current_dir / "preview.json"
+        if current_preview_path.exists():
+            current_preview = load_json_file(
+                current_preview_path, max_bytes=max_bytes, max_depth=max_depth
+            )
+            if current_preview.get("publication_comparison") != incoming_comparison:
+                raise PublishGuardError(
+                    "Idempotent persist cannot change publication_comparison"
+                )
+        return {"status": "idempotent", "snapshot_id": incoming_id}
+
+    if incoming_comparison.get("available") is not True:
+        raise PublishGuardError(
+            "Refusing to replace a published snapshot without an available "
+            "publication_comparison"
+        )
+    if compared_to != current_id:
+        raise PublishGuardError(
+            f"publication_comparison baseline {compared_to!r} is not the "
+            f"current published snapshot {current_id!r}"
+        )
+    return {
+        "status": "successor",
+        "snapshot_id": incoming_id,
+        "compared_to": current_id,
+    }
 
 
 def _history_path(published_dir: Path) -> Path:

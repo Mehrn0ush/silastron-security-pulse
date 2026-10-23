@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import json
+import shutil
 import tempfile
 import unittest
 from datetime import datetime, timezone
@@ -13,8 +14,16 @@ from silastron_pulse.diff import (
     detect_changes,
     publication_comparison,
 )
+from silastron_pulse.errors import PublishGuardError
+from silastron_pulse.lock import ExclusiveLock
 from silastron_pulse.pipeline import collect
-from silastron_pulse.store import build_preview_document, load_snapshot, promote_snapshot
+from silastron_pulse.store import (
+    build_preview_document,
+    load_snapshot,
+    promote_lock_path,
+    promote_snapshot,
+    verify_publication_transition,
+)
 from silastron_pulse.validate import validate_snapshot
 from tests.support import frozen_clock, test_config, valid_fetcher
 
@@ -276,6 +285,172 @@ class PublicationComparisonTests(unittest.TestCase):
     def test_detect_changes_still_uses_collect_semantics(self) -> None:
         current_entries = detect_changes({}, {})
         self.assertTrue(current_entries.is_empty())
+
+    def test_republishing_the_same_snapshot_does_not_change_comparison(self) -> None:
+        first = self._snapshot()
+        published = self.root / "published"
+        limits = {
+            "max_bytes": self.config.max_kev_bytes,
+            "max_depth": self.config.max_json_depth,
+        }
+        promote_snapshot(
+            first,
+            published,
+            now=datetime(2099, 1, 10, 12, tzinfo=timezone.utc),
+            stale_after_hours=36,
+            **limits,
+        )
+        second = copy.deepcopy(first)
+        second["snapshot_id"] = "second-idempotent"
+        second["generated_at"] = "2099-01-11T12:00:00Z"
+        second["collection_completed_at"] = second["generated_at"]
+        second["records"][0]["cve"]["severity"]["base_score"] = 9.8
+        second["records"][0]["cve"]["severity"]["base_severity"] = "CRITICAL"
+        second = validate_snapshot(second)
+        promote_snapshot(
+            second,
+            published,
+            now=datetime(2099, 1, 11, 12, tzinfo=timezone.utc),
+            stale_after_hours=36,
+            **limits,
+        )
+        preview_before = json.loads((published / "preview.json").read_text(encoding="utf-8"))
+        latest_before = json.loads((published / "latest.json").read_text(encoding="utf-8"))
+        manifest_before = json.loads((published / "manifest.json").read_text(encoding="utf-8"))
+        again = promote_snapshot(
+            second,
+            published,
+            now=datetime(2099, 1, 11, 18, tzinfo=timezone.utc),
+            stale_after_hours=36,
+            **limits,
+        )
+        preview_after = json.loads((published / "preview.json").read_text(encoding="utf-8"))
+        latest_after = json.loads((published / "latest.json").read_text(encoding="utf-8"))
+        self.assertEqual(preview_after["publication_comparison"], preview_before["publication_comparison"])
+        self.assertEqual(
+            preview_after["publication_comparison"]["compared_to_snapshot_id"],
+            first["snapshot_id"],
+        )
+        self.assertTrue(preview_after["publication_comparison"]["available"])
+        self.assertEqual(latest_after, latest_before)
+        self.assertEqual(again["generated_at"], manifest_before["generated_at"])
+        self.assertEqual(
+            verify_publication_transition(
+                incoming_dir=published,
+                current_dir=published,
+                **limits,
+            )["status"],
+            "idempotent",
+        )
+
+    def test_stale_comparison_baseline_cannot_be_persisted(self) -> None:
+        first = self._snapshot()
+        current = self.root / "current"
+        incoming = self.root / "incoming"
+        limits = {
+            "max_bytes": self.config.max_kev_bytes,
+            "max_depth": self.config.max_json_depth,
+        }
+        promote_snapshot(
+            first,
+            current,
+            now=datetime(2099, 1, 10, 12, tzinfo=timezone.utc),
+            stale_after_hours=36,
+            **limits,
+        )
+        shutil.copytree(current, incoming)
+        successor = copy.deepcopy(first)
+        successor["snapshot_id"] = "live-successor"
+        successor["generated_at"] = "2099-01-11T12:00:00Z"
+        successor["collection_completed_at"] = successor["generated_at"]
+        successor = validate_snapshot(successor)
+        promote_snapshot(
+            successor,
+            current,
+            now=datetime(2099, 1, 11, 12, tzinfo=timezone.utc),
+            stale_after_hours=36,
+            **limits,
+        )
+
+        stale = copy.deepcopy(first)
+        stale["snapshot_id"] = "stale-sibling"
+        stale["generated_at"] = "2099-01-11T13:00:00Z"
+        stale["collection_completed_at"] = stale["generated_at"]
+        stale = validate_snapshot(stale)
+        promote_snapshot(
+            stale,
+            incoming,
+            now=datetime(2099, 1, 11, 13, tzinfo=timezone.utc),
+            stale_after_hours=36,
+            **limits,
+        )
+        with self.assertRaises(PublishGuardError) as raised:
+            verify_publication_transition(
+                incoming_dir=incoming,
+                current_dir=current,
+                **limits,
+            )
+        self.assertIn(successor["snapshot_id"], str(raised.exception))
+        self.assertIn("not the current published snapshot", str(raised.exception))
+
+        mutated = json.loads((current / "preview.json").read_text(encoding="utf-8"))
+        mutated["publication_comparison"]["compared_to_snapshot_id"] = "invented-baseline"
+        (incoming / "preview.json").write_text(json.dumps(mutated), encoding="utf-8")
+        (incoming / "latest.json").write_text(
+            (current / "latest.json").read_text(encoding="utf-8"), encoding="utf-8"
+        )
+        with self.assertRaises(PublishGuardError) as raised:
+            verify_publication_transition(
+                incoming_dir=incoming,
+                current_dir=current,
+                **limits,
+            )
+        self.assertIn("cannot change publication_comparison", str(raised.exception))
+
+    def test_first_persist_cannot_claim_a_published_baseline(self) -> None:
+        first = self._snapshot()
+        incoming = self.root / "incoming"
+        promote_snapshot(
+            first,
+            incoming,
+            now=datetime(2099, 1, 10, 12, tzinfo=timezone.utc),
+            stale_after_hours=36,
+            max_bytes=self.config.max_kev_bytes,
+            max_depth=self.config.max_json_depth,
+        )
+        preview = json.loads((incoming / "preview.json").read_text(encoding="utf-8"))
+        preview["publication_comparison"]["available"] = True
+        preview["publication_comparison"]["compared_to_snapshot_id"] = "ghost"
+        preview["publication_comparison"]["added_count"] = 12
+        (incoming / "preview.json").write_text(json.dumps(preview), encoding="utf-8")
+        with self.assertRaises(PublishGuardError):
+            verify_publication_transition(
+                incoming_dir=incoming,
+                current_dir=self.root / "missing-published",
+                max_bytes=self.config.max_kev_bytes,
+                max_depth=self.config.max_json_depth,
+            )
+
+    def test_overlapping_promote_is_refused_while_lock_is_held(self) -> None:
+        first = self._snapshot()
+        published = self.root / "published"
+        with ExclusiveLock(
+            promote_lock_path(published),
+            conflict="held",
+            error=PublishGuardError,
+        ):
+            with self.assertRaises(PublishGuardError) as raised:
+                promote_snapshot(
+                    first,
+                    published,
+                    now=datetime(2099, 1, 10, 12, tzinfo=timezone.utc),
+                    stale_after_hours=36,
+                    max_bytes=self.config.max_kev_bytes,
+                    max_depth=self.config.max_json_depth,
+                )
+        self.assertIn("refusing concurrent promote", str(raised.exception))
+        self.assertFalse((published / "latest.json").exists())
+        self.assertFalse((published / "preview.json").exists())
 
 
 if __name__ == "__main__":
