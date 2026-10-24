@@ -61,6 +61,7 @@ class PreviewDashboardTests(unittest.TestCase):
         self.assertIn("This is not zero new entries", js)
         self.assertIn("Publication ", js)
         self.assertIn("Newly extracted remediation is counted separately", js)
+        self.assertIn("Field-level evidence not stored", js)
         self.assertNotIn("Not applicable", js)
 
     def test_explorer_stays_lazy_and_filterable(self) -> None:

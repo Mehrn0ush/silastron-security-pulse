@@ -32,12 +32,14 @@ Optional object written at promote time. It is **not** `snapshot.changes`.
   Newly extracted remediation or other enrichment is `enrichment_count`, not a
   core update. Older published previews may still put enrichment-only rows in
   `rows` as `cve_update` with empty `changed_fields`; consumers must
-  reclassify those rows instead of treating `updated_count` as upstream fact
-  changes
+  leave those rows unresolved instead of treating missing field-level evidence
+  as confirmed enrichment or as zero core updates
 - `enrichment_count` / `enrichment_sample`: optional. Absent on snapshots
   published before this field existed
 - `rows`: bounded field-level before/after values for added, removed, and core
-  updates. Retrieval timestamps are ignored. EPSS is excluded while
+  updates. `added_count`, `removed_count`, `updated_count`, and
+  `enrichment_count` are full-catalog totals computed before `rows` is
+  truncated. Retrieval timestamps are ignored. EPSS is excluded while
   redistribution remains disabled. Empty `changed_fields` is not a reason to
   invent "Not applicable" values
 
