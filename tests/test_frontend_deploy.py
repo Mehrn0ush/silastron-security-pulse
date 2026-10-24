@@ -46,7 +46,9 @@ class FrontendDeployWorkflowTests(unittest.TestCase):
         self.assertNotIn("persist-published", frontend)
         self.assertNotIn("git push", frontend)
         self.assertNotIn("contents: write", frontend)
-        self.assertIn("actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e", frontend)
+        self.assertIn("actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346", frontend)
+        self.assertIn("actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9", frontend)
+        self.assertNotIn("actions/upload-artifact@v4", frontend)
         self.assertIn("github-pages", frontend)
         self.assertIn("needs: build", frontend)
 

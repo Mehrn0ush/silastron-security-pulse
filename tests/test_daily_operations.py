@@ -63,6 +63,28 @@ class CollectWorkflowContractTests(unittest.TestCase):
             self.assertIn("actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09", text)
             self.assertIn("actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1", text)
 
+    def test_artifact_actions_use_node_24_releases(self) -> None:
+        collect = _workflow("collect.yml")
+        publish = _workflow("publish.yml")
+        frontend = _workflow("deploy-frontend.yml")
+        self.assertIn(
+            "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+            collect,
+        )
+        self.assertIn(
+            "actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+            publish,
+        )
+        self.assertIn(
+            "actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333",
+            publish,
+        )
+        for text in (collect, publish, frontend):
+            self.assertNotIn("ea165f8d65b6e75b540449e92b4886f43607fa02", text)
+            self.assertNotIn("d3f86a106a0bac45b974a628896c90dbdf5c8093", text)
+            self.assertNotIn("actions/upload-artifact@v4", text)
+            self.assertNotIn("actions/download-artifact@v4", text)
+
 
 class PublishIsolationTests(unittest.TestCase):
     def test_publish_stays_manual_and_binds_an_explicit_collect_run(self) -> None:
