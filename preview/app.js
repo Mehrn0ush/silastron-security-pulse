@@ -659,7 +659,7 @@
     }
     var fields = displayableChangedFields(row);
     if (!fields.length) {
-      return "No stored field-level diff";
+      return "Stored values are unchanged";
     }
     return fields
       .map(function (item) {
@@ -835,11 +835,6 @@
         "confirmed newly extracted remediation changes. Missing field-level diffs are not treated as enrichment.",
         classified.enrichment_count
       );
-      appendCount(
-        summary,
-        "listed updates without stored field-level diffs. Those rows are not classified as enrichment or as confirmed core fact changes.",
-        classified.unresolved_count
-      );
     } else {
       appendCount(
         summary,
@@ -856,10 +851,14 @@
     renderChangeGroup("Newly added KEV entries", classified.added_rows);
     renderChangeGroup("Removed KEV entries", classified.removed_rows);
     renderChangeGroup("Records with field-level updates", classified.core_rows);
-    renderChangeGroup(
-      "Published updates without stored field-level diffs",
-      classified.unresolved_rows || []
-    );
+    if (classified.unresolved_count) {
+      var unresolved = document.createElement("p");
+      unresolved.className = "empty-state";
+      unresolved.textContent =
+        String(classified.unresolved_count) +
+        " listed updates have no stored field-level before/after values. They are not shown as individual rows, and missing values are not treated as remediation enrichment or as confirmed core vulnerability changes.";
+      changesBody.appendChild(unresolved);
+    }
     if (classified.enrichment_count) {
       var enrichment = document.createElement("details");
       var enrichmentSummary = document.createElement("summary");
@@ -883,7 +882,7 @@
       !classified.added_rows.length &&
       !classified.removed_rows.length &&
       !classified.core_rows.length &&
-      !(classified.unresolved_rows && classified.unresolved_rows.length) &&
+      !classified.unresolved_count &&
       !classified.enrichment_count
     ) {
       var empty = document.createElement("p");
@@ -1246,7 +1245,7 @@
           : "Baseline unavailable. This is not zero new entries."
       );
       appendCard(
-        "Updated Records",
+        "Vulnerability Updates",
         comparisonAvailable
           ? classified.field_evidence === "unavailable"
             ? "Field-level evidence not stored"
