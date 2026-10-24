@@ -75,17 +75,20 @@ snapshot. Intelligence updates still require Publish.
 Runners are pinned to `ubuntu-24.04` so `ubuntu-latest` cannot silently move
 to Ubuntu 26.
 
-## Action pins (verified 2026-10-23 via GitHub git refs API)
+## Action pins (verified 2026-10-24 via GitHub git refs API)
+
+Artifact and Pages actions below run on Node.js 24. The previous v4
+artifact pins ran on Node 20 and were being forced onto Node 24.
 
 | Action | Tag | SHA |
 | --- | --- | --- |
 | actions/checkout | v5.1.0 | `fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09` |
 | actions/setup-python | v6.3.0 | `ece7cb06caefa5fff74198d8649806c4678c61a1` |
-| actions/upload-artifact | v4.6.2 | `ea165f8d65b6e75b540449e92b4886f43607fa02` |
-| actions/download-artifact | v4.3.0 | `d3f86a106a0bac45b974a628896c90dbdf5c8093` |
-| actions/upload-pages-artifact | v3.0.1 | `56afc609e74202658d3ffba0e8f6dda462b719fa` |
+| actions/upload-artifact | v7.0.2 | `cf430e030ddbb5b0abf93d22962f4752f3646cd9` |
+| actions/download-artifact | v8.0.2 | `9000827ccba6bdab643e8b6fd33ac0654aef8333` |
+| actions/upload-pages-artifact | v5.0.0 | `fc324d3547104276b827a68afc52ff2a11cc49c9` |
 | actions/configure-pages | v5.0.0 | `983d7736d9b0ae728b81ab479565c72886d7745b` |
-| actions/deploy-pages | v4.0.5 | `d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e` |
+| actions/deploy-pages | v5.0.1 | `368f82528645a54fb793d4d04e342629a3f51346` |
 
 `configure-pages` is listed for operators who later add it; the current publish
 workflow uses the Pages artifact + deploy-pages pair.
