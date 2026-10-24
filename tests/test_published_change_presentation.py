@@ -4,7 +4,11 @@ import copy
 import unittest
 from pathlib import Path
 
-from silastron_pulse.diff import interpret_publication_comparison, publication_comparison
+from silastron_pulse.diff import (
+    _row_displayable_fields,
+    interpret_publication_comparison,
+    publication_comparison,
+)
 from tests.support import load_fixture_json
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -100,20 +104,28 @@ class PublishedChangePresentationTests(unittest.TestCase):
         self.assertIn("cve_date_updated", dated["changed_fields"])
         self.assertNotEqual(dated["before"]["cve_date_updated"], dated["after"]["cve_date_updated"])
 
-    def test_already_published_634_comparison_is_reclassified(self) -> None:
+    def test_already_published_634_comparison_does_not_invent_enrichment(self) -> None:
         presented = interpret_publication_comparison(LIVE["published_comparison"])
         self.assertTrue(presented["available"])
         self.assertEqual(presented["added_count"], 2)
         self.assertEqual(presented["removed_count"], 0)
-        self.assertEqual(presented["updated_count"], 0)
-        self.assertEqual(presented["enrichment_count"], 634)
+        self.assertIsNone(presented["updated_count"])
+        self.assertIsNone(presented["enrichment_count"])
+        self.assertEqual(presented["unresolved_count"], 634)
+        self.assertEqual(presented["field_evidence"], "unavailable")
         self.assertEqual([row["cve_id"] for row in presented["added_rows"]], LIVE["added_cve_ids"])
         self.assertEqual(presented["core_rows"], [])
-        self.assertTrue(presented["enrichment_rows"])
-        for row in presented["enrichment_rows"]:
+        self.assertEqual(presented["enrichment_rows"], [])
+        self.assertTrue(presented["unresolved_rows"])
+        for row in presented["unresolved_rows"]:
             self.assertEqual(row["categories"], ["cve_update"])
             self.assertEqual(row["changed_fields"], [])
             self.assertEqual(row["before"], row["after"])
+        added = presented["added_rows"][0]
+        fields = _row_displayable_fields(added)
+        self.assertIn("product", fields)
+        self.assertNotIn("cve_description", fields)
+        self.assertTrue(fields)
 
     def test_new_comparison_counts_are_used_when_enrichment_count_is_present(self) -> None:
         presented = interpret_publication_comparison(
@@ -161,12 +173,16 @@ class PreviewChangePresentationContractTests(unittest.TestCase):
         self.assertIn("Extracted remediation evidence newly present", js)
         self.assertIn("New in current published snapshot", js)
         self.assertIn("Records with field-level updates", js)
-        self.assertIn("return null;", js)
+        self.assertIn("Published updates without stored field-level diffs", js)
+        self.assertIn("Field-level evidence not stored", js)
+        self.assertIn("presentEpssNote", js)
+        self.assertIn("https://www.first.org/epss/faq", js)
+        self.assertIn("Missing field-level diffs are not treated as enrichment", js)
         self.assertNotIn("Not applicable", js)
         self.assertNotIn("No displayable field differences.", js)
         self.assertNotIn("Verified Fix", js)
         self.assertIn("CNA-Reported Solution", js)
-        self.assertNotIn("#Usage-Agreement", js)
+        self.assertNotIn("See https://www.first.org/epss/#Usage-Agreement", js)
 
     def test_epss_docs_do_not_claim_a_current_usage_agreement_license(self) -> None:
         usage = (ROOT / "docs" / "licenses" / "first-epss-usage.txt").read_text(encoding="utf-8")

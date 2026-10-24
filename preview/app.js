@@ -286,6 +286,21 @@
     return String(value);
   }
 
+  function presentEpssNote(value) {
+    if (typeof value !== "string" || !value) {
+      return value;
+    }
+    if (value.indexOf("#Usage-Agreement") === -1 && value.indexOf("FIRST EPSS Usage Agreement") === -1) {
+      return value;
+    }
+    return (
+      "EPSS is disabled in this snapshot. FIRST currently publishes scores for public use " +
+      "with requested attribution (https://www.first.org/epss/faq). That is not a " +
+      "redistribution license for this public JSON feed. The published snapshot still " +
+      "contains a historic Usage Agreement URL that FIRST removed."
+    );
+  }
+
   function appendCard(term, value, hint) {
     var article = document.createElement("article");
     article.className = "card";
@@ -490,26 +505,39 @@
     });
   }
 
+  function sideObject(value) {
+    return value && typeof value === "object" && !Array.isArray(value) ? value : null;
+  }
+
+  function objectHasKey(value, key) {
+    return !!(sideObject(value) && Object.prototype.hasOwnProperty.call(value, key));
+  }
+
   function fieldPair(before, after, key) {
-    var previousValue = before ? before[key] : null;
-    var currentValue = after ? after[key] : null;
-    if (before && after && previousValue === currentValue) {
+    var hasBefore = objectHasKey(before, key);
+    var hasAfter = objectHasKey(after, key);
+    if (!hasBefore && !hasAfter) {
+      return null;
+    }
+    var previousValue = hasBefore ? before[key] : undefined;
+    var currentValue = hasAfter ? after[key] : undefined;
+    if (hasBefore && hasAfter && previousValue === currentValue) {
       return null;
     }
     return {
       field: FIELD_LABELS[key] || key,
-      previous: before ? previousValue : "Not in previous published snapshot",
-      current: after ? currentValue : "Removed from current published snapshot",
+      previous: hasBefore ? previousValue : "Not in previous published snapshot",
+      current: hasAfter ? currentValue : "Removed from current published snapshot",
     };
   }
 
   function displayableChangedFields(row) {
-    var before = row && row.before && typeof row.before === "object" ? row.before : null;
-    var after = row && row.after && typeof row.after === "object" ? row.after : null;
+    var before = sideObject(row && row.before);
+    var after = sideObject(row && row.after);
     var declared = row && Array.isArray(row.changed_fields) ? row.changed_fields.slice() : [];
     var keys = declared;
     if (!keys.length) {
-      keys = Object.keys(FIELD_LABELS);
+      keys = [];
       [before, after].forEach(function (side) {
         if (!side) {
           return;
@@ -533,10 +561,13 @@
       removed_count: null,
       updated_count: null,
       enrichment_count: null,
+      unresolved_count: null,
+      field_evidence: null,
       added_rows: [],
       removed_rows: [],
       core_rows: [],
       enrichment_rows: [],
+      unresolved_rows: [],
       enrichment_sample: [],
     };
     if (!comparison || comparison.available !== true) {
@@ -546,6 +577,7 @@
     var removedRows = [];
     var coreRows = [];
     var enrichmentRows = [];
+    var unresolvedRows = [];
     (comparison.rows || []).forEach(function (row) {
       var cats = row.categories || [];
       if (cats.indexOf("added_kev") !== -1) {
@@ -568,22 +600,30 @@
       } else if (hasCoreCat || fields.length) {
         coreRows.push(row);
       } else {
-        enrichmentRows.push(row);
+        unresolvedRows.push(row);
       }
     });
     var publishedUpdated = comparison.updated_count;
     var publishedEnrichment = comparison.enrichment_count;
     var updated;
     var enrichment;
+    var unresolvedCount;
+    var fieldEvidence;
     if (typeof publishedEnrichment === "number") {
       updated = typeof publishedUpdated === "number" ? publishedUpdated : coreRows.length;
       enrichment = publishedEnrichment;
-    } else if (!coreRows.length && (enrichmentRows.length || (typeof publishedUpdated === "number" && publishedUpdated))) {
+      unresolvedCount = 0;
+      fieldEvidence = "stored";
+    } else if (typeof publishedUpdated === "number" && publishedUpdated === 0 && !unresolvedRows.length) {
       updated = 0;
-      enrichment = typeof publishedUpdated === "number" ? publishedUpdated : enrichmentRows.length;
+      enrichment = 0;
+      unresolvedCount = 0;
+      fieldEvidence = "stored";
     } else {
-      updated = typeof publishedUpdated === "number" ? publishedUpdated : coreRows.length;
-      enrichment = enrichmentRows.length;
+      updated = null;
+      enrichment = null;
+      unresolvedCount = typeof publishedUpdated === "number" ? publishedUpdated : unresolvedRows.length;
+      fieldEvidence = "unavailable";
     }
     var sample = Array.isArray(comparison.enrichment_sample)
       ? comparison.enrichment_sample.filter(function (item) {
@@ -598,10 +638,13 @@
       removed_count: comparison.removed_count,
       updated_count: updated,
       enrichment_count: enrichment,
+      unresolved_count: unresolvedCount,
+      field_evidence: fieldEvidence,
       added_rows: addedRows,
       removed_rows: removedRows,
       core_rows: coreRows,
       enrichment_rows: enrichmentRows,
+      unresolved_rows: unresolvedRows,
       enrichment_sample: sample.slice(0, 8),
     };
   }
@@ -616,7 +659,7 @@
     }
     var fields = displayableChangedFields(row);
     if (!fields.length) {
-      return "See published values";
+      return "No stored field-level diff";
     }
     return fields
       .map(function (item) {
@@ -774,27 +817,49 @@
       formatInstant(comparison.compared_to_generated_at) +
       ". Retrieval timestamps are not treated as vulnerability updates. Collect-time candidate diffs are not shown here. Newly extracted remediation is not counted as a KEV, CVE, CVSS, or completeness update.";
     if (comparison.truncated) {
-      note += " Record-level rows are a bounded subset of added, removed, and core field changes.";
+      note += " Record-level rows are a bounded subset. Truncation is not proof that omitted updates are enrichment or that core field changes are absent.";
     }
     changesNote.textContent = note;
     var summary = document.createElement("ul");
     summary.className = "change-summary";
     appendCount(summary, "newly added to KEV", classified.added_count);
     appendCount(summary, "removed from KEV", classified.removed_count);
-    appendCount(
-      summary,
-      "records with KEV, CVE, CVSS, or completeness field changes",
-      classified.updated_count
-    );
-    appendCount(
-      summary,
-      "existing records that now include extracted remediation evidence. That is not a change to those CVEs' upstream vulnerability facts.",
-      classified.enrichment_count
-    );
+    if (classified.field_evidence === "unavailable") {
+      appendCount(
+        summary,
+        "confirmed KEV, CVE, CVSS, or completeness field changes. This published comparison listed updates without stored field-level before/after values, so that count is unavailable rather than zero.",
+        classified.updated_count
+      );
+      appendCount(
+        summary,
+        "confirmed newly extracted remediation changes. Missing field-level diffs are not treated as enrichment.",
+        classified.enrichment_count
+      );
+      appendCount(
+        summary,
+        "listed updates without stored field-level diffs. Those rows are not classified as enrichment or as confirmed core fact changes.",
+        classified.unresolved_count
+      );
+    } else {
+      appendCount(
+        summary,
+        "records with KEV, CVE, CVSS, or completeness field changes",
+        classified.updated_count
+      );
+      appendCount(
+        summary,
+        "existing records that now include extracted remediation evidence. That is not a change to those CVEs' upstream vulnerability facts.",
+        classified.enrichment_count
+      );
+    }
     changesBody.appendChild(summary);
     renderChangeGroup("Newly added KEV entries", classified.added_rows);
     renderChangeGroup("Removed KEV entries", classified.removed_rows);
     renderChangeGroup("Records with field-level updates", classified.core_rows);
+    renderChangeGroup(
+      "Published updates without stored field-level diffs",
+      classified.unresolved_rows || []
+    );
     if (classified.enrichment_count) {
       var enrichment = document.createElement("details");
       var enrichmentSummary = document.createElement("summary");
@@ -818,6 +883,7 @@
       !classified.added_rows.length &&
       !classified.removed_rows.length &&
       !classified.core_rows.length &&
+      !(classified.unresolved_rows && classified.unresolved_rows.length) &&
       !classified.enrichment_count
     ) {
       var empty = document.createElement("p");
@@ -1181,9 +1247,15 @@
       );
       appendCard(
         "Updated Records",
-        comparisonAvailable ? comparisonCount(classified.updated_count) : "No comparison available",
         comparisonAvailable
-          ? "KEV, CVE, CVSS, or completeness field changes versus the previous published snapshot. Newly extracted remediation is counted separately."
+          ? classified.field_evidence === "unavailable"
+            ? "Field-level evidence not stored"
+            : comparisonCount(classified.updated_count)
+          : "No comparison available",
+        comparisonAvailable
+          ? classified.field_evidence === "unavailable"
+            ? "This published comparison lists updates but did not store displayable before/after field diffs. That is not zero updates and is not confirmed enrichment."
+            : "KEV, CVE, CVSS, or completeness field changes versus the previous published snapshot. Newly extracted remediation is counted separately."
           : "Baseline unavailable. This is not zero updates."
       );
       appendCard(
@@ -1225,7 +1297,7 @@
       appendMeta("CVE source updated at", cve.source_updated_at);
       appendMeta("CVE retrieved at", cve.retrieved_at);
       appendMeta("EPSS source status", epss.status);
-      appendMeta("EPSS source note", epss.error || epss.notes);
+      appendMeta("EPSS source note", presentEpssNote(epss.error || epss.notes));
       appendMeta("EPSS redistribution", epssDisabled ? "Disabled is not a zero probability." : asText(epss.status));
       if (preview && preview.note) {
         appendMeta("Consumer note", preview.note);

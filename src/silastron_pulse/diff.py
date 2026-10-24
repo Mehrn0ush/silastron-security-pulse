@@ -219,28 +219,45 @@ def _changed_display_fields(before: Mapping[str, Any], after: Mapping[str, Any])
     return [key for key in keys if before.get(key) != after.get(key)]
 
 
+def _side_dict(value: object) -> dict[str, Any] | None:
+    return value if isinstance(value, dict) else None
+
+
 def _row_displayable_fields(row: Mapping[str, Any]) -> list[str]:
-    before = row.get("before") if isinstance(row.get("before"), dict) else {}
-    after = row.get("after") if isinstance(row.get("after"), dict) else {}
+    before = _side_dict(row.get("before"))
+    after = _side_dict(row.get("after"))
     declared = row.get("changed_fields") if isinstance(row.get("changed_fields"), list) else []
     keys = [key for key in declared if isinstance(key, str)]
     if not keys:
-        keys = list(dict.fromkeys([*before, *after]))
+        keys = list(dict.fromkeys([*(before or {}), *(after or {})]))
     changed: list[str] = []
     for key in keys:
-        previous = before.get(key)
-        current = after.get(key)
-        if not before:
-            if current not in (None, ""):
-                changed.append(key)
+        has_before = before is not None and key in before
+        has_after = after is not None and key in after
+        if not has_before and not has_after:
             continue
-        if not after:
-            if previous not in (None, ""):
-                changed.append(key)
+        if has_before and has_after and before[key] == after[key]:
             continue
-        if previous != current:
-            changed.append(key)
+        changed.append(key)
     return changed
+
+
+def _empty_presentation() -> dict[str, Any]:
+    return {
+        "available": False,
+        "added_count": None,
+        "removed_count": None,
+        "updated_count": None,
+        "enrichment_count": None,
+        "unresolved_count": None,
+        "field_evidence": None,
+        "added_rows": [],
+        "removed_rows": [],
+        "core_rows": [],
+        "enrichment_rows": [],
+        "unresolved_rows": [],
+        "enrichment_sample": [],
+    }
 
 
 def interpret_publication_comparison(
@@ -248,28 +265,17 @@ def interpret_publication_comparison(
 ) -> dict[str, Any]:
     """Derive presentation counts from a stored published comparison.
 
-    Newly extracted remediation is not a core vulnerability-fact update. Already
-    published comparisons that labeled those rows ``cve_update`` with empty
-    ``changed_fields`` are reclassified here so the dashboard does not wait for
-    the next Publish.
+    Missing field-level diffs are not treated as confirmed enrichment. A
+    truncated legacy comparison cannot prove the unpublished remainder is
+    remediation-only or that core updates are absent.
     """
     if not comparison or comparison.get("available") is not True:
-        return {
-            "available": False,
-            "added_count": None,
-            "removed_count": None,
-            "updated_count": None,
-            "enrichment_count": None,
-            "added_rows": [],
-            "removed_rows": [],
-            "core_rows": [],
-            "enrichment_rows": [],
-            "enrichment_sample": [],
-        }
+        return _empty_presentation()
     added_rows: list[dict[str, Any]] = []
     removed_rows: list[dict[str, Any]] = []
     core_rows: list[dict[str, Any]] = []
     enrichment_rows: list[dict[str, Any]] = []
+    unresolved_rows: list[dict[str, Any]] = []
     for raw in comparison.get("rows") or []:
         if not isinstance(raw, dict):
             continue
@@ -282,26 +288,36 @@ def interpret_publication_comparison(
             continue
         fields = _row_displayable_fields(raw)
         has_core_cat = bool(cats & CORE_ROW_CATEGORIES)
-        enrichment_only = bool(cats & ENRICHMENT_ROW_CATEGORIES) and not has_core_cat and "cve_update" not in cats
+        enrichment_only = (
+            bool(cats & ENRICHMENT_ROW_CATEGORIES)
+            and not has_core_cat
+            and "cve_update" not in cats
+        )
         if enrichment_only:
             enrichment_rows.append(dict(raw))
         elif has_core_cat or fields:
             core_rows.append(dict(raw))
         else:
-            enrichment_rows.append(dict(raw))
+            unresolved_rows.append(dict(raw))
     published_updated = comparison.get("updated_count")
     published_enrichment = comparison.get("enrichment_count")
     if isinstance(published_enrichment, int):
         updated = published_updated if isinstance(published_updated, int) else len(core_rows)
         enrichment = published_enrichment
-    elif not core_rows and (
-        enrichment_rows or (isinstance(published_updated, int) and published_updated)
-    ):
+        unresolved_count = 0
+        field_evidence = "stored"
+    elif isinstance(published_updated, int) and published_updated == 0 and not unresolved_rows:
         updated = 0
-        enrichment = published_updated if isinstance(published_updated, int) else len(enrichment_rows)
+        enrichment = 0
+        unresolved_count = 0
+        field_evidence = "stored"
     else:
-        updated = published_updated if isinstance(published_updated, int) else len(core_rows)
-        enrichment = len(enrichment_rows)
+        updated = None
+        enrichment = None
+        unresolved_count = (
+            published_updated if isinstance(published_updated, int) else len(unresolved_rows)
+        )
+        field_evidence = "unavailable"
     sample = comparison.get("enrichment_sample")
     if not isinstance(sample, list):
         sample = [row.get("cve_id") for row in enrichment_rows]
@@ -311,10 +327,13 @@ def interpret_publication_comparison(
         "removed_count": comparison.get("removed_count"),
         "updated_count": updated,
         "enrichment_count": enrichment,
+        "unresolved_count": unresolved_count,
+        "field_evidence": field_evidence,
         "added_rows": added_rows,
         "removed_rows": removed_rows,
         "core_rows": core_rows,
         "enrichment_rows": enrichment_rows,
+        "unresolved_rows": unresolved_rows,
         "enrichment_sample": [item for item in sample if isinstance(item, str)][:ENRICHMENT_SAMPLE_LIMIT],
     }
 
