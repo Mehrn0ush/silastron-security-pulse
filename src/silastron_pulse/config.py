@@ -28,6 +28,7 @@ class PulseConfig:
     http_timeout_seconds: int
     max_redirects: int
     max_kev_bytes: int
+    max_snapshot_bytes: int
     max_delta_bytes: int
     max_cve_bytes: int
     max_json_depth: int
@@ -70,6 +71,12 @@ class PulseConfig:
                 defaults["max_kev_bytes"],
                 minimum=1024,
                 maximum=30_000_000,
+            ),
+            max_snapshot_bytes=_int_env(
+                "PULSE_MAX_SNAPSHOT_BYTES",
+                defaults["max_snapshot_bytes"],
+                minimum=1024,
+                maximum=80_000_000,
             ),
             max_delta_bytes=_int_env(
                 "PULSE_MAX_DELTA_BYTES",
