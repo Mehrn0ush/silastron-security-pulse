@@ -133,7 +133,7 @@ jobs:
             --published-dir _site/data \
             --expected-digest "${{ steps.digest.outputs.digest }}" \
             --expected-collector-sha "$(python -c 'import json; print(json.load(open("/tmp/collect-run.json"))["head_sha"])')"
-          cp preview/index.html preview/styles.css preview/app.js _site/
+          cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/
           python -m silastron_pulse validate _site/data/manifest.json
           python -m silastron_pulse validate _site/data/latest.json
           python - <<'PY'

@@ -48,7 +48,7 @@ jobs:
             --published-dir pulse-state/published
           mkdir -p _site/data
           cp -a pulse-state/published/. _site/data/
-          cp preview/index.html preview/styles.css preview/app.js _site/
+          cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/
           python3 -m silastron_pulse verify-published-site \
             --published-dir pulse-state/published \
             --site-data _site/data

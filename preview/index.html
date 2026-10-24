@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="system">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -8,19 +8,47 @@
       content="default-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; font-src 'none'; object-src 'none'; upgrade-insecure-requests"
     />
     <meta name="referrer" content="no-referrer" />
+    <meta
+      name="description"
+      content="Silastron Security Pulse: published CISA KEV and CVE List V5 intelligence. No composite risk score."
+    />
     <title>Silastron Security Pulse</title>
+    <script src="theme.js"></script>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <header>
-      <p class="eyebrow">Silastron Security Pulse</p>
-      <h1>Known exploited vulnerability intelligence</h1>
-      <p class="lede">
-        Public CISA KEV and CVE List V5 snapshot. Signals stay separate: this
-        page does not compute a risk score and does not claim Silastron.com or
-        customer exposure.
-      </p>
+    <header class="site-header">
+      <div class="brand-lockup">
+        <p class="brand-name">
+          <a class="brand-link" href="https://silastron.com" rel="noopener noreferrer"
+            >Silastron</a
+          >
+        </p>
+        <p class="eyebrow">Apastron · Gravity of Silence</p>
+        <p class="product-name">Security Pulse</p>
+      </div>
+      <div class="header-tools">
+        <div class="theme-switch" role="group" aria-label="Color theme">
+          <button type="button" data-theme-choice="system" aria-pressed="true">
+            System
+          </button>
+          <button type="button" data-theme-choice="light" aria-pressed="false">
+            Light
+          </button>
+          <button type="button" data-theme-choice="dark" aria-pressed="false">
+            Dark
+          </button>
+        </div>
+      </div>
+      <div class="header-copy">
+        <h1>Known exploited vulnerability intelligence</h1>
+        <p class="lede">
+          Public CISA KEV and CVE List V5 snapshot. Signals stay separate: this
+          page does not compute a risk score and does not claim Silastron.com or
+          customer exposure.
+        </p>
+      </div>
       <nav class="page-nav" aria-label="Page">
         <a href="#overview">Overview</a>
         <a href="#changes">What's changed</a>
@@ -168,61 +196,64 @@
 
       <section id="signals" aria-labelledby="signals-heading">
         <h2 id="signals-heading">How to read these signals</h2>
-        <ul>
-          <li>
-            <strong>Confirmed exploitation</strong> means CISA listed the CVE in
-            the Known Exploited Vulnerabilities catalog. KEV indicates confirmed
-            historical exploitation, not current exposure.
-          </li>
-          <li>
-            <strong>EPSS</strong>, when present, is an estimated probability of
-            exploitation, not confirmation. When EPSS is disabled it is not a
-            probability of zero.
-          </li>
-          <li>
-            <strong>Severity</strong> is CVSS from the CVE CNA container when
-            available. Missing scores are shown as unavailable, not guessed.
-            CVSS describes vulnerability severity, not exploitation
-            probability.
-          </li>
-          <li>
-            <strong>Collection outcome</strong> (<code>ok</code>,
-            <code>degraded</code>, or <code>failed</code>) is whether the
-            collector finished. A <code>degraded</code> snapshot succeeded;
-            it is not a failed collection.
-          </li>
-          <li>
-            <strong>Record completeness</strong> is per CVE:
-            <code>complete</code> extracted inventory,
-            <code>partial</code> truncated product/version text, or
-            <code>unavailable</code> enrichment. Completeness refers to
-            extracted data, not proof of complete real-world affectedness.
-            These are not the collection outcome and are not freshness.
-          </li>
-          <li>
-            <strong>Product affectedness</strong> is vendor/product text from
-            KEV and CVE records. A complete extracted inventory does not prove
-            complete real-world product coverage or deployment exposure.
-          </li>
-          <li>
-            <strong>Freshness</strong> is computed at viewing time from the
-            snapshot timestamp. It is independent of collection outcome and
-            record completeness.
-          </li>
-          <li>
-            <strong>What's Changed</strong> compares the current published
-            snapshot to the immediately preceding published snapshot. It is
-            not a collect-time candidate diff and is not CISA's KEV
-            <code>dateAdded</code> list.
-          </li>
-          <li>
-            <strong>No composite risk score</strong> is calculated. Signals
-            stay independent.
-          </li>
-          <li>
-            <strong>Deployment exposure</strong> is not assessed here.
-          </li>
-        </ul>
+        <details>
+          <summary>Signal definitions and methodology</summary>
+          <ul>
+            <li>
+              <strong>Confirmed exploitation</strong> means CISA listed the CVE in
+              the Known Exploited Vulnerabilities catalog. KEV indicates confirmed
+              historical exploitation, not current exposure.
+            </li>
+            <li>
+              <strong>EPSS</strong>, when present, is an estimated probability of
+              exploitation, not confirmation. When EPSS is disabled it is not a
+              probability of zero.
+            </li>
+            <li>
+              <strong>Severity</strong> is CVSS from the CVE CNA container when
+              available. Missing scores are shown as unavailable, not guessed.
+              CVSS describes vulnerability severity, not exploitation
+              probability.
+            </li>
+            <li>
+              <strong>Collection outcome</strong> (<code>ok</code>,
+              <code>degraded</code>, or <code>failed</code>) is whether the
+              collector finished. A <code>degraded</code> snapshot succeeded;
+              it is not a failed collection.
+            </li>
+            <li>
+              <strong>Record completeness</strong> is per CVE:
+              <code>complete</code> extracted inventory,
+              <code>partial</code> truncated product/version text, or
+              <code>unavailable</code> enrichment. Completeness refers to
+              extracted data, not proof of complete real-world affectedness.
+              These are not the collection outcome and are not freshness.
+            </li>
+            <li>
+              <strong>Product affectedness</strong> is vendor/product text from
+              KEV and CVE records. A complete extracted inventory does not prove
+              complete real-world product coverage or deployment exposure.
+            </li>
+            <li>
+              <strong>Freshness</strong> is computed at viewing time from the
+              snapshot timestamp. It is independent of collection outcome and
+              record completeness.
+            </li>
+            <li>
+              <strong>What's Changed</strong> compares the current published
+              snapshot to the immediately preceding published snapshot. It is
+              not a collect-time candidate diff and is not CISA's KEV
+              <code>dateAdded</code> list.
+            </li>
+            <li>
+              <strong>No composite risk score</strong> is calculated. Signals
+              stay independent.
+            </li>
+            <li>
+              <strong>Deployment exposure</strong> is not assessed here.
+            </li>
+          </ul>
+        </details>
       </section>
 
       <section id="provenance" aria-labelledby="provenance-heading">
@@ -240,6 +271,10 @@
       </section>
     </main>
     <footer>
+      <p>
+        A Silastron research dashboard.
+        <a href="https://silastron.com" rel="noopener noreferrer">silastron.com</a>
+      </p>
       <p>
         CVE is a registered trademark of The MITRE Corporation. KEV data is
         dedicated to the public domain under CC0 1.0. This preview does not
