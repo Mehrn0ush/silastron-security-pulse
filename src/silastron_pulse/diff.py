@@ -426,6 +426,9 @@ def publication_comparison(
         previous_sources=previous_published.get("sources"),
         current_sources=current_published.get("sources"),
     )
+    added_count = len(changes.new_kev_entries)
+    removed_count = len(changes.removed_kev_entries)
+    core_count = 0
     rows: list[dict[str, Any]] = []
     for cve_id in changes.new_kev_entries:
         current = current_entries[cve_id]
@@ -495,11 +498,8 @@ def publication_comparison(
                 links=current.links,
             )
         )
-    updated_count = sum(
-        1
-        for row in rows
-        if "added_kev" not in row["categories"] and "removed_kev" not in row["categories"]
-    )
+        core_count += 1
+    # Aggregate counts cover every record. The display window is applied after.
     limit = max(0, int(max_rows))
     return {
         "available": True,
@@ -508,9 +508,9 @@ def publication_comparison(
         "compared_to_generated_at": previous_published.get("generated_at"),
         "current_snapshot_id": current_id,
         "current_generated_at": current_published.get("generated_at"),
-        "added_count": len(changes.new_kev_entries),
-        "removed_count": len(changes.removed_kev_entries),
-        "updated_count": updated_count,
+        "added_count": added_count,
+        "removed_count": removed_count,
+        "updated_count": core_count,
         "enrichment_count": len(enrichment_ids),
         "enrichment_sample": enrichment_ids[:ENRICHMENT_SAMPLE_LIMIT],
         "truncated": len(rows) > limit,

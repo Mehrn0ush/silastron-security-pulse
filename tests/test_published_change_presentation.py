@@ -9,6 +9,7 @@ from silastron_pulse.diff import (
     interpret_publication_comparison,
     publication_comparison,
 )
+from silastron_pulse.store import build_preview_document
 from tests.support import load_fixture_json
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -105,6 +106,9 @@ class PublishedChangePresentationTests(unittest.TestCase):
         self.assertNotEqual(dated["before"]["cve_date_updated"], dated["after"]["cve_date_updated"])
 
     def test_already_published_634_comparison_does_not_invent_enrichment(self) -> None:
+        self.assertEqual(LIVE["published_comparison"]["updated_count"], 634)
+        self.assertNotIn("enrichment_count", LIVE["published_comparison"])
+        self.assertTrue(LIVE["published_comparison"]["truncated"])
         presented = interpret_publication_comparison(LIVE["published_comparison"])
         self.assertTrue(presented["available"])
         self.assertEqual(presented["added_count"], 2)
@@ -159,6 +163,42 @@ class PublishedChangePresentationTests(unittest.TestCase):
         self.assertEqual(presented["enrichment_sample"], ["CVE-2002-0367"])
         self.assertEqual(len(presented["core_rows"]), 1)
         self.assertEqual(len(presented["added_rows"]), 1)
+        self.assertEqual(presented["field_evidence"], "stored")
+
+    def test_truncation_does_not_change_full_catalog_counts(self) -> None:
+        previous, current = live_snapshot_pair()
+        comparison = publication_comparison(previous, current, max_rows=1)
+        self.assertEqual(comparison["added_count"], 2)
+        self.assertEqual(comparison["removed_count"], 0)
+        self.assertEqual(comparison["updated_count"], 2)
+        self.assertEqual(comparison["enrichment_count"], 632)
+        self.assertTrue(comparison["truncated"])
+        self.assertEqual(len(comparison["rows"]), 1)
+        self.assertEqual(comparison["rows"][0]["categories"], ["added_kev"])
+        self.assertNotEqual(comparison["updated_count"], len(comparison["rows"]))
+        current = copy.deepcopy(current)
+        current["limits"] = {"max_preview_changes": 1, "max_preview_recent": 1}
+        current["status"] = "ok"
+        current["changes"] = {}
+        preview = build_preview_document(current, previous_published=previous)
+        stored = preview["publication_comparison"]
+        self.assertEqual(
+            (
+                stored["added_count"],
+                stored["removed_count"],
+                stored["updated_count"],
+                stored["enrichment_count"],
+            ),
+            (2, 0, 2, 632),
+        )
+        self.assertTrue(stored["truncated"])
+        self.assertEqual(len(stored["rows"]), 1)
+        presented = interpret_publication_comparison(stored)
+        self.assertEqual(presented["field_evidence"], "stored")
+        self.assertEqual(presented["updated_count"], 2)
+        self.assertEqual(presented["enrichment_count"], 632)
+        self.assertEqual(presented["added_count"], 2)
+        self.assertNotEqual(presented["updated_count"], len(presented["core_rows"]))
 
 
 class PreviewChangePresentationContractTests(unittest.TestCase):
@@ -175,6 +215,9 @@ class PreviewChangePresentationContractTests(unittest.TestCase):
         self.assertIn("Records with field-level updates", js)
         self.assertIn("Published updates without stored field-level diffs", js)
         self.assertIn("Field-level evidence not stored", js)
+        self.assertIn("objectHasKey", js)
+        self.assertIn("textContent", js)
+        self.assertNotIn("innerHTML", js)
         self.assertIn("presentEpssNote", js)
         self.assertIn("https://www.first.org/epss/faq", js)
         self.assertIn("Missing field-level diffs are not treated as enrichment", js)
