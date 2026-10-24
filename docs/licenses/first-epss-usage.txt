@@ -1,6 +1,16 @@
-FIRST EPSS Usage Agreement (not currently redistributed by this project)
-Source: https://www.first.org/epss/#Usage-Agreement
-Text captured via ScanCode LicenseDB first-epss-usage on 2026-10-21.
+FIRST EPSS terms (not currently redistributed by this project)
+Current source: https://www.first.org/epss/faq
+Also: https://www.first.org/epss/data
+Historic source (obsolete fragment): https://www.first.org/epss/#Usage-Agreement
+Historic text captured via ScanCode LicenseDB first-epss-usage on 2026-10-21.
+
+FIRST's current FAQ (retrieved 2026-10-24) states that EPSS scores are
+published freely via CSV download and API with no registration required, and
+that attribution is requested when EPSS data is used in publications or
+products. That is not treated as a redistribution license for a derived
+public JSON snapshot.
+
+Historic Usage Agreement text (the live #Usage-Agreement fragment is gone):
 
 EPSS is an emerging standard developed by a volunteer group of researchers,
 practitioners, academics and government personnel. We grant the use of EPSS

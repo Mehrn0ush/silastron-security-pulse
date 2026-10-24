@@ -25,6 +25,7 @@
   against the previously published `latest.json`. The first published
   snapshot has no predecessor; the UI reports "No comparison available"
   rather than treating the catalog as newly added or showing zero changes.
+  Newly extracted remediation is `enrichment_count`, not `updated_count`.
 - GitHub Pages CSP is a meta tag; GitHub may not emit equivalent HTTP headers.
   **UNVERIFIED** on a live Pages hostname because Pages is not deployed.
 - First live collect still performs ~1,754 CVE GETs for the KEV subset.

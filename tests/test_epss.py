@@ -8,6 +8,7 @@ from silastron_pulse.adapters.epss import (
     collect_epss,
     parse_epss_api_payload,
 )
+from silastron_pulse.constants import EPSS_FAQ_URL, EPSS_USAGE_AGREEMENT_URL
 from silastron_pulse.errors import ValidationError
 from tests.support import load_fixture_json
 
@@ -44,7 +45,12 @@ class EpssAdapterTests(unittest.TestCase):
             parse_epss_api_payload(payload, "CVE-2099-0001")
 
     def test_blocker_is_explicit(self) -> None:
-        self.assertIn("https://www.first.org/epss", EPSS_BLOCKER)
+        self.assertFalse(REDISTRIBUTION_CLEARED)
+        self.assertEqual(EPSS_USAGE_AGREEMENT_URL, EPSS_FAQ_URL)
+        self.assertEqual(EPSS_FAQ_URL, "https://www.first.org/epss/faq")
+        self.assertIn(EPSS_FAQ_URL, EPSS_BLOCKER)
+        self.assertNotIn("#Usage-Agreement", EPSS_BLOCKER)
+        self.assertNotIn("Usage Agreement with requested attribution", EPSS_BLOCKER)
 
 
 if __name__ == "__main__":

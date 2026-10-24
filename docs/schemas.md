@@ -28,8 +28,18 @@ Optional object written at promote time. It is **not** `snapshot.changes`.
   snapshot identity
 - `added_count` / `removed_count` / `updated_count`: integers when available,
   otherwise `null`. Unavailable must not be rendered as zero
-- `rows`: bounded field-level before/after values. Retrieval timestamps are
-  ignored. EPSS is excluded while redistribution remains disabled
+- `updated_count` is KEV, CVE, CVSS, or completeness *field* changes only.
+  Newly extracted remediation or other enrichment is `enrichment_count`, not a
+  core update. Older published previews may still put enrichment-only rows in
+  `rows` as `cve_update` with empty `changed_fields`; consumers must
+  reclassify those rows instead of treating `updated_count` as upstream fact
+  changes
+- `enrichment_count` / `enrichment_sample`: optional. Absent on snapshots
+  published before this field existed
+- `rows`: bounded field-level before/after values for added, removed, and core
+  updates. Retrieval timestamps are ignored. EPSS is excluded while
+  redistribution remains disabled. Empty `changed_fields` is not a reason to
+  invent "Not applicable" values
 
 ## Snapshot v1 required fields
 
@@ -47,7 +57,8 @@ Optional object written at promote time. It is **not** `snapshot.changes`.
 - `records[].links`: constructed HTTPS URLs to CVE.org, CISA KEV, and CVE List V5
 - `records[].remediation`: optional evidence object. `status` is `available` or
   `unavailable`. Items are copied from CISA KEV `requiredAction`/`notes` (and
-  HTTPS URLs found in those fields), CVE List V5 CNA `solutions` (Verified Fix),
+  HTTPS URLs found in those fields), CVE List V5 CNA `solutions` (CNA-Reported
+  Solution; not independently verified),
   CNA `workarounds` (Mitigation), and CNA references tagged `vendor-advisory`
   (Reference). A missing object is valid for snapshots collected before this
   field existed. Absence of items is not proof that no vendor fix exists. The

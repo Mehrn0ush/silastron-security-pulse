@@ -40,6 +40,7 @@ class PreviewDashboardTests(unittest.TestCase):
         self.assertIn("slice(0, RECENT_LIMIT)", js)
         self.assertIn("Published-to-published comparison", js)
         self.assertIn("Collect-time candidate diffs are not shown here", js)
+        self.assertIn("Newly extracted remediation is not counted", js)
         self.assertIn("catalog-cvss", js)
         self.assertIn("cvssMatches", js)
         self.assertIn("buildRecordDetails", js)
@@ -56,8 +57,11 @@ class PreviewDashboardTests(unittest.TestCase):
         self.assertIn("Updated Records", js)
         self.assertIn("Published Data Freshness", js)
         self.assertIn("comparisonCount", js)
+        self.assertIn("classifyPublishedComparison", js)
         self.assertIn("This is not zero new entries", js)
         self.assertIn("Publication ", js)
+        self.assertIn("Newly extracted remediation is counted separately", js)
+        self.assertNotIn("Not applicable", js)
 
     def test_explorer_stays_lazy_and_filterable(self) -> None:
         html = (ROOT / "preview" / "index.html").read_text(encoding="utf-8")
@@ -76,6 +80,8 @@ class PreviewDashboardTests(unittest.TestCase):
         self.assertIn("Record details", js)
         self.assertIn("buildRemediation", js)
         self.assertIn("No verified remediation data", js)
+        self.assertIn('verified_fix: "CNA-Reported Solution"', js)
+        self.assertNotIn("Verified Fix", js)
         self.assertIn("fallbackRemediation", js)
         self.assertIn("safePublicHttpsUrl", js)
         self.assertNotIn("loadCatalog();", js.replace("function loadCatalog()", ""))

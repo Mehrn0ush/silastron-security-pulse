@@ -208,6 +208,11 @@ class CveRecord:
             "remediation_items": [item.to_dict() for item in self.remediation_items],
         }
 
+    def core_comparable(self) -> dict[str, Any]:
+        payload = self.comparable()
+        payload.pop("remediation_items", None)
+        return payload
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "status": self.status,
