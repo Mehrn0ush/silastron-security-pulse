@@ -92,3 +92,7 @@ artifact pins ran on Node 20 and were being forced onto Node 24.
 
 `configure-pages` is listed for operators who later add it; the current publish
 workflow uses the Pages artifact + deploy-pages pair.
+
+Custom domain `pulse.silastron.com` is a repository Pages setting. Actions
+workflow publishes ignore a `CNAME` file. Neither Publish nor Deploy
+frontend writes Pages DNS settings; see docs/deployment.md.
