@@ -158,7 +158,7 @@ def _collect_locked(
     previous = _load_previous(
         previous_snapshot_path=previous_snapshot_path,
         state=state,
-        max_bytes=config.max_kev_bytes,
+        max_bytes=config.max_snapshot_bytes,
         max_depth=config.max_json_depth,
     )
     cache_index, cached_records = _load_cve_cache(state, config)
@@ -309,7 +309,7 @@ def _collect_locked(
             target,
             now=completed,
             stale_after_hours=config.stale_after_hours,
-            max_bytes=config.max_kev_bytes,
+            max_bytes=config.max_snapshot_bytes,
             max_depth=config.max_json_depth,
         )
         write_collection_status(

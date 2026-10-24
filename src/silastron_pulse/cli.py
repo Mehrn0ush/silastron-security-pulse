@@ -116,7 +116,7 @@ def main(argv: list[str] | None = None) -> int:
                 raise PulseError("Candidate digest does not match --expected-digest")
             candidate = load_snapshot(
                 args.candidate,
-                max_bytes=config.max_kev_bytes,
+                max_bytes=config.max_snapshot_bytes,
                 max_depth=config.max_json_depth,
             )
             binding = candidate.get("binding") or {}
@@ -137,7 +137,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.published_dir,
                 now=SystemClock().now(),
                 stale_after_hours=config.stale_after_hours,
-                max_bytes=config.max_kev_bytes,
+                max_bytes=config.max_snapshot_bytes,
                 max_depth=config.max_json_depth,
             )
             print("promoted")
@@ -149,7 +149,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.snapshot_id,
                 now=SystemClock().now(),
                 stale_after_hours=config.stale_after_hours,
-                max_bytes=config.max_kev_bytes,
+                max_bytes=config.max_snapshot_bytes,
                 max_depth=config.max_json_depth,
                 confirm=args.confirm,
             )
@@ -175,7 +175,7 @@ def main(argv: list[str] | None = None) -> int:
             verify_publication_transition(
                 incoming_dir=args.incoming,
                 current_dir=args.current,
-                max_bytes=config.max_kev_bytes,
+                max_bytes=config.max_snapshot_bytes,
                 max_depth=config.max_json_depth,
             )
             print("publication transition ok")
@@ -184,7 +184,7 @@ def main(argv: list[str] | None = None) -> int:
             config = PulseConfig.from_env(args.published_dir)
             result = verify_published_site(
                 args.published_dir,
-                max_bytes=config.max_kev_bytes,
+                max_bytes=config.max_snapshot_bytes,
                 max_depth=config.max_json_depth,
             )
             if args.site_data is not None:
