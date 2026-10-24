@@ -84,10 +84,20 @@ DISPLAY_FIELD_KEYS = (
     "due_date",
     "cve_state",
     "cve_title",
+    "cve_description",
+    "cve_date_updated",
+    "cve_assigner",
+    "cve_status",
+    "affected_products",
     "cvss_base_score",
     "cvss_base_severity",
     "completeness",
+    "remediation_item_count",
 )
+
+CORE_ROW_CATEGORIES = frozenset({"kev_update", "cvss_change", "completeness_change"})
+ENRICHMENT_ROW_CATEGORIES = frozenset({"enrichment_update", "remediation_update"})
+ENRICHMENT_SAMPLE_LIMIT = 8
 
 NO_PREVIOUS_PUBLISHED = "no_previous_published_snapshot"
 INCOMPATIBLE_PUBLISHED = "incompatible_published_snapshot"
@@ -158,6 +168,26 @@ def entries_from_snapshot(payload: Mapping[str, Any]) -> dict[str, PulseEntry]:
     return entries
 
 
+def affected_products_label(entry: PulseEntry) -> str | None:
+    products = entry.cve.products
+    if not products:
+        return None
+    parts: list[str] = []
+    limit = 8
+    for item in products[:limit]:
+        name = "/".join(part for part in (item.vendor, item.product) if part) or "unspecified product"
+        versions = list(item.versions or [])
+        if versions:
+            shown = ", ".join(versions[:4])
+            extra = f" (+{len(versions) - 4} versions)" if len(versions) > 4 else ""
+            parts.append(f"{name} [{shown}{extra}]")
+        else:
+            parts.append(name)
+    if len(products) > limit:
+        parts.append(f"+{len(products) - limit} more products")
+    return "; ".join(parts)
+
+
 def display_fields(entry: PulseEntry) -> dict[str, Any]:
     severity = entry.cve.severity
     return {
@@ -169,9 +199,123 @@ def display_fields(entry: PulseEntry) -> dict[str, Any]:
         "due_date": entry.kev.due_date,
         "cve_state": entry.cve.state,
         "cve_title": entry.cve.title,
+        "cve_description": entry.cve.description,
+        "cve_date_updated": entry.cve.date_updated,
+        "cve_assigner": entry.cve.assigner_short_name,
+        "cve_status": entry.cve.status,
+        "affected_products": affected_products_label(entry),
         "cvss_base_score": severity.base_score if severity else None,
         "cvss_base_severity": severity.base_severity if severity else None,
         "completeness": entry.completeness(),
+        "remediation_item_count": len(entry.cve.remediation_items),
+    }
+
+
+def _changed_display_fields(before: Mapping[str, Any], after: Mapping[str, Any]) -> list[str]:
+    keys = list(DISPLAY_FIELD_KEYS)
+    for key in before.keys() | after.keys():
+        if key not in keys:
+            keys.append(key)
+    return [key for key in keys if before.get(key) != after.get(key)]
+
+
+def _row_displayable_fields(row: Mapping[str, Any]) -> list[str]:
+    before = row.get("before") if isinstance(row.get("before"), dict) else {}
+    after = row.get("after") if isinstance(row.get("after"), dict) else {}
+    declared = row.get("changed_fields") if isinstance(row.get("changed_fields"), list) else []
+    keys = [key for key in declared if isinstance(key, str)]
+    if not keys:
+        keys = list(dict.fromkeys([*before, *after]))
+    changed: list[str] = []
+    for key in keys:
+        previous = before.get(key)
+        current = after.get(key)
+        if not before:
+            if current not in (None, ""):
+                changed.append(key)
+            continue
+        if not after:
+            if previous not in (None, ""):
+                changed.append(key)
+            continue
+        if previous != current:
+            changed.append(key)
+    return changed
+
+
+def interpret_publication_comparison(
+    comparison: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    """Derive presentation counts from a stored published comparison.
+
+    Newly extracted remediation is not a core vulnerability-fact update. Already
+    published comparisons that labeled those rows ``cve_update`` with empty
+    ``changed_fields`` are reclassified here so the dashboard does not wait for
+    the next Publish.
+    """
+    if not comparison or comparison.get("available") is not True:
+        return {
+            "available": False,
+            "added_count": None,
+            "removed_count": None,
+            "updated_count": None,
+            "enrichment_count": None,
+            "added_rows": [],
+            "removed_rows": [],
+            "core_rows": [],
+            "enrichment_rows": [],
+            "enrichment_sample": [],
+        }
+    added_rows: list[dict[str, Any]] = []
+    removed_rows: list[dict[str, Any]] = []
+    core_rows: list[dict[str, Any]] = []
+    enrichment_rows: list[dict[str, Any]] = []
+    for raw in comparison.get("rows") or []:
+        if not isinstance(raw, dict):
+            continue
+        cats = {item for item in (raw.get("categories") or []) if isinstance(item, str)}
+        if "added_kev" in cats:
+            added_rows.append(dict(raw))
+            continue
+        if "removed_kev" in cats:
+            removed_rows.append(dict(raw))
+            continue
+        fields = _row_displayable_fields(raw)
+        has_core_cat = bool(cats & CORE_ROW_CATEGORIES)
+        enrichment_only = bool(cats & ENRICHMENT_ROW_CATEGORIES) and not has_core_cat and "cve_update" not in cats
+        if enrichment_only:
+            enrichment_rows.append(dict(raw))
+        elif has_core_cat or fields:
+            core_rows.append(dict(raw))
+        else:
+            enrichment_rows.append(dict(raw))
+    published_updated = comparison.get("updated_count")
+    published_enrichment = comparison.get("enrichment_count")
+    if isinstance(published_enrichment, int):
+        updated = published_updated if isinstance(published_updated, int) else len(core_rows)
+        enrichment = published_enrichment
+    elif not core_rows and (
+        enrichment_rows or (isinstance(published_updated, int) and published_updated)
+    ):
+        updated = 0
+        enrichment = published_updated if isinstance(published_updated, int) else len(enrichment_rows)
+    else:
+        updated = published_updated if isinstance(published_updated, int) else len(core_rows)
+        enrichment = len(enrichment_rows)
+    sample = comparison.get("enrichment_sample")
+    if not isinstance(sample, list):
+        sample = [row.get("cve_id") for row in enrichment_rows]
+    return {
+        "available": True,
+        "added_count": comparison.get("added_count"),
+        "removed_count": comparison.get("removed_count"),
+        "updated_count": updated,
+        "enrichment_count": enrichment,
+        "added_rows": added_rows,
+        "removed_rows": removed_rows,
+        "core_rows": core_rows,
+        "enrichment_rows": enrichment_rows,
+        "enrichment_sample": [item for item in sample if isinstance(item, str)][:ENRICHMENT_SAMPLE_LIMIT],
     }
 
 
@@ -193,6 +337,8 @@ def _unavailable_publication_comparison(
         "added_count": None,
         "removed_count": None,
         "updated_count": None,
+        "enrichment_count": None,
+        "enrichment_sample": [],
         "truncated": False,
         "rows": [],
     }
@@ -289,16 +435,26 @@ def publication_comparison(
     updated_ids = sorted(
         set(changes.updated_kev_entries) | set(changes.changed_cve_information)
     )
+    enrichment_ids: list[str] = []
     for cve_id in updated_ids:
         previous = previous_entries[cve_id]
         current = current_entries[cve_id]
+        kev_changed = previous.kev.comparable() != current.kev.comparable()
+        cve_core_changed = previous.cve.core_comparable() != current.cve.core_comparable()
+        rem_changed = [item.to_dict() for item in previous.cve.remediation_items] != [
+            item.to_dict() for item in current.cve.remediation_items
+        ]
+        if not kev_changed and not cve_core_changed:
+            if rem_changed:
+                enrichment_ids.append(cve_id)
+            continue
         before = display_fields(previous)
         after = display_fields(current)
-        changed_fields = [key for key in DISPLAY_FIELD_KEYS if before.get(key) != after.get(key)]
+        changed_fields = _changed_display_fields(before, after)
         categories: list[str] = []
-        if previous.kev.comparable() != current.kev.comparable():
+        if kev_changed:
             categories.append("kev_update")
-        if previous.cve.comparable() != current.cve.comparable():
+        if cve_core_changed:
             categories.append("cve_update")
         if before["cvss_base_score"] != after["cvss_base_score"] or (
             before["cvss_base_severity"] != after["cvss_base_severity"]
@@ -307,6 +463,8 @@ def publication_comparison(
         if before["completeness"] != after["completeness"]:
             categories.append("completeness_change")
         if not categories:
+            if rem_changed:
+                enrichment_ids.append(cve_id)
             continue
         rows.append(
             _change_row(
@@ -318,7 +476,11 @@ def publication_comparison(
                 links=current.links,
             )
         )
-    updated_count = sum(1 for row in rows if "added_kev" not in row["categories"] and "removed_kev" not in row["categories"])
+    updated_count = sum(
+        1
+        for row in rows
+        if "added_kev" not in row["categories"] and "removed_kev" not in row["categories"]
+    )
     limit = max(0, int(max_rows))
     return {
         "available": True,
@@ -330,6 +492,8 @@ def publication_comparison(
         "added_count": len(changes.new_kev_entries),
         "removed_count": len(changes.removed_kev_entries),
         "updated_count": updated_count,
+        "enrichment_count": len(enrichment_ids),
+        "enrichment_sample": enrichment_ids[:ENRICHMENT_SAMPLE_LIMIT],
         "truncated": len(rows) > limit,
         "rows": rows[:limit],
     }

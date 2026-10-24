@@ -89,15 +89,18 @@ host this pipeline does not allowlist. It is not used.
 | Item | Value | Status |
 | --- | --- | --- |
 | Home | https://www.first.org/epss | VERIFIED |
-| Data page | https://www.first.org/epss/data | VERIFIED |
+| Data page | https://www.first.org/epss/data | VERIFIED 2026-10-24 |
 | API | https://api.first.org/data/v1/epss | VERIFIED documentation |
 | Daily CSV | https://epss.empiricalsecurity.com/epss_scores-current.csv.gz | VERIFIED documentation |
-| Usage agreement | Grants public *use* of scores and requests attribution | VERIFIED via FIRST usage text captured by ScanCode LicenseDB |
+| FAQ / current terms | https://www.first.org/epss/faq — scores published freely; attribution requested | VERIFIED 2026-10-24 |
+| Historic "Usage Agreement" fragment | https://www.first.org/epss/#Usage-Agreement | OBSOLETE — FIRST removed the fragment |
 | Explicit redistribution license for derived public JSON feeds | Not found | BLOCKED |
 
-FIRST says scores are free to use with requested attribution. That is **not**
-treated as permission to republish scores in a public GitHub Pages JSON
-snapshot that third parties, including a future WordPress theme, will consume.
+FIRST currently says scores are published freely for public use and requests
+attribution. That is **not** treated as permission to republish scores in a
+public GitHub Pages JSON snapshot that third parties, including a future
+WordPress theme, will consume. This project does not claim a current EPSS
+redistribution license.
 
 Adapter: `src/silastron_pulse/adapters/epss.py`  
 `REDISTRIBUTION_CLEARED = False`  
@@ -109,9 +112,10 @@ permitted, then change the blocker in code through a reviewed pull request.
 Do not enable by environment variable.
 
 Remaining technical blockers after a rights decision (do not treat as
-permission): the live FIRST Usage Agreement fragment is gone; daily CSV gzip
-is larger than `max_epss_bytes` (2_000_000); the API `cve` parameter is capped
-at 2000 characters so KEV-sized batches must use the CSV.
+permission): FIRST still does not publish an explicit redistribution license
+for derived public JSON feeds; daily CSV gzip is larger than
+`max_epss_bytes` (2_000_000); the API `cve` parameter is capped at 2000
+characters so KEV-sized batches must use the CSV.
 
 ## Correlation policy
 

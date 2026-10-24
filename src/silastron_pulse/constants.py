@@ -53,7 +53,9 @@ CVE_SCHEMA_DOCS_URL = "https://github.com/CVEProject/cve-schema"
 EPSS_HOME_URL = "https://www.first.org/epss"
 EPSS_DATA_URL = "https://www.first.org/epss/data"
 EPSS_API_URL = "https://api.first.org/data/v1/epss"
-EPSS_USAGE_AGREEMENT_URL = "https://www.first.org/epss/#Usage-Agreement"
+EPSS_FAQ_URL = "https://www.first.org/epss/faq"
+# FIRST removed the #Usage-Agreement fragment. Current terms/attribution live on the FAQ.
+EPSS_USAGE_AGREEMENT_URL = EPSS_FAQ_URL
 
 ALLOWED_HTTPS_HOSTS = frozenset(
     {
@@ -127,7 +129,9 @@ CISA_KEV_ATTRIBUTION = (
 )
 
 EPSS_ATTRIBUTION = (
-    "EPSS scores, when enabled, are used under the FIRST EPSS Usage "
-    "Agreement with requested attribution to https://www.first.org/epss "
-    "and Jacobs et al., Exploit Prediction Scoring System, DTRAP 2(3), 2021."
+    "EPSS scores are not redistributed in this snapshot. FIRST currently "
+    "publishes scores for public use with requested attribution "
+    f"({EPSS_FAQ_URL} and {EPSS_DATA_URL}). That is not treated as a "
+    "redistribution license for a derived public JSON feed. "
+    "Jacobs et al., Exploit Prediction Scoring System, DTRAP 2(3), 2021."
 )

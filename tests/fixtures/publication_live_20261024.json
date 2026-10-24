@@ -1,0 +1,2558 @@
+{
+  "source": "origin/pulse-state published latest 20261024T134028Z_7a47e929631b vs 20261022T071919Z_113d2177d767",
+  "previous_snapshot_id": "20261022T071919Z_113d2177d767",
+  "current_snapshot_id": "20261024T134028Z_7a47e929631b",
+  "previous_generated_at": "2026-10-22T07:19:19Z",
+  "current_generated_at": "2026-10-24T13:40:28Z",
+  "added_cve_ids": [
+    "CVE-2026-110447",
+    "CVE-2026-114625"
+  ],
+  "core_update_cve_ids": [
+    "CVE-2024-21762",
+    "CVE-2026-96951"
+  ],
+  "enrichment_only_cve_ids": [
+    "CVE-2002-0367",
+    "CVE-2004-0210",
+    "CVE-2006-2492",
+    "CVE-2007-0671",
+    "CVE-2008-0015",
+    "CVE-2008-4250",
+    "CVE-2009-0238",
+    "CVE-2009-0556",
+    "CVE-2009-0557",
+    "CVE-2009-0563",
+    "CVE-2009-1123",
+    "CVE-2009-1537",
+    "CVE-2009-3129",
+    "CVE-2010-0232",
+    "CVE-2010-0249",
+    "CVE-2010-0738",
+    "CVE-2010-0806",
+    "CVE-2010-1428",
+    "CVE-2010-2568",
+    "CVE-2010-2572",
+    "CVE-2010-3333",
+    "CVE-2010-3765",
+    "CVE-2010-3962",
+    "CVE-2010-4398",
+    "CVE-2011-1889",
+    "CVE-2011-2005",
+    "CVE-2011-3402",
+    "CVE-2012-0151",
+    "CVE-2012-0158",
+    "CVE-2012-1823",
+    "CVE-2012-1854",
+    "CVE-2012-1856",
+    "CVE-2012-1889",
+    "CVE-2012-2539",
+    "CVE-2012-4792",
+    "CVE-2013-0074",
+    "CVE-2013-1331",
+    "CVE-2013-1347",
+    "CVE-2013-2465",
+    "CVE-2013-2551",
+    "CVE-2013-3163",
+    "CVE-2013-3660",
+    "CVE-2013-3893",
+    "CVE-2013-3896",
+    "CVE-2013-3897",
+    "CVE-2013-3900",
+    "CVE-2013-3906",
+    "CVE-2013-3918",
+    "CVE-2013-5065",
+    "CVE-2013-7331",
+    "CVE-2014-0160",
+    "CVE-2014-0322",
+    "CVE-2014-0780",
+    "CVE-2014-1761",
+    "CVE-2014-1776",
+    "CVE-2014-1812",
+    "CVE-2014-2817",
+    "CVE-2014-4077",
+    "CVE-2014-4113",
+    "CVE-2014-4114",
+    "CVE-2014-4123",
+    "CVE-2014-4148",
+    "CVE-2014-6324",
+    "CVE-2014-6332",
+    "CVE-2014-6352",
+    "CVE-2015-0016",
+    "CVE-2015-0071",
+    "CVE-2015-1427",
+    "CVE-2015-1635",
+    "CVE-2015-1641",
+    "CVE-2015-1642",
+    "CVE-2015-1671",
+    "CVE-2015-1701",
+    "CVE-2015-1769",
+    "CVE-2015-1770",
+    "CVE-2015-2360",
+    "CVE-2015-2387",
+    "CVE-2015-2419",
+    "CVE-2015-2424",
+    "CVE-2015-2425",
+    "CVE-2015-2426",
+    "CVE-2015-2502",
+    "CVE-2015-2545",
+    "CVE-2015-2546",
+    "CVE-2015-2590",
+    "CVE-2015-3043",
+    "CVE-2015-3113",
+    "CVE-2015-4495",
+    "CVE-2015-4902",
+    "CVE-2015-5119",
+    "CVE-2015-5122",
+    "CVE-2015-5123",
+    "CVE-2015-5317",
+    "CVE-2015-5477",
+    "CVE-2015-6175",
+    "CVE-2015-7645",
+    "CVE-2015-8651",
+    "CVE-2016-0034",
+    "CVE-2016-0040",
+    "CVE-2016-0099",
+    "CVE-2016-0151",
+    "CVE-2016-0162",
+    "CVE-2016-0165",
+    "CVE-2016-0167",
+    "CVE-2016-0185",
+    "CVE-2016-0189",
+    "CVE-2016-0984",
+    "CVE-2016-1010",
+    "CVE-2016-1019",
+    "CVE-2016-1646",
+    "CVE-2016-3235",
+    "CVE-2016-3298",
+    "CVE-2016-3309",
+    "CVE-2016-3351",
+    "CVE-2016-3393",
+    "CVE-2016-3427",
+    "CVE-2016-3714",
+    "CVE-2016-3715",
+    "CVE-2016-3718",
+    "CVE-2016-4117",
+    "CVE-2016-4171",
+    "CVE-2016-5195",
+    "CVE-2016-7193",
+    "CVE-2016-7200",
+    "CVE-2016-7201",
+    "CVE-2016-7255",
+    "CVE-2016-7256",
+    "CVE-2016-7262",
+    "CVE-2016-7855",
+    "CVE-2016-7892",
+    "CVE-2016-8735",
+    "CVE-2016-9079",
+    "CVE-2017-1000253",
+    "CVE-2017-11292",
+    "CVE-2017-12149",
+    "CVE-2017-12615",
+    "CVE-2017-12617",
+    "CVE-2017-16651",
+    "CVE-2017-5030",
+    "CVE-2017-5070",
+    "CVE-2017-7494",
+    "CVE-2017-8291",
+    "CVE-2017-9805",
+    "CVE-2017-9841",
+    "CVE-2018-1000861",
+    "CVE-2018-14634",
+    "CVE-2018-14667",
+    "CVE-2018-15982",
+    "CVE-2018-17463",
+    "CVE-2018-17480",
+    "CVE-2018-18809",
+    "CVE-2018-4878",
+    "CVE-2018-5002",
+    "CVE-2018-5430",
+    "CVE-2018-6065",
+    "CVE-2018-6789",
+    "CVE-2018-7600",
+    "CVE-2018-7602",
+    "CVE-2019-0211",
+    "CVE-2019-1003029",
+    "CVE-2019-1003030",
+    "CVE-2019-10149",
+    "CVE-2019-1064",
+    "CVE-2019-1069",
+    "CVE-2019-11043",
+    "CVE-2019-11707",
+    "CVE-2019-11708",
+    "CVE-2019-13272",
+    "CVE-2019-13720",
+    "CVE-2019-15271",
+    "CVE-2019-1652",
+    "CVE-2019-1653",
+    "CVE-2019-16928",
+    "CVE-2019-17026",
+    "CVE-2019-2215",
+    "CVE-2019-5418",
+    "CVE-2019-5544",
+    "CVE-2019-7609",
+    "CVE-2020-10148",
+    "CVE-2020-1054",
+    "CVE-2020-11023",
+    "CVE-2020-11651",
+    "CVE-2020-11652",
+    "CVE-2020-11899",
+    "CVE-2020-12641",
+    "CVE-2020-13671",
+    "CVE-2020-13965",
+    "CVE-2020-1472",
+    "CVE-2020-15999",
+    "CVE-2020-16009",
+    "CVE-2020-1631",
+    "CVE-2020-16846",
+    "CVE-2020-17144",
+    "CVE-2020-1938",
+    "CVE-2020-2021",
+    "CVE-2020-2506",
+    "CVE-2020-2509",
+    "CVE-2020-28949",
+    "CVE-2020-3118",
+    "CVE-2020-3153",
+    "CVE-2020-3161",
+    "CVE-2020-3259",
+    "CVE-2020-3433",
+    "CVE-2020-3452",
+    "CVE-2020-3566",
+    "CVE-2020-3569",
+    "CVE-2020-35730",
+    "CVE-2020-3580",
+    "CVE-2020-36193",
+    "CVE-2020-6418",
+    "CVE-2020-6819",
+    "CVE-2020-6820",
+    "CVE-2020-7247",
+    "CVE-2020-9054",
+    "CVE-2021-1497",
+    "CVE-2021-1498",
+    "CVE-2021-1647",
+    "CVE-2021-1789",
+    "CVE-2021-1870",
+    "CVE-2021-1871",
+    "CVE-2021-21148",
+    "CVE-2021-21166",
+    "CVE-2021-21193",
+    "CVE-2021-21206",
+    "CVE-2021-21220",
+    "CVE-2021-21224",
+    "CVE-2021-22204",
+    "CVE-2021-22600",
+    "CVE-2021-26411",
+    "CVE-2021-26855",
+    "CVE-2021-26857",
+    "CVE-2021-26858",
+    "CVE-2021-27059",
+    "CVE-2021-27065",
+    "CVE-2021-27085",
+    "CVE-2021-28799",
+    "CVE-2021-30116",
+    "CVE-2021-30533",
+    "CVE-2021-30551",
+    "CVE-2021-30554",
+    "CVE-2021-30632",
+    "CVE-2021-30633",
+    "CVE-2021-30858",
+    "CVE-2021-30860",
+    "CVE-2021-30952",
+    "CVE-2021-31196",
+    "CVE-2021-3156",
+    "CVE-2021-31979",
+    "CVE-2021-33766",
+    "CVE-2021-33771",
+    "CVE-2021-34448",
+    "CVE-2021-34473",
+    "CVE-2021-34484",
+    "CVE-2021-34486",
+    "CVE-2021-34523",
+    "CVE-2021-34527",
+    "CVE-2021-3493",
+    "CVE-2021-35211",
+    "CVE-2021-36934",
+    "CVE-2021-36942",
+    "CVE-2021-36948",
+    "CVE-2021-36955",
+    "CVE-2021-37973",
+    "CVE-2021-37975",
+    "CVE-2021-37976",
+    "CVE-2021-38000",
+    "CVE-2021-38003",
+    "CVE-2021-38406",
+    "CVE-2021-38645",
+    "CVE-2021-38646",
+    "CVE-2021-38647",
+    "CVE-2021-38648",
+    "CVE-2021-38649",
+    "CVE-2021-39144",
+    "CVE-2021-39226",
+    "CVE-2021-40438",
+    "CVE-2021-40444",
+    "CVE-2021-41379",
+    "CVE-2021-41773",
+    "CVE-2021-42013",
+    "CVE-2021-42278",
+    "CVE-2021-42287",
+    "CVE-2021-42292",
+    "CVE-2021-42321",
+    "CVE-2021-44026",
+    "CVE-2021-44228",
+    "CVE-2021-45046",
+    "CVE-2022-0028",
+    "CVE-2022-0492",
+    "CVE-2022-0543",
+    "CVE-2022-1096",
+    "CVE-2022-1364",
+    "CVE-2022-20699",
+    "CVE-2022-20700",
+    "CVE-2022-20701",
+    "CVE-2022-20703",
+    "CVE-2022-20708",
+    "CVE-2022-20821",
+    "CVE-2022-21882",
+    "CVE-2022-21919",
+    "CVE-2022-21971",
+    "CVE-2022-21999",
+    "CVE-2022-22047",
+    "CVE-2022-22620",
+    "CVE-2022-22718",
+    "CVE-2022-2294",
+    "CVE-2022-22963",
+    "CVE-2022-22965",
+    "CVE-2022-23131",
+    "CVE-2022-23134",
+    "CVE-2022-24112",
+    "CVE-2022-24521",
+    "CVE-2022-24706",
+    "CVE-2022-26904",
+    "CVE-2022-26923",
+    "CVE-2022-26925",
+    "CVE-2022-27593",
+    "CVE-2022-2856",
+    "CVE-2022-30190",
+    "CVE-2022-30333",
+    "CVE-2022-3038",
+    "CVE-2022-3075",
+    "CVE-2022-32893",
+    "CVE-2022-33891",
+    "CVE-2022-34713",
+    "CVE-2022-3723",
+    "CVE-2022-37969",
+    "CVE-2022-38028",
+    "CVE-2022-41033",
+    "CVE-2022-41040",
+    "CVE-2022-41049",
+    "CVE-2022-41073",
+    "CVE-2022-41080",
+    "CVE-2022-41082",
+    "CVE-2022-41091",
+    "CVE-2022-41125",
+    "CVE-2022-41128",
+    "CVE-2022-41328",
+    "CVE-2022-4135",
+    "CVE-2022-42475",
+    "CVE-2022-44698",
+    "CVE-2022-47986",
+    "CVE-2023-0386",
+    "CVE-2023-21529",
+    "CVE-2023-21674",
+    "CVE-2023-21715",
+    "CVE-2023-21823",
+    "CVE-2023-21839",
+    "CVE-2023-23376",
+    "CVE-2023-23397",
+    "CVE-2023-23752",
+    "CVE-2023-24880",
+    "CVE-2023-24955",
+    "CVE-2023-26369",
+    "CVE-2023-27524",
+    "CVE-2023-27997",
+    "CVE-2023-28229",
+    "CVE-2023-28252",
+    "CVE-2023-29298",
+    "CVE-2023-29300",
+    "CVE-2023-29336",
+    "CVE-2023-29357",
+    "CVE-2023-29360",
+    "CVE-2023-32046",
+    "CVE-2023-32049",
+    "CVE-2023-33246",
+    "CVE-2023-35311",
+    "CVE-2023-36025",
+    "CVE-2023-36033",
+    "CVE-2023-36036",
+    "CVE-2023-36424",
+    "CVE-2023-36563",
+    "CVE-2023-36584",
+    "CVE-2023-36761",
+    "CVE-2023-36802",
+    "CVE-2023-36844",
+    "CVE-2023-36845",
+    "CVE-2023-36846",
+    "CVE-2023-36847",
+    "CVE-2023-36851",
+    "CVE-2023-36874",
+    "CVE-2023-36884",
+    "CVE-2023-38180",
+    "CVE-2023-38203",
+    "CVE-2023-38205",
+    "CVE-2023-40044",
+    "CVE-2023-41763",
+    "CVE-2023-4346",
+    "CVE-2023-44221",
+    "CVE-2023-44487",
+    "CVE-2023-45249",
+    "CVE-2023-46604",
+    "CVE-2023-46747",
+    "CVE-2023-46748",
+    "CVE-2023-47565",
+    "CVE-2023-48788",
+    "CVE-2023-4911",
+    "CVE-2023-50224",
+    "CVE-2023-6448",
+    "CVE-2023-7028",
+    "CVE-2023-7101",
+    "CVE-2024-0012",
+    "CVE-2024-11120",
+    "CVE-2024-11667",
+    "CVE-2024-1212",
+    "CVE-2024-20767",
+    "CVE-2024-20953",
+    "CVE-2024-21182",
+    "CVE-2024-21287",
+    "CVE-2024-21338",
+    "CVE-2024-21351",
+    "CVE-2024-21410",
+    "CVE-2024-21412",
+    "CVE-2024-21413",
+    "CVE-2024-23113",
+    "CVE-2024-26169",
+    "CVE-2024-27348",
+    "CVE-2024-28986",
+    "CVE-2024-28987",
+    "CVE-2024-28995",
+    "CVE-2024-29059",
+    "CVE-2024-29988",
+    "CVE-2024-30040",
+    "CVE-2024-30051",
+    "CVE-2024-30088",
+    "CVE-2024-32113",
+    "CVE-2024-3393",
+    "CVE-2024-3400",
+    "CVE-2024-34102",
+    "CVE-2024-35250",
+    "CVE-2024-38014",
+    "CVE-2024-38080",
+    "CVE-2024-38094",
+    "CVE-2024-38106",
+    "CVE-2024-38107",
+    "CVE-2024-38112",
+    "CVE-2024-38178",
+    "CVE-2024-38189",
+    "CVE-2024-38193",
+    "CVE-2024-38213",
+    "CVE-2024-38217",
+    "CVE-2024-38226",
+    "CVE-2024-38475",
+    "CVE-2024-38856",
+    "CVE-2024-4040",
+    "CVE-2024-40766",
+    "CVE-2024-40890",
+    "CVE-2024-40891",
+    "CVE-2024-43451",
+    "CVE-2024-43461",
+    "CVE-2024-43468",
+    "CVE-2024-43572",
+    "CVE-2024-43573",
+    "CVE-2024-45195",
+    "CVE-2024-4610",
+    "CVE-2024-47575",
+    "CVE-2024-4885",
+    "CVE-2024-49035",
+    "CVE-2024-49039",
+    "CVE-2024-49138",
+    "CVE-2024-53704",
+    "CVE-2024-55591",
+    "CVE-2024-5910",
+    "CVE-2024-6047",
+    "CVE-2024-6670",
+    "CVE-2024-7262",
+    "CVE-2024-7399",
+    "CVE-2024-7694",
+    "CVE-2024-8956",
+    "CVE-2024-8957",
+    "CVE-2024-9463",
+    "CVE-2024-9465",
+    "CVE-2024-9474",
+    "CVE-2024-9537",
+    "CVE-2025-0108",
+    "CVE-2025-0111",
+    "CVE-2025-0994",
+    "CVE-2025-10035",
+    "CVE-2025-11371",
+    "CVE-2025-1316",
+    "CVE-2025-14733",
+    "CVE-2025-15556",
+    "CVE-2025-21333",
+    "CVE-2025-21334",
+    "CVE-2025-21335",
+    "CVE-2025-21391",
+    "CVE-2025-21418",
+    "CVE-2025-21590",
+    "CVE-2025-23006",
+    "CVE-2025-24054",
+    "CVE-2025-24472",
+    "CVE-2025-24813",
+    "CVE-2025-24983",
+    "CVE-2025-24984",
+    "CVE-2025-24985",
+    "CVE-2025-24989",
+    "CVE-2025-24990",
+    "CVE-2025-24991",
+    "CVE-2025-24993",
+    "CVE-2025-25249",
+    "CVE-2025-25257",
+    "CVE-2025-26399",
+    "CVE-2025-26633",
+    "CVE-2025-2746",
+    "CVE-2025-2747",
+    "CVE-2025-2749",
+    "CVE-2025-2775",
+    "CVE-2025-2776",
+    "CVE-2025-29824",
+    "CVE-2025-30397",
+    "CVE-2025-30400",
+    "CVE-2025-32701",
+    "CVE-2025-32706",
+    "CVE-2025-32709",
+    "CVE-2025-32756",
+    "CVE-2025-33053",
+    "CVE-2025-33073",
+    "CVE-2025-34028",
+    "CVE-2025-3935",
+    "CVE-2025-4008",
+    "CVE-2025-40536",
+    "CVE-2025-40551",
+    "CVE-2025-40602",
+    "CVE-2025-49704",
+    "CVE-2025-49706",
+    "CVE-2025-52691",
+    "CVE-2025-53521",
+    "CVE-2025-53770",
+    "CVE-2025-54236",
+    "CVE-2025-54253",
+    "CVE-2025-58034",
+    "CVE-2025-59230",
+    "CVE-2025-59287",
+    "CVE-2025-59374",
+    "CVE-2025-59718",
+    "CVE-2025-60710",
+    "CVE-2025-61624",
+    "CVE-2025-61757",
+    "CVE-2025-61882",
+    "CVE-2025-61884",
+    "CVE-2025-6218",
+    "CVE-2025-62215",
+    "CVE-2025-62221",
+    "CVE-2025-64446",
+    "CVE-2025-67038",
+    "CVE-2025-68686",
+    "CVE-2025-9242",
+    "CVE-2025-9377",
+    "CVE-2026-0257",
+    "CVE-2026-0300",
+    "CVE-2026-0322",
+    "CVE-2026-102489",
+    "CVE-2026-102490",
+    "CVE-2026-104286",
+    "CVE-2026-12569",
+    "CVE-2026-15409",
+    "CVE-2026-15410",
+    "CVE-2026-16812",
+    "CVE-2026-20805",
+    "CVE-2026-20963",
+    "CVE-2026-21509",
+    "CVE-2026-21510",
+    "CVE-2026-21513",
+    "CVE-2026-21514",
+    "CVE-2026-21519",
+    "CVE-2026-21525",
+    "CVE-2026-21533",
+    "CVE-2026-21643",
+    "CVE-2026-21962",
+    "CVE-2026-22719",
+    "CVE-2026-22769",
+    "CVE-2026-24858",
+    "CVE-2026-25089",
+    "CVE-2026-28318",
+    "CVE-2026-32201",
+    "CVE-2026-32202",
+    "CVE-2026-33824",
+    "CVE-2026-33825",
+    "CVE-2026-34197",
+    "CVE-2026-34486",
+    "CVE-2026-34621",
+    "CVE-2026-35273",
+    "CVE-2026-35616",
+    "CVE-2026-39808",
+    "CVE-2026-41091",
+    "CVE-2026-41940",
+    "CVE-2026-42016",
+    "CVE-2026-42018",
+    "CVE-2026-42897",
+    "CVE-2026-45498",
+    "CVE-2026-45659",
+    "CVE-2026-46817",
+    "CVE-2026-48172",
+    "CVE-2026-48282",
+    "CVE-2026-48558",
+    "CVE-2026-50522",
+    "CVE-2026-5430",
+    "CVE-2026-54420",
+    "CVE-2026-55040",
+    "CVE-2026-56155",
+    "CVE-2026-56164",
+    "CVE-2026-58644",
+    "CVE-2026-60137",
+    "CVE-2026-63030",
+    "CVE-2026-65660",
+    "CVE-2026-66384",
+    "CVE-2026-67277",
+    "CVE-2026-67279",
+    "CVE-2026-68820",
+    "CVE-2026-71362",
+    "CVE-2026-72529",
+    "CVE-2026-72530",
+    "CVE-2026-7273",
+    "CVE-2026-72898",
+    "CVE-2026-7473",
+    "CVE-2026-75650",
+    "CVE-2026-8037",
+    "CVE-2026-81963",
+    "CVE-2026-82329",
+    "CVE-2026-83548",
+    "CVE-2026-83549",
+    "CVE-2026-8398",
+    "CVE-2026-84869",
+    "CVE-2026-85706",
+    "CVE-2026-85880",
+    "CVE-2026-86060",
+    "CVE-2026-86218",
+    "CVE-2026-87886",
+    "CVE-2026-87902",
+    "CVE-2026-9198",
+    "CVE-2026-93952",
+    "CVE-2026-94127"
+  ],
+  "expected": {
+    "added_count": 2,
+    "removed_count": 0,
+    "updated_count": 2,
+    "enrichment_count": 632
+  },
+  "published_comparison": {
+    "available": true,
+    "reason": null,
+    "compared_to_snapshot_id": "20261022T071919Z_113d2177d767",
+    "compared_to_generated_at": "2026-10-22T07:19:19Z",
+    "current_snapshot_id": "20261024T134028Z_7a47e929631b",
+    "current_generated_at": "2026-10-24T13:40:28Z",
+    "added_count": 2,
+    "removed_count": 0,
+    "updated_count": 634,
+    "truncated": true,
+    "rows": [
+      {
+        "after": {
+          "completeness": "complete",
+          "cve_state": "PUBLISHED",
+          "cve_title": null,
+          "cvss_base_score": 9.2,
+          "cvss_base_severity": "CRITICAL",
+          "due_date": "2026-10-26",
+          "kev_date_added": "2026-10-23",
+          "product": "Collabora Online \u2013 Built-in CODE Server",
+          "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA\u2019s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA\u2019s \u201cForensics Triage Requirements\u201d (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+          "vendor_project": "Collabora",
+          "vulnerability_name": "Collabora Online \u2013 Built-in CODE Server OS Command Injection Vulnerability"
+        },
+        "before": null,
+        "categories": [
+          "added_kev"
+        ],
+        "changed_fields": [],
+        "cve_id": "CVE-2026-110447",
+        "links": {
+          "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-110447",
+          "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/110xxx/CVE-2026-110447.json",
+          "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+        }
+      },
+      {
+        "after": {
+          "completeness": "complete",
+          "cve_state": "PUBLISHED",
+          "cve_title": "Security Advisory 0199",
+          "cvss_base_score": 9.4,
+          "cvss_base_severity": "CRITICAL",
+          "due_date": "2026-10-26",
+          "kev_date_added": "2026-10-23",
+          "product": "VeloCloud Orchestrator",
+          "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA\u2019s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA\u2019s \u201cForensics Triage Requirements\u201d (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+          "vendor_project": "Arista",
+          "vulnerability_name": "Arista VeloCloud Orchestrator SQL Injection Vulnerability"
+        },
+        "before": null,
+        "categories": [
+          "added_kev"
+        ],
+        "changed_fields": [],
+        "cve_id": "CVE-2026-114625",
+        "links": {
+          "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-114625",
+          "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/114xxx/CVE-2026-114625.json",
+          "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+        }
+      },
+      {
+        "after": {
+          "completeness": "complete",
+          "cve_state": "PUBLISHED",
+          "cve_title": null,
+          "cvss_base_score": null,
+          "cvss_base_severity": null,
+          "due_date": "2022-03-24",
+          "kev_date_added": "2022-03-03",
+          "product": "Windows",
+          "required_action": "Apply updates per vendor instructions.",
+          "vendor_project": "Microsoft",
+          "vulnerability_name": "Microsoft Windows Privilege Escalation Vulnerability"
+        },
+        "before": {
+          "completeness": "complete",
+          "cve_state": "PUBLISHED",
+          "cve_title": null,
+          "cvss_base_score": null,
+          "cvss_base_severity": null,
+          "due_date": "2022-03-24",
+          "kev_date_added": "2022-03-03",
+          "product": "Windows",
+          "required_action": "Apply updates per vendor instructions.",
+          "vendor_project": "Microsoft",
+          "vulnerability_name": "Microsoft Windows Privilege Escalation Vulnerability"
+        },
+        "categories": [
+          "cve_update"
+        ],
+        "changed_fields": [],
+        "cve_id": "CVE-2002-0367",
+        "links": {
+          "cve_record": "https://www.cve.org/CVERecord?id=CVE-2002-0367",
+          "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2002/0xxx/CVE-2002-0367.json",
+          "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+        }
+      },
+      {
+        "after": {
+          "completeness": "complete",
+          "cve_state": "PUBLISHED",
+          "cve_title": null,
+          "cvss_base_score": null,
+          "cvss_base_severity": null,
+          "due_date": "2022-03-24",
+          "kev_date_added": "2022-03-03",
+          "product": "Windows",
+          "required_action": "Apply updates per vendor instructions.",
+          "vendor_project": "Microsoft",
+          "vulnerability_name": "Microsoft Windows Privilege Escalation Vulnerability"
+        },
+        "before": {
+          "completeness": "complete",
+          "cve_state": "PUBLISHED",
+          "cve_title": null,
+          "cvss_base_score": null,
+          "cvss_base_severity": null,
+          "due_date": "2022-03-24",
+          "kev_date_added": "2022-03-03",
+          "product": "Windows",
+          "required_action": "Apply updates per vendor instructions.",
+          "vendor_project": "Microsoft",
+          "vulnerability_name": "Microsoft Windows Privilege Escalation Vulnerability"
+        },
+        "categories": [
+          "cve_update"
+        ],
+        "changed_fields": [],
+        "cve_id": "CVE-2004-0210",
+        "links": {
+          "cve_record": "https://www.cve.org/CVERecord?id=CVE-2004-0210",
+          "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2004/0xxx/CVE-2004-0210.json",
+          "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+        }
+      },
+      {
+        "after": {
+          "completeness": "complete",
+          "cve_state": "PUBLISHED",
+          "cve_title": null,
+          "cvss_base_score": null,
+          "cvss_base_severity": null,
+          "due_date": "2022-06-22",
+          "kev_date_added": "2022-06-08",
+          "product": "Word",
+          "required_action": "Apply updates per vendor instructions.",
+          "vendor_project": "Microsoft",
+          "vulnerability_name": "Microsoft Word Malformed Object Pointer Vulnerability"
+        },
+        "before": {
+          "completeness": "complete",
+          "cve_state": "PUBLISHED",
+          "cve_title": null,
+          "cvss_base_score": null,
+          "cvss_base_severity": null,
+          "due_date": "2022-06-22",
+          "kev_date_added": "2022-06-08",
+          "product": "Word",
+          "required_action": "Apply updates per vendor instructions.",
+          "vendor_project": "Microsoft",
+          "vulnerability_name": "Microsoft Word Malformed Object Pointer Vulnerability"
+        },
+        "categories": [
+          "cve_update"
+        ],
+        "changed_fields": [],
+        "cve_id": "CVE-2006-2492",
+        "links": {
+          "cve_record": "https://www.cve.org/CVERecord?id=CVE-2006-2492",
+          "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2006/2xxx/CVE-2006-2492.json",
+          "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+        }
+      }
+    ]
+  },
+  "added_records": {
+    "CVE-2026-110447": {
+      "cve_id": "CVE-2026-110447",
+      "completeness": "complete",
+      "kev": {
+        "cve_id": "CVE-2026-110447",
+        "vendor_project": "Collabora",
+        "product": "Collabora Online \u2013 Built-in CODE Server",
+        "vulnerability_name": "Collabora Online \u2013 Built-in CODE Server OS Command Injection Vulnerability",
+        "date_added": "2026-10-23",
+        "short_description": "Collabora Collabora Online \u2013 Built-in CODE Server when used within the NextCloud platform contains an OS command injection vulnerability that allows for remote code execution when the CODE server isn't running.",
+        "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA\u2019s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA\u2019s \u201cForensics Triage Requirements\u201d (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+        "due_date": "2026-10-26",
+        "known_ransomware_campaign_use": "Unknown",
+        "notes": "https://help.nextcloud.com/t/to-collabora-built-in-user-update-asap/250516 ; https://github.com/CollaboraOnline/online/security/advisories/GHSA-g3vx-3m76-fghh ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-110447",
+        "cwes": [
+          "CWE-78"
+        ],
+        "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+        "record_sha256": "2d9037bcfdd043faa955bfe479676d0f5d28f1c4c13459e328f595dfc872f329",
+        "truncated_fields": [],
+        "cwes_incomplete": false
+      },
+      "cve": {
+        "status": "ok",
+        "cve_id": "CVE-2026-110447",
+        "state": "PUBLISHED",
+        "data_version": "5.2",
+        "date_published": "2026-10-14T02:27:42.315Z",
+        "date_updated": "2026-10-24T03:55:50.462Z",
+        "assigner_short_name": "mitre",
+        "title": null,
+        "description": "Collabora Online Built-in CODE Server before 26.4.303 (richdocumentscode), a Nextcloud app, allows remote code execution, as exploited in the wild in September and October 2026, a different vulnerability than CVE-2025-66208. This is an OS c",
+        "severity": {
+          "base_score": 9.2,
+          "base_severity": "CRITICAL",
+          "cvss_version": "4.0",
+          "source": "cve_cna",
+          "vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"
+        },
+        "products": [],
+        "source_url": "https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/2026/110xxx/CVE-2026-110447.json",
+        "record_page_url": "https://www.cve.org/CVERecord?id=CVE-2026-110447",
+        "record_sha256": "04af7d7320706aa9c605f94ad00f9942fd900abd85ccc62465569b0233530a9b",
+        "truncated_fields": [],
+        "omitted_product_count": 0,
+        "omitted_version_count": 0,
+        "remediation_items": [
+          {
+            "attribution": "CVE List V5 CNA vendor-advisory",
+            "kind": "reference",
+            "source": "cve_list_v5",
+            "url": "https://help.nextcloud.com/t/to-collabora-built-in-user-update-asap/250516"
+          }
+        ]
+      },
+      "epss": {
+        "cve_id": "CVE-2026-110447",
+        "notes": "EPSS is disabled because FIRST grants public use of scores with requested attribution, but does not publish an explicit redistribution license for derived public datasets. Silastron Security Pulse would republish scores in GitHub Pages JSON consumed by third parties. That exceeds verified rights. See https://www.first.org/epss/#Usage-Agreement",
+        "percentile": null,
+        "score": null,
+        "score_date": null,
+        "status": "unavailable"
+      },
+      "signals": {
+        "composite_risk_score": null,
+        "confirmed_exploitation": {
+          "basis": "cisa_kev",
+          "date_added": "2026-10-23",
+          "note": "CISA listed this CVE in KEV. This is source-asserted evidence of known exploitation, not a statement about Silastron systems.",
+          "source": "CISA Known Exploited Vulnerabilities catalog",
+          "status": "confirmed_by_source",
+          "value": true
+        },
+        "deployment_exposure": {
+          "note": "Deployment exposure requires an asset inventory and is out of scope for this public intelligence snapshot.",
+          "status": "not_assessed",
+          "value": null
+        },
+        "estimated_exploitation_probability": {
+          "basis": "first_epss",
+          "note": "EPSS is disabled because FIRST grants public use of scores with requested attribution, but does not publish an explicit redistribution license for derived public datasets. Silastron Security Pulse would republish scores in GitHub Pages JSON consumed by third parties. That exceeds verified rights. See https://www.first.org/epss/#Usage-Agreement",
+          "percentile": null,
+          "status": "unavailable",
+          "value": null
+        },
+        "note": "These signals are independent. They are never collapsed into a single risk score.",
+        "product_affectedness": {
+          "cve_products": [
+            {
+              "product": "Collabora Online - Built-in CODE Server",
+              "source": "cve_cna",
+              "status": "affected",
+              "vendor": "Collabora",
+              "versions": [
+                "affected 0 26.4.303"
+              ]
+            }
+          ],
+          "kev_product": "Collabora Online \u2013 Built-in CODE Server",
+          "kev_vendor_project": "Collabora",
+          "note": "Product affectedness is copied from KEV and the CVE CNA container. A complete extracted inventory does not prove complete real-world product coverage, and it does not mean a Silastron or customer system is exposed.",
+          "omitted_product_count": 0,
+          "omitted_version_count": 0,
+          "status": "source_asserted"
+        },
+        "vulnerability_severity": {
+          "base_score": 9.2,
+          "base_severity": "CRITICAL",
+          "cvss_version": "4.0",
+          "note": "CVSS measures vulnerability severity, not exploitation or deployment exposure.",
+          "source": "cve_cna",
+          "status": "available",
+          "vector": "CVSS:4.0/AV:N/AC:L/AT:P/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N"
+        }
+      },
+      "links": {
+        "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-110447",
+        "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/110xxx/CVE-2026-110447.json",
+        "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+      }
+    },
+    "CVE-2026-114625": {
+      "cve_id": "CVE-2026-114625",
+      "completeness": "complete",
+      "kev": {
+        "cve_id": "CVE-2026-114625",
+        "vendor_project": "Arista",
+        "product": "VeloCloud Orchestrator",
+        "vulnerability_name": "Arista VeloCloud Orchestrator SQL Injection Vulnerability",
+        "date_added": "2026-10-23",
+        "short_description": "Arista VeloCloud Orchestrator on-prem contains a SQL injection vulnerability that may allow a remote attacker to access privileged internal functionality and impact the VCO host. Successful exploitation may compromise the confidentiality, integrity, and availability of the orchestrator and data managed by the orchestrator.",
+        "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA\u2019s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA\u2019s \u201cForensics Triage Requirements\u201d (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+        "due_date": "2026-10-26",
+        "known_ransomware_campaign_use": "Unknown",
+        "notes": "https://www.arista.com/en/support/advisories-notices/security-advisory/24838-security-advisory-0199 ; ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-114625",
+        "cwes": [
+          "CWE-89"
+        ],
+        "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+        "record_sha256": "aab7bd979511aae6cf6da512a2b81b579a111716f0ca7f069103ed943a50fe4f",
+        "truncated_fields": [],
+        "cwes_incomplete": false
+      },
+      "cve": {
+        "status": "ok",
+        "cve_id": "CVE-2026-114625",
+        "state": "PUBLISHED",
+        "data_version": "5.2",
+        "date_published": "2026-10-22T20:47:56.427Z",
+        "date_updated": "2026-10-24T03:55:14.884Z",
+        "assigner_short_name": "Arista",
+        "title": "Security Advisory 0199",
+        "description": "VeloCloud Orchestrator (VCO) on-prem has a security issue where this issue may allow a remote attacker to access privileged internal functionality and impact the VCO host. Successful exploitation may compromise the confidentiality, integrit",
+        "severity": {
+          "base_score": 9.4,
+          "base_severity": "CRITICAL",
+          "cvss_version": "4.0",
+          "source": "cve_cna",
+          "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H"
+        },
+        "products": [],
+        "source_url": "https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/2026/114xxx/CVE-2026-114625.json",
+        "record_page_url": "https://www.cve.org/CVERecord?id=CVE-2026-114625",
+        "record_sha256": "0d711873d077fc09338fd9e0f0a53476ba8de20f9a241cfcd83f747b630f9fbf",
+        "truncated_fields": [],
+        "omitted_product_count": 0,
+        "omitted_version_count": 0,
+        "remediation_items": [
+          {
+            "attribution": "CVE List V5 CNA solutions",
+            "kind": "verified_fix",
+            "source": "cve_list_v5",
+            "text": "The recommended resolution is to upgrade to a fixed VCO release at your earliest convenience.  These vulnerabilities have been fixed in the following releases:  - VCO 5.2.3.18 and later in the 5.2 train - VCO 6.1.3.10 and later in the 6.1 train - VCO 6.4.2.12 and later in the 6.4 train"
+          },
+          {
+            "attribution": "CVE List V5 CNA workarounds",
+            "kind": "mitigation",
+            "source": "cve_list_v5",
+            "text": "Until the fixed software is deployed, operators should apply defense-in-depth controls appropriate for their environment:  - Restrict access to the VCO web interface to trusted administrative networks. - Monitor the VCO for accesses from known malicious source IPs. - Monitor for unexpected outbound network activity from the VCO host. - Consider blocking outbound ports not needed for normal activities. - Monitor for backdoor daemons and webshells. - Review recent administrator activity for unexpected changes."
+          },
+          {
+            "attribution": "CVE List V5 CNA vendor-advisory",
+            "kind": "reference",
+            "source": "cve_list_v5",
+            "text": "Security Advisory 0199",
+            "url": "https://www.arista.com/en/support/advisories-notices/security-advisory/24838-security-advisory-0199"
+          }
+        ]
+      },
+      "epss": {
+        "cve_id": "CVE-2026-114625",
+        "notes": "EPSS is disabled because FIRST grants public use of scores with requested attribution, but does not publish an explicit redistribution license for derived public datasets. Silastron Security Pulse would republish scores in GitHub Pages JSON consumed by third parties. That exceeds verified rights. See https://www.first.org/epss/#Usage-Agreement",
+        "percentile": null,
+        "score": null,
+        "score_date": null,
+        "status": "unavailable"
+      },
+      "signals": {
+        "composite_risk_score": null,
+        "confirmed_exploitation": {
+          "basis": "cisa_kev",
+          "date_added": "2026-10-23",
+          "note": "CISA listed this CVE in KEV. This is source-asserted evidence of known exploitation, not a statement about Silastron systems.",
+          "source": "CISA Known Exploited Vulnerabilities catalog",
+          "status": "confirmed_by_source",
+          "value": true
+        },
+        "deployment_exposure": {
+          "note": "Deployment exposure requires an asset inventory and is out of scope for this public intelligence snapshot.",
+          "status": "not_assessed",
+          "value": null
+        },
+        "estimated_exploitation_probability": {
+          "basis": "first_epss",
+          "note": "EPSS is disabled because FIRST grants public use of scores with requested attribution, but does not publish an explicit redistribution license for derived public datasets. Silastron Security Pulse would republish scores in GitHub Pages JSON consumed by third parties. That exceeds verified rights. See https://www.first.org/epss/#Usage-Agreement",
+          "percentile": null,
+          "status": "unavailable",
+          "value": null
+        },
+        "note": "These signals are independent. They are never collapsed into a single risk score.",
+        "product_affectedness": {
+          "cve_products": [
+            {
+              "product": "VeloCloud Orchestrator",
+              "source": "cve_cna",
+              "status": "unaffected",
+              "vendor": "Arista Networks",
+              "versions": [
+                "affected 5.2.0 5.2.3.18",
+                "affected 6.1.0 6.1.3.10",
+                "affected 6.4.0 6.4.2.12"
+              ]
+            }
+          ],
+          "kev_product": "VeloCloud Orchestrator",
+          "kev_vendor_project": "Arista",
+          "note": "Product affectedness is copied from KEV and the CVE CNA container. A complete extracted inventory does not prove complete real-world product coverage, and it does not mean a Silastron or customer system is exposed.",
+          "omitted_product_count": 0,
+          "omitted_version_count": 0,
+          "status": "source_asserted"
+        },
+        "vulnerability_severity": {
+          "base_score": 9.4,
+          "base_severity": "CRITICAL",
+          "cvss_version": "4.0",
+          "note": "CVSS measures vulnerability severity, not exploitation or deployment exposure.",
+          "source": "cve_cna",
+          "status": "available",
+          "vector": "CVSS:4.0/AV:N/AC:L/AT:N/PR:L/UI:N/VC:H/VI:H/VA:H/SC:H/SI:H/SA:H"
+        }
+      },
+      "links": {
+        "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-114625",
+        "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/114xxx/CVE-2026-114625.json",
+        "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+      }
+    }
+  },
+  "core_records": {
+    "CVE-2024-21762": {
+      "previous": {
+        "cve_id": "CVE-2024-21762",
+        "completeness": "complete",
+        "kev": {
+          "cve_id": "CVE-2024-21762",
+          "vendor_project": "Fortinet",
+          "product": "FortiOS",
+          "vulnerability_name": "Fortinet FortiOS Out-of-Bound Write Vulnerability",
+          "date_added": "2024-02-09",
+          "short_description": "Fortinet FortiOS contains an out-of-bound write vulnerability that allows a remote unauthenticated attacker to execute code or commands via specially crafted HTTP requests.",
+          "required_action": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
+          "due_date": "2024-02-16",
+          "known_ransomware_campaign_use": "Known",
+          "notes": "https://fortiguard.fortinet.com/psirt/FG-IR-24-015 ;   https://nvd.nist.gov/vuln/detail/CVE-2024-21762",
+          "cwes": [
+            "CWE-787"
+          ],
+          "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+          "record_sha256": "a39058cc2fb14f9df23f9dedb0ffcf229b42c0fe2b431c5bbcafa83a6a739daa",
+          "truncated_fields": [],
+          "cwes_incomplete": false
+        },
+        "cve": {
+          "status": "ok",
+          "cve_id": "CVE-2024-21762",
+          "state": "PUBLISHED",
+          "data_version": "5.2",
+          "date_published": "2024-02-09T08:14:25.954Z",
+          "date_updated": "2026-08-04T03:55:55.226Z",
+          "assigner_short_name": "fortinet",
+          "title": null,
+          "description": "A out-of-bounds write in Fortinet FortiOS versions 7.4.0 through 7.4.2, 7.2.0 through 7.2.6, 7.0.0 through 7.0.13, 6.4.0 through 6.4.14, 6.2.0 through 6.2.15, 6.0.0 through 6.0.17, FortiProxy versions 7.4.0 through 7.4.2, 7.2.0 through 7.2.8, 7.0.0 through 7.0.14, 2.0.0 through 2.0.13, 1.2.0 through 1.2.13, 1.1.0 through 1.1.6, 1.0.0 through 1.0.7 allows attacker to execute unauthorized code or commands via specifically crafted requests",
+          "severity": {
+            "base_score": 9.6,
+            "base_severity": "CRITICAL",
+            "cvss_version": "3.1",
+            "source": "cve_cna",
+            "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H/E:H/RL:W/RC:C"
+          },
+          "products": [
+            {
+              "vendor": "Fortinet",
+              "product": "FortiProxy",
+              "status": "unaffected",
+              "versions": [
+                "affected 7.4.0",
+                "affected 7.2.0",
+                "affected 7.0.0",
+                "affected 2.0.0",
+                "affected 1.2.0",
+                "affected 1.1.0",
+                "affected 1.0.0"
+              ]
+            },
+            {
+              "vendor": "Fortinet",
+              "product": "FortiOS",
+              "status": "unaffected",
+              "versions": [
+                "affected 7.4.0",
+                "affected 7.2.0",
+                "affected 7.0.0",
+                "affected 6.4.0",
+                "affected 6.2.0",
+                "affected 6.0.0"
+              ]
+            }
+          ],
+          "source_url": "https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/2024/21xxx/CVE-2024-21762.json",
+          "record_page_url": "https://www.cve.org/CVERecord?id=CVE-2024-21762",
+          "record_sha256": "1b38e10fb9c1c445e0da4a3560a068c5eb995d2c31ccb46b901784eafbd9bab4",
+          "truncated_fields": [],
+          "omitted_product_count": 0,
+          "omitted_version_count": 0,
+          "remediation_items": []
+        },
+        "epss": {
+          "cve_id": "CVE-2024-21762",
+          "notes": "EPSS is disabled because FIRST grants public use of scores with requested attribution, but does not publish an explicit redistribution license for derived public datasets. Silastron Security Pulse would republish scores in GitHub Pages JSON consumed by third parties. That exceeds verified rights. See https://www.first.org/epss/#Usage-Agreement",
+          "percentile": null,
+          "score": null,
+          "score_date": null,
+          "status": "unavailable"
+        },
+        "signals": {
+          "composite_risk_score": null,
+          "confirmed_exploitation": {
+            "basis": "cisa_kev",
+            "date_added": "2024-02-09",
+            "note": "CISA listed this CVE in KEV. This is source-asserted evidence of known exploitation, not a statement about Silastron systems.",
+            "source": "CISA Known Exploited Vulnerabilities catalog",
+            "status": "confirmed_by_source",
+            "value": true
+          },
+          "deployment_exposure": {
+            "note": "Deployment exposure requires an asset inventory and is out of scope for this public intelligence snapshot.",
+            "status": "not_assessed",
+            "value": null
+          },
+          "estimated_exploitation_probability": {
+            "basis": "first_epss",
+            "note": "EPSS is disabled because FIRST grants public use of scores with requested attribution, but does not publish an explicit redistribution license for derived public datasets. Silastron Security Pulse would republish scores in GitHub Pages JSON consumed by third parties. That exceeds verified rights. See https://www.first.org/epss/#Usage-Agreement",
+            "percentile": null,
+            "status": "unavailable",
+            "value": null
+          },
+          "note": "These signals are independent. They are never collapsed into a single risk score.",
+          "product_affectedness": {
+            "cve_products": [
+              {
+                "product": "FortiProxy",
+                "source": "cve_cna",
+                "status": "unaffected",
+                "vendor": "Fortinet",
+                "versions": [
+                  "affected 7.4.0",
+                  "affected 7.2.0",
+                  "affected 7.0.0",
+                  "affected 2.0.0",
+                  "affected 1.2.0",
+                  "affected 1.1.0",
+                  "affected 1.0.0"
+                ]
+              },
+              {
+                "product": "FortiOS",
+                "source": "cve_cna",
+                "status": "unaffected",
+                "vendor": "Fortinet",
+                "versions": [
+                  "affected 7.4.0",
+                  "affected 7.2.0",
+                  "affected 7.0.0",
+                  "affected 6.4.0",
+                  "affected 6.2.0",
+                  "affected 6.0.0"
+                ]
+              }
+            ],
+            "kev_product": "FortiOS",
+            "kev_vendor_project": "Fortinet",
+            "note": "Product affectedness is copied from KEV and the CVE CNA container. A complete extracted inventory does not prove complete real-world product coverage, and it does not mean a Silastron or customer system is exposed.",
+            "omitted_product_count": 0,
+            "omitted_version_count": 0,
+            "status": "source_asserted"
+          },
+          "vulnerability_severity": {
+            "base_score": 9.6,
+            "base_severity": "CRITICAL",
+            "cvss_version": "3.1",
+            "note": "CVSS measures vulnerability severity, not exploitation or deployment exposure.",
+            "source": "cve_cna",
+            "status": "available",
+            "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H/E:H/RL:W/RC:C"
+          }
+        },
+        "links": {
+          "cve_record": "https://www.cve.org/CVERecord?id=CVE-2024-21762",
+          "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2024/21xxx/CVE-2024-21762.json",
+          "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+        }
+      },
+      "current": {
+        "cve_id": "CVE-2024-21762",
+        "completeness": "complete",
+        "kev": {
+          "cve_id": "CVE-2024-21762",
+          "vendor_project": "Fortinet",
+          "product": "FortiOS",
+          "vulnerability_name": "Fortinet FortiOS Out-of-Bound Write Vulnerability",
+          "date_added": "2024-02-09",
+          "short_description": "Fortinet FortiOS contains an out-of-bound write vulnerability that allows a remote unauthenticated attacker to execute code or commands via specially crafted HTTP requests.",
+          "required_action": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
+          "due_date": "2024-02-16",
+          "known_ransomware_campaign_use": "Known",
+          "notes": "https://fortiguard.fortinet.com/psirt/FG-IR-24-015 ;   https://nvd.nist.gov/vuln/detail/CVE-2024-21762",
+          "cwes": [
+            "CWE-787"
+          ],
+          "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+          "record_sha256": "a39058cc2fb14f9df23f9dedb0ffcf229b42c0fe2b431c5bbcafa83a6a739daa",
+          "truncated_fields": [],
+          "cwes_incomplete": false
+        },
+        "cve": {
+          "status": "ok",
+          "cve_id": "CVE-2024-21762",
+          "state": "PUBLISHED",
+          "data_version": "5.2",
+          "date_published": "2024-02-09T08:14:25.954Z",
+          "date_updated": "2026-10-22T13:48:34.670Z",
+          "assigner_short_name": "fortinet",
+          "title": null,
+          "description": "A out-of-bounds write vulnerability in Fortinet FortiOS 7.4.0 through 7.4.2, FortiOS 7.2.0 through 7.2.6, FortiOS 7.0.0 through 7.0.13, FortiOS 6.4.0 through 6.4.14, FortiOS 6.2.0 through 6.2.15, FortiOS 6.0 all versions, FortiProxy 7.4.0 through 7.4.2, FortiProxy 7.2.0 through 7.2.8, FortiProxy 7.0.0 through 7.0.14, FortiProxy 2.0.0 through 2.0.13, FortiProxy 01.02 all versions, FortiProxy 1.2 all versions, FortiProxy 01.01 all versions, FortiProxy 1.1 all versions, FortiProxy 01.00 all versions allows attacker to execute unauthorized code or commands via specifically crafted requests",
+          "severity": {
+            "base_score": 9.6,
+            "base_severity": "CRITICAL",
+            "cvss_version": "3.1",
+            "source": "cve_cna",
+            "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H/E:H/RL:W/RC:C"
+          },
+          "products": [
+            {
+              "vendor": "Fortinet",
+              "product": "FortiOS",
+              "status": "unaffected",
+              "versions": [
+                "affected 7.4.0",
+                "affected 7.2.0",
+                "affected 7.0.0",
+                "affected 6.4.0",
+                "affected 6.2.0",
+                "affected 6.0.0"
+              ]
+            },
+            {
+              "vendor": "Fortinet",
+              "product": "FortiProxy",
+              "status": "unaffected",
+              "versions": [
+                "affected 7.4.0",
+                "affected 7.2.0",
+                "affected 7.0.0",
+                "affected 2.0.0",
+                "affected 1.2.1",
+                "affected 01.02.00",
+                "affected 1.1.4",
+                "affected 01.01.00",
+                "affected 01.00.00"
+              ]
+            }
+          ],
+          "source_url": "https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/2024/21xxx/CVE-2024-21762.json",
+          "record_page_url": "https://www.cve.org/CVERecord?id=CVE-2024-21762",
+          "record_sha256": "774b473508180734c57f0c3a6f900b83240313c3e1749d6c4f61036dd542af97",
+          "truncated_fields": [],
+          "omitted_product_count": 0,
+          "omitted_version_count": 0,
+          "remediation_items": [
+            {
+              "attribution": "CVE List V5 CNA solutions",
+              "kind": "verified_fix",
+              "source": "cve_list_v5",
+              "text": "Upgrade to FortiProxy version 7.4.3 or above Upgrade to FortiProxy version 7.2.9 or above Upgrade to FortiProxy version 7.0.15 or above Upgrade to FortiProxy version 2.0.14 or above Upgrade to FortiOS version 7.4.3 or above Upgrade to FortiOS version 7.2.7 or above Upgrade to FortiOS version 7.0.14 or above Upgrade to FortiOS version 6.4.15 or above Upgrade to FortiOS version 6.2.16 or above"
+            }
+          ]
+        },
+        "epss": {
+          "cve_id": "CVE-2024-21762",
+          "notes": "EPSS is disabled because FIRST grants public use of scores with requested attribution, but does not publish an explicit redistribution license for derived public datasets. Silastron Security Pulse would republish scores in GitHub Pages JSON consumed by third parties. That exceeds verified rights. See https://www.first.org/epss/#Usage-Agreement",
+          "percentile": null,
+          "score": null,
+          "score_date": null,
+          "status": "unavailable"
+        },
+        "signals": {
+          "composite_risk_score": null,
+          "confirmed_exploitation": {
+            "basis": "cisa_kev",
+            "date_added": "2024-02-09",
+            "note": "CISA listed this CVE in KEV. This is source-asserted evidence of known exploitation, not a statement about Silastron systems.",
+            "source": "CISA Known Exploited Vulnerabilities catalog",
+            "status": "confirmed_by_source",
+            "value": true
+          },
+          "deployment_exposure": {
+            "note": "Deployment exposure requires an asset inventory and is out of scope for this public intelligence snapshot.",
+            "status": "not_assessed",
+            "value": null
+          },
+          "estimated_exploitation_probability": {
+            "basis": "first_epss",
+            "note": "EPSS is disabled because FIRST grants public use of scores with requested attribution, but does not publish an explicit redistribution license for derived public datasets. Silastron Security Pulse would republish scores in GitHub Pages JSON consumed by third parties. That exceeds verified rights. See https://www.first.org/epss/#Usage-Agreement",
+            "percentile": null,
+            "status": "unavailable",
+            "value": null
+          },
+          "note": "These signals are independent. They are never collapsed into a single risk score.",
+          "product_affectedness": {
+            "cve_products": [
+              {
+                "product": "FortiOS",
+                "source": "cve_cna",
+                "status": "unaffected",
+                "vendor": "Fortinet",
+                "versions": [
+                  "affected 7.4.0",
+                  "affected 7.2.0",
+                  "affected 7.0.0",
+                  "affected 6.4.0",
+                  "affected 6.2.0",
+                  "affected 6.0.0"
+                ]
+              },
+              {
+                "product": "FortiProxy",
+                "source": "cve_cna",
+                "status": "unaffected",
+                "vendor": "Fortinet",
+                "versions": [
+                  "affected 7.4.0",
+                  "affected 7.2.0",
+                  "affected 7.0.0",
+                  "affected 2.0.0",
+                  "affected 1.2.1",
+                  "affected 01.02.00",
+                  "affected 1.1.4",
+                  "affected 01.01.00",
+                  "affected 01.00.00"
+                ]
+              }
+            ],
+            "kev_product": "FortiOS",
+            "kev_vendor_project": "Fortinet",
+            "note": "Product affectedness is copied from KEV and the CVE CNA container. A complete extracted inventory does not prove complete real-world product coverage, and it does not mean a Silastron or customer system is exposed.",
+            "omitted_product_count": 0,
+            "omitted_version_count": 0,
+            "status": "source_asserted"
+          },
+          "vulnerability_severity": {
+            "base_score": 9.6,
+            "base_severity": "CRITICAL",
+            "cvss_version": "3.1",
+            "note": "CVSS measures vulnerability severity, not exploitation or deployment exposure.",
+            "source": "cve_cna",
+            "status": "available",
+            "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H/E:H/RL:W/RC:C"
+          }
+        },
+        "links": {
+          "cve_record": "https://www.cve.org/CVERecord?id=CVE-2024-21762",
+          "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2024/21xxx/CVE-2024-21762.json",
+          "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+        }
+      }
+    },
+    "CVE-2026-96951": {
+      "previous": {
+        "cve_id": "CVE-2026-96951",
+        "completeness": "complete",
+        "kev": {
+          "cve_id": "CVE-2026-96951",
+          "vendor_project": "Microsoft",
+          "product": "Windows",
+          "vulnerability_name": "Microsoft Windows Command Injection Vulnerability",
+          "date_added": "2026-10-13",
+          "short_description": "Microsoft Windows Shell contains a command injection vulnerability that allows an unauthorized attacker to bypass a security feature over a network.",
+          "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA\u2019s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA\u2019s \u201cForensics Triage Requirements\u201d (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+          "due_date": "2026-10-16",
+          "known_ransomware_campaign_use": "Unknown",
+          "notes": "https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2026-96951 ; BOD 26-04: BOD 26-04: Prioritizing Security Updates Based on Risk | CISA ; Forensics Triage Requirements: BOD 26-04: Implementation Guidance for Prioritizing Security Updates Based on Risk | CISA ;  https://nvd.nist.gov/vuln/detail/CVE-2026-96951",
+          "cwes": [
+            "CWE-77"
+          ],
+          "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+          "record_sha256": "07f27ffa7a7e7f7fada184ee026bc33a57439e2cc0e0f147b0274df365e9357d",
+          "truncated_fields": [],
+          "cwes_incomplete": false
+        },
+        "cve": {
+          "status": "ok",
+          "cve_id": "CVE-2026-96951",
+          "state": "PUBLISHED",
+          "data_version": "5.2",
+          "date_published": "2026-10-13T19:01:26.801Z",
+          "date_updated": "2026-10-21T21:02:34.818Z",
+          "assigner_short_name": "microsoft",
+          "title": "Windows Shell Security Feature Bypass Vulnerability",
+          "description": "Improper neutralization of special elements used in a command ('command injection') in Windows Shell allows an unauthorized attacker to bypass a security feature over a network.",
+          "severity": {
+            "base_score": 8.8,
+            "base_severity": "HIGH",
+            "cvss_version": "3.1",
+            "source": "cve_cna",
+            "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H/E:F/RL:O/RC:C"
+          },
+          "products": [
+            {
+              "vendor": "Microsoft",
+              "product": "Outlook.com",
+              "status": null,
+              "versions": [
+                "affected 1.0.0 20260925.100"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 10 Version 1607",
+              "status": null,
+              "versions": [
+                "affected 10.0.14393.0 10.0.14393.9612"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 10 Version 1809",
+              "status": null,
+              "versions": [
+                "affected 10.0.17763.0 10.0.17763.9376"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 10 Version 21H2",
+              "status": null,
+              "versions": [
+                "affected 10.0.19044.0 10.0.19044.7807"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 10 Version 22H2",
+              "status": null,
+              "versions": [
+                "affected 10.0.19045.0 10.0.19045.7807"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 11 version 23H2",
+              "status": null,
+              "versions": [
+                "affected 10.0.22631.0 10.0.22631.7652"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 11 Version 23H2",
+              "status": null,
+              "versions": [
+                "affected 10.0.22631.0 10.0.22631.7652"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 11 Version 24H2",
+              "status": null,
+              "versions": [
+                "affected 10.0.26100.0 10.0.26100.9711"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 11 Version 25H2",
+              "status": null,
+              "versions": [
+                "affected 10.0.26200.0 10.0.26200.9711"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 11 version 26H1",
+              "status": null,
+              "versions": [
+                "affected 10.0.28000.0 10.0.28000.3231"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 11 Version 26H2",
+              "status": null,
+              "versions": [
+                "affected 10.0.26300.0 10.0.26300.9711"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2012 R2",
+              "status": null,
+              "versions": [
+                "affected 6.3.9600.0 6.3.9600.23470"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2012 R2 (Server Core installation)",
+              "status": null,
+              "versions": [
+                "affected 6.3.9600.0 6.3.9600.23470"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2016",
+              "status": null,
+              "versions": [
+                "affected 10.0.14393.0 10.0.14393.9612"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2016 (Server Core installation)",
+              "status": null,
+              "versions": [
+                "affected 10.0.14393.0 10.0.14393.9612"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2019",
+              "status": null,
+              "versions": [
+                "affected 10.0.17763.0 10.0.17763.9376"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2019 (Server Core installation)",
+              "status": null,
+              "versions": [
+                "affected 10.0.17763.0 10.0.17763.9376"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2022",
+              "status": null,
+              "versions": [
+                "affected 10.0.20348.0 10.0.20348.5761"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2025",
+              "status": null,
+              "versions": [
+                "affected 10.0.26100.0 10.0.26100.33650"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2025 (Server Core installation)",
+              "status": null,
+              "versions": [
+                "affected 10.0.26100.0 10.0.26100.33650"
+              ]
+            }
+          ],
+          "source_url": "https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/2026/96xxx/CVE-2026-96951.json",
+          "record_page_url": "https://www.cve.org/CVERecord?id=CVE-2026-96951",
+          "record_sha256": "c5676973024b1224cb3188d5d339996cf04560d37bd350260d9d0134ce3b59fb",
+          "truncated_fields": [],
+          "omitted_product_count": 0,
+          "omitted_version_count": 0,
+          "remediation_items": []
+        },
+        "epss": {
+          "cve_id": "CVE-2026-96951",
+          "notes": "EPSS is disabled because FIRST grants public use of scores with requested attribution, but does not publish an explicit redistribution license for derived public datasets. Silastron Security Pulse would republish scores in GitHub Pages JSON consumed by third parties. That exceeds verified rights. See https://www.first.org/epss/#Usage-Agreement",
+          "percentile": null,
+          "score": null,
+          "score_date": null,
+          "status": "unavailable"
+        },
+        "signals": {
+          "composite_risk_score": null,
+          "confirmed_exploitation": {
+            "basis": "cisa_kev",
+            "date_added": "2026-10-13",
+            "note": "CISA listed this CVE in KEV. This is source-asserted evidence of known exploitation, not a statement about Silastron systems.",
+            "source": "CISA Known Exploited Vulnerabilities catalog",
+            "status": "confirmed_by_source",
+            "value": true
+          },
+          "deployment_exposure": {
+            "note": "Deployment exposure requires an asset inventory and is out of scope for this public intelligence snapshot.",
+            "status": "not_assessed",
+            "value": null
+          },
+          "estimated_exploitation_probability": {
+            "basis": "first_epss",
+            "note": "EPSS is disabled because FIRST grants public use of scores with requested attribution, but does not publish an explicit redistribution license for derived public datasets. Silastron Security Pulse would republish scores in GitHub Pages JSON consumed by third parties. That exceeds verified rights. See https://www.first.org/epss/#Usage-Agreement",
+            "percentile": null,
+            "status": "unavailable",
+            "value": null
+          },
+          "note": "These signals are independent. They are never collapsed into a single risk score.",
+          "product_affectedness": {
+            "cve_products": [
+              {
+                "product": "Outlook.com",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 1.0.0 20260925.100"
+                ]
+              },
+              {
+                "product": "Windows 10 Version 1607",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.14393.0 10.0.14393.9612"
+                ]
+              },
+              {
+                "product": "Windows 10 Version 1809",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.17763.0 10.0.17763.9376"
+                ]
+              },
+              {
+                "product": "Windows 10 Version 21H2",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.19044.0 10.0.19044.7807"
+                ]
+              },
+              {
+                "product": "Windows 10 Version 22H2",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.19045.0 10.0.19045.7807"
+                ]
+              },
+              {
+                "product": "Windows 11 version 23H2",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.22631.0 10.0.22631.7652"
+                ]
+              },
+              {
+                "product": "Windows 11 Version 23H2",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.22631.0 10.0.22631.7652"
+                ]
+              },
+              {
+                "product": "Windows 11 Version 24H2",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.26100.0 10.0.26100.9711"
+                ]
+              },
+              {
+                "product": "Windows 11 Version 25H2",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.26200.0 10.0.26200.9711"
+                ]
+              },
+              {
+                "product": "Windows 11 version 26H1",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.28000.0 10.0.28000.3231"
+                ]
+              },
+              {
+                "product": "Windows 11 Version 26H2",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.26300.0 10.0.26300.9711"
+                ]
+              },
+              {
+                "product": "Windows Server 2012 R2",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 6.3.9600.0 6.3.9600.23470"
+                ]
+              },
+              {
+                "product": "Windows Server 2012 R2 (Server Core installation)",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 6.3.9600.0 6.3.9600.23470"
+                ]
+              },
+              {
+                "product": "Windows Server 2016",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.14393.0 10.0.14393.9612"
+                ]
+              },
+              {
+                "product": "Windows Server 2016 (Server Core installation)",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.14393.0 10.0.14393.9612"
+                ]
+              },
+              {
+                "product": "Windows Server 2019",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.17763.0 10.0.17763.9376"
+                ]
+              },
+              {
+                "product": "Windows Server 2019 (Server Core installation)",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.17763.0 10.0.17763.9376"
+                ]
+              },
+              {
+                "product": "Windows Server 2022",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.20348.0 10.0.20348.5761"
+                ]
+              },
+              {
+                "product": "Windows Server 2025",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.26100.0 10.0.26100.33650"
+                ]
+              },
+              {
+                "product": "Windows Server 2025 (Server Core installation)",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.26100.0 10.0.26100.33650"
+                ]
+              }
+            ],
+            "kev_product": "Windows",
+            "kev_vendor_project": "Microsoft",
+            "note": "Product affectedness is copied from KEV and the CVE CNA container. A complete extracted inventory does not prove complete real-world product coverage, and it does not mean a Silastron or customer system is exposed.",
+            "omitted_product_count": 0,
+            "omitted_version_count": 0,
+            "status": "source_asserted"
+          },
+          "vulnerability_severity": {
+            "base_score": 8.8,
+            "base_severity": "HIGH",
+            "cvss_version": "3.1",
+            "note": "CVSS measures vulnerability severity, not exploitation or deployment exposure.",
+            "source": "cve_cna",
+            "status": "available",
+            "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H/E:F/RL:O/RC:C"
+          }
+        },
+        "links": {
+          "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-96951",
+          "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/96xxx/CVE-2026-96951.json",
+          "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+        }
+      },
+      "current": {
+        "cve_id": "CVE-2026-96951",
+        "completeness": "complete",
+        "kev": {
+          "cve_id": "CVE-2026-96951",
+          "vendor_project": "Microsoft",
+          "product": "Windows",
+          "vulnerability_name": "Microsoft Windows Command Injection Vulnerability",
+          "date_added": "2026-10-13",
+          "short_description": "Microsoft Windows Shell contains a command injection vulnerability that allows an unauthorized attacker to bypass a security feature over a network.",
+          "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA\u2019s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA\u2019s \u201cForensics Triage Requirements\u201d (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+          "due_date": "2026-10-16",
+          "known_ransomware_campaign_use": "Unknown",
+          "notes": "https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2026-96951 ; BOD 26-04: BOD 26-04: Prioritizing Security Updates Based on Risk | CISA ; Forensics Triage Requirements: BOD 26-04: Implementation Guidance for Prioritizing Security Updates Based on Risk | CISA ;  https://nvd.nist.gov/vuln/detail/CVE-2026-96951",
+          "cwes": [
+            "CWE-77"
+          ],
+          "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+          "record_sha256": "07f27ffa7a7e7f7fada184ee026bc33a57439e2cc0e0f147b0274df365e9357d",
+          "truncated_fields": [],
+          "cwes_incomplete": false
+        },
+        "cve": {
+          "status": "ok",
+          "cve_id": "CVE-2026-96951",
+          "state": "PUBLISHED",
+          "data_version": "5.2",
+          "date_published": "2026-10-13T19:01:26.801Z",
+          "date_updated": "2026-10-23T22:31:05.367Z",
+          "assigner_short_name": "microsoft",
+          "title": "Windows Shell Security Feature Bypass Vulnerability",
+          "description": "Improper neutralization of special elements used in a command ('command injection') in Windows Shell allows an unauthorized attacker to bypass a security feature over a network.",
+          "severity": {
+            "base_score": 8.8,
+            "base_severity": "HIGH",
+            "cvss_version": "3.1",
+            "source": "cve_cna",
+            "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H/E:F/RL:O/RC:C"
+          },
+          "products": [
+            {
+              "vendor": "Microsoft",
+              "product": "Outlook.com",
+              "status": null,
+              "versions": [
+                "affected 1.0.0 20260925.100"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 10 Version 1607",
+              "status": null,
+              "versions": [
+                "affected 10.0.14393.0 10.0.14393.9612"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 10 Version 1809",
+              "status": null,
+              "versions": [
+                "affected 10.0.17763.0 10.0.17763.9376"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 10 Version 21H2",
+              "status": null,
+              "versions": [
+                "affected 10.0.19044.0 10.0.19044.7807"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 10 Version 22H2",
+              "status": null,
+              "versions": [
+                "affected 10.0.19045.0 10.0.19045.7807"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 11 version 23H2",
+              "status": null,
+              "versions": [
+                "affected 10.0.22631.0 10.0.22631.7652"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 11 Version 23H2",
+              "status": null,
+              "versions": [
+                "affected 10.0.22631.0 10.0.22631.7652"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 11 Version 24H2",
+              "status": null,
+              "versions": [
+                "affected 10.0.26100.0 10.0.26100.9711"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 11 Version 25H2",
+              "status": null,
+              "versions": [
+                "affected 10.0.26200.0 10.0.26200.9711"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 11 version 26H1",
+              "status": null,
+              "versions": [
+                "affected 10.0.28000.0 10.0.28000.3231"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows 11 Version 26H2",
+              "status": null,
+              "versions": [
+                "affected 10.0.26300.0 10.0.26300.9711"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2012 R2",
+              "status": null,
+              "versions": [
+                "affected 6.3.9600.0 6.3.9600.23470"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2012 R2 (Server Core installation)",
+              "status": null,
+              "versions": [
+                "affected 6.3.9600.0 6.3.9600.23470"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2016",
+              "status": null,
+              "versions": [
+                "affected 10.0.14393.0 10.0.14393.9612"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2016 (Server Core installation)",
+              "status": null,
+              "versions": [
+                "affected 10.0.14393.0 10.0.14393.9612"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2019",
+              "status": null,
+              "versions": [
+                "affected 10.0.17763.0 10.0.17763.9376"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2019 (Server Core installation)",
+              "status": null,
+              "versions": [
+                "affected 10.0.17763.0 10.0.17763.9376"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2022",
+              "status": null,
+              "versions": [
+                "affected 10.0.20348.0 10.0.20348.5761"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2025",
+              "status": null,
+              "versions": [
+                "affected 10.0.26100.0 10.0.26100.33650"
+              ]
+            },
+            {
+              "vendor": "Microsoft",
+              "product": "Windows Server 2025 (Server Core installation)",
+              "status": null,
+              "versions": [
+                "affected 10.0.26100.0 10.0.26100.33650"
+              ]
+            }
+          ],
+          "source_url": "https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/2026/96xxx/CVE-2026-96951.json",
+          "record_page_url": "https://www.cve.org/CVERecord?id=CVE-2026-96951",
+          "record_sha256": "0550da543a7459f0eb294a766c42595b91a73e210d80a31e0c17bdcde030b74e",
+          "truncated_fields": [],
+          "omitted_product_count": 0,
+          "omitted_version_count": 0,
+          "remediation_items": [
+            {
+              "attribution": "CVE List V5 CNA vendor-advisory",
+              "kind": "reference",
+              "source": "cve_list_v5",
+              "text": "Windows Shell Security Feature Bypass Vulnerability",
+              "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-96951"
+            }
+          ]
+        },
+        "epss": {
+          "cve_id": "CVE-2026-96951",
+          "notes": "EPSS is disabled because FIRST grants public use of scores with requested attribution, but does not publish an explicit redistribution license for derived public datasets. Silastron Security Pulse would republish scores in GitHub Pages JSON consumed by third parties. That exceeds verified rights. See https://www.first.org/epss/#Usage-Agreement",
+          "percentile": null,
+          "score": null,
+          "score_date": null,
+          "status": "unavailable"
+        },
+        "signals": {
+          "composite_risk_score": null,
+          "confirmed_exploitation": {
+            "basis": "cisa_kev",
+            "date_added": "2026-10-13",
+            "note": "CISA listed this CVE in KEV. This is source-asserted evidence of known exploitation, not a statement about Silastron systems.",
+            "source": "CISA Known Exploited Vulnerabilities catalog",
+            "status": "confirmed_by_source",
+            "value": true
+          },
+          "deployment_exposure": {
+            "note": "Deployment exposure requires an asset inventory and is out of scope for this public intelligence snapshot.",
+            "status": "not_assessed",
+            "value": null
+          },
+          "estimated_exploitation_probability": {
+            "basis": "first_epss",
+            "note": "EPSS is disabled because FIRST grants public use of scores with requested attribution, but does not publish an explicit redistribution license for derived public datasets. Silastron Security Pulse would republish scores in GitHub Pages JSON consumed by third parties. That exceeds verified rights. See https://www.first.org/epss/#Usage-Agreement",
+            "percentile": null,
+            "status": "unavailable",
+            "value": null
+          },
+          "note": "These signals are independent. They are never collapsed into a single risk score.",
+          "product_affectedness": {
+            "cve_products": [
+              {
+                "product": "Outlook.com",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 1.0.0 20260925.100"
+                ]
+              },
+              {
+                "product": "Windows 10 Version 1607",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.14393.0 10.0.14393.9612"
+                ]
+              },
+              {
+                "product": "Windows 10 Version 1809",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.17763.0 10.0.17763.9376"
+                ]
+              },
+              {
+                "product": "Windows 10 Version 21H2",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.19044.0 10.0.19044.7807"
+                ]
+              },
+              {
+                "product": "Windows 10 Version 22H2",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.19045.0 10.0.19045.7807"
+                ]
+              },
+              {
+                "product": "Windows 11 version 23H2",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.22631.0 10.0.22631.7652"
+                ]
+              },
+              {
+                "product": "Windows 11 Version 23H2",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.22631.0 10.0.22631.7652"
+                ]
+              },
+              {
+                "product": "Windows 11 Version 24H2",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.26100.0 10.0.26100.9711"
+                ]
+              },
+              {
+                "product": "Windows 11 Version 25H2",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.26200.0 10.0.26200.9711"
+                ]
+              },
+              {
+                "product": "Windows 11 version 26H1",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.28000.0 10.0.28000.3231"
+                ]
+              },
+              {
+                "product": "Windows 11 Version 26H2",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.26300.0 10.0.26300.9711"
+                ]
+              },
+              {
+                "product": "Windows Server 2012 R2",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 6.3.9600.0 6.3.9600.23470"
+                ]
+              },
+              {
+                "product": "Windows Server 2012 R2 (Server Core installation)",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 6.3.9600.0 6.3.9600.23470"
+                ]
+              },
+              {
+                "product": "Windows Server 2016",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.14393.0 10.0.14393.9612"
+                ]
+              },
+              {
+                "product": "Windows Server 2016 (Server Core installation)",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.14393.0 10.0.14393.9612"
+                ]
+              },
+              {
+                "product": "Windows Server 2019",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.17763.0 10.0.17763.9376"
+                ]
+              },
+              {
+                "product": "Windows Server 2019 (Server Core installation)",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.17763.0 10.0.17763.9376"
+                ]
+              },
+              {
+                "product": "Windows Server 2022",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.20348.0 10.0.20348.5761"
+                ]
+              },
+              {
+                "product": "Windows Server 2025",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.26100.0 10.0.26100.33650"
+                ]
+              },
+              {
+                "product": "Windows Server 2025 (Server Core installation)",
+                "source": "cve_cna",
+                "status": null,
+                "vendor": "Microsoft",
+                "versions": [
+                  "affected 10.0.26100.0 10.0.26100.33650"
+                ]
+              }
+            ],
+            "kev_product": "Windows",
+            "kev_vendor_project": "Microsoft",
+            "note": "Product affectedness is copied from KEV and the CVE CNA container. A complete extracted inventory does not prove complete real-world product coverage, and it does not mean a Silastron or customer system is exposed.",
+            "omitted_product_count": 0,
+            "omitted_version_count": 0,
+            "status": "source_asserted"
+          },
+          "vulnerability_severity": {
+            "base_score": 8.8,
+            "base_severity": "HIGH",
+            "cvss_version": "3.1",
+            "note": "CVSS measures vulnerability severity, not exploitation or deployment exposure.",
+            "source": "cve_cna",
+            "status": "available",
+            "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H/E:F/RL:O/RC:C"
+          }
+        },
+        "links": {
+          "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-96951",
+          "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/96xxx/CVE-2026-96951.json",
+          "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+        }
+      }
+    }
+  },
+  "enrichment_example": {
+    "cve_id": "CVE-2002-0367",
+    "previous": {
+      "cve_id": "CVE-2002-0367",
+      "completeness": "complete",
+      "kev": {
+        "cve_id": "CVE-2002-0367",
+        "vendor_project": "Microsoft",
+        "product": "Windows",
+        "vulnerability_name": "Microsoft Windows Privilege Escalation Vulnerability",
+        "date_added": "2022-03-03",
+        "short_description": "smss.exe debugging subsystem in Microsoft Windows does not properly authenticate programs that connect to other programs, which allows local users to gain administrator or SYSTEM privileges.",
+        "required_action": "Apply updates per vendor instructions.",
+        "due_date": "2022-03-24",
+        "known_ransomware_campaign_use": "Unknown",
+        "notes": "https://nvd.nist.gov/vuln/detail/CVE-2002-0367",
+        "cwes": [],
+        "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+        "record_sha256": "410fb9fcd1a5e97c3de8e34433fe6098a4f27dfc1b971438bed964bdec0e6941",
+        "truncated_fields": [],
+        "cwes_incomplete": false
+      },
+      "cve": {
+        "status": "ok",
+        "cve_id": "CVE-2002-0367",
+        "state": "PUBLISHED",
+        "data_version": "5.1",
+        "date_published": "2003-04-02T05:00:00.000Z",
+        "date_updated": "2025-10-22T00:05:57.464Z",
+        "assigner_short_name": "mitre",
+        "title": null,
+        "description": "smss.exe debugging subsystem in Windows NT and Windows 2000 does not properly authenticate programs that connect to other programs, which allows local users to ",
+        "severity": null,
+        "products": [],
+        "source_url": "https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/2002/0xxx/CVE-2002-0367.json",
+        "record_page_url": "https://www.cve.org/CVERecord?id=CVE-2002-0367",
+        "record_sha256": "8894ea382d1eeffc46ebd4b64d6e71defc34ff65947b0ba9c5ebe153077b8636",
+        "truncated_fields": [],
+        "omitted_product_count": 0,
+        "omitted_version_count": 0,
+        "remediation_items": []
+      },
+      "epss": {
+        "cve_id": "CVE-2002-0367",
+        "notes": "EPSS is disabled because FIRST grants public use of scores with requested attribution, but does not publish an explicit redistribution license for derived public datasets. Silastron Security Pulse would republish scores in GitHub Pages JSON consumed by third parties. That exceeds verified rights. See https://www.first.org/epss/#Usage-Agreement",
+        "percentile": null,
+        "score": null,
+        "score_date": null,
+        "status": "unavailable"
+      },
+      "signals": {
+        "composite_risk_score": null,
+        "confirmed_exploitation": {
+          "basis": "cisa_kev",
+          "date_added": "2022-03-03",
+          "note": "CISA listed this CVE in KEV. This is source-asserted evidence of known exploitation, not a statement about Silastron systems.",
+          "source": "CISA Known Exploited Vulnerabilities catalog",
+          "status": "confirmed_by_source",
+          "value": true
+        },
+        "deployment_exposure": {
+          "note": "Deployment exposure requires an asset inventory and is out of scope for this public intelligence snapshot.",
+          "status": "not_assessed",
+          "value": null
+        },
+        "estimated_exploitation_probability": {
+          "basis": "first_epss",
+          "note": "EPSS is disabled because FIRST grants public use of scores with requested attribution, but does not publish an explicit redistribution license for derived public datasets. Silastron Security Pulse would republish scores in GitHub Pages JSON consumed by third parties. That exceeds verified rights. See https://www.first.org/epss/#Usage-Agreement",
+          "percentile": null,
+          "status": "unavailable",
+          "value": null
+        },
+        "note": "These signals are independent. They are never collapsed into a single risk score.",
+        "product_affectedness": {
+          "cve_products": [
+            {
+              "product": "n/a",
+              "source": "cve_cna",
+              "status": null,
+              "vendor": "n/a",
+              "versions": [
+                "affected n/a"
+              ]
+            }
+          ],
+          "kev_product": "Windows",
+          "kev_vendor_project": "Microsoft",
+          "note": "Product affectedness is copied from KEV and the CVE CNA container. A complete extracted inventory does not prove complete real-world product coverage, and it does not mean a Silastron or customer system is exposed.",
+          "omitted_product_count": 0,
+          "omitted_version_count": 0,
+          "status": "source_asserted"
+        },
+        "vulnerability_severity": {
+          "base_score": null,
+          "base_severity": null,
+          "cvss_version": null,
+          "note": "No CVSS vector was present in the CNA container of the CVE record.",
+          "source": null,
+          "status": "unavailable",
+          "vector": null
+        }
+      },
+      "links": {
+        "cve_record": "https://www.cve.org/CVERecord?id=CVE-2002-0367",
+        "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2002/0xxx/CVE-2002-0367.json",
+        "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+      }
+    },
+    "current": {
+      "cve_id": "CVE-2002-0367",
+      "completeness": "complete",
+      "kev": {
+        "cve_id": "CVE-2002-0367",
+        "vendor_project": "Microsoft",
+        "product": "Windows",
+        "vulnerability_name": "Microsoft Windows Privilege Escalation Vulnerability",
+        "date_added": "2022-03-03",
+        "short_description": "smss.exe debugging subsystem in Microsoft Windows does not properly authenticate programs that connect to other programs, which allows local users to gain administrator or SYSTEM privileges.",
+        "required_action": "Apply updates per vendor instructions.",
+        "due_date": "2022-03-24",
+        "known_ransomware_campaign_use": "Unknown",
+        "notes": "https://nvd.nist.gov/vuln/detail/CVE-2002-0367",
+        "cwes": [],
+        "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+        "record_sha256": "410fb9fcd1a5e97c3de8e34433fe6098a4f27dfc1b971438bed964bdec0e6941",
+        "truncated_fields": [],
+        "cwes_incomplete": false
+      },
+      "cve": {
+        "status": "ok",
+        "cve_id": "CVE-2002-0367",
+        "state": "PUBLISHED",
+        "data_version": "5.1",
+        "date_published": "2003-04-02T05:00:00.000Z",
+        "date_updated": "2025-10-22T00:05:57.464Z",
+        "assigner_short_name": "mitre",
+        "title": null,
+        "description": "smss.exe debugging subsystem in Windows NT and Windows 2000 does not properly authenticate programs that connect to other programs, which allows local users to ",
+        "severity": null,
+        "products": [],
+        "source_url": "https://raw.githubusercontent.com/CVEProject/cvelistV5/main/cves/2002/0xxx/CVE-2002-0367.json",
+        "record_page_url": "https://www.cve.org/CVERecord?id=CVE-2002-0367",
+        "record_sha256": "8894ea382d1eeffc46ebd4b64d6e71defc34ff65947b0ba9c5ebe153077b8636",
+        "truncated_fields": [],
+        "omitted_product_count": 0,
+        "omitted_version_count": 0,
+        "remediation_items": [
+          {
+            "attribution": "CVE List V5 CNA vendor-advisory",
+            "kind": "reference",
+            "source": "cve_list_v5",
+            "text": "MS02-024",
+            "url": "https://docs.microsoft.com/en-us/security-updates/securitybulletins/2002/ms02-024"
+          }
+        ]
+      },
+      "epss": {
+        "cve_id": "CVE-2002-0367",
+        "notes": "EPSS is disabled because FIRST grants public use of scores with requested attribution, but does not publish an explicit redistribution license for derived public datasets. Silastron Security Pulse would republish scores in GitHub Pages JSON consumed by third parties. That exceeds verified rights. See https://www.first.org/epss/#Usage-Agreement",
+        "percentile": null,
+        "score": null,
+        "score_date": null,
+        "status": "unavailable"
+      },
+      "signals": {
+        "composite_risk_score": null,
+        "confirmed_exploitation": {
+          "basis": "cisa_kev",
+          "date_added": "2022-03-03",
+          "note": "CISA listed this CVE in KEV. This is source-asserted evidence of known exploitation, not a statement about Silastron systems.",
+          "source": "CISA Known Exploited Vulnerabilities catalog",
+          "status": "confirmed_by_source",
+          "value": true
+        },
+        "deployment_exposure": {
+          "note": "Deployment exposure requires an asset inventory and is out of scope for this public intelligence snapshot.",
+          "status": "not_assessed",
+          "value": null
+        },
+        "estimated_exploitation_probability": {
+          "basis": "first_epss",
+          "note": "EPSS is disabled because FIRST grants public use of scores with requested attribution, but does not publish an explicit redistribution license for derived public datasets. Silastron Security Pulse would republish scores in GitHub Pages JSON consumed by third parties. That exceeds verified rights. See https://www.first.org/epss/#Usage-Agreement",
+          "percentile": null,
+          "status": "unavailable",
+          "value": null
+        },
+        "note": "These signals are independent. They are never collapsed into a single risk score.",
+        "product_affectedness": {
+          "cve_products": [
+            {
+              "product": "n/a",
+              "source": "cve_cna",
+              "status": null,
+              "vendor": "n/a",
+              "versions": [
+                "affected n/a"
+              ]
+            }
+          ],
+          "kev_product": "Windows",
+          "kev_vendor_project": "Microsoft",
+          "note": "Product affectedness is copied from KEV and the CVE CNA container. A complete extracted inventory does not prove complete real-world product coverage, and it does not mean a Silastron or customer system is exposed.",
+          "omitted_product_count": 0,
+          "omitted_version_count": 0,
+          "status": "source_asserted"
+        },
+        "vulnerability_severity": {
+          "base_score": null,
+          "base_severity": null,
+          "cvss_version": null,
+          "note": "No CVSS vector was present in the CNA container of the CVE record.",
+          "source": null,
+          "status": "unavailable",
+          "vector": null
+        }
+      },
+      "links": {
+        "cve_record": "https://www.cve.org/CVERecord?id=CVE-2002-0367",
+        "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2002/0xxx/CVE-2002-0367.json",
+        "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+      }
+    }
+  }
+}

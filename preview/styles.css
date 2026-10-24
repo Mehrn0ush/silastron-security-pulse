@@ -319,6 +319,15 @@ details .diff-table {
   font-size: 1rem;
 }
 
+.change-summary {
+  margin: 0 0 1rem;
+  padding-left: 1.2rem;
+}
+
+#changes > details {
+  margin: 0.75rem 0;
+}
+
 .empty-state {
   margin: 0;
 }

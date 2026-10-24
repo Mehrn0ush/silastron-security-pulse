@@ -55,6 +55,7 @@ class PublicationComparisonTests(unittest.TestCase):
         self.assertIsNone(comparison["added_count"])
         self.assertIsNone(comparison["removed_count"])
         self.assertIsNone(comparison["updated_count"])
+        self.assertIsNone(comparison["enrichment_count"])
         self.assertEqual(comparison["rows"], [])
         self.assertEqual(current["changes"]["new_kev_entries"], [])
 
