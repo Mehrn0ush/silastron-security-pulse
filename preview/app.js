@@ -216,9 +216,30 @@
     }
   }
 
+  function bannerLabel(kind) {
+    if (kind === "ok") {
+      return "Fresh collection";
+    }
+    if (kind === "stale") {
+      return "Stale snapshot";
+    }
+    if (kind === "warn") {
+      return "Degraded collection";
+    }
+    if (kind === "failed") {
+      return "Failed";
+    }
+    return "Unavailable";
+  }
+
   function setBanner(kind, message) {
     statusBanner.className = "banner " + kind;
-    statusBanner.textContent = message;
+    statusBanner.textContent = "";
+    var label = document.createElement("strong");
+    label.className = "banner-label";
+    label.textContent = bannerLabel(kind);
+    statusBanner.appendChild(label);
+    statusBanner.appendChild(document.createTextNode(" " + message));
   }
 
   function addLink(container, href, label) {
@@ -279,6 +300,35 @@
     return "Unavailable";
   }
 
+  function cvssBand(row) {
+    if (row.severity_status !== "available" || row.cvss_base_score === null || row.cvss_base_score === undefined) {
+      return null;
+    }
+    var numeric = Number(row.cvss_base_score);
+    if (!isFinite(numeric)) {
+      return null;
+    }
+    if (numeric >= 9) {
+      return "critical";
+    }
+    if (numeric >= 7) {
+      return "high";
+    }
+    if (numeric >= 4) {
+      return "medium";
+    }
+    if (numeric > 0) {
+      return "low";
+    }
+    return null;
+  }
+
+  function labeledCell(label) {
+    var cell = document.createElement("td");
+    cell.setAttribute("data-label", label);
+    return cell;
+  }
+
   function comparisonCount(value) {
     if (value === null || value === undefined || value === "") {
       return "No comparison available";
@@ -301,9 +351,9 @@
     );
   }
 
-  function appendCard(term, value, hint) {
+  function appendCard(term, value, hint, tone) {
     var article = document.createElement("article");
-    article.className = "card";
+    article.className = tone ? "card card-" + tone : "card";
     var heading = document.createElement("h3");
     heading.textContent = term;
     var valueEl = document.createElement("p");
@@ -449,7 +499,7 @@
     }
     rows.forEach(function (row) {
       var tr = document.createElement("tr");
-      var cve = document.createElement("td");
+      var cve = labeledCell("CVE");
       var cveLink = row.links && row.links.cve_record;
       if (safeHttpsUrl(cveLink)) {
         addLink(cve, cveLink, asText(row.cve_id));
@@ -458,11 +508,11 @@
       }
       tr.appendChild(cve);
       if (showChange) {
-        var change = document.createElement("td");
+        var change = labeledCell("Change");
         change.textContent = asText(row.change);
         tr.appendChild(change);
       }
-      var product = document.createElement("td");
+      var product = labeledCell("Vendor / product");
       product.textContent = asText(row.vendor_project) + " / " + asText(row.product);
       if (row.vulnerability_name) {
         var name = document.createElement("div");
@@ -471,12 +521,12 @@
         product.appendChild(name);
       }
       tr.appendChild(product);
-      var added = document.createElement("td");
+      var added = labeledCell("KEV added");
       added.textContent = asText(row.kev_date_added);
       tr.appendChild(added);
-      var completeness = document.createElement("td");
+      var completeness = labeledCell("Completeness");
       var pill = document.createElement("span");
-      pill.className = "pill";
+      pill.className = "pill ok";
       if (row.completeness === "partial" || row.partial) {
         pill.className = "pill warn";
       } else if (row.completeness === "unavailable") {
@@ -485,19 +535,27 @@
       pill.textContent = completenessLabel(row);
       completeness.appendChild(pill);
       tr.appendChild(completeness);
-      var cvss = document.createElement("td");
+      var cvss = labeledCell("CVSS");
+      var band = cvssBand(row);
       cvss.textContent = cvssLabel(row);
+      if (band) {
+        cvss.className = "severity-" + band;
+        var mark = document.createElement("span");
+        mark.className = "severity-text";
+        mark.textContent = " " + band;
+        cvss.appendChild(mark);
+      }
       tr.appendChild(cvss);
-      var epss = document.createElement("td");
+      var epss = labeledCell("EPSS");
       epss.textContent = epssLabel(row);
       tr.appendChild(epss);
-      var links = document.createElement("td");
+      var links = labeledCell("Sources");
       addLink(links, row.links && row.links.cve_record, "CVE record");
       addLink(links, row.links && row.links.kev_catalog, "KEV catalog");
       addLink(links, row.links && row.links.cvelist_v5, "CVE List V5");
       tr.appendChild(links);
       if (showDetails) {
-        var detailsCell = document.createElement("td");
+        var detailsCell = labeledCell("Details");
         detailsCell.appendChild(buildRecordDetails(row));
         tr.appendChild(detailsCell);
       }
@@ -759,7 +817,7 @@
     var tbody = document.createElement("tbody");
     rows.forEach(function (row) {
       var tr = document.createElement("tr");
-      var cve = document.createElement("td");
+      var cve = labeledCell("CVE");
       var cveLink = row.links && row.links.cve_record;
       if (safeHttpsUrl(cveLink)) {
         addLink(cve, cveLink, asText(row.cve_id));
@@ -767,22 +825,22 @@
         cve.textContent = asText(row.cve_id);
       }
       tr.appendChild(cve);
-      var cats = document.createElement("td");
+      var cats = labeledCell("Categories");
       cats.textContent = (row.categories || [])
         .map(function (item) {
           return CATEGORY_LABELS[item] || item;
         })
         .join("; ");
       tr.appendChild(cats);
-      var fields = document.createElement("td");
+      var fields = labeledCell("Changed fields");
       fields.textContent = changedFieldsLabel(row);
       tr.appendChild(fields);
-      var links = document.createElement("td");
+      var links = labeledCell("Sources");
       addLink(links, row.links && row.links.cve_record, "CVE record");
       addLink(links, row.links && row.links.kev_catalog, "KEV catalog");
       addLink(links, row.links && row.links.cvelist_v5, "CVE List V5");
       tr.appendChild(links);
-      var detailsCell = document.createElement("td");
+      var detailsCell = labeledCell("Details");
       var beforeAfter = buildBeforeAfter(row);
       if (beforeAfter) {
         detailsCell.appendChild(beforeAfter);
@@ -1268,7 +1326,8 @@
           formatAge(freshness.ageHours) +
           " at viewing time. Stale after " +
           asText(manifest.stale_after_hours || 36) +
-          " hours."
+          " hours.",
+        freshness.invalid ? "invalid" : freshness.stale ? "stale" : "fresh"
       );
 
       appendMeta("Collection outcome", collectionOutcome);

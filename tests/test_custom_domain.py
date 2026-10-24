@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CUSTOM_DOMAIN = "pulse.silastron.com"
 PAGES_CNAME_TARGET = "mehrn0ush.github.io"
-PREVIEW_FILES = ("index.html", "styles.css", "app.js")
+PREVIEW_FILES = ("index.html", "styles.css", "app.js", "theme.js")
 UPLOAD_PAGES_ARTIFACT = "actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9"
 DEPLOY_PAGES = "actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346"
 
@@ -30,8 +30,10 @@ class CustomDomainFrontendTests(unittest.TestCase):
         self.assertNotIn("<base", html)
         self.assertIn('href="styles.css"', html)
         self.assertIn('src="app.js"', html)
+        self.assertIn('src="theme.js"', html)
         self.assertNotIn('href="/styles.css"', html)
         self.assertNotIn('src="/app.js"', html)
+        self.assertNotIn('src="/theme.js"', html)
         self.assertIn('loadJson("data/manifest.json")', js)
         self.assertIn('loadJson("data/preview.json")', js)
         self.assertIn('loadJson("data/latest.json")', js)
@@ -48,8 +50,10 @@ class CustomDomainFrontendTests(unittest.TestCase):
         hrefs = re.findall(r'<a\b[^>]*\bhref="([^"]+)"', html)
         self.assertTrue(hrefs)
         for href in hrefs:
-            self.assertFalse(href.startswith("http"), href)
             self.assertFalse(href.startswith("//"), href)
+            if href.startswith("http"):
+                self.assertEqual(href, "https://silastron.com")
+                continue
             self.assertTrue(href.startswith("#"), href)
 
     def test_csp_allows_same_origin_json_on_a_custom_host(self) -> None:
@@ -88,7 +92,7 @@ class CustomDomainWorkflowTests(unittest.TestCase):
             self.assertIn("group: pages", text)
             self.assertIn("cancel-in-progress: false", text)
             self.assertIn(
-                "cp preview/index.html preview/styles.css preview/app.js _site/",
+                "cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/",
                 text,
             )
 
@@ -114,6 +118,7 @@ class CustomDomainWorkflowTests(unittest.TestCase):
             html = (site / "index.html").read_text(encoding="utf-8")
             self.assertIn('href="styles.css"', html)
             self.assertIn('src="app.js"', html)
+            self.assertIn('src="theme.js"', html)
             self.assertIn("connect-src 'self'", html)
 
 
