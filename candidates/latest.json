@@ -6,7 +6,7 @@
   },
   "binding": {
     "collector_commit_sha": "81478bc4cdede25e90348817dac121f25e0d43df",
-    "source_state_revision": "2026.10.23:2026-10-25T08:51:50.766Z"
+    "source_state_revision": "2026.10.23:2026-10-25T12:18:51.710Z"
   },
   "changes": {
     "changed_cve_information": [],
@@ -18,11 +18,11 @@
     ],
     "updated_kev_entries": []
   },
-  "collection_completed_at": "2026-10-25T08:57:36Z",
-  "collection_started_at": "2026-10-25T08:57:34Z",
+  "collection_completed_at": "2026-10-25T12:54:33Z",
+  "collection_started_at": "2026-10-25T12:54:32Z",
   "composite_risk_score": null,
   "consumer_note": "This snapshot is public vulnerability intelligence. status is collection outcome (ok, degraded, or failed), not freshness and not per-record completeness. records[].completeness describes extracted inventory completeness; a complete extraction does not prove complete real-world product affectedness. Freshness must be recomputed at viewing time. Confirmed exploitation, estimated probability, severity, product affectedness, and deployment exposure are separate signals.",
-  "generated_at": "2026-10-25T08:57:36Z",
+  "generated_at": "2026-10-25T12:54:33Z",
   "limits": {
     "max_cve_bytes": 3000000,
     "max_cve_enrichments": 3000,
@@ -379863,7 +379863,7 @@
     }
   ],
   "schema_version": "1.0.0",
-  "snapshot_id": "20261025T085736Z_8bfe838b4393",
+  "snapshot_id": "20261025T125433Z_ce4d7f20997c",
   "sources": {
     "cve": {
       "content_sha256": "7592f2f8b77bdfc03c4436a7963d22c81e99a3f2deaa6a97995e9f7852cf546a",
@@ -379876,7 +379876,7 @@
       "retrieved_at": "2026-10-24T12:26:44Z",
       "schema_version": "CVE Record Format 5.x (dataVersion on each record)",
       "source_published_at": "2025-10-21T18:43:58.429Z",
-      "source_revision": "2026-10-25T08:51:50.766Z",
+      "source_revision": "2026-10-25T12:18:51.710Z",
       "source_updated_at": "2026-10-24T03:55:50.462Z",
       "status": "degraded",
       "url": "https://github.com/CVEProject/cvelistV5"
@@ -379905,7 +379905,7 @@
       "name": "CISA Known Exploited Vulnerabilities Catalog",
       "notes": "The CISA Known Exploited Vulnerabilities catalog is dedicated to the public domain under CC0 1.0. Use does not authorize use of the CISA logo or DHS seal and is not an endorsement by CISA or DHS. See https://www.cisa.gov/sites/default/files/licenses/kev/license.txt",
       "parser_version": "1.0.0",
-      "retrieved_at": "2026-10-25T08:57:35Z",
+      "retrieved_at": "2026-10-25T12:54:32Z",
       "schema_version": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities_schema.json",
       "source_published_at": "2026-10-23T19:30:18.9209Z",
       "source_revision": "2026.10.23",
@@ -379916,18 +379916,18 @@
   },
   "status": "degraded",
   "summary": {
-    "bytes_transferred": 2001967,
+    "bytes_transferred": 1996017,
     "changed_cve_information": 0,
     "collector_commit_sha": "81478bc4cdede25e90348817dac121f25e0d43df",
     "complete_records": 1738,
-    "cve_delta_log_sha256": "915f676028ba4f062c44d21377691fc9413ab78cdc9b3f1d18c575ec6054c5aa",
-    "cve_delta_sha256": "d495b5df2a446512041a5d3cb212ac2e15147d55490e027e1bd7c783a71165b7",
+    "cve_delta_log_sha256": "7fad135fde439a7f00f533f5c2c9084050db927dd20afd1dfd5ee9e7b7641271",
+    "cve_delta_sha256": "ccfede3e7bffc9f02f49590bd570b5b4f72f8f2d4479276f3ac1c28a97553a00",
     "cve_enriched_ok": 1756,
     "cve_fetched": 0,
     "cve_reused": 1756,
     "cve_strategy": "delta",
     "cve_unavailable": 0,
-    "duration_ms": 1482,
+    "duration_ms": 1348,
     "epss_changes": 0,
     "epss_enabled": false,
     "http_gets": 3,

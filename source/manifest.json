@@ -1,9 +1,9 @@
 {
   "collector_commit_sha": "81478bc4cdede25e90348817dac121f25e0d43df",
-  "cve_revision": "2026-10-25T08:51:50.766Z",
+  "cve_revision": "2026-10-25T12:18:51.710Z",
   "kev_revision": "2026.10.23",
   "record_count": 1756,
   "schema_version": "1.0.0",
-  "source_state_revision": "2026.10.23:2026-10-25T08:51:50.766Z",
-  "updated_at": "2026-10-25T08:57:36Z"
+  "source_state_revision": "2026.10.23:2026-10-25T12:18:51.710Z",
+  "updated_at": "2026-10-25T12:54:33Z"
 }
