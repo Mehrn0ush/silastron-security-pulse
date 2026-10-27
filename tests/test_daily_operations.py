@@ -87,20 +87,30 @@ class CollectWorkflowContractTests(unittest.TestCase):
 
 
 class PublishIsolationTests(unittest.TestCase):
-    def test_publish_stays_manual_and_binds_an_explicit_collect_run(self) -> None:
+    def test_publish_stays_bound_to_an_explicit_collect_run(self) -> None:
         text = _workflow("publish.yml")
         self.assertIn("workflow_dispatch:", text)
+        self.assertIn("workflow_run:", text)
+        self.assertIn('workflows: ["Collect"]', text)
+        self.assertIn("branches: [main]", text)
         self.assertNotIn("schedule:", text)
+        self.assertNotIn("pull_request:", text)
         self.assertIn("collect_run_id:", text)
         self.assertIn("required: true", text)
         self.assertIn("confirm == 'PUBLISH'", text)
-        self.assertIn("run-id: ${{ github.event.inputs.collect_run_id }}", text)
+        self.assertIn("github.event.workflow_run.id", text)
+        self.assertIn("github.event.workflow_run.event == 'schedule'", text)
+        self.assertIn("decide-publication", text)
         self.assertNotIn("run-id: ${{ github.run_id }}", text)
+        self.assertNotIn("gh run list", text)
 
     def test_publish_does_not_select_the_latest_collect_implicitly(self) -> None:
         text = _workflow("publish.yml")
         self.assertIn("github.event.inputs.collect_run_id", text)
+        self.assertIn("github.event.workflow_run.id", text)
         self.assertNotIn("gh run list", text)
+        self.assertIn("steps.decide.outputs.decision == 'publish'", text)
+        self.assertIn("needs.build.outputs.decision == 'publish'", text)
 
     def test_persist_verifies_comparison_baseline_before_overwrite(self) -> None:
         text = _workflow("publish.yml")

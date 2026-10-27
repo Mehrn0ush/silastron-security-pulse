@@ -15,8 +15,9 @@ severity, product affectedness, and deployment exposure into a risk score.
 - Collection workflow: daily at 08:00 UTC plus manual `workflow_dispatch`.
   Collect does not publish.
 - Frontend-only Pages deploy is a separate manual workflow; it does not Collect or Promote.
-- GitHub Pages publication: **manual only**. Requires `confirm=PUBLISH` and an
-  explicit Collect `collect_run_id`.
+- GitHub Pages publication: a successful scheduled Collect auto-starts Publish
+  bound to that run ID. Manual `confirm=PUBLISH` with an explicit
+  `collect_run_id` remains the fallback. Unchanged upstream data is a skip.
 - EPSS: **BLOCKED** for publication. See [docs/source-contracts.md](docs/source-contracts.md).
 
 ## Documentation

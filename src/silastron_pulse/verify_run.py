@@ -95,6 +95,7 @@ def verify_collect_run(
     expected_digest: str | None,
     metadata: dict[str, Any] | None = None,
     sha256sums_text: str | None = None,
+    allowed_events: frozenset[str] | None = None,
 ) -> dict[str, Any]:
     repo = (
         (run.get("headRepository") or {}).get("nameWithOwner")
@@ -122,9 +123,10 @@ def verify_collect_run(
     if conclusion != "success":
         raise ArtifactVerifyError(f"Collect run conclusion is {conclusion!r}, not success")
     event = run.get("event")
-    if event is not None and event not in ALLOWED_COLLECT_EVENTS:
+    accepted_events = allowed_events if allowed_events is not None else ALLOWED_COLLECT_EVENTS
+    if event is not None and event not in accepted_events:
         raise ArtifactVerifyError(
-            f"Collect run event {event!r} is not workflow_dispatch or schedule"
+            f"Collect run event {event!r} is not allowed ({sorted(accepted_events)})"
         )
     head_sha = run.get("headSha") or run.get("head_sha")
     if not head_sha:

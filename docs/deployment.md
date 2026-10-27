@@ -98,9 +98,12 @@ review. The checked-in preview manifest is `unpublished`.
 3. Collect runs daily at 08:00 UTC and can also be started from `main` via
    workflow_dispatch. Inspect the `pulse-candidate` artifact from the Collect
    run you intend to publish.
-4. Run `Publish GitHub Pages` from `main` with `confirm=PUBLISH` and that
-   Collect run's `collect_run_id`. A newer Collect does not replace the bound
-   artifact.
+4. A successful **scheduled** Collect starts `Publish GitHub Pages`
+   automatically, bound to that Collect run ID. Manual Collect does not
+   auto-publish. To publish a manual Collect, run `Publish GitHub Pages`
+   from `main` with `confirm=PUBLISH` and that run's `collect_run_id`. A
+   newer Collect does not replace the bound artifact. Unchanged upstream
+   data is a normal skip, not a failed publish.
 5. To ship UI from `main` without republishing intelligence, run
    `Deploy frontend` with `confirm=DEPLOY_FRONTEND`. It copies the current
    published snapshot as-is and does not run Collect or Promote.

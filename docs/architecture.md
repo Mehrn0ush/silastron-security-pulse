@@ -34,7 +34,9 @@ Persistent layout is documented in [collection-state.md](collection-state.md).
    packages, reducing supply-chain surface.
 4. **Collection and publication are separate workflows.** A failed collect
    cannot deploy Pages and cannot replace last-known-good source, candidate, or
-   published state. Rollback is an explicit CLI/workflow operation.
+   published state. A successful scheduled Collect may start Publish, still
+   bound to that run's artifact. Manual Publish and frontend deploy stay
+   independent. Rollback is an explicit CLI/workflow operation.
 5. **Signals stay distinct.** Confirmed exploitation, EPSS probability, CVSS
    severity, product affectedness, and deployment exposure are separate objects.
    `composite_risk_score` is always `null`.

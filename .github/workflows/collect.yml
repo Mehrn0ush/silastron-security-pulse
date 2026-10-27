@@ -1,7 +1,9 @@
 name: Collect
 
 # Daily candidate collection. This workflow never deploys Pages and never
-# writes pulse-state published/. Publish remains a separate manual dispatch.
+# writes pulse-state published/. A successful scheduled run is the only
+# event that may start automated Publish, which still binds that exact
+# run ID. Manual Collect still requires explicit Publish dispatch.
 
 on:
   workflow_dispatch:

@@ -45,13 +45,18 @@ a crash mid-write does not claim that source state is complete.
    writes `dist/candidate.json`, commits `source/` and `candidates/` to
    `pulse-state`, and uploads artifact `pulse-candidate`. It never writes
    `published/`. See [cve-sync.md](cve-sync.md).
-2. **Publish** requires `collect_run_id`. It verifies repository, Collect
-   workflow identity, `main`, success, `workflow_dispatch` or `schedule`, head
-   SHA, artifact name, expiry, and SHA-256 digest. The selected run is the one
-   named in `collect_run_id`, not the newest Collect. It copies the actual last
-   published snapshot from `pulse-state` into the promote directory so stale
-   replay is compared against real published state, then deploys Pages and
-   commits `published/` only after a successful deploy job.
+2. **Publish** binds one Collect run. A successful scheduled Collect on `main`
+   starts Publish via `workflow_run` with that exact run ID. Manual dispatch
+   remains the fallback and still requires `collect_run_id`. It verifies
+   repository, Collect workflow identity, `main`, success, allowed event,
+   head SHA, artifact name, expiry, and SHA-256 digest. Automated publication
+   accepts only `schedule`; manual dispatch still accepts `workflow_dispatch`
+   or `schedule`. The selected run is never the newest Collect. Fail-closed
+   `decide-publication` skips unchanged upstream data and rejects stale,
+   inconsistent, or degraded-beyond-policy candidates. It copies the actual
+   last published snapshot from `pulse-state` into the promote directory so
+   stale replay is compared against real published state, then deploys Pages
+   and commits `published/` only after a successful deploy job.
 3. **Rollback** is `silastron-pulse rollback --confirm ROLLBACK --snapshot-id …`.
    It is the only operation allowed to re-promote a superseded snapshot.
 

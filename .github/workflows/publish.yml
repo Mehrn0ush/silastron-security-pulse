@@ -1,8 +1,16 @@
 name: Publish GitHub Pages
 
-# Comment-only change to reindex GitHub Actions workflow files.
+run-name: ${{ github.event_name == 'workflow_run' && format('Auto-publish Collect {0}', github.event.workflow_run.id) || format('Publish Collect {0}', github.event.inputs.collect_run_id) }}
+
+# Manual dispatch remains the explicit fallback. Automated publication is
+# event-driven from a successful scheduled Collect run and is bound to that
+# run ID. This workflow never selects "the latest" candidate.
 
 on:
+  workflow_run:
+    workflows: ["Collect"]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
     inputs:
       confirm:
@@ -23,13 +31,57 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  note-ineligible-auto-publish:
+    name: Note ineligible auto-publish
+    runs-on: ubuntu-24.04
+    if: >
+      github.event_name == 'workflow_run' &&
+      (
+        github.event.workflow_run.conclusion != 'success' ||
+        github.event.workflow_run.event != 'schedule' ||
+        github.event.workflow_run.head_branch != 'main' ||
+        github.event.workflow_run.name != 'Collect' ||
+        github.event.workflow_run.head_repository.full_name != github.repository
+      )
+    steps:
+      - name: Write trigger summary
+        run: |
+          {
+            echo "## Auto-publish skipped"
+            echo
+            echo "- Collect run ID: \`${{ github.event.workflow_run.id }}\`"
+            echo "- Collect event: \`${{ github.event.workflow_run.event }}\`"
+            echo "- Conclusion: \`${{ github.event.workflow_run.conclusion }}\`"
+            echo "- Branch: \`${{ github.event.workflow_run.head_branch }}\`"
+            echo "- Head repository: \`${{ github.event.workflow_run.head_repository.full_name }}\`"
+            echo
+            echo "Automated publication only follows a successful scheduled Collect on main in this repository."
+            echo "Manual Collect remains a candidate until Publish is dispatched with this run ID."
+          } >> "$GITHUB_STEP_SUMMARY"
+
   build:
     name: Build Pages artifact
     runs-on: ubuntu-24.04
-    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && github.event.inputs.confirm == 'PUBLISH'
+    if: >
+      (
+        github.event_name == 'workflow_dispatch' &&
+        github.ref == 'refs/heads/main' &&
+        github.event.inputs.confirm == 'PUBLISH'
+      ) ||
+      (
+        github.event_name == 'workflow_run' &&
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'schedule' &&
+        github.event.workflow_run.head_branch == 'main' &&
+        github.event.workflow_run.name == 'Collect' &&
+        github.event.workflow_run.head_repository.full_name == github.repository
+      )
     outputs:
-      digest: ${{ steps.digest.outputs.digest }}
-      snapshot_id: ${{ steps.digest.outputs.snapshot_id }}
+      decision: ${{ steps.decide.outputs.decision }}
+      reason: ${{ steps.decide.outputs.reason }}
+      digest: ${{ steps.decide.outputs.digest }}
+      snapshot_id: ${{ steps.decide.outputs.snapshot_id }}
+      collect_run_id: ${{ steps.decide.outputs.collect_run_id }}
     steps:
       - name: Checkout publisher
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
@@ -48,7 +100,7 @@ jobs:
       - name: Verify collect run identity
         env:
           GH_TOKEN: ${{ github.token }}
-          RUN_ID: ${{ github.event.inputs.collect_run_id }}
+          RUN_ID: ${{ github.event.workflow_run.id || github.event.inputs.collect_run_id }}
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
@@ -62,11 +114,13 @@ jobs:
           import json, os
           from pathlib import Path
           run = json.loads(Path("/tmp/collect-run.json").read_text())
+          run["repository_full_name"] = os.environ["REPO"]
+          Path("/tmp/collect-run.json").write_text(json.dumps(run), encoding="utf-8")
           artifacts = json.loads(Path("/tmp/collect-artifacts.json").read_text())
           items = artifacts.get("artifacts") or []
           pulse = next((item for item in items if item.get("name") == "pulse-candidate"), None)
           Path("/tmp/collect-artifact.json").write_text(json.dumps(pulse or {}))
-          print(json.dumps({"id": run.get("id"), "path": run.get("path"), "head_sha": run.get("head_sha"), "conclusion": run.get("conclusion")}, indent=2))
+          print(json.dumps({"id": run.get("id"), "path": run.get("path"), "head_sha": run.get("head_sha"), "event": run.get("event"), "conclusion": run.get("conclusion")}, indent=2))
           PY
 
       - name: Download collect artifact
@@ -75,49 +129,32 @@ jobs:
           name: pulse-candidate
           path: dist
           github-token: ${{ github.token }}
-          run-id: ${{ github.event.inputs.collect_run_id }}
+          run-id: ${{ github.event.workflow_run.id || github.event.inputs.collect_run_id }}
 
-      - name: Verify artifact digest and binding
-        id: digest
+      - name: Decide publication
+        id: decide
         env:
           PYTHONPATH: src
           REPO: ${{ github.repository }}
+          PUBLISH_MODE: ${{ github.event_name == 'workflow_run' && 'auto' || 'manual' }}
         run: |
           set -euo pipefail
-          python - <<'PY'
-          import json, os
-          from pathlib import Path
-          from silastron_pulse.verify_run import verify_collect_run
-          candidate = Path("dist/candidate.json").read_bytes()
-          meta = json.loads(Path("dist/candidate.meta.json").read_text())
-          sha256sums = Path("dist/SHA256SUMS").read_text(encoding="utf-8")
-          run = json.loads(Path("/tmp/collect-run.json").read_text())
-          run["repository_full_name"] = os.environ["REPO"]
-          artifact = json.loads(Path("/tmp/collect-artifact.json").read_text())
-          # artifact.digest is the GitHub zip-archive SHA-256. Content
-          # integrity is candidate.json versus meta, SHA256SUMS, and
-          # expected_digest. download-artifact verifies the archive.
-          result = verify_collect_run(
-              run,
-              expected_repository=os.environ["REPO"],
-              expected_branch="main",
-              expected_head_sha=run.get("head_sha"),
-              artifact=artifact,
-              candidate_bytes=candidate,
-              expected_digest=meta.get("content_sha256"),
-              metadata=meta,
-              sha256sums_text=sha256sums,
-          )
-          snapshot_id = result.get("snapshot_id")
-          if not snapshot_id:
-              raise SystemExit("Candidate snapshot_id is missing")
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as handle:
-              handle.write(f"digest={result['digest']}\n")
-              handle.write(f"snapshot_id={snapshot_id}\n")
-          print(result["digest"])
-          PY
+          # artifact.digest is the GitHub zip-archive SHA-256, not candidate.json.
+          python -m silastron_pulse decide-publication \
+            --mode "${PUBLISH_MODE}" \
+            --run-json /tmp/collect-run.json \
+            --artifact-json /tmp/collect-artifact.json \
+            --candidate dist/candidate.json \
+            --metadata-json dist/candidate.meta.json \
+            --sha256sums dist/SHA256SUMS \
+            --published-dir pulse-state/published \
+            --expected-repository "${REPO}" \
+            --expected-branch main \
+            --github-output "${GITHUB_OUTPUT}" \
+            --summary-path "${GITHUB_STEP_SUMMARY}"
 
       - name: Promote snapshot into site data
+        if: steps.decide.outputs.decision == 'publish'
         env:
           PYTHONPATH: src
         run: |
@@ -131,7 +168,7 @@ jobs:
           python -m silastron_pulse promote \
             --candidate dist/candidate.json \
             --published-dir _site/data \
-            --expected-digest "${{ steps.digest.outputs.digest }}" \
+            --expected-digest "${{ steps.decide.outputs.digest }}" \
             --expected-collector-sha "$(python -c 'import json; print(json.load(open("/tmp/collect-run.json"))["head_sha"])')"
           cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/
           python -m silastron_pulse validate _site/data/manifest.json
@@ -147,11 +184,13 @@ jobs:
           PY
 
       - name: Upload Pages artifact
+        if: steps.decide.outputs.decision == 'publish'
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: _site
 
       - name: Upload published state snapshot
+        if: steps.decide.outputs.decision == 'publish'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: pulse-published
@@ -162,6 +201,7 @@ jobs:
   deploy:
     name: Deploy Pages
     needs: build
+    if: needs.build.outputs.decision == 'publish'
     runs-on: ubuntu-24.04
     environment:
       name: github-pages
@@ -178,6 +218,7 @@ jobs:
   persist-published:
     name: Persist published snapshot to pulse-state
     needs: [build, deploy]
+    if: needs.build.outputs.decision == 'publish'
     runs-on: ubuntu-24.04
     permissions:
       contents: write

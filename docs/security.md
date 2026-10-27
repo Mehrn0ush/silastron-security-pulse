@@ -21,7 +21,7 @@
 | Unsafe URLs | `javascript:`, `data:`, credentials, localhost, and non-allowlisted hosts are dropped |
 | Identifier integrity | Exact CVE ID match; mismatch is a correlation failure |
 | Fail closed | Failed collect writes `collection-status.json` and does not rewrite pulse-state |
-| Artifact identity | Publish requires collect run ID, workflow path/name, digest, and SHA binding |
+| Artifact identity | Publish binds one Collect run ID, workflow path/name, digest, and SHA. Auto-publish accepts only scheduled Collect on main |
 | Path-restricted links | Preview and `authoritative_href` allow only KEV catalog, CVE.org record, and cvelistV5 blob paths |
 | Least privilege | Collect may write `pulse-state` only; Pages write only on the deploy job |
 | SHA-pinned actions | See docs/workflows.md |

@@ -26,15 +26,26 @@ Pull requests never collect live intelligence and never deploy Pages.
   is left in place
 - HTTP 429/5xx retries remain in `HttpsFetcher`; this workflow does not publish
 
-A successful scheduled Collect is a candidate only. Publication still requires
-an explicit Publish dispatch with that run's `collect_run_id`.
+A successful **scheduled** Collect may start automated Publish via
+`workflow_run`. The Publish workflow still binds that exact Collect `run_id`
+and never selects the newest candidate. Manual Collect remains a candidate
+only until an operator dispatches Publish with that run ID.
 
 ## `publish.yml`
 
-- Trigger: workflow_dispatch with `confirm=PUBLISH` and **required** `collect_run_id`
-- No schedule. A newer Collect run is not selected automatically.
-- Accepts Collect runs whose event is `workflow_dispatch` or `schedule`
+- Triggers: `workflow_run` (Collect completed) **and** `workflow_dispatch`
+  with `confirm=PUBLISH` and **required** `collect_run_id`
+- No independent Publish cron. Automated runs use `run-name`
+  `Auto-publish Collect <id>`
+- Automated publication requires Collect `event=schedule`, `conclusion=success`,
+  `head_branch=main`, workflow name `Collect`, and the same-repository head.
+  `workflow_run.branches: [main]` prevents other branches from starting Publish.
+  Ineligible Collect completions write a skip summary instead of promoting.
+- Manual dispatch still accepts Collect `workflow_dispatch` or `schedule`
+- A newer Collect run is not selected automatically
 - Runs only from `main`
+- `decide-publication` runs after artifact download and fail-closes before
+  promote. Unchanged upstream KEV/CVE identity is a successful skip
 - Verifies Collect run repository, workflow identity, branch, success, SHA, artifact
   name, expiry, and `candidate.json` content SHA-256 (against `candidate.meta.json`,
   `SHA256SUMS`, and the expected content digest). GitHub `artifact.digest` is the
@@ -49,9 +60,11 @@ an explicit Publish dispatch with that run's `collect_run_id`.
   names the live `pulse-state/published/latest.json`, then commits `published/`
   to `pulse-state`. A stale baseline is refused even if another Publish run
   already persisted. Workflow `concurrency: pages` is not the only guard.
-- Untrusted pull requests cannot dispatch this on `main`
+- Untrusted pull requests cannot dispatch this on `main` and cannot start Collect
+  on `main`, so they cannot start automated publication
 
-Do **not** run this workflow until publication is explicitly approved.
+Scheduled Collect plus automated Publish is the daily production path. Manual
+Publish remains the explicit fallback.
 
 ## `deploy-frontend.yml`
 

@@ -7,11 +7,12 @@ import json
 import sys
 from pathlib import Path
 
-from silastron_pulse.clock import SystemClock, format_datetime
+from silastron_pulse.clock import SystemClock, format_datetime, parse_generated_at
 from silastron_pulse.config import PulseConfig
 from silastron_pulse.errors import PulseError
 from silastron_pulse.jsonutil import sha256_bytes
 from silastron_pulse.pipeline import collect
+from silastron_pulse.auto_publish import evaluate_publication, write_decision_outputs
 from silastron_pulse.store import (
     assert_site_data_matches_published,
     atomic_write_json,
@@ -84,6 +85,23 @@ def main(argv: list[str] | None = None) -> int:
     )
     verify_site.add_argument("--published-dir", type=Path, required=True)
     verify_site.add_argument("--site-data", type=Path, default=None)
+
+    decide = sub.add_parser(
+        "decide-publication",
+        help="Fail-closed eligibility decision for a bound Collect artifact",
+    )
+    decide.add_argument("--mode", choices=("auto", "manual"), required=True)
+    decide.add_argument("--run-json", type=Path, required=True)
+    decide.add_argument("--artifact-json", type=Path, required=True)
+    decide.add_argument("--candidate", type=Path, required=True)
+    decide.add_argument("--metadata-json", type=Path, required=True)
+    decide.add_argument("--sha256sums", type=Path, required=True)
+    decide.add_argument("--published-dir", type=Path, required=True)
+    decide.add_argument("--expected-repository", required=True)
+    decide.add_argument("--expected-branch", default="main")
+    decide.add_argument("--github-output", type=Path, default=None)
+    decide.add_argument("--summary-path", type=Path, default=None)
+    decide.add_argument("--now", default=None, help="RFC3339 evaluation time (tests)")
 
     args = parser.parse_args(argv)
     try:
@@ -191,6 +209,44 @@ def main(argv: list[str] | None = None) -> int:
                 assert_site_data_matches_published(args.site_data, args.published_dir)
             print(json.dumps(result, indent=2))
             return 0
+        if args.command == "decide-publication":
+            config = PulseConfig.from_env(args.published_dir)
+            run = json.loads(args.run_json.read_text(encoding="utf-8"))
+            artifact = json.loads(args.artifact_json.read_text(encoding="utf-8"))
+            metadata = json.loads(args.metadata_json.read_text(encoding="utf-8"))
+            decision = evaluate_publication(
+                mode=args.mode,
+                run=run,
+                expected_repository=args.expected_repository,
+                expected_branch=args.expected_branch,
+                artifact=artifact,
+                candidate_bytes=args.candidate.read_bytes(),
+                metadata=metadata,
+                sha256sums_text=args.sha256sums.read_text(encoding="utf-8"),
+                published_dir=args.published_dir,
+                now=parse_generated_at(args.now) if args.now else SystemClock().now(),
+                max_bytes=config.max_snapshot_bytes,
+                max_depth=config.max_json_depth,
+                stale_after_hours=config.stale_after_hours,
+            )
+            write_decision_outputs(
+                decision,
+                output_path=args.github_output,
+                summary_path=args.summary_path,
+            )
+            print(json.dumps(
+                {
+                    "outcome": decision.outcome,
+                    "reason": decision.reason,
+                    "snapshot_id": decision.snapshot_id,
+                    "collect_run_id": decision.collect_run_id,
+                    "digest": decision.digest,
+                    "details": decision.details,
+                },
+                indent=2,
+                default=str,
+            ))
+            return 0 if decision.outcome in {"publish", "skip"} else 1
         if args.command == "write-unpublished":
             clock = SystemClock()
             payload = unpublished_status(generated_at=format_datetime(clock.now()))
