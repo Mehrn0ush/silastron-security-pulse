@@ -37,7 +37,7 @@ class FrontendDeployWorkflowTests(unittest.TestCase):
         self.assertIn("group: pages", publish)
         self.assertIn("cancel-in-progress: false", publish)
         self.assertIn("python3 -m silastron_pulse verify-published-site", frontend)
-        self.assertIn("cp -a pulse-state/published/. _site/data/", frontend)
+        self.assertIn("silastron_pulse safe-copy", frontend)
         self.assertIn(
             "cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/",
             frontend,

@@ -46,12 +46,17 @@ only until an operator dispatches Publish with that run ID.
 - Runs only from `main`
 - `decide-publication` runs after artifact download and fail-closes before
   promote. Unchanged upstream KEV/CVE identity is a successful skip
-- Verifies Collect run repository, workflow identity, branch, success, SHA, artifact
-  name, expiry, and `candidate.json` content SHA-256 (against `candidate.meta.json`,
-  `SHA256SUMS`, and the expected content digest). GitHub `artifact.digest` is the
-  zip archive hash and is not compared to `candidate.json`.
-- `persist-published` needs `[build, deploy]` so `needs.build.outputs.snapshot_id`
-  is written into the pulse-state commit message after a successful deploy
+- Verifies Collect run repository, workflow **path and name**, branch, success,
+  event, numeric run ID, SHA, artifact name, expiry, and `candidate.json`
+  content SHA-256 (against `candidate.meta.json`, `SHA256SUMS`, and the expected
+  content digest). GitHub `artifact.digest` is the zip archive hash and is not
+  compared to `candidate.json`. Candidate records must match the Collect-time
+  KEV catalog bundled in the same artifact (`source-kev-catalog.json`).
+  Publication does not re-fetch CISA.
+- Artifact trees refuse extra files and symlinks. `snapshot_id` is not
+  interpolated into a shell command.
+- `persist-published` needs `[build, deploy]` so a failed deploy is not recorded
+  as a successful publication
 - Copies actual `pulse-state/published` into the promote directory so replay is
   compared against last published state
 - Deploy job permissions: `pages: write`, `id-token: write`
@@ -60,6 +65,11 @@ only until an operator dispatches Publish with that run ID.
   names the live `pulse-state/published/latest.json`, then commits `published/`
   to `pulse-state`. A stale baseline is refused even if another Publish run
   already persisted. Workflow `concurrency: pages` is not the only guard.
+- GitHub Pages deploy and `pulse-state` persist are not a single atomic write.
+  If persist fails after a successful deploy, `warn-pages-state-divergence`
+  fails the workflow and documents reconciliation: re-run `persist-published`
+  or dispatch Publish with the same Collect run ID. Do not run Deploy frontend
+  until persist succeeds.
 - Untrusted pull requests cannot dispatch this on `main` and cannot start Collect
   on `main`, so they cannot start automated publication
 

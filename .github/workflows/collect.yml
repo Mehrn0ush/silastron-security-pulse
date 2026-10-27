@@ -71,17 +71,38 @@ jobs:
           PYTHONPATH: src
         run: python -m silastron_pulse validate dist/candidate.json
 
-      - name: Write digest
+      - name: Bind Collect-time KEV catalog and write digests
         env:
           PYTHONPATH: src
         run: |
+          set -euo pipefail
           python - <<'PY'
+          import shutil
           from pathlib import Path
           from silastron_pulse.jsonutil import sha256_bytes
-          body = Path("dist/candidate.json").read_bytes()
-          digest = sha256_bytes(body)
-          Path("dist/SHA256SUMS").write_text(f"{digest}  candidate.json\n", encoding="utf-8")
-          print(digest)
+          mapping = {
+              "catalog.json": "source-kev-catalog.json",
+              "meta.json": "source-kev-meta.json",
+          }
+          for src_name, dest_name in mapping.items():
+              src = Path("pulse-state/source/kev") / src_name
+              if src.is_symlink() or not src.is_file():
+                  raise SystemExit(f"{src} must be a regular Collect-time KEV file")
+              shutil.copyfile(src, Path("dist") / dest_name, follow_symlinks=False)
+          names = (
+              "candidate.json",
+              "candidate.meta.json",
+              "collection-status.json",
+              "source-kev-catalog.json",
+              "source-kev-meta.json",
+          )
+          lines = []
+          for name in names:
+              digest = sha256_bytes(Path("dist", name).read_bytes())
+              lines.append(f"{digest}  {name}")
+              if name == "candidate.json":
+                  print(digest)
+          Path("dist/SHA256SUMS").write_text("\n".join(lines) + "\n", encoding="utf-8")
           PY
 
       - name: Upload candidate artifact
@@ -93,6 +114,8 @@ jobs:
             dist/candidate.meta.json
             dist/collection-status.json
             dist/SHA256SUMS
+            dist/source-kev-catalog.json
+            dist/source-kev-meta.json
           if-no-files-found: error
           retention-days: 14
 

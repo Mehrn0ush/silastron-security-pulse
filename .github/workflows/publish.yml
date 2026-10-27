@@ -85,12 +85,15 @@ jobs:
     steps:
       - name: Checkout publisher
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
 
       - name: Checkout pulse-state
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
         with:
           ref: pulse-state
           path: pulse-state
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
@@ -104,8 +107,8 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          if [ -z "${RUN_ID}" ]; then
-            echo "collect_run_id is required"
+          if [[ ! "${RUN_ID}" =~ ^[0-9]+$ ]]; then
+            echo "collect_run_id must be a numeric GitHub Actions run id"
             exit 1
           fi
           gh api "repos/${REPO}/actions/runs/${RUN_ID}" > /tmp/collect-run.json
@@ -114,8 +117,12 @@ jobs:
           import json, os
           from pathlib import Path
           run = json.loads(Path("/tmp/collect-run.json").read_text())
-          run["repository_full_name"] = os.environ["REPO"]
-          Path("/tmp/collect-run.json").write_text(json.dumps(run), encoding="utf-8")
+          expected = os.environ["RUN_ID"]
+          if str(run.get("id")) != expected:
+              raise SystemExit(f"Fetched run id {run.get('id')!r} is not {expected}")
+          repo = (run.get("repository") or {}).get("full_name") if isinstance(run.get("repository"), dict) else None
+          if repo and repo != os.environ["REPO"]:
+              raise SystemExit(f"Collect run repository {repo!r} is not {os.environ['REPO']}")
           artifacts = json.loads(Path("/tmp/collect-artifacts.json").read_text())
           items = artifacts.get("artifacts") or []
           pulse = next((item for item in items if item.get("name") == "pulse-candidate"), None)
@@ -137,9 +144,13 @@ jobs:
           PYTHONPATH: src
           REPO: ${{ github.repository }}
           PUBLISH_MODE: ${{ github.event_name == 'workflow_run' && 'auto' || 'manual' }}
+          RUN_ID: ${{ github.event.workflow_run.id || github.event.inputs.collect_run_id }}
+          EXPECTED_EVENT: ${{ github.event_name == 'workflow_run' && 'schedule' || '' }}
+          EXPECTED_HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
         run: |
           set -euo pipefail
           # artifact.digest is the GitHub zip-archive SHA-256, not candidate.json.
+          python -m silastron_pulse verify-artifact-dir --path dist
           python -m silastron_pulse decide-publication \
             --mode "${PUBLISH_MODE}" \
             --run-json /tmp/collect-run.json \
@@ -147,9 +158,15 @@ jobs:
             --candidate dist/candidate.json \
             --metadata-json dist/candidate.meta.json \
             --sha256sums dist/SHA256SUMS \
+            --kev-catalog dist/source-kev-catalog.json \
+            --kev-meta dist/source-kev-meta.json \
             --published-dir pulse-state/published \
             --expected-repository "${REPO}" \
             --expected-branch main \
+            --expected-run-id "${RUN_ID}" \
+            --expected-event "${EXPECTED_EVENT}" \
+            --expected-head-sha "${EXPECTED_HEAD_SHA}" \
+            --artifact-dir dist \
             --github-output "${GITHUB_OUTPUT}" \
             --summary-path "${GITHUB_STEP_SUMMARY}"
 
@@ -162,8 +179,9 @@ jobs:
           python -m silastron_pulse validate dist/candidate.json
           mkdir -p _site/data
           if [ -f pulse-state/published/latest.json ]; then
-            mkdir -p _site/data/snapshots
-            cp -a pulse-state/published/. _site/data/
+            python -m silastron_pulse safe-copy \
+              --src pulse-state/published \
+              --dst _site/data
           fi
           python -m silastron_pulse promote \
             --candidate dist/candidate.json \
@@ -226,6 +244,8 @@ jobs:
     steps:
       - name: Checkout publisher
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
 
       - name: Checkout pulse-state
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
@@ -249,10 +269,22 @@ jobs:
             --current pulse-state/published
 
       - name: Commit published snapshot
+        env:
+          PYTHONPATH: src
+          SNAPSHOT_ID: ${{ needs.build.outputs.snapshot_id }}
         run: |
           set -euo pipefail
-          mkdir -p pulse-state/published
-          cp -a published-data/. pulse-state/published/
+          python3 -m silastron_pulse safe-copy \
+            --src published-data \
+            --dst pulse-state/published
+          python3 - <<'PY'
+          import os, re
+          from pathlib import Path
+          snapshot_id = os.environ.get("SNAPSHOT_ID", "")
+          if not re.fullmatch(r"[A-Za-z0-9._-]{1,128}", snapshot_id):
+              raise SystemExit("snapshot_id is not a safe commit token")
+          Path("/tmp/publish-commit-msg").write_text(f"publish {snapshot_id}\n", encoding="utf-8")
+          PY
           cd pulse-state
           git add published
           if git diff --cached --quiet; then
@@ -261,5 +293,29 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "publish ${{ needs.build.outputs.snapshot_id }}"
+          git commit -F /tmp/publish-commit-msg
           git push origin HEAD:pulse-state
+
+  warn-pages-state-divergence:
+    name: Warn if Pages deployed without persisted state
+    needs: [build, deploy, persist-published]
+    if: ${{ always() && needs.build.outputs.decision == 'publish' && needs.deploy.result == 'success' && needs.persist-published.result != 'success' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Record reconciliation procedure
+        run: |
+          {
+            echo "## Pages and pulse-state may have diverged"
+            echo
+            echo "GitHub Pages deploy succeeded, but \`pulse-state\` \`published/\` was not persisted."
+            echo "GitHub Pages cannot be updated atomically with the state branch."
+            echo
+            echo "Reconcile before the next frontend deploy:"
+            echo "1. Re-run the failed \`persist-published\` job on this workflow run, or"
+            echo "2. Dispatch Publish with the same Collect run ID."
+            echo
+            echo "Do not run Deploy frontend until persist succeeds; it copies the older pulse-state snapshot onto Pages."
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit 1

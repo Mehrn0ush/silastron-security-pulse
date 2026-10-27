@@ -13,12 +13,20 @@ from silastron_pulse.constants import DEFAULT_LIMITS
 from silastron_pulse.errors import ArtifactVerifyError, PulseError, ValidationError
 from silastron_pulse.freshness import freshness
 from silastron_pulse.jsonutil import sha256_bytes
+from silastron_pulse.kev_integrity import (
+    kev_publication_diff,
+    unexplained_kev_change_reason,
+    verify_candidate_matches_catalog,
+)
+from silastron_pulse.safe_fs import require_run_id, require_safe_token
 from silastron_pulse.store import load_snapshot, parse_generated_at
 from silastron_pulse.validate import validate_snapshot
-from silastron_pulse.verify_run import ALLOWED_COLLECT_EVENTS, verify_collect_run
+from silastron_pulse.verify_run import ALLOWED_COLLECT_EVENTS, parse_sha256sums, verify_collect_run
 
 AUTO_COLLECT_EVENTS = frozenset({"schedule"})
-MAX_KEV_DROP_RATIO = 0.10
+# Last-resort completeness guard for CVE extraction quality when the KEV
+# digest is unchanged. Catalog membership is decided by exact ID-set match
+# against the Collect-time KEV catalog, not by this ratio.
 MAX_COMPLETE_REGRESSION_RATIO = 0.10
 
 
@@ -51,32 +59,48 @@ def evaluate_publication(
     max_bytes: int,
     max_depth: int,
     stale_after_hours: int | None = None,
+    expected_head_sha: str | None = None,
+    expected_run_id: str | None = None,
+    expected_event: str | None = None,
+    kev_catalog: dict[str, Any] | None = None,
+    kev_meta: dict[str, Any] | None = None,
+    extra_files: dict[str, bytes] | None = None,
 ) -> PublicationDecision:
     """Return publish, skip, or reject for one already-bound Collect artifact."""
     if mode not in {"auto", "manual"}:
         return _reject("invalid_mode", f"Publication mode {mode!r} is not auto or manual")
+    try:
+        bound_run_id = require_run_id(expected_run_id or run.get("id"))
+    except ArtifactVerifyError as exc:
+        return _reject("collect_run_untrusted", str(exc), collect_run_id=run.get("id"))
     if not isinstance(metadata, dict) or not metadata.get("content_sha256"):
         return _reject(
             "artifact_invalid",
             "candidate.meta.json digest is missing",
-            collect_run_id=run.get("id"),
+            collect_run_id=bound_run_id,
         )
     allowed_events = AUTO_COLLECT_EVENTS if mode == "auto" else ALLOWED_COLLECT_EVENTS
+    if mode == "auto" and expected_event is None:
+        expected_event = "schedule"
     try:
+        if extra_files:
+            _verify_extra_files(extra_files, sha256sums_text)
         verified = verify_collect_run(
             run,
             expected_repository=expected_repository,
             expected_branch=expected_branch,
-            expected_head_sha=run.get("headSha") or run.get("head_sha"),
+            expected_head_sha=expected_head_sha,
             artifact=artifact,
             candidate_bytes=candidate_bytes,
             expected_digest=(metadata or {}).get("content_sha256") if metadata else sha256_bytes(candidate_bytes),
             metadata=metadata,
             sha256sums_text=sha256sums_text,
             allowed_events=allowed_events,
+            expected_run_id=bound_run_id,
+            expected_event=expected_event,
         )
     except ArtifactVerifyError as exc:
-        return _reject("collect_run_untrusted", str(exc), collect_run_id=run.get("id"))
+        return _reject("collect_run_untrusted", str(exc), collect_run_id=bound_run_id)
 
     try:
         payload = json.loads(candidate_bytes.decode("utf-8"))
@@ -92,6 +116,16 @@ def evaluate_publication(
     snapshot_id = candidate.get("snapshot_id")
     digest = verified.get("digest")
     collect_run_id = verified.get("run_id")
+    try:
+        require_safe_token(snapshot_id, label="snapshot_id")
+    except ArtifactVerifyError as exc:
+        return _reject(
+            "snapshot_invalid",
+            str(exc),
+            snapshot_id=None,
+            collect_run_id=collect_run_id,
+            digest=digest,
+        )
     hours = _stale_after_hours(candidate, stale_after_hours)
     try:
         fresh = freshness(
@@ -149,6 +183,24 @@ def evaluate_publication(
             digest=digest,
             details=details,
         )
+
+    try:
+        catalog_info = verify_candidate_matches_catalog(
+            candidate,
+            catalog=kev_catalog,
+            meta=kev_meta,
+        )
+    except (ValidationError, TypeError, ValueError) as exc:
+        return _reject(
+            "kev_catalog_mismatch",
+            str(exc),
+            snapshot_id=snapshot_id,
+            collect_run_id=collect_run_id,
+            digest=digest,
+            details=details,
+        )
+    details["kev_catalog_count"] = catalog_info.get("count")
+    details["kev_catalog_revision"] = catalog_info.get("source_revision")
 
     if candidate["status"] == "failed":
         return _reject(
@@ -245,6 +297,26 @@ def evaluate_publication(
             details=details,
         )
 
+    kev_diff = kev_publication_diff(published, candidate)
+    details["kev_diff"] = {
+        "added": kev_diff["added"],
+        "removed": kev_diff["removed"],
+        "field_changes": kev_diff["field_changes"],
+        "same_digest": kev_diff["same_digest"],
+        "substitution": kev_diff["substitution"],
+    }
+    unexplained = unexplained_kev_change_reason(kev_diff)
+    if unexplained:
+        code, message = unexplained
+        return _reject(
+            code,
+            message,
+            snapshot_id=snapshot_id,
+            collect_run_id=collect_run_id,
+            digest=digest,
+            details=details,
+        )
+
     if _upstream_identity(candidate) == _upstream_identity(published):
         return PublicationDecision(
             outcome="skip",
@@ -285,11 +357,11 @@ def write_decision_outputs(
 ) -> None:
     if output_path is not None:
         with output_path.open("a", encoding="utf-8") as handle:
-            handle.write(f"decision={decision.outcome}\n")
-            handle.write(f"reason={_one_line(decision.reason)}\n")
-            handle.write(f"snapshot_id={decision.snapshot_id or ''}\n")
-            handle.write(f"digest={decision.digest or ''}\n")
-            handle.write(f"collect_run_id={decision.collect_run_id or ''}\n")
+            handle.write(f"decision={_output_token(decision.outcome)}\n")
+            handle.write(f"reason={_output_token(decision.reason)}\n")
+            handle.write(f"snapshot_id={_output_token(decision.snapshot_id)}\n")
+            handle.write(f"digest={_output_token(decision.digest)}\n")
+            handle.write(f"collect_run_id={_output_token(decision.collect_run_id)}\n")
     if summary_path is not None:
         with summary_path.open("a", encoding="utf-8") as handle:
             handle.write(_format_summary(decision))
@@ -316,11 +388,9 @@ def _reject(
     )
 
 
-def _stale_after_hours(candidate: dict[str, Any], override: int | None) -> int:
-    if override is not None:
-        return override
-    limits = candidate.get("limits") or {}
-    raw = limits.get("stale_after_hours", DEFAULT_LIMITS["stale_after_hours"])
+def _stale_after_hours(_candidate: dict[str, Any], override: int | None) -> int:
+    # Candidate-controlled limits must not relax publication freshness.
+    raw = override if override is not None else DEFAULT_LIMITS["stale_after_hours"]
     try:
         hours = int(raw)
     except (TypeError, ValueError):
@@ -428,33 +498,8 @@ def _upstream_identity(snapshot: dict[str, Any]) -> tuple[object, ...]:
 def _regression_reason(
     published: dict[str, Any], candidate: dict[str, Any]
 ) -> tuple[str, str] | None:
-    published_ids = {
-        item.get("cve_id") for item in published.get("records") or [] if item.get("cve_id")
-    }
-    candidate_ids = {
-        item.get("cve_id") for item in candidate.get("records") or [] if item.get("cve_id")
-    }
     published_kev = ((published.get("sources") or {}).get("kev") or {}).get("content_sha256")
     candidate_kev = ((candidate.get("sources") or {}).get("kev") or {}).get("content_sha256")
-    if published_kev and published_kev == candidate_kev and published_ids != candidate_ids:
-        missing = sorted(published_ids - candidate_ids)
-        extra = sorted(candidate_ids - published_ids)
-        return (
-            "source_inconsistent",
-            "KEV digest is unchanged but CVE IDs changed"
-            + (f"; missing {missing[:8]}" if missing else "")
-            + (f"; extra {extra[:8]}" if extra else ""),
-        )
-    published_count = len(published.get("records") or [])
-    candidate_count = len(candidate.get("records") or [])
-    if published_count and candidate_count < published_count * (1 - MAX_KEV_DROP_RATIO):
-        return (
-            "unexpected_kev_drop",
-            (
-                f"Candidate record count {candidate_count} dropped more than "
-                f"{int(MAX_KEV_DROP_RATIO * 100)}% from published {published_count}"
-            ),
-        )
     published_complete = (published.get("summary") or {}).get("complete_records")
     candidate_complete = (candidate.get("summary") or {}).get("complete_records")
     if (
@@ -468,10 +513,33 @@ def _regression_reason(
             "completeness_regression",
             (
                 f"Complete extracted inventories fell from {published_complete} to "
-                f"{candidate_complete} while the KEV digest is unchanged"
+                f"{candidate_complete} while the KEV digest is unchanged. "
+                f"This {int(MAX_COMPLETE_REGRESSION_RATIO * 100)}% completeness "
+                "threshold is a last-resort extraction-quality heuristic, not a "
+                "KEV membership check."
             ),
         )
     return None
+
+
+def _verify_extra_files(extra_files: dict[str, bytes], sha256sums_text: str | None) -> None:
+    if not sha256sums_text:
+        raise ArtifactVerifyError("SHA256SUMS is required to bind Collect-time KEV catalog files")
+    for name, body in extra_files.items():
+        require_safe_token(name, label="artifact file name")
+        listed = parse_sha256sums(sha256sums_text, filename=name)
+        if listed != sha256_bytes(body):
+            raise ArtifactVerifyError(f"SHA256SUMS digest does not match {name}")
+
+
+def _output_token(value: object) -> str:
+    text = _one_line(str(value)) if value is not None else ""
+    if not text:
+        return ""
+    try:
+        return require_safe_token(text, label="workflow output")
+    except ArtifactVerifyError:
+        return ""
 
 
 def _format_summary(decision: PublicationDecision) -> str:
@@ -491,6 +559,8 @@ def _format_summary(decision: PublicationDecision) -> str:
         f"- Candidate digest: `{decision.digest or 'none'}`",
         f"- Collection status: `{details.get('status') or 'unknown'}`",
         f"- Record count: `{details.get('record_count')}`",
+        f"- KEV catalog count: `{details.get('kev_catalog_count')}`",
+        f"- KEV catalog revision: `{details.get('kev_catalog_revision')}`",
         "",
         "### Freshness",
         "",
@@ -501,6 +571,19 @@ def _format_summary(decision: PublicationDecision) -> str:
         f"- Published snapshot: `{published.get('snapshot_id') or published.get('state') or 'none'}`",
         f"- Published generated at: `{published.get('snapshot_generated_at') or 'none'}`",
     ]
+    kev_diff = details.get("kev_diff") or {}
+    if kev_diff:
+        lines.extend(
+            [
+                "",
+                "### KEV set versus published",
+                "",
+                f"- Added: `{kev_diff.get('added') or []}`",
+                f"- Removed: `{kev_diff.get('removed') or []}`",
+                f"- Material field changes: `{kev_diff.get('field_changes') or []}`",
+                f"- Same KEV digest: `{kev_diff.get('same_digest')}`",
+            ]
+        )
     message = details.get("message")
     if message:
         lines.extend(["", f"- Detail: {message}"])

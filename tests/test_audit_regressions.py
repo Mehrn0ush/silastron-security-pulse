@@ -383,7 +383,7 @@ class PublishWorkflowTests(unittest.TestCase):
         self.assertIn("snapshot_id: ${{ steps.decide.outputs.snapshot_id }}", build)
         self.assertIn("needs: [build, deploy]", persist)
         self.assertIn(
-            'git commit -m "publish ${{ needs.build.outputs.snapshot_id }}"',
+            "git commit -F /tmp/publish-commit-msg",
             persist,
         )
         self.assertIn("--sha256sums dist/SHA256SUMS", build)
