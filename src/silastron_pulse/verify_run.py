@@ -30,6 +30,24 @@ def _normalize_sha256(value: str | None) -> str | None:
     return digest
 
 
+def _reported_repository(run: dict[str, Any]) -> str | None:
+    repository = run.get("repository")
+    if isinstance(repository, dict):
+        full_name = repository.get("full_name") or repository.get("nameWithOwner")
+        if isinstance(full_name, str) and full_name:
+            return full_name
+    elif isinstance(repository, str) and repository:
+        return repository
+    for candidate in (
+        (run.get("headRepository") or {}).get("nameWithOwner") if isinstance(run.get("headRepository"), dict) else None,
+        (run.get("head_repository") or {}).get("full_name") if isinstance(run.get("head_repository"), dict) else None,
+        run.get("repository_full_name"),
+    ):
+        if isinstance(candidate, str) and candidate:
+            return candidate
+    return None
+
+
 def parse_sha256sums(text: str, *, filename: str = "candidate.json") -> str:
     """Return the content digest listed for filename in GNU sha256sum format."""
     if not isinstance(text, str) or not text.strip():
@@ -43,7 +61,8 @@ def parse_sha256sums(text: str, *, filename: str = "candidate.json") -> str:
         if len(parts) != 2:
             continue
         listed_name = parts[1][1:] if parts[1].startswith("*") else parts[1]
-        listed_name = listed_name.rsplit("/", 1)[-1]
+        if "/" in listed_name or "\\" in listed_name or ".." in listed_name:
+            raise ArtifactVerifyError("SHA256SUMS must list basename-only artifact files")
         if listed_name != filename:
             continue
         digest = _normalize_sha256(parts[0])
@@ -96,23 +115,27 @@ def verify_collect_run(
     metadata: dict[str, Any] | None = None,
     sha256sums_text: str | None = None,
     allowed_events: frozenset[str] | None = None,
+    expected_run_id: str | None = None,
+    expected_event: str | None = None,
 ) -> dict[str, Any]:
-    repo = (
-        (run.get("headRepository") or {}).get("nameWithOwner")
-        or run.get("repository")
-        or (run.get("head_repository") or {}).get("full_name")
-    )
-    if run.get("repository_full_name"):
-        repo = run["repository_full_name"]
-    if repo != expected_repository:
+    repo = _reported_repository(run)
+    if repo is not None and repo != expected_repository:
         raise ArtifactVerifyError(
             f"Collect run repository {repo!r} does not match {expected_repository!r}"
         )
+    if expected_run_id is not None and str(run.get("id")) != str(expected_run_id):
+        raise ArtifactVerifyError(
+            f"Collect run id {run.get('id')!r} does not match bound run {expected_run_id!r}"
+        )
     workflow = run.get("path") or (run.get("workflow") or {}).get("path") or ""
     name = run.get("name") or (run.get("workflow") or {}).get("name") or ""
-    if workflow not in ALLOWED_WORKFLOW_PATHS and name not in ALLOWED_WORKFLOW_NAMES:
+    if workflow not in ALLOWED_WORKFLOW_PATHS:
         raise ArtifactVerifyError(
-            f"Run workflow {workflow or name!r} is not the Collect workflow"
+            f"Run workflow path {workflow!r} is not the Collect workflow"
+        )
+    if name not in ALLOWED_WORKFLOW_NAMES:
+        raise ArtifactVerifyError(
+            f"Run workflow name {name!r} is not the Collect workflow"
         )
     branch = run.get("headBranch") or run.get("head_branch")
     if branch != expected_branch:
@@ -124,6 +147,11 @@ def verify_collect_run(
         raise ArtifactVerifyError(f"Collect run conclusion is {conclusion!r}, not success")
     event = run.get("event")
     accepted_events = allowed_events if allowed_events is not None else ALLOWED_COLLECT_EVENTS
+    if expected_event is not None:
+        if event != expected_event:
+            raise ArtifactVerifyError(
+                f"Collect run event {event!r} does not match bound event {expected_event!r}"
+            )
     if event is not None and event not in accepted_events:
         raise ArtifactVerifyError(
             f"Collect run event {event!r} is not allowed ({sorted(accepted_events)})"
@@ -133,7 +161,7 @@ def verify_collect_run(
         raise ArtifactVerifyError("Collect run is missing head SHA")
     if expected_head_sha and head_sha != expected_head_sha:
         raise ArtifactVerifyError(
-            f"Collect run SHA {head_sha} does not match checkout SHA {expected_head_sha}"
+            f"Collect run SHA {head_sha} does not match bound head SHA {expected_head_sha}"
         )
     if artifact is None:
         raise ArtifactVerifyError("Collect artifact pulse-candidate is missing")

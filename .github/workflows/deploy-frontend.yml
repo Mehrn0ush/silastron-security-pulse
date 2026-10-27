@@ -23,12 +23,15 @@ jobs:
     steps:
       - name: Checkout publisher
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
 
       - name: Checkout pulse-state
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
         with:
           ref: pulse-state
           path: pulse-state
+          persist-credentials: false
 
       - name: Set up Python
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
@@ -47,7 +50,9 @@ jobs:
           python3 -m silastron_pulse verify-published-site \
             --published-dir pulse-state/published
           mkdir -p _site/data
-          cp -a pulse-state/published/. _site/data/
+          python3 -m silastron_pulse safe-copy \
+            --src pulse-state/published \
+            --dst _site/data
           cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/
           python3 -m silastron_pulse verify-published-site \
             --published-dir pulse-state/published \

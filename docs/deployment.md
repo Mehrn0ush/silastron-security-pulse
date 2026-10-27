@@ -126,6 +126,18 @@ redeploy the unpublished placeholder until a good snapshot is available.
 
 Failed collections leave the last promoted snapshot in place.
 
+If Pages deploy succeeds and `persist-published` fails, GitHub Pages may be
+ahead of `pulse-state`. Re-run that persist job or dispatch Publish with the
+same Collect run ID before running Deploy frontend. That window cannot be
+closed atomically by GitHub Pages; the workflow fails closed and records the
+reconciliation steps.
+
+Legitimate CISA catalog additions, removals, and field corrections publish
+when the candidate matches its Collect-time catalog. Unexplained ID rewrites
+against an unchanged KEV digest are rejected. Recovery is a new Collect that
+produces a consistent catalog, or explicit `rollback --confirm ROLLBACK`.
+Manual Publish cannot skip those catalog checks.
+
 ## WordPress.com later
 
 Point a future theme at the Pages URLs for `manifest.json` and `latest.json`.

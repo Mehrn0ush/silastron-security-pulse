@@ -42,21 +42,25 @@ a crash mid-write does not claim that source state is complete.
    the previous valid snapshot from `published/latest.json` or
    `candidates/latest.json`, fetches KEV, incrementally enriches CVE List V5
    (`delta.json` / `deltaLog.json`, not a per-CVE poll of the full KEV set),
-   writes `dist/candidate.json`, commits `source/` and `candidates/` to
-   `pulse-state`, and uploads artifact `pulse-candidate`. It never writes
-   `published/`. See [cve-sync.md](cve-sync.md).
+   writes `dist/candidate.json`, copies the Collect-time KEV catalog into the
+   `pulse-candidate` artifact, commits `source/` and `candidates/` to
+   `pulse-state`, and uploads that artifact. It never writes `published/`.
+   See [cve-sync.md](cve-sync.md).
 2. **Publish** binds one Collect run. A successful scheduled Collect on `main`
    starts Publish via `workflow_run` with that exact run ID. Manual dispatch
    remains the fallback and still requires `collect_run_id`. It verifies
-   repository, Collect workflow identity, `main`, success, allowed event,
-   head SHA, artifact name, expiry, and SHA-256 digest. Automated publication
+   repository, Collect workflow path **and** name, `main`, success, allowed
+   event, head SHA, artifact name, expiry, SHA-256 digest, and that candidate
+   KEV records equal the bundled Collect-time catalog. Automated publication
    accepts only `schedule`; manual dispatch still accepts `workflow_dispatch`
    or `schedule`. The selected run is never the newest Collect. Fail-closed
    `decide-publication` skips unchanged upstream data and rejects stale,
-   inconsistent, or degraded-beyond-policy candidates. It copies the actual
-   last published snapshot from `pulse-state` into the promote directory so
-   stale replay is compared against real published state, then deploys Pages
-   and commits `published/` only after a successful deploy job.
+   catalog-mismatched, or degraded-beyond-policy candidates. It copies the
+   actual last published snapshot from `pulse-state` into the promote directory
+   so stale replay is compared against real published state, then deploys Pages
+   and commits `published/` only after a successful deploy job. Pages and
+   pulse-state persist are sequential; a persist failure after deploy is a
+   recorded divergence, not a silent success.
 3. **Rollback** is `silastron-pulse rollback --confirm ROLLBACK --snapshot-id …`.
    It is the only operation allowed to re-promote a superseded snapshot.
 

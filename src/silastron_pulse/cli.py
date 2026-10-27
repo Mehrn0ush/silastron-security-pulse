@@ -13,6 +13,11 @@ from silastron_pulse.errors import PulseError
 from silastron_pulse.jsonutil import sha256_bytes
 from silastron_pulse.pipeline import collect
 from silastron_pulse.auto_publish import evaluate_publication, write_decision_outputs
+from silastron_pulse.safe_fs import (
+    assert_artifact_tree,
+    copy_tree_without_symlinks,
+    require_run_id,
+)
 from silastron_pulse.store import (
     assert_site_data_matches_published,
     atomic_write_json,
@@ -102,6 +107,25 @@ def main(argv: list[str] | None = None) -> int:
     decide.add_argument("--github-output", type=Path, default=None)
     decide.add_argument("--summary-path", type=Path, default=None)
     decide.add_argument("--now", default=None, help="RFC3339 evaluation time (tests)")
+    decide.add_argument("--kev-catalog", type=Path, required=True)
+    decide.add_argument("--kev-meta", type=Path, required=True)
+    decide.add_argument("--expected-run-id", default=None)
+    decide.add_argument("--expected-event", default=None)
+    decide.add_argument("--expected-head-sha", default=None)
+    decide.add_argument("--artifact-dir", type=Path, default=None)
+
+    artifact_dir = sub.add_parser(
+        "verify-artifact-dir",
+        help="Refuse unexpected files or symlinks in a Collect artifact tree",
+    )
+    artifact_dir.add_argument("--path", type=Path, required=True)
+
+    copy_tree = sub.add_parser(
+        "safe-copy",
+        help="Copy published JSON without following symlinks",
+    )
+    copy_tree.add_argument("--src", type=Path, required=True)
+    copy_tree.add_argument("--dst", type=Path, required=True)
 
     args = parser.parse_args(argv)
     try:
@@ -209,11 +233,27 @@ def main(argv: list[str] | None = None) -> int:
                 assert_site_data_matches_published(args.site_data, args.published_dir)
             print(json.dumps(result, indent=2))
             return 0
+        if args.command == "verify-artifact-dir":
+            assert_artifact_tree(args.path)
+            print("artifact tree ok")
+            return 0
+        if args.command == "safe-copy":
+            copy_tree_without_symlinks(args.src, args.dst)
+            print("copied")
+            return 0
         if args.command == "decide-publication":
             config = PulseConfig.from_env(args.published_dir)
+            if args.artifact_dir is not None:
+                assert_artifact_tree(args.artifact_dir)
             run = json.loads(args.run_json.read_text(encoding="utf-8"))
             artifact = json.loads(args.artifact_json.read_text(encoding="utf-8"))
             metadata = json.loads(args.metadata_json.read_text(encoding="utf-8"))
+            kev_catalog = json.loads(args.kev_catalog.read_text(encoding="utf-8"))
+            kev_meta = json.loads(args.kev_meta.read_text(encoding="utf-8"))
+            extra_files = {
+                "source-kev-catalog.json": args.kev_catalog.read_bytes(),
+                "source-kev-meta.json": args.kev_meta.read_bytes(),
+            }
             decision = evaluate_publication(
                 mode=args.mode,
                 run=run,
@@ -228,6 +268,12 @@ def main(argv: list[str] | None = None) -> int:
                 max_bytes=config.max_snapshot_bytes,
                 max_depth=config.max_json_depth,
                 stale_after_hours=config.stale_after_hours,
+                expected_head_sha=args.expected_head_sha or None,
+                expected_run_id=require_run_id(args.expected_run_id or run.get("id")),
+                expected_event=args.expected_event or None,
+                kev_catalog=kev_catalog,
+                kev_meta=kev_meta,
+                extra_files=extra_files,
             )
             write_decision_outputs(
                 decision,

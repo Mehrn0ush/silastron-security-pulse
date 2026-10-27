@@ -12,6 +12,7 @@ from pathlib import Path
 from silastron_pulse.auto_publish import evaluate_publication
 from silastron_pulse.cli import main
 from silastron_pulse.jsonutil import dump_bytes, sha256_bytes
+from silastron_pulse.kev_integrity import catalog_from_snapshot
 from silastron_pulse.pipeline import collect
 from silastron_pulse.store import promote_snapshot
 from silastron_pulse.verify_run import verify_collect_run
@@ -63,37 +64,69 @@ class AutoPublishHelperTests(unittest.TestCase):
     def _bundle(self, snapshot: dict, *, event: str = "schedule") -> dict:
         raw = dump_bytes(snapshot)
         digest = sha256_bytes(raw)
+        catalog, meta = catalog_from_snapshot(snapshot)
+        catalog_bytes = dump_bytes(catalog)
+        meta_bytes = dump_bytes(meta)
         binding = snapshot.get("binding") or {}
         metadata = {
             "content_sha256": digest,
             "source_state_revision": binding.get("source_state_revision"),
         }
+        files = {
+            "candidate.json": raw,
+            "source-kev-catalog.json": catalog_bytes,
+            "source-kev-meta.json": meta_bytes,
+        }
+        sha256sums = "".join(
+            f"{sha256_bytes(body)}  {name}\n" for name, body in files.items()
+        )
         return {
             "raw": raw,
             "digest": digest,
             "metadata": metadata,
-            "sha256sums": f"{digest}  candidate.json\n",
+            "catalog": catalog,
+            "kev_meta": meta,
+            "catalog_bytes": catalog_bytes,
+            "meta_bytes": meta_bytes,
+            "sha256sums": sha256sums,
             "run": _run(event=event, head_sha=binding.get("collector_commit_sha") or "abc"),
             "artifact": {"name": "pulse-candidate", "expired": False},
         }
 
-    def _decide(self, snapshot: dict, *, mode: str = "auto", event: str = "schedule"):
+    def _decide(
+        self,
+        snapshot: dict,
+        *,
+        mode: str = "auto",
+        event: str = "schedule",
+        catalog: dict | None = None,
+        kev_meta: dict | None = None,
+        **overrides: object,
+    ):
         bundle = self._bundle(snapshot, event=event)
-        return evaluate_publication(
-            mode=mode,
-            run=bundle["run"],
-            expected_repository=REPO,
-            expected_branch="main",
-            artifact=bundle["artifact"],
-            candidate_bytes=bundle["raw"],
-            metadata=bundle["metadata"],
-            sha256sums_text=bundle["sha256sums"],
-            published_dir=self.published,
-            now=NOW,
-            max_bytes=self.config.max_snapshot_bytes,
-            max_depth=self.config.max_json_depth,
-            stale_after_hours=36,
-        ), bundle
+        kwargs = {
+            "mode": mode,
+            "run": bundle["run"],
+            "expected_repository": REPO,
+            "expected_branch": "main",
+            "artifact": bundle["artifact"],
+            "candidate_bytes": bundle["raw"],
+            "metadata": bundle["metadata"],
+            "sha256sums_text": bundle["sha256sums"],
+            "published_dir": self.published,
+            "now": NOW,
+            "max_bytes": self.config.max_snapshot_bytes,
+            "max_depth": self.config.max_json_depth,
+            "stale_after_hours": 36,
+            "kev_catalog": catalog if catalog is not None else bundle["catalog"],
+            "kev_meta": kev_meta if kev_meta is not None else bundle["kev_meta"],
+            "extra_files": {
+                "source-kev-catalog.json": bundle["catalog_bytes"],
+                "source-kev-meta.json": bundle["meta_bytes"],
+            },
+        }
+        kwargs.update(overrides)
+        return evaluate_publication(**kwargs), bundle
 
     def _promote(self, snapshot: dict) -> None:
         promote_snapshot(
@@ -181,7 +214,7 @@ class AutoPublishHelperTests(unittest.TestCase):
         self.assertEqual(decision.outcome, "reject")
         self.assertEqual(decision.reason, "kev_unverified")
 
-    def test_unexpected_kev_drop_is_rejected(self) -> None:
+    def test_unexplained_small_kev_removal_is_rejected(self) -> None:
         self._promote(self.snapshot)
         dropped = deepcopy(self.snapshot)
         dropped["generated_at"] = "2099-01-10T13:00:00Z"
@@ -190,12 +223,58 @@ class AutoPublishHelperTests(unittest.TestCase):
         dropped["records"] = dropped["records"][:1]
         dropped["summary"]["kev_records"] = 1
         dropped["summary"]["complete_records"] = 1
-        dropped["sources"]["kev"]["content_sha256"] = "b" * 64
-        decision, _ = self._decide(dropped)
+        catalog, meta = catalog_from_snapshot(self.snapshot)
+        decision, _ = self._decide(dropped, catalog=catalog, kev_meta=meta, extra_files=None)
         self.assertEqual(decision.outcome, "reject")
-        self.assertEqual(decision.reason, "unexpected_kev_drop")
+        self.assertEqual(decision.reason, "kev_catalog_mismatch")
 
-    def test_same_kev_digest_with_missing_ids_is_rejected(self) -> None:
+    def test_catalog_explained_kev_shrink_is_eligible(self) -> None:
+        self._promote(self.snapshot)
+        dropped = deepcopy(self.snapshot)
+        dropped["generated_at"] = "2099-01-10T13:00:00Z"
+        dropped["collection_completed_at"] = "2099-01-10T13:00:00Z"
+        dropped["snapshot_id"] = "drop-ok"
+        dropped["records"] = dropped["records"][:1]
+        dropped["summary"]["kev_records"] = 1
+        dropped["summary"]["complete_records"] = 1
+        dropped["sources"]["kev"]["content_sha256"] = "b" * 64
+        dropped["sources"]["kev"]["source_revision"] = "2099.01.10"
+        decision, _ = self._decide(dropped)
+        self.assertEqual(decision.outcome, "publish")
+        self.assertEqual(decision.reason, "eligible")
+
+    def test_same_count_substitution_matching_catalog_is_eligible(self) -> None:
+        self._promote(self.snapshot)
+        mutated = deepcopy(self.snapshot)
+        mutated["generated_at"] = "2099-01-10T13:00:00Z"
+        mutated["collection_completed_at"] = "2099-01-10T13:00:00Z"
+        mutated["snapshot_id"] = "swap-ok"
+        mutated["sources"]["kev"]["content_sha256"] = "d" * 64
+        mutated["sources"]["kev"]["source_revision"] = "2099.01.11"
+        record = mutated["records"][-1]
+        record["cve_id"] = "CVE-2099-9999"
+        record["kev"]["cve_id"] = "CVE-2099-9999"
+        record["cve"]["cve_id"] = "CVE-2099-9999"
+        decision, _ = self._decide(mutated)
+        self.assertEqual(decision.outcome, "publish")
+        self.assertEqual(decision.reason, "eligible")
+
+    def test_same_count_substitution_without_catalog_support_is_rejected(self) -> None:
+        self._promote(self.snapshot)
+        mutated = deepcopy(self.snapshot)
+        mutated["generated_at"] = "2099-01-10T13:00:00Z"
+        mutated["collection_completed_at"] = "2099-01-10T13:00:00Z"
+        mutated["snapshot_id"] = "swap-bad"
+        record = mutated["records"][-1]
+        record["cve_id"] = "CVE-2099-9999"
+        record["kev"]["cve_id"] = "CVE-2099-9999"
+        record["cve"]["cve_id"] = "CVE-2099-9999"
+        catalog, meta = catalog_from_snapshot(self.snapshot)
+        decision, _ = self._decide(mutated, catalog=catalog, kev_meta=meta, extra_files=None)
+        self.assertEqual(decision.outcome, "reject")
+        self.assertEqual(decision.reason, "kev_catalog_mismatch")
+
+    def test_same_digest_id_rewrite_is_rejected(self) -> None:
         self._promote(self.snapshot)
         mutated = deepcopy(self.snapshot)
         mutated["generated_at"] = "2099-01-10T13:00:00Z"
@@ -207,7 +286,7 @@ class AutoPublishHelperTests(unittest.TestCase):
         record["cve"]["cve_id"] = "CVE-2099-9999"
         decision, _ = self._decide(mutated)
         self.assertEqual(decision.outcome, "reject")
-        self.assertEqual(decision.reason, "source_inconsistent")
+        self.assertEqual(decision.reason, "unexplained_kev_change")
 
     def test_completeness_regression_with_unchanged_kev_is_rejected(self) -> None:
         self._promote(self.snapshot)
@@ -300,6 +379,55 @@ class AutoPublishHelperTests(unittest.TestCase):
         self.assertEqual(decision.outcome, "reject")
         self.assertIn(decision.reason, {"snapshot_invalid", "source_inconsistent"})
 
+    def test_corrupted_catalog_is_rejected(self) -> None:
+        decision, _ = self._decide(
+            self.snapshot,
+            catalog={"records": "nope"},
+            extra_files=None,
+        )
+        self.assertEqual(decision.outcome, "reject")
+        self.assertEqual(decision.reason, "kev_catalog_mismatch")
+
+    def test_catalog_digest_inconsistent_with_candidate_is_rejected(self) -> None:
+        catalog, meta = catalog_from_snapshot(self.snapshot)
+        meta = dict(meta)
+        meta["content_sha256"] = "e" * 64
+        decision, _ = self._decide(self.snapshot, catalog=catalog, kev_meta=meta, extra_files=None)
+        self.assertEqual(decision.outcome, "reject")
+        self.assertEqual(decision.reason, "kev_catalog_mismatch")
+
+    def test_forged_workflow_identity_is_rejected(self) -> None:
+        decision, _ = self._decide(
+            self.snapshot,
+            run=_run(path=".github/workflows/ci.yml", name="Collect"),
+            extra_files=None,
+        )
+        self.assertEqual(decision.outcome, "reject")
+        self.assertEqual(decision.reason, "collect_run_untrusted")
+
+    def test_unsafe_sha256sums_path_is_rejected(self) -> None:
+        bundle = self._bundle(self.snapshot)
+        digest = bundle["digest"]
+        decision, _ = self._decide(
+            self.snapshot,
+            sha256sums_text=f"{digest}  ../candidate.json\n",
+            extra_files=None,
+        )
+        self.assertEqual(decision.outcome, "reject")
+        self.assertEqual(decision.reason, "collect_run_untrusted")
+
+    def test_remediation_only_change_is_eligible(self) -> None:
+        self._promote(self.snapshot)
+        later = deepcopy(self.snapshot)
+        later["generated_at"] = "2099-01-10T13:00:00Z"
+        later["collection_completed_at"] = "2099-01-10T13:00:00Z"
+        later["snapshot_id"] = "remediation-1"
+        later["sources"]["cve"]["content_sha256"] = "f" * 64
+        later["records"][0]["cve"]["description"] = "Updated remediation text"
+        decision, _ = self._decide(later)
+        self.assertEqual(decision.outcome, "publish")
+        self.assertEqual(decision.reason, "eligible")
+
     def test_cli_writes_skip_outputs_for_unchanged_data(self) -> None:
         self._promote(self.snapshot)
         later = deepcopy(self.snapshot)
@@ -313,6 +441,8 @@ class AutoPublishHelperTests(unittest.TestCase):
         (files / "artifact.json").write_text(json.dumps(bundle["artifact"]), encoding="utf-8")
         (files / "candidate.json").write_bytes(bundle["raw"])
         (files / "meta.json").write_text(json.dumps(bundle["metadata"]), encoding="utf-8")
+        (files / "source-kev-catalog.json").write_bytes(bundle["catalog_bytes"])
+        (files / "source-kev-meta.json").write_bytes(bundle["meta_bytes"])
         (files / "SHA256SUMS").write_text(bundle["sha256sums"], encoding="utf-8")
         output = files / "github-output"
         summary = files / "summary.md"
@@ -332,6 +462,10 @@ class AutoPublishHelperTests(unittest.TestCase):
                     str(files / "meta.json"),
                     "--sha256sums",
                     str(files / "SHA256SUMS"),
+                    "--kev-catalog",
+                    str(files / "source-kev-catalog.json"),
+                    "--kev-meta",
+                    str(files / "source-kev-meta.json"),
                     "--published-dir",
                     str(self.published),
                     "--expected-repository",
@@ -361,6 +495,8 @@ class AutoPublishHelperTests(unittest.TestCase):
         (files / "meta.json").write_text(
             json.dumps({"content_sha256": "0" * 64}), encoding="utf-8"
         )
+        (files / "source-kev-catalog.json").write_bytes(bundle["catalog_bytes"])
+        (files / "source-kev-meta.json").write_bytes(bundle["meta_bytes"])
         (files / "SHA256SUMS").write_text(bundle["sha256sums"], encoding="utf-8")
         self.assertEqual(
             main(
@@ -378,6 +514,10 @@ class AutoPublishHelperTests(unittest.TestCase):
                     str(files / "meta.json"),
                     "--sha256sums",
                     str(files / "SHA256SUMS"),
+                    "--kev-catalog",
+                    str(files / "source-kev-catalog.json"),
+                    "--kev-meta",
+                    str(files / "source-kev-meta.json"),
                     "--published-dir",
                     str(self.published),
                     "--expected-repository",
@@ -398,6 +538,13 @@ class AutoPublishWorkflowTests(unittest.TestCase):
         self.assertIn("Auto-publish Collect", publish)
         self.assertIn("PUBLISH_MODE", publish)
         self.assertIn("head_repository.full_name == github.repository", publish)
+        self.assertIn("persist-credentials: false", publish)
+        self.assertIn("verify-artifact-dir", publish)
+        self.assertIn("safe-copy", publish)
+        self.assertIn("git commit -F /tmp/publish-commit-msg", publish)
+        self.assertIn("warn-pages-state-divergence:", publish)
+        self.assertIn("source-kev-catalog.json", collect)
+        self.assertIn("collect_run_id must be a numeric", publish)
         self.assertIn("group: pages", publish)
         self.assertIn("cancel-in-progress: false", publish)
         self.assertNotIn("pull_request:", publish)
