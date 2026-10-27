@@ -1,24 +1,110 @@
 {
-  "changes": [],
-  "changes_available": false,
-  "collection_completed_at": "2026-10-25T08:57:36Z",
-  "collection_started_at": "2026-10-25T08:57:34Z",
-  "generated_at": "2026-10-25T08:57:36Z",
+  "changes": [
+    {
+      "change": "changed_cve_information",
+      "completeness": "complete",
+      "cve_date_updated": "2026-10-25T18:48:18.266Z",
+      "cve_id": "CVE-2026-96951",
+      "cve_retrieved_at": "2026-10-26T14:47:13Z",
+      "cve_source_updated_at": "2026-10-25T18:48:18.266Z",
+      "cve_state": "PUBLISHED",
+      "cve_status": "ok",
+      "cvss_base_score": 8.8,
+      "epss_score": null,
+      "epss_status": "unavailable",
+      "kev_date_added": "2026-10-13",
+      "kev_listed": true,
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
+      "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
+      "links": {
+        "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-96951",
+        "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/96xxx/CVE-2026-96951.json",
+        "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+      },
+      "omitted_product_count": 0,
+      "omitted_version_count": 0,
+      "partial": false,
+      "product": "Windows",
+      "retrieved_at": "2026-10-26T14:47:13Z",
+      "severity_status": "available",
+      "source_published_at": "2026-10-23T19:30:18.9209Z",
+      "truncated_fields": [],
+      "vendor_project": "Microsoft",
+      "vulnerability_name": "Microsoft Windows Command Injection Vulnerability"
+    }
+  ],
+  "changes_available": true,
+  "collection_completed_at": "2026-10-26T14:47:13Z",
+  "collection_started_at": "2026-10-26T14:47:11Z",
+  "generated_at": "2026-10-26T14:47:13Z",
   "note": "This snapshot is public vulnerability intelligence. status is collection outcome (ok, degraded, or failed), not freshness and not per-record completeness. records[].completeness describes extracted inventory completeness; a complete extraction does not prove complete real-world product affectedness. Freshness must be recomputed at viewing time. Confirmed exploitation, estimated probability, severity, product affectedness, and deployment exposure are separate signals.",
   "publication_comparison": {
     "added_count": 0,
     "available": true,
-    "compared_to_generated_at": "2026-10-24T13:40:28Z",
-    "compared_to_snapshot_id": "20261024T134028Z_7a47e929631b",
-    "current_generated_at": "2026-10-25T08:57:36Z",
-    "current_snapshot_id": "20261025T085736Z_8bfe838b4393",
+    "compared_to_generated_at": "2026-10-25T08:57:36Z",
+    "compared_to_snapshot_id": "20261025T085736Z_8bfe838b4393",
+    "current_generated_at": "2026-10-26T14:47:13Z",
+    "current_snapshot_id": "20261026T144713Z_2422af751529",
     "enrichment_count": 0,
     "enrichment_sample": [],
     "reason": null,
     "removed_count": 0,
-    "rows": [],
+    "rows": [
+      {
+        "after": {
+          "affected_products": "Microsoft/Outlook.com [affected 1.0.0 20260925.100]; Microsoft/Windows 10 Version 1607 [affected 10.0.14393.0 10.0.14393.9612]; Microsoft/Windows 10 Version 1809 [affected 10.0.17763.0 10.0.17763.9376]; Microsoft/Windows 10 Version 21H2 [affected 10.0.19044.0 10.0.19044.7807]; Microsoft/Windows 10 Version 22H2 [affected 10.0.19045.0 10.0.19045.7807]; Microsoft/Windows 11 version 23H2 [affected 10.0.22631.0 10.0.22631.7652]; Microsoft/Windows 11 Version 23H2 [affected 10.0.22631.0 10.0.22631.7652]; Microsoft/Windows 11 Version 24H2 [affected 10.0.26100.0 10.0.26100.9711]; +12 more products",
+          "completeness": "complete",
+          "cve_assigner": "microsoft",
+          "cve_date_updated": "2026-10-25T18:48:18.266Z",
+          "cve_description": "Improper neutralization of special elements used in a command ('command injection') in Windows Shell allows an unauthorized attacker to bypass a security feature over a network.",
+          "cve_state": "PUBLISHED",
+          "cve_status": "ok",
+          "cve_title": "Windows Shell Security Feature Bypass Vulnerability",
+          "cvss_base_score": 8.8,
+          "cvss_base_severity": "HIGH",
+          "due_date": "2026-10-16",
+          "kev_date_added": "2026-10-13",
+          "product": "Windows",
+          "remediation_item_count": 1,
+          "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+          "vendor_project": "Microsoft",
+          "vulnerability_name": "Microsoft Windows Command Injection Vulnerability"
+        },
+        "before": {
+          "affected_products": "Microsoft/Outlook.com [affected 1.0.0 20260925.100]; Microsoft/Windows 10 Version 1607 [affected 10.0.14393.0 10.0.14393.9612]; Microsoft/Windows 10 Version 1809 [affected 10.0.17763.0 10.0.17763.9376]; Microsoft/Windows 10 Version 21H2 [affected 10.0.19044.0 10.0.19044.7807]; Microsoft/Windows 10 Version 22H2 [affected 10.0.19045.0 10.0.19045.7807]; Microsoft/Windows 11 version 23H2 [affected 10.0.22631.0 10.0.22631.7652]; Microsoft/Windows 11 Version 23H2 [affected 10.0.22631.0 10.0.22631.7652]; Microsoft/Windows 11 Version 24H2 [affected 10.0.26100.0 10.0.26100.9711]; +12 more products",
+          "completeness": "complete",
+          "cve_assigner": "microsoft",
+          "cve_date_updated": "2026-10-23T22:31:05.367Z",
+          "cve_description": "Improper neutralization of special elements used in a command ('command injection') in Windows Shell allows an unauthorized attacker to bypass a security feature over a network.",
+          "cve_state": "PUBLISHED",
+          "cve_status": "ok",
+          "cve_title": "Windows Shell Security Feature Bypass Vulnerability",
+          "cvss_base_score": 8.8,
+          "cvss_base_severity": "HIGH",
+          "due_date": "2026-10-16",
+          "kev_date_added": "2026-10-13",
+          "product": "Windows",
+          "remediation_item_count": 1,
+          "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+          "vendor_project": "Microsoft",
+          "vulnerability_name": "Microsoft Windows Command Injection Vulnerability"
+        },
+        "categories": [
+          "cve_update"
+        ],
+        "changed_fields": [
+          "cve_date_updated"
+        ],
+        "cve_id": "CVE-2026-96951",
+        "links": {
+          "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-96951",
+          "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/96xxx/CVE-2026-96951.json",
+          "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+        }
+      }
+    ],
     "truncated": false,
-    "updated_count": 0
+    "updated_count": 1
   },
   "recent_kev_additions": [
     {
@@ -35,7 +121,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-23",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-114625",
@@ -67,7 +153,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-23",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-110447",
@@ -99,7 +185,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-20",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-96656",
@@ -131,7 +217,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-20",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-96655",
@@ -163,7 +249,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-20",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-96654",
@@ -195,7 +281,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-20",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-96652",
@@ -227,7 +313,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-20",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-110936",
@@ -259,7 +345,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-20",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-106931",
@@ -291,7 +377,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-16",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-102764",
@@ -323,7 +409,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-16",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2025-61624",
@@ -355,7 +441,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-15",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-21589",
@@ -387,7 +473,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-14",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-76519",
@@ -419,7 +505,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-14",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-105134",
@@ -451,7 +537,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-14",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-105133",
@@ -483,7 +569,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-14",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-0322",
@@ -504,10 +590,10 @@
     {
       "change": "recent_kev_addition",
       "completeness": "complete",
-      "cve_date_updated": "2026-10-23T22:31:05.367Z",
+      "cve_date_updated": "2026-10-25T18:48:18.266Z",
       "cve_id": "CVE-2026-96951",
-      "cve_retrieved_at": "2026-10-24T12:26:44Z",
-      "cve_source_updated_at": "2026-10-23T22:31:05.367Z",
+      "cve_retrieved_at": "2026-10-26T14:47:13Z",
+      "cve_source_updated_at": "2026-10-25T18:48:18.266Z",
       "cve_state": "PUBLISHED",
       "cve_status": "ok",
       "cvss_base_score": 8.8,
@@ -515,7 +601,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-13",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-96951",
@@ -526,7 +612,7 @@
       "omitted_version_count": 0,
       "partial": false,
       "product": "Windows",
-      "retrieved_at": "2026-10-24T12:26:44Z",
+      "retrieved_at": "2026-10-26T14:47:13Z",
       "severity_status": "available",
       "source_published_at": "2026-10-23T19:30:18.9209Z",
       "truncated_fields": [],
@@ -547,7 +633,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-13",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-104935",
@@ -579,7 +665,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-08",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2023-22894",
@@ -611,7 +697,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-08",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2021-3199",
@@ -643,7 +729,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-08",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2016-3081",
@@ -675,7 +761,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-08",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2015-5477",
@@ -707,7 +793,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-08",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2015-3306",
@@ -739,7 +825,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-04",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-88779",
@@ -771,7 +857,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-02",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-102490",
@@ -803,7 +889,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-02",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-10-25T08:57:35Z",
+      "kev_retrieved_at": "2026-10-26T14:47:12Z",
       "kev_source_published_at": "2026-10-23T19:30:18.9209Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-102489",
@@ -823,21 +909,21 @@
     }
   ],
   "schema_version": "1.0.0",
-  "snapshot_id": "20261025T085736Z_8bfe838b4393",
+  "snapshot_id": "20261026T144713Z_2422af751529",
   "sources": {
     "cve": {
-      "content_sha256": "7592f2f8b77bdfc03c4436a7963d22c81e99a3f2deaa6a97995e9f7852cf546a",
+      "content_sha256": "7d857a04ef78fd9e611309b200749c5171018b43a9f11d212a06ed1a6ebd8154",
       "error": "18 CVE records have truncated fields",
       "id": "cve-list-v5",
       "license": "CVE Program Terms of Use",
       "name": "CVE List V5",
-      "notes": "CVE is a registered trademark and the CVE List is copyright The MITRE Corporation. Use of CVE and the CVE List is subject to the CVE Program Terms of Use at https://www.cve.org/Legal/TermsOfUse. Any copy of CVE data must reproduce MITRE's copyright designation and that license. Incremental strategy=delta; fetched=0; reused=1756.",
+      "notes": "CVE is a registered trademark and the CVE List is copyright The MITRE Corporation. Use of CVE and the CVE List is subject to the CVE Program Terms of Use at https://www.cve.org/Legal/TermsOfUse. Any copy of CVE data must reproduce MITRE's copyright designation and that license. Incremental strategy=delta; fetched=1; reused=1755.",
       "parser_version": "1.0.0",
-      "retrieved_at": "2026-10-24T12:26:44Z",
+      "retrieved_at": "2026-10-26T14:47:13Z",
       "schema_version": "CVE Record Format 5.x (dataVersion on each record)",
       "source_published_at": "2025-10-21T18:43:58.429Z",
-      "source_revision": "2026-10-25T08:51:50.766Z",
-      "source_updated_at": "2026-10-24T03:55:50.462Z",
+      "source_revision": "2026-10-26T13:57:25.494Z",
+      "source_updated_at": "2026-10-25T18:48:18.266Z",
       "status": "degraded",
       "url": "https://github.com/CVEProject/cvelistV5"
     },
@@ -865,7 +951,7 @@
       "name": "CISA Known Exploited Vulnerabilities Catalog",
       "notes": "The CISA Known Exploited Vulnerabilities catalog is dedicated to the public domain under CC0 1.0. Use does not authorize use of the CISA logo or DHS seal and is not an endorsement by CISA or DHS. See https://www.cisa.gov/sites/default/files/licenses/kev/license.txt",
       "parser_version": "1.0.0",
-      "retrieved_at": "2026-10-25T08:57:35Z",
+      "retrieved_at": "2026-10-26T14:47:12Z",
       "schema_version": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities_schema.json",
       "source_published_at": "2026-10-23T19:30:18.9209Z",
       "source_revision": "2026.10.23",
@@ -876,21 +962,21 @@
   },
   "status": "degraded",
   "summary": {
-    "bytes_transferred": 2001967,
-    "changed_cve_information": 0,
+    "bytes_transferred": 1987467,
+    "changed_cve_information": 1,
     "collector_commit_sha": "81478bc4cdede25e90348817dac121f25e0d43df",
     "complete_records": 1738,
-    "cve_delta_log_sha256": "915f676028ba4f062c44d21377691fc9413ab78cdc9b3f1d18c575ec6054c5aa",
-    "cve_delta_sha256": "d495b5df2a446512041a5d3cb212ac2e15147d55490e027e1bd7c783a71165b7",
+    "cve_delta_log_sha256": "22fbf9bcaef894c8d8f0774d905fc423cd40080bdadbb9e7ca61534f3996f4e4",
+    "cve_delta_sha256": "1ffe8ef30cc3ef1046b8d9403e6ecf107ad1a732d09e2262de15507860f17f33",
     "cve_enriched_ok": 1756,
-    "cve_fetched": 0,
-    "cve_reused": 1756,
+    "cve_fetched": 1,
+    "cve_reused": 1755,
     "cve_strategy": "delta",
     "cve_unavailable": 0,
-    "duration_ms": 1482,
+    "duration_ms": 1640,
     "epss_changes": 0,
     "epss_enabled": false,
-    "http_gets": 3,
+    "http_gets": 4,
     "http_heads": 1,
     "kev_content_sha256": "97a6e54bc74c651ab3c55657191db9adec6c63b05ca54e4205327cfd97a8fb70",
     "kev_records": 1756,
