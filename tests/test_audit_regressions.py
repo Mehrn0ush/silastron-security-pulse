@@ -380,14 +380,14 @@ class PublishWorkflowTests(unittest.TestCase):
     def test_persist_published_needs_build_outputs_snapshot_id(self) -> None:
         build = self._job("build")
         persist = self._job("persist-published")
-        self.assertIn("snapshot_id: ${{ steps.digest.outputs.snapshot_id }}", build)
+        self.assertIn("snapshot_id: ${{ steps.decide.outputs.snapshot_id }}", build)
         self.assertIn("needs: [build, deploy]", persist)
         self.assertIn(
             'git commit -m "publish ${{ needs.build.outputs.snapshot_id }}"',
             persist,
         )
-        self.assertIn("sha256sums_text=sha256sums", build)
-        self.assertIn("metadata=meta", build)
+        self.assertIn("--sha256sums dist/SHA256SUMS", build)
+        self.assertIn("--metadata-json dist/candidate.meta.json", build)
         self.assertIn("artifact.digest is the GitHub zip-archive SHA-256", build)
         self.assertIn("verify-publication", persist)
         self.assertIn("--incoming published-data", persist)
