@@ -1,16 +1,16 @@
 {
-  "content_sha256": "653c72ea869cbca7a9198b5e17b97bef516b67494e89bb919a9639d4eedbfa13",
+  "content_sha256": "2d9931c086e42d05425c2da924299c8d9b7ff836de373f981668b7ef5f6f0fd7",
   "error": null,
   "id": "cisa-kev",
   "license": "CC0-1.0",
   "name": "CISA Known Exploited Vulnerabilities Catalog",
   "notes": "The CISA Known Exploited Vulnerabilities catalog is dedicated to the public domain under CC0 1.0. Use does not authorize use of the CISA logo or DHS seal and is not an endorsement by CISA or DHS. See https://www.cisa.gov/sites/default/files/licenses/kev/license.txt",
   "parser_version": "1.0.0",
-  "retrieved_at": "2026-10-27T13:52:38Z",
+  "retrieved_at": "2026-10-28T14:47:50Z",
   "schema_version": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities_schema.json",
-  "source_published_at": "2026-10-26T22:24:24.6101Z",
-  "source_revision": "2026.10.26",
-  "source_updated_at": "2026-10-26T22:24:24.6101Z",
+  "source_published_at": "2026-10-27T19:00:02.2307Z",
+  "source_revision": "2026.10.27",
+  "source_updated_at": "2026-10-27T19:00:02.2307Z",
   "status": "ok",
   "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
 }
