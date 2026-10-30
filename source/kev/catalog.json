@@ -1,17 +1,17 @@
 {
   "meta": {
-    "content_sha256": "c72e8b7751209e7575ed777439e3f4e9295ba86b4edf5d52730959d8bf9bfe64",
+    "content_sha256": "38a7172a5f26470dc7632aaa1c6cff4a51fe7bfec8cdce978a19b816a751e34d",
     "error": null,
     "id": "cisa-kev",
     "license": "CC0-1.0",
     "name": "CISA Known Exploited Vulnerabilities Catalog",
     "notes": "The CISA Known Exploited Vulnerabilities catalog is dedicated to the public domain under CC0 1.0. Use does not authorize use of the CISA logo or DHS seal and is not an endorsement by CISA or DHS. See https://www.cisa.gov/sites/default/files/licenses/kev/license.txt",
     "parser_version": "1.0.0",
-    "retrieved_at": "2026-10-29T14:53:30Z",
+    "retrieved_at": "2026-10-30T14:45:45Z",
     "schema_version": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities_schema.json",
-    "source_published_at": "2026-10-28T19:00:04.8077Z",
-    "source_revision": "2026.10.28",
-    "source_updated_at": "2026-10-28T19:00:04.8077Z",
+    "source_published_at": "2026-10-29T19:09:34.4003Z",
+    "source_revision": "2026.10.29",
+    "source_updated_at": "2026-10-29T19:09:34.4003Z",
     "status": "ok",
     "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
   },
@@ -35992,6 +35992,27 @@
       "vulnerability_name": "Adobe Commerce and Magento Improper Neutralization of Special Elements Used in a Template Engine Vulnerability"
     },
     {
+      "cve_id": "CVE-2026-76418",
+      "cwes": [
+        "CWE-690"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-10-29",
+      "due_date": "2026-11-01",
+      "forensic_triage": "No",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-asaftd-tunnel-dos-s6mgkb75 ; ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-76418",
+      "product": "Secure Firewall ASA Software and Cisco Secure FTD Software",
+      "record_sha256": "bb9d0b0d9d50e3f3fac8e5cb70402b48b3c8d2a7bf15ef942caa6ad027461f6a",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Cisco Secure Firewall ASA Software and Cisco Secure FTD Software contains an unchecked return value to NULL pointer dereference vulnerability that could allow an unauthenticated, remote attacker to cause the device to reload unexpectedly, resulting in a denial of service (DoS) condition.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Cisco",
+      "vulnerability_name": "Cisco Secure Firewall ASA Software and Cisco Secure FTD Software Unchecked Return Value to NULL Pointer Dereference Vulnerability"
+    },
+    {
       "cve_id": "CVE-2026-76460",
       "cwes": [
         "CWE-648"
@@ -36792,6 +36813,27 @@
       "truncated_fields": [],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Windows Command Injection Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2026-97229",
+      "cwes": [
+        "CWE-190"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-10-29",
+      "due_date": "2026-11-01",
+      "forensic_triage": "Yes",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "Other products can potentially be affected by the same underlying Ruby/Onigmo Integer Overflow issue in CI/CD Regular Expression Compiler. For more information please see: https://www.ruby-lang.org/en/news/2026/10/23/regexp-fixes-for-gitlab-cves ; https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-4-2-released/ ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-97229",
+      "product": "Community Edition and Enterprise Edition",
+      "record_sha256": "a7ee43de99571ce5e8215e03685a31cecdb70fe6364e4b932e21ca1f968db791",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "GitLab Community Edition and Enterprise Edition contain a integer overflow or wraparound vulnerability that could allow an unauthenticated user to execute arbitrary code on the GitLab server via a specially crafted regular expression in a CI/CD configuration, due to insufficient regular expression validation.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "GitLab",
+      "vulnerability_name": "GitLab Community Edition and Enterprise Edition Integer Overflow or Wraparound Vulnerability"
     }
   ]
 }
