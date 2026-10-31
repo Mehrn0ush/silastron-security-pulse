@@ -1,17 +1,17 @@
 {
   "meta": {
-    "content_sha256": "38a7172a5f26470dc7632aaa1c6cff4a51fe7bfec8cdce978a19b816a751e34d",
+    "content_sha256": "3aa9cf3c01f116362a29d111702979175453c425e3733bde80fc4f6f8e2294e5",
     "error": null,
     "id": "cisa-kev",
     "license": "CC0-1.0",
     "name": "CISA Known Exploited Vulnerabilities Catalog",
     "notes": "The CISA Known Exploited Vulnerabilities catalog is dedicated to the public domain under CC0 1.0. Use does not authorize use of the CISA logo or DHS seal and is not an endorsement by CISA or DHS. See https://www.cisa.gov/sites/default/files/licenses/kev/license.txt",
     "parser_version": "1.0.0",
-    "retrieved_at": "2026-10-30T14:45:45Z",
+    "retrieved_at": "2026-10-31T14:14:06Z",
     "schema_version": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities_schema.json",
-    "source_published_at": "2026-10-29T19:09:34.4003Z",
-    "source_revision": "2026.10.29",
-    "source_updated_at": "2026-10-29T19:09:34.4003Z",
+    "source_published_at": "2026-10-30T17:02:45.3665Z",
+    "source_revision": "2026.10.30",
+    "source_updated_at": "2026-10-30T17:02:45.3665Z",
     "status": "ok",
     "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
   },
@@ -33129,6 +33129,29 @@
       "vulnerability_name": "Siemens Software Center Uncontrolled Search Path Element Vulnerability"
     },
     {
+      "cve_id": "CVE-2026-111357",
+      "cwes": [
+        "CWE-306",
+        "CWE-345",
+        "CWE-862"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-10-30",
+      "due_date": "2026-11-02",
+      "forensic_triage": "Yes",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://hub.ivanti.com/s/article/Security-Advisory-Ivanti-Connect-Secure-CVE-2026-104935?language=en_US ; https://www.cisa.gov/news-events/alerts/2026/10/13/cisa-urges-patching-newly-exploited-vulnerability-ivanti-connect-secure ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-111357",
+      "product": "Connect Secure",
+      "record_sha256": "d2ffcbec465feb61b872b0e6e5542774c5265be59c0b329076135de9b9fdab03",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Ivanti Connect Secure contains a missing authentication for critical function vulnerability that could allow a local authenticated attacker to escalate their privileges. This vulnerability can be chained with CVE-2026-104935 and CVE-2026-118527.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Ivanti",
+      "vulnerability_name": "Ivanti Connect Secure Missing Authentication for Critical Function Vulnerability"
+    },
+    {
       "cve_id": "CVE-2026-111497",
       "cwes": [
         "CWE-252",
@@ -33192,6 +33215,27 @@
       "truncated_fields": [],
       "vendor_project": "Google",
       "vulnerability_name": "Google Chromium V8 Out-of-Bounds Read and Write Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2026-118527",
+      "cwes": [
+        "CWE-340"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-10-30",
+      "due_date": "2026-11-13",
+      "forensic_triage": "No",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://hub.ivanti.com/s/article/Security-Advisory-Ivanti-Connect-Secure-CVE-2026-104935?language=en_US ; ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-118527",
+      "product": "Connect Secure",
+      "record_sha256": "96cea37397ea5229f12647166407a3bf0aafc153207d098b6da52a19181240aa",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Ivanti Connect Secure contains a generation of predictable numbers or identifiers vulnerability that allows a remote authenticated attacker to upload files with attacker-controlled content to a known location on disk. This vulnerability can be chained with CVE-2026-104935 and CVE-2026-111357.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Ivanti",
+      "vulnerability_name": "Ivanti Connect Secure Generation of Predictable Numbers or Identifiers Vulnerability"
     },
     {
       "cve_id": "CVE-2026-12569",
