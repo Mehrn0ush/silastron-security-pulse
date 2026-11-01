@@ -39,6 +39,12 @@ class PulseState:
     def cve_record_path(self, cve_id: str) -> Path:
         return self.source / "cve" / "records" / f"{cve_id}.json"
 
+    def nvd_index_path(self) -> Path:
+        return self.source / "nvd" / "index.json"
+
+    def nvd_record_path(self, cve_id: str) -> Path:
+        return self.source / "nvd" / "records" / f"{cve_id}.json"
+
     def candidate_path(self) -> Path:
         return self.candidates / "latest.json"
 
@@ -65,6 +71,10 @@ class PulseState:
         payload = self.load_json(self.cve_index_path(), max_bytes=max_bytes, max_depth=max_depth)
         return payload or {"records": {}}
 
+    def load_nvd_index(self, *, max_bytes: int, max_depth: int) -> dict[str, Any]:
+        payload = self.load_json(self.nvd_index_path(), max_bytes=max_bytes, max_depth=max_depth)
+        return payload or {"records": {}}
+
     def load_previous_snapshot(
         self, *, max_bytes: int, max_depth: int, required: bool
     ) -> dict[str, Any] | None:
@@ -89,6 +99,8 @@ class PulseState:
         cve_index: dict[str, Any],
         cve_records: dict[str, dict[str, Any]],
         kev_provenance: dict[str, Any] | None = None,
+        nvd_index: dict[str, Any] | None = None,
+        nvd_records: dict[str, dict[str, Any]] | None = None,
     ) -> None:
         atomic_write_json(self.kev_meta_path(), kev_meta)
         atomic_write_json(self.kev_catalog_path(), kev_catalog)
@@ -97,6 +109,11 @@ class PulseState:
         atomic_write_json(self.cve_index_path(), cve_index)
         for cve_id, record in cve_records.items():
             atomic_write_json(self.cve_record_path(cve_id), record)
+        if nvd_index is not None:
+            atomic_write_json(self.nvd_index_path(), nvd_index)
+        if nvd_records:
+            for cve_id, record in nvd_records.items():
+                atomic_write_json(self.nvd_record_path(cve_id), record)
         atomic_write_json(self.source_manifest_path(), manifest)
 
     def write_candidate(self, snapshot: dict[str, Any], meta: dict[str, Any]) -> str:

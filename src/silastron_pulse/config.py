@@ -9,6 +9,14 @@ from pathlib import Path
 from silastron_pulse.constants import DEFAULT_LIMITS
 
 
+def _optional_secret(name: str) -> str | None:
+    raw = os.environ.get(name)
+    if raw is None:
+        return None
+    value = raw.strip()
+    return value or None
+
+
 def _int_env(name: str, default: int, *, minimum: int, maximum: int) -> int:
     raw = os.environ.get(name)
     if raw is None or raw == "":
@@ -48,6 +56,9 @@ class PulseConfig:
     stale_after_hours: int
     max_cve_failures_ratio: float
     max_cve_failures_absolute: int
+    max_nvd_bytes: int
+    nvd_min_interval_ms: int
+    nvd_api_key: str | None
     output_dir: Path
 
     @classmethod
@@ -182,5 +193,18 @@ class PulseConfig:
             ),
             max_cve_failures_ratio=defaults["max_cve_failures_ratio"],
             max_cve_failures_absolute=defaults["max_cve_failures_absolute"],
+            max_nvd_bytes=_int_env(
+                "PULSE_MAX_NVD_BYTES",
+                defaults["max_nvd_bytes"],
+                minimum=1024,
+                maximum=5_000_000,
+            ),
+            nvd_min_interval_ms=_int_env(
+                "PULSE_NVD_MIN_INTERVAL_MS",
+                defaults["nvd_min_interval_ms"],
+                minimum=0,
+                maximum=30_000,
+            ),
+            nvd_api_key=_optional_secret("NVD_API_KEY"),
             output_dir=output_dir,
         )

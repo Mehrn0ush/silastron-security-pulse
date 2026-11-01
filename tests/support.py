@@ -8,7 +8,7 @@ from silastron_pulse.clock import FrozenClock, SteppingClock
 from silastron_pulse.config import PulseConfig
 from silastron_pulse.constants import CVE_DELTA_JSON_URL, KEV_JSON_URL
 from silastron_pulse.http import FetchResult, MapFetcher
-from silastron_pulse.ids import cvelist_v5_raw_url
+from silastron_pulse.ids import cvelist_v5_raw_url, nvd_cve_api_url
 
 FIXTURES = Path(__file__).resolve().parent / "fixtures"
 NOW = datetime(2099, 1, 10, 12, 0, tzinfo=timezone.utc)
@@ -44,6 +44,12 @@ def valid_fetcher(**overrides: FetchResult | Exception) -> MapFetcher:
             cvelist_v5_raw_url("CVE-2099-0002"), "cve_2099_0002.json"
         ),
         CVE_DELTA_JSON_URL: fetch_result(CVE_DELTA_JSON_URL, "delta_initial.json"),
+        nvd_cve_api_url("CVE-2099-0001"): fetch_result(
+            nvd_cve_api_url("CVE-2099-0001"), "nvd_empty.json"
+        ),
+        nvd_cve_api_url("CVE-2099-0002"): fetch_result(
+            nvd_cve_api_url("CVE-2099-0002"), "nvd_empty.json"
+        ),
     }
     mapping.update(overrides)
     return MapFetcher(mapping)

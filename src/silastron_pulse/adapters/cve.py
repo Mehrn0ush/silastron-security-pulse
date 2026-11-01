@@ -25,6 +25,7 @@ from silastron_pulse.enrichment_policy import AVAILABLE, PARTIAL, classify_fetch
 from silastron_pulse.errors import CorrelationError, FetchError, ValidationError
 from silastron_pulse.http import Fetcher
 from silastron_pulse.ids import cvelist_v5_raw_url, parse_cve_id, same_cve_id
+from silastron_pulse.intelligence import extract_cna_assertions
 from silastron_pulse.jsonutil import load_bounded_json, sha256_bytes
 from silastron_pulse.models import (
     CveProduct,
@@ -455,6 +456,7 @@ def parse_cve_record(
         omitted_version_count=omitted_versions,
         cached=False,
         remediation_items=tuple(remediation_items),
+        cna_assertions=extract_cna_assertions(cna, config),
     )
 
 
@@ -505,6 +507,11 @@ def cve_record_from_dict(payload: dict[str, Any], *, cached: bool = False) -> Cv
         enrichment_availability=(
             payload.get("enrichment_availability")
             if isinstance(payload.get("enrichment_availability"), dict)
+            else None
+        ),
+        cna_assertions=(
+            payload.get("cna_assertions")
+            if isinstance(payload.get("cna_assertions"), dict)
             else None
         ),
     )
@@ -726,7 +733,7 @@ def _remediation_from_dict(value: object) -> list[RemediationItem]:
         return []
     items: list[RemediationItem] = []
     allowed_kinds = {"required_action", "verified_fix", "mitigation", "reference"}
-    allowed_sources = {"cisa_kev", "cve_list_v5"}
+    allowed_sources = {"cisa_kev", "cve_list_v5", "nvd"}
     for raw in value:
         if not isinstance(raw, dict):
             continue

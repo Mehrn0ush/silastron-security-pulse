@@ -257,6 +257,8 @@ class AutoPublishHelperTests(AutoPublishFixtures):
         record["cve_id"] = "CVE-2099-9999"
         record["kev"]["cve_id"] = "CVE-2099-9999"
         record["cve"]["cve_id"] = "CVE-2099-9999"
+        if isinstance(record.get("intelligence"), dict):
+            record["intelligence"]["identity"]["cve_id"] = "CVE-2099-9999"
         decision, _ = self._decide(mutated)
         self.assertEqual(decision.outcome, "publish")
         self.assertEqual(decision.reason, "eligible")
@@ -271,6 +273,8 @@ class AutoPublishHelperTests(AutoPublishFixtures):
         record["cve_id"] = "CVE-2099-9999"
         record["kev"]["cve_id"] = "CVE-2099-9999"
         record["cve"]["cve_id"] = "CVE-2099-9999"
+        if isinstance(record.get("intelligence"), dict):
+            record["intelligence"]["identity"]["cve_id"] = "CVE-2099-9999"
         catalog, meta = catalog_from_snapshot(self.snapshot)
         decision, _ = self._decide(mutated, catalog=catalog, kev_meta=meta, extra_files=None)
         self.assertEqual(decision.outcome, "reject")
@@ -286,6 +290,8 @@ class AutoPublishHelperTests(AutoPublishFixtures):
         record["cve_id"] = "CVE-2099-9999"
         record["kev"]["cve_id"] = "CVE-2099-9999"
         record["cve"]["cve_id"] = "CVE-2099-9999"
+        if isinstance(record.get("intelligence"), dict):
+            record["intelligence"]["identity"]["cve_id"] = "CVE-2099-9999"
         decision, _ = self._decide(mutated)
         self.assertEqual(decision.outcome, "reject")
         self.assertEqual(decision.reason, "unexplained_kev_change")

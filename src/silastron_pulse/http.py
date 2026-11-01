@@ -43,6 +43,25 @@ class HeadResult:
     content_length: int | None = None
 
 
+ALLOWED_REQUEST_HEADERS = frozenset({"apikey"})
+
+
+def _safe_request_headers(headers: dict[str, str] | None) -> dict[str, str]:
+    """Allow only documented secret-bearing headers. Values are never logged."""
+    if not headers:
+        return {}
+    safe: dict[str, str] = {}
+    for key, value in headers.items():
+        if not isinstance(key, str) or key.lower() not in ALLOWED_REQUEST_HEADERS:
+            raise FetchError(f"Disallowed request header {key!r}")
+        if not isinstance(value, str) or not value.strip():
+            continue
+        if any(ch.isspace() for ch in value) or len(value) > 256:
+            raise FetchError("Request header value is invalid")
+        safe[key] = value
+    return safe
+
+
 class Fetcher(Protocol):
     def get(
         self,
@@ -50,6 +69,7 @@ class Fetcher(Protocol):
         *,
         max_bytes: int,
         etag: str | None = None,
+        headers: dict[str, str] | None = None,
     ) -> FetchResult:
         ...
 
@@ -106,11 +126,14 @@ class HttpsFetcher:
         *,
         max_bytes: int,
         etag: str | None = None,
+        headers: dict[str, str] | None = None,
     ) -> FetchResult:
         last_error: FetchError | None = None
         for attempt in range(self._max_attempts):
             try:
-                return self._once(url, max_bytes=max_bytes, etag=etag)
+                return self._once(
+                    url, max_bytes=max_bytes, etag=etag, extra_headers=headers
+                )
             except FetchError as exc:
                 last_error = exc
                 if not exc.retryable or attempt + 1 >= self._max_attempts:
@@ -131,7 +154,14 @@ class HttpsFetcher:
                 self._sleep(wait)
             self._last_request = time.monotonic()
 
-    def _once(self, url: str, *, max_bytes: int, etag: str | None) -> FetchResult:
+    def _once(
+        self,
+        url: str,
+        *,
+        max_bytes: int,
+        etag: str | None,
+        extra_headers: dict[str, str] | None = None,
+    ) -> FetchResult:
         safe = sanitize_https_url(url, hosts=self._hosts)
         if safe is None:
             raise FetchError(f"URL is not on the HTTPS allowlist: {url!r}")
@@ -145,6 +175,8 @@ class HttpsFetcher:
         }
         if etag:
             headers["If-None-Match"] = etag
+        for key, value in _safe_request_headers(extra_headers).items():
+            headers[key] = value
         request = Request(safe, headers=headers, method="GET")
         retrieved_at = format_datetime(self._clock.now())
         try:
@@ -363,11 +395,13 @@ class MapFetcher:
         *,
         max_bytes: int,
         etag: str | None = None,
+        headers: dict[str, str] | None = None,
     ) -> FetchResult:
         parsed = urlparse(url)
         if parsed.scheme != "https":
             raise FetchError("MapFetcher only accepts https URLs")
         self.calls.append((url, etag))
+        del headers
         if url not in self._mapping:
             raise FetchError(f"No fixture for {url}")
         result = self._mapping[url]
@@ -411,8 +445,10 @@ class ScriptedFetcher:
         *,
         max_bytes: int,
         etag: str | None = None,
+        headers: dict[str, str] | None = None,
     ) -> FetchResult:
         self.calls.append((url, etag))
+        del headers
         queue = self._mapping.get(url)
         if not queue:
             raise FetchError(f"No fixture remaining for {url}")
@@ -465,11 +501,14 @@ class RetryingFetcher:
         *,
         max_bytes: int,
         etag: str | None = None,
+        headers: dict[str, str] | None = None,
     ) -> FetchResult:
         last_error: FetchError | None = None
         for attempt in range(self._max_attempts):
             try:
-                return self._inner.get(url, max_bytes=max_bytes, etag=etag)
+                return self._inner.get(
+                    url, max_bytes=max_bytes, etag=etag, headers=headers
+                )
             except FetchError as exc:
                 last_error = exc
                 if not exc.retryable or attempt + 1 >= self._max_attempts:
@@ -511,9 +550,12 @@ class CountingFetcher:
         *,
         max_bytes: int,
         etag: str | None = None,
+        headers: dict[str, str] | None = None,
     ) -> FetchResult:
         self.get_count += 1
-        result = self._inner.get(url, max_bytes=max_bytes, etag=etag)
+        result = self._inner.get(
+            url, max_bytes=max_bytes, etag=etag, headers=headers
+        )
         transferred = result.wire_bytes if result.wire_bytes is not None else len(result.body)
         self.bytes_received += transferred
         return result

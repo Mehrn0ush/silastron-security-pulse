@@ -40,6 +40,18 @@ CSV_COLUMNS = (
     "kev_catalog_url",
     "cve_record_url",
     "cvelist_v5_url",
+    "nvd_url",
+    "nvd_status",
+    "cvss_versions",
+    "cvss_sources",
+    "attack_vector",
+    "privileges_required",
+    "user_interaction",
+    "cwe_ids",
+    "has_fixed_version",
+    "has_vendor_advisory",
+    "has_affected_versions",
+    "source_conflicts",
 )
 
 
@@ -114,4 +126,78 @@ def _cell(
         return (row.get("links") or {}).get("cve_record")
     if column == "cvelist_v5_url":
         return (row.get("links") or {}).get("cvelist_v5")
+    if column == "nvd_url":
+        return (row.get("links") or {}).get("nvd")
+    intelligence = row.get("intelligence") if isinstance(row.get("intelligence"), dict) else {}
+    coverage = intelligence.get("coverage") if isinstance(intelligence.get("coverage"), dict) else {}
+    sources = intelligence.get("sources") if isinstance(intelligence.get("sources"), dict) else {}
+    if column == "nvd_status":
+        return (sources.get("nvd") or {}).get("status") or row.get("nvd_status") or UNAVAILABLE
+    if column == "cvss_versions":
+        versions = row.get("cvss_versions")
+        if versions:
+            return versions
+        assessments = ((intelligence.get("cvss") or {}).get("assessments")) if isinstance(intelligence.get("cvss"), dict) else []
+        if isinstance(assessments, list) and assessments:
+            return sorted({str(item.get("cvss_version")) for item in assessments if isinstance(item, dict) and item.get("cvss_version")})
+        return UNAVAILABLE
+    if column == "cvss_sources":
+        sources_col = row.get("cvss_sources")
+        if sources_col:
+            return sources_col
+        assessments = ((intelligence.get("cvss") or {}).get("assessments")) if isinstance(intelligence.get("cvss"), dict) else []
+        if isinstance(assessments, list) and assessments:
+            return sorted({str(item.get("source")) for item in assessments if isinstance(item, dict) and item.get("source")})
+        return UNAVAILABLE
+    if column in {"attack_vector", "privileges_required", "user_interaction"}:
+        if row.get(column):
+            return row.get(column)
+        assessments = ((intelligence.get("cvss") or {}).get("assessments")) if isinstance(intelligence.get("cvss"), dict) else []
+        key = {
+            "attack_vector": "attackVector",
+            "privileges_required": "privilegesRequired",
+            "user_interaction": "userInteraction",
+        }[column]
+        values = []
+        if isinstance(assessments, list):
+            for item in assessments:
+                if not isinstance(item, dict):
+                    continue
+                metrics = item.get("metrics") if isinstance(item.get("metrics"), dict) else {}
+                value = metrics.get(key) or metrics.get(key.replace("attackVector", "accessVector"))
+                if value:
+                    values.append(f"{item.get('source')}:{item.get('cvss_version')}:{value}")
+        return values or UNAVAILABLE
+    if column == "cwe_ids":
+        if row.get("cwe_ids"):
+            return row.get("cwe_ids")
+        assertions = ((intelligence.get("cwes") or {}).get("assertions")) if isinstance(intelligence.get("cwes"), dict) else []
+        if isinstance(assertions, list) and assertions:
+            return sorted({str(item.get("cwe_id")) for item in assertions if isinstance(item, dict) and item.get("cwe_id")})
+        return row.get("cwes") or UNAVAILABLE
+    if column == "has_fixed_version":
+        if row.get("has_fixed_version") is not None:
+            return row.get("has_fixed_version")
+        if not intelligence:
+            return UNAVAILABLE
+        return True if coverage.get("has_fixed_version") else False
+    if column == "has_vendor_advisory":
+        if row.get("has_vendor_advisory") is not None:
+            return row.get("has_vendor_advisory")
+        if not intelligence:
+            return UNAVAILABLE
+        return True if coverage.get("has_vendor_advisory") else False
+    if column == "has_affected_versions":
+        if row.get("has_affected_versions") is not None:
+            return row.get("has_affected_versions")
+        if not intelligence:
+            return UNAVAILABLE
+        return True if coverage.get("has_affected_versions") else False
+    if column == "source_conflicts":
+        if row.get("source_conflicts") is not None:
+            return row.get("source_conflicts")
+        conflicts = intelligence.get("conflicts")
+        if isinstance(conflicts, list) and conflicts:
+            return [item.get("kind") for item in conflicts if isinstance(item, dict)]
+        return UNAVAILABLE
     return row.get(column)

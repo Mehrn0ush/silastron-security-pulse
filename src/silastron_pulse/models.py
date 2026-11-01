@@ -8,7 +8,7 @@ from typing import Any, Literal
 SourceStatus = Literal["ok", "failed", "disabled", "unavailable", "degraded"]
 CollectionStatus = Literal["ok", "failed", "degraded"]
 RemediationKind = Literal["required_action", "verified_fix", "mitigation", "reference"]
-RemediationSource = Literal["cisa_kev", "cve_list_v5"]
+RemediationSource = Literal["cisa_kev", "cve_list_v5", "nvd"]
 
 
 def _omit_none(payload: dict[str, Any]) -> dict[str, Any]:
@@ -189,6 +189,7 @@ class CveRecord:
     cached: bool = False
     remediation_items: tuple[RemediationItem, ...] = ()
     enrichment_availability: dict[str, Any] | None = None
+    cna_assertions: dict[str, Any] | None = None
 
     def comparable(self) -> dict[str, Any]:
         return {
@@ -240,6 +241,7 @@ class CveRecord:
             "cached": self.cached,
             "remediation_items": [item.to_dict() for item in self.remediation_items],
             "enrichment_availability": self.enrichment_availability,
+            "cna_assertions": self.cna_assertions,
         }
 
 
@@ -303,6 +305,7 @@ class PulseEntry:
     epss: EpssRecord
     signals: Signals
     links: dict[str, str]
+    intelligence: Any | None = None
 
     def completeness(self) -> str:
         return record_completeness(kev=self.kev, cve=self.cve)
@@ -310,7 +313,7 @@ class PulseEntry:
     def to_dict(self) -> dict[str, Any]:
         from silastron_pulse.remediation import assemble_remediation
 
-        return {
+        payload = {
             "cve_id": self.cve_id,
             "completeness": self.completeness(),
             "kev": self.kev.to_dict(),
@@ -320,6 +323,9 @@ class PulseEntry:
             "links": dict(self.links),
             "remediation": assemble_remediation(kev=self.kev, cve=self.cve),
         }
+        if self.intelligence is not None:
+            payload["intelligence"] = self.intelligence.to_dict()
+        return payload
 
 
 def record_completeness(*, kev: KevRecord, cve: CveRecord) -> str:

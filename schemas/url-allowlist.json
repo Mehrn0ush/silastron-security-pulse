@@ -9,7 +9,9 @@
     "raw.githubusercontent.com",
     "www.first.org",
     "api.first.org",
-    "epss.empiricalsecurity.com"
+    "epss.empiricalsecurity.com",
+    "services.nvd.nist.gov",
+    "nvd.nist.gov"
   ],
   "preview_link_hosts": [
     "www.cisa.gov",
@@ -17,6 +19,7 @@
     "www.cve.org",
     "cve.org",
     "github.com",
-    "www.first.org"
+    "www.first.org",
+    "nvd.nist.gov"
   ]
 }

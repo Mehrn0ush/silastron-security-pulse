@@ -10,6 +10,7 @@ PREVIEW_SCHEMA_VERSION = "1.0.0"
 KEV_PARSER_VERSION = "1.0.0"
 CVE_PARSER_VERSION = "1.0.0"
 EPSS_PARSER_VERSION = "1.0.0"
+NVD_PARSER_VERSION = "1.0.0"
 
 USER_AGENT = (
     "SilastronSecurityPulse/1.0 "
@@ -49,6 +50,12 @@ CVE_RECORD_PAGE_TEMPLATE = "https://www.cve.org/CVERecord?id={cve_id}"
 CVE_TERMS_OF_USE_URL = "https://www.cve.org/Legal/TermsOfUse"
 CVE_SCHEMA_DOCS_URL = "https://github.com/CVEProject/cve-schema"
 
+# Official NVD CVE API 2.0. Optional enrichment; never a KEV publication dependency.
+NVD_CVE_API_URL = "https://services.nvd.nist.gov/rest/json/cves/2.0"
+NVD_HOME_URL = "https://nvd.nist.gov/"
+NVD_API_DOCS_URL = "https://nvd.nist.gov/developers/vulnerabilities"
+NVD_USAGE_URL = "https://nvd.nist.gov/general/news/api-20-announcements"
+
 # FIRST EPSS — adapter remains disabled pending redistribution clearance.
 EPSS_HOME_URL = "https://www.first.org/epss"
 EPSS_DATA_URL = "https://www.first.org/epss/data"
@@ -68,6 +75,8 @@ ALLOWED_HTTPS_HOSTS = frozenset(
         "www.first.org",
         "api.first.org",
         "epss.empiricalsecurity.com",
+        "services.nvd.nist.gov",
+        "nvd.nist.gov",
     }
 )
 
@@ -79,6 +88,7 @@ AUTHORITATIVE_LINK_HOSTS = frozenset(
         "cve.org",
         "github.com",
         "www.first.org",
+        "nvd.nist.gov",
     }
 )
 
@@ -108,6 +118,8 @@ DEFAULT_LIMITS = {
     "max_cwes": 16,
     "max_cve_failures_ratio": 0.05,
     "max_cve_failures_absolute": 25,
+    "max_nvd_bytes": 2_000_000,
+    "nvd_min_interval_ms": 0,
 }
 
 CVE_ID_PATTERN = r"^CVE-[0-9]{4}-[0-9]{4,}$"
@@ -126,6 +138,12 @@ CISA_KEV_ATTRIBUTION = (
     "public domain under CC0 1.0. Use does not authorize use of the CISA "
     "logo or DHS seal and is not an endorsement by CISA or DHS. "
     "See https://www.cisa.gov/sites/default/files/licenses/kev/license.txt"
+)
+
+NVD_ATTRIBUTION = (
+    "This product uses the NVD API but is not endorsed or certified by the "
+    "NVD. NVD data is provided as-is. See https://nvd.nist.gov/ and "
+    f"{NVD_API_DOCS_URL}."
 )
 
 EPSS_ATTRIBUTION = (

@@ -248,6 +248,8 @@ class PublicationComparisonTests(unittest.TestCase):
         extra["kev"]["cve_id"] = "CVE-2099-0003"
         extra["cve"]["cve_id"] = "CVE-2099-0003"
         extra["epss"]["cve_id"] = "CVE-2099-0003"
+        if isinstance(extra.get("intelligence"), dict):
+            extra["intelligence"]["identity"]["cve_id"] = "CVE-2099-0003"
         extra["kev"]["date_added"] = "2099-01-03"
         extra["links"] = {
             "cve_record": "https://www.cve.org/CVERecord?id=CVE-2099-0003",

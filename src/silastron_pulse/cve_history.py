@@ -430,6 +430,14 @@ def _record_view(record: dict[str, Any]) -> dict[str, Any]:
     remediation = record.get("remediation") if isinstance(record.get("remediation"), dict) else {}
     items = remediation.get("items") if isinstance(remediation.get("items"), list) else []
     products = cve.get("products") if isinstance(cve.get("products"), list) else None
+    intelligence = record.get("intelligence") if isinstance(record.get("intelligence"), dict) else {}
+    cvss = intelligence.get("cvss") if isinstance(intelligence.get("cvss"), dict) else {}
+    assessments = cvss.get("assessments") if isinstance(cvss.get("assessments"), list) else None
+    cwes = (intelligence.get("cwes") or {}).get("assertions") if isinstance(intelligence.get("cwes"), dict) else None
+    affected = (intelligence.get("affected") or {}).get("products") if isinstance(intelligence.get("affected"), dict) else None
+    fixed = (intelligence.get("remediation") or {}).get("fixed_versions") if isinstance(intelligence.get("remediation"), dict) else None
+    conflicts = intelligence.get("conflicts") if isinstance(intelligence.get("conflicts"), list) else None
+    nvd_status = ((intelligence.get("sources") or {}).get("nvd") or {}).get("status")
     return {
         "kev": {field: _present(kev.get(field)) for field in KEV_FIELDS},
         "kev_date_added": _present(kev.get("date_added")),
@@ -437,6 +445,12 @@ def _record_view(record: dict[str, Any]) -> dict[str, Any]:
         "products": _canonicalize(products) if products is not None else "unavailable",
         "products_available": products is not None,
         "cvss": {field: _present(severity.get(field)) for field in CVSS_FIELDS},
+        "cvss_assessments": _canonicalize(assessments) if assessments is not None else "unavailable",
+        "cwe_assertions": _canonicalize(cwes) if cwes is not None else "unavailable",
+        "affected_ranges": _canonicalize(affected) if affected is not None else "unavailable",
+        "fixed_versions": _canonicalize(fixed) if fixed is not None else "unavailable",
+        "conflicts": _canonicalize(conflicts) if conflicts is not None else "unavailable",
+        "nvd_status": _present(nvd_status),
         "completeness": _present(record.get("completeness")),
         "remediation_status": _present(remediation.get("status")),
         "remediation_items": _canonicalize(items) if items else "unavailable",
@@ -520,6 +534,99 @@ def _diff_views(
                 "Extraction completeness changed. This is not a confirmed upstream vulnerability change.",
             )
         )
+    if previous.get("cvss_assessments") != current.get("cvss_assessments") and (
+        previous.get("cvss_assessments") != "unavailable"
+        or current.get("cvss_assessments") != "unavailable"
+    ):
+        change = _value_change(previous.get("cvss_assessments"), current.get("cvss_assessments"))
+        if change is not None:
+            events.append(
+                _event(
+                    "cvss_assessment_change",
+                    "upstream_cvss",
+                    snapshot_id,
+                    generated_at,
+                    [{"field": "cvss_assessments", **change}],
+                    "Source-attributed CVSS assessments changed. Retrieval timestamps are excluded.",
+                )
+            )
+    if previous.get("cwe_assertions") != current.get("cwe_assertions") and (
+        previous.get("cwe_assertions") != "unavailable" or current.get("cwe_assertions") != "unavailable"
+    ):
+        change = _value_change(previous.get("cwe_assertions"), current.get("cwe_assertions"))
+        if change is not None:
+            events.append(
+                _event(
+                    "cwe_change",
+                    "upstream_cve",
+                    snapshot_id,
+                    generated_at,
+                    [{"field": "cwes", **change}],
+                    "Source-attributed CWE classifications changed.",
+                )
+            )
+    if previous.get("affected_ranges") != current.get("affected_ranges") and (
+        previous.get("affected_ranges") != "unavailable" or current.get("affected_ranges") != "unavailable"
+    ):
+        change = _value_change(previous.get("affected_ranges"), current.get("affected_ranges"))
+        if change is not None:
+            events.append(
+                _event(
+                    "affected_range_change",
+                    "upstream_cve",
+                    snapshot_id,
+                    generated_at,
+                    [{"field": "affected_ranges", **change}],
+                    "Source-attributed affected version ranges changed. Ranges were not merged.",
+                )
+            )
+    if previous.get("fixed_versions") != current.get("fixed_versions") and (
+        previous.get("fixed_versions") != "unavailable" or current.get("fixed_versions") != "unavailable"
+    ):
+        change = _value_change(previous.get("fixed_versions"), current.get("fixed_versions"))
+        if change is not None:
+            events.append(
+                _event(
+                    "fixed_version_change",
+                    "extraction_enrichment",
+                    snapshot_id,
+                    generated_at,
+                    [{"field": "fixed_versions", **change}],
+                    "Explicit fixed-version evidence changed. Upper bounds of affected ranges are not treated as fixes.",
+                )
+            )
+    if previous.get("nvd_status") != current.get("nvd_status"):
+        events.append(
+            _event(
+                "nvd_change",
+                "extraction_enrichment",
+                snapshot_id,
+                generated_at,
+                [
+                    {
+                        "field": "nvd_status",
+                        "before": previous.get("nvd_status"),
+                        "after": current.get("nvd_status"),
+                    }
+                ],
+                "NVD enrichment availability changed. This does not alter KEV eligibility.",
+            )
+        )
+    if previous.get("conflicts") != current.get("conflicts") and (
+        previous.get("conflicts") != "unavailable" or current.get("conflicts") != "unavailable"
+    ):
+        change = _value_change(previous.get("conflicts"), current.get("conflicts"))
+        if change is not None:
+            events.append(
+                _event(
+                    "intelligence_conflict_change",
+                    "extraction_enrichment",
+                    snapshot_id,
+                    generated_at,
+                    [{"field": "conflicts", **change}],
+                    "Visible source conflicts changed. Conflicts are preserved, not resolved.",
+                )
+            )
     rem_change = _value_change(previous["remediation_items"], current["remediation_items"])
     if rem_change is not None or previous["remediation_status"] != current["remediation_status"]:
         events.append(

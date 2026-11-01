@@ -92,6 +92,12 @@ def validate_snapshot(payload: object, *, compatible: bool = False) -> dict[str,
         if not isinstance(links, dict):
             raise ValidationError(f"{cve_id} links are required")
         _validate_remediation(cve_id, record.get("remediation"))
+        _validate_intelligence(cve_id, record.get("intelligence"))
+    nvd_meta = sources.get("nvd")
+    if nvd_meta is not None:
+        if not isinstance(nvd_meta, dict):
+            raise ValidationError("Snapshot sources.nvd must be an object")
+        _require_string(nvd_meta, "status")
     changes = payload.get("changes")
     if not isinstance(changes, dict):
         raise ValidationError("Snapshot changes must be an object")
@@ -183,7 +189,7 @@ def _validate_remediation(cve_id: str, value: object) -> None:
     if status == "available" and not items:
         raise ValidationError(f"{cve_id} available remediation must include items")
     kinds = {"required_action", "verified_fix", "mitigation", "reference"}
-    sources = {"cisa_kev", "cve_list_v5"}
+    sources = {"cisa_kev", "cve_list_v5", "nvd"}
     for index, item in enumerate(items):
         if not isinstance(item, dict):
             raise ValidationError(f"{cve_id} remediation.items[{index}] must be an object")
@@ -196,6 +202,71 @@ def _validate_remediation(cve_id: str, value: object) -> None:
         url = item.get("url")
         if url is not None and sanitize_public_https_url(url) != url:
             raise ValidationError(f"{cve_id} remediation.items[{index}] has an unsafe url")
+
+
+def _validate_intelligence(cve_id: str, value: object) -> None:
+    if value is None:
+        return
+    if not isinstance(value, dict):
+        raise ValidationError(f"{cve_id} intelligence must be an object")
+    if value.get("composite_risk_score") not in (None,):
+        raise ValidationError(f"{cve_id} intelligence must not set a composite risk score")
+    identity = value.get("identity")
+    if not isinstance(identity, dict) or identity.get("cve_id") != cve_id:
+        raise ValidationError(f"{cve_id} intelligence.identity.cve_id mismatch")
+    cvss = value.get("cvss")
+    if cvss is not None:
+        if not isinstance(cvss, dict):
+            raise ValidationError(f"{cve_id} intelligence.cvss must be an object")
+        assessments = cvss.get("assessments")
+        if assessments is None:
+            assessments = []
+        if not isinstance(assessments, list):
+            raise ValidationError(f"{cve_id} intelligence.cvss.assessments must be an array")
+        for index, item in enumerate(assessments):
+            if not isinstance(item, dict):
+                raise ValidationError(f"{cve_id} cvss.assessments[{index}] must be an object")
+            if item.get("source") not in {"cve_cna", "nvd"}:
+                raise ValidationError(f"{cve_id} cvss.assessments[{index}] has an invalid source")
+            if item.get("cvss_version") not in {"2.0", "3.0", "3.1", "4.0"}:
+                raise ValidationError(f"{cve_id} cvss.assessments[{index}] has an invalid version")
+            if not isinstance(item.get("base_score"), (int, float)) or isinstance(item.get("base_score"), bool):
+                raise ValidationError(f"{cve_id} cvss.assessments[{index}] needs a numeric base_score")
+            if "metrics" in item and item["metrics"] is not None and not isinstance(item["metrics"], dict):
+                raise ValidationError(f"{cve_id} cvss.assessments[{index}].metrics must be an object")
+    remediation = value.get("remediation")
+    if isinstance(remediation, dict):
+        for index, item in enumerate(remediation.get("fixed_versions") or []):
+            if not isinstance(item, dict):
+                raise ValidationError(f"{cve_id} fixed_versions[{index}] must be an object")
+            if item.get("evidence") != "cna_changes_status_fixed":
+                raise ValidationError(
+                    f"{cve_id} fixed_versions[{index}] must cite explicit CNA fixed evidence"
+                )
+            if not isinstance(item.get("version"), str) or not item["version"].strip():
+                raise ValidationError(f"{cve_id} fixed_versions[{index}] needs a version")
+        for index, item in enumerate(remediation.get("vendor_advisories") or []):
+            if not isinstance(item, dict):
+                raise ValidationError(f"{cve_id} vendor_advisories[{index}] must be an object")
+            url = item.get("url")
+            if url is not None and sanitize_public_https_url(url) != url:
+                raise ValidationError(f"{cve_id} vendor_advisories[{index}] has an unsafe url")
+    for index, item in enumerate(value.get("references") or []):
+        if not isinstance(item, dict):
+            raise ValidationError(f"{cve_id} references[{index}] must be an object")
+        url = item.get("url")
+        if url is not None and sanitize_public_https_url(url) != url:
+            raise ValidationError(f"{cve_id} references[{index}] has an unsafe url")
+    sources = value.get("sources")
+    if sources is not None:
+        if not isinstance(sources, dict):
+            raise ValidationError(f"{cve_id} intelligence.sources must be an object")
+        for name in ("cisa_kev", "cve_list_v5", "nvd"):
+            meta = sources.get(name)
+            if meta is None:
+                continue
+            if not isinstance(meta, dict) or not isinstance(meta.get("status"), str):
+                raise ValidationError(f"{cve_id} intelligence.sources.{name} is invalid")
 
 
 def _require(payload: dict[str, Any], key: str, expected: str) -> None:
