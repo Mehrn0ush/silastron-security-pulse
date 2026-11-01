@@ -55,8 +55,10 @@ Persistent layout is documented in [collection-state.md](collection-state.md).
    frontend deploy when they diverge. Recovery verifies the original artifact
    and never silently rolls back `published/latest`.
 10. **CVE history is published-to-published.** Compact indexes are generated
-    from immutable snapshots at promote time. The explorer loads one CVE file
-    on demand and never treats extraction enrichment as an upstream change.
+    from immutable snapshots at promote time and merged into a durable ledger
+    so first-observed dates survive the 36-snapshot comparison window. The
+    explorer loads one bounded CVE file on demand and never treats extraction
+    enrichment as an upstream change. See [cve-history.md](cve-history.md).
 11. **No large upstream datasets are committed.** Tests use synthetic fixtures
    plus small official samples (one KEV excerpt and CVE-2021-44228). Live
    snapshots stay on `pulse-state` and workflow artifacts until publication is

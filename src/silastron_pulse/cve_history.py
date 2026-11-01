@@ -8,6 +8,7 @@ confirmed upstream KEV/CVE/CVSS changes.
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -15,11 +16,12 @@ from silastron_pulse.errors import ValidationError
 from silastron_pulse.ids import parse_cve_id
 from silastron_pulse.store import atomic_write_json, load_json_file, load_snapshot
 
-HISTORY_SCHEMA_VERSION = "1.0.0"
+HISTORY_SCHEMA_VERSION = "1.1.0"
 MAX_HISTORY_SNAPSHOTS = 36
 MAX_HISTORY_EVENTS_PER_CVE = 48
 HISTORY_INDEX_NAME = "history/index.json"
 HISTORY_CVE_DIR = "history/cves"
+HISTORY_LEDGER_DIR = "history/ledger/cves"
 
 KEV_FIELDS = (
     "vendor_project",
@@ -64,12 +66,94 @@ def build_cve_history(
     snapshots = _load_published_snapshots(
         published_dir, max_bytes=max_bytes, max_depth=max_depth
     )
-    bounded = snapshots[-MAX_HISTORY_SNAPSHOTS:]
-    dropped = max(0, len(snapshots) - len(bounded))
-    coverage = "bounded" if dropped else "complete_for_retained_snapshots"
-    first_retained = bounded[0]["snapshot_id"] if bounded else None
+    ledgers = _load_existing_ledgers(
+        published_dir, max_bytes=max_bytes, max_depth=max_depth
+    )
+    comparison = snapshots[-MAX_HISTORY_SNAPSHOTS:]
+    dropped = max(0, len(snapshots) - len(comparison))
+    snapshot_ids = {
+        item.get("snapshot_id")
+        for item in snapshots
+        if isinstance(item.get("snapshot_id"), str)
+    }
+    rebuilt = _rebuild_from_snapshots(snapshots)
     per_cve: dict[str, dict[str, Any]] = {}
-    for snapshot in bounded:
+    for cve_id in sorted(set(rebuilt) | set(ledgers)):
+        per_cve[cve_id] = _merge_history(
+            cve_id,
+            rebuilt.get(cve_id),
+            ledgers.get(cve_id),
+            snapshot_ids=snapshot_ids,
+            dropped=dropped,
+        )
+
+    documents = []
+    ledgers_out = []
+    for cve_id in sorted(per_cve):
+        ledger = per_cve[cve_id]
+        ledger.pop("_previous", None)
+        events = _dedupe_events(ledger.get("events") or [])
+        ledger["events"] = events
+        ledger["durable_event_count"] = len(events)
+        frontend_events, truncated = _frontend_events(events)
+        document = dict(ledger)
+        document["events"] = frontend_events
+        document["events_truncated"] = truncated
+        document["event_count"] = len(frontend_events)
+        document["frontend_event_limit"] = MAX_HISTORY_EVENTS_PER_CVE
+        documents.append(document)
+        ledgers_out.append(ledger)
+
+    coverage = "durable"
+    if dropped and not ledgers:
+        coverage = "bounded"
+    elif not dropped:
+        coverage = "complete_for_retained_snapshots"
+    index = {
+        "schema_version": HISTORY_SCHEMA_VERSION,
+        "generated_from": "published_snapshots_and_durable_ledger",
+        "coverage": coverage,
+        "retained_snapshot_count": len(snapshots),
+        "comparison_snapshot_count": len(comparison),
+        "omitted_older_snapshot_count": dropped,
+        "max_snapshots": MAX_HISTORY_SNAPSHOTS,
+        "max_frontend_events_per_cve": MAX_HISTORY_EVENTS_PER_CVE,
+        "cve_count": len(documents),
+        "cves": [
+            {
+                "cve_id": item["cve_id"],
+                "first_observed_snapshot_id": item["first_observed_snapshot_id"],
+                "first_observed_generated_at": item["first_observed_generated_at"],
+                "first_observed_may_be_incomplete": item["first_observed_may_be_incomplete"],
+                "kev_date_added": item["kev_date_added"],
+                "event_count": item["event_count"],
+                "durable_event_count": item["durable_event_count"],
+                "path": f"cves/{item['cve_id']}.json",
+            }
+            for item in documents
+        ],
+        "note": (
+            "History is published-to-published only. Collect-time candidate "
+            "changes are excluded. Remediation and completeness events are "
+            "extraction enrichment, not confirmed upstream vulnerability changes. "
+            "Values absent from earlier snapshots are marked unavailable, not invented. "
+            "first_observed and events persist in history/ledger after older "
+            "immutable snapshots are no longer compared. Frontend CVE files keep "
+            f"at most {MAX_HISTORY_EVENTS_PER_CVE} events plus first_observed."
+        ),
+    }
+    return {"index": index, "documents": documents, "ledgers": ledgers_out}
+
+
+def load_cve_history_document(published_dir: Path, cve_id: str, *, max_bytes: int, max_depth: int) -> dict[str, Any]:
+    parsed = parse_cve_id(cve_id)
+    path = published_dir / HISTORY_CVE_DIR / f"{parsed}.json"
+    return load_json_file(path, max_bytes=max_bytes, max_depth=max_depth)
+
+
+def _rebuild_from_snapshots(snapshots: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    per_cve: dict[str, dict[str, Any]] = {}
+    for snapshot in snapshots:
         generated_at = snapshot.get("generated_at")
         snapshot_id = snapshot.get("snapshot_id")
         if not isinstance(snapshot_id, str) or not isinstance(generated_at, str):
@@ -81,14 +165,12 @@ def build_cve_history(
                 cve_id = parse_cve_id(record.get("cve_id"))
             except ValidationError:
                 continue
-            entry = per_cve.setdefault(cve_id, _empty_history(cve_id, coverage, dropped))
+            entry = per_cve.setdefault(cve_id, _empty_history(cve_id, "complete_for_retained_snapshots", 0))
             view = _record_view(record)
             if entry["first_observed_snapshot_id"] is None:
                 entry["first_observed_snapshot_id"] = snapshot_id
                 entry["first_observed_generated_at"] = generated_at
-                entry["first_observed_may_be_incomplete"] = bool(
-                    dropped and snapshot_id == first_retained
-                )
+                entry["first_observed_may_be_incomplete"] = False
                 entry["kev_date_added"] = view["kev_date_added"]
                 entry["events"].append(
                     {
@@ -97,71 +179,190 @@ def build_cve_history(
                         "snapshot_id": snapshot_id,
                         "generated_at": generated_at,
                         "note": (
-                            "First appearance in the retained published snapshot set. "
-                            "This is not CISA KEV dateAdded."
+                            "First verifiable appearance in a published snapshot still "
+                            "available when this event was recorded. This is not CISA "
+                            "KEV dateAdded."
                         ),
                     }
                 )
             else:
-                previous = entry["_previous"]
-                events = _diff_views(
-                    previous,
-                    view,
-                    snapshot_id=snapshot_id,
-                    generated_at=generated_at,
+                entry["events"].extend(
+                    _diff_views(
+                        entry["_previous"],
+                        view,
+                        snapshot_id=snapshot_id,
+                        generated_at=generated_at,
+                    )
                 )
-                entry["events"].extend(events)
             entry["_previous"] = view
             entry["latest_snapshot_id"] = snapshot_id
             entry["latest_generated_at"] = generated_at
             if view["kev_date_added"] not in (None, "unavailable"):
                 entry["kev_date_added"] = view["kev_date_added"]
+    return per_cve
 
-    documents = []
-    for cve_id in sorted(per_cve):
-        document = per_cve[cve_id]
-        document.pop("_previous", None)
-        events = document["events"][:MAX_HISTORY_EVENTS_PER_CVE]
-        if len(document["events"]) > MAX_HISTORY_EVENTS_PER_CVE:
-            document["events_truncated"] = True
-        document["events"] = events
-        document["event_count"] = len(events)
-        documents.append(document)
 
-    index = {
-        "schema_version": HISTORY_SCHEMA_VERSION,
-        "generated_from": "published_snapshots",
-        "coverage": coverage,
-        "retained_snapshot_count": len(bounded),
-        "omitted_older_snapshot_count": dropped,
-        "max_snapshots": MAX_HISTORY_SNAPSHOTS,
-        "cve_count": len(documents),
-        "cves": [
-            {
-                "cve_id": item["cve_id"],
-                "first_observed_snapshot_id": item["first_observed_snapshot_id"],
-                "first_observed_generated_at": item["first_observed_generated_at"],
-                "first_observed_may_be_incomplete": item["first_observed_may_be_incomplete"],
-                "kev_date_added": item["kev_date_added"],
-                "event_count": item["event_count"],
-                "path": f"cves/{item['cve_id']}.json",
-            }
-            for item in documents
-        ],
-        "note": (
-            "History is published-to-published only. Collect-time candidate "
-            "changes are excluded. Remediation and completeness events are "
-            "extraction enrichment, not confirmed upstream vulnerability changes. "
-            "Values absent from earlier snapshots are marked unavailable, not invented."
-        ),
+def _merge_history(
+    cve_id: str,
+    rebuilt: dict[str, Any] | None,
+    ledger: dict[str, Any] | None,
+    *,
+    snapshot_ids: set[object],
+    dropped: int,
+) -> dict[str, Any]:
+    if rebuilt is None and ledger is None:
+        return _empty_history(cve_id, "durable", dropped)
+    if ledger is None:
+        assert rebuilt is not None
+        rebuilt["coverage"] = "durable" if dropped else rebuilt.get("coverage")
+        rebuilt["omitted_older_snapshot_count"] = dropped
+        return rebuilt
+    if rebuilt is None:
+        preserved = dict(ledger)
+        preserved["coverage"] = "durable"
+        preserved["omitted_older_snapshot_count"] = dropped
+        preserved["first_observed_may_be_incomplete"] = bool(
+            preserved.get("first_observed_may_be_incomplete")
+            or preserved.get("first_observed_snapshot_id") not in snapshot_ids
+        )
+        return preserved
+    merged = dict(rebuilt)
+    ledger_first_at = ledger.get("first_observed_generated_at")
+    rebuilt_first_at = rebuilt.get("first_observed_generated_at")
+    if _is_earlier(
+        ledger.get("first_observed_snapshot_id"),
+        ledger_first_at,
+        rebuilt.get("first_observed_snapshot_id"),
+        rebuilt_first_at,
+    ):
+        merged["first_observed_snapshot_id"] = ledger.get("first_observed_snapshot_id")
+        merged["first_observed_generated_at"] = ledger_first_at
+        merged["first_observed_may_be_incomplete"] = bool(
+            ledger.get("first_observed_may_be_incomplete")
+            or ledger.get("first_observed_snapshot_id") not in snapshot_ids
+        )
+    else:
+        merged["first_observed_may_be_incomplete"] = bool(
+            rebuilt.get("first_observed_may_be_incomplete") and dropped
+        )
+    if merged.get("kev_date_added") in (None, "unavailable"):
+        merged["kev_date_added"] = ledger.get("kev_date_added") or "unavailable"
+    merged["events"] = _dedupe_events(
+        _keep_earliest_first_observed(
+            list(ledger.get("events") or []) + list(rebuilt.get("events") or []),
+            snapshot_id=merged.get("first_observed_snapshot_id"),
+        )
+    )
+    merged["coverage"] = "durable"
+    merged["omitted_older_snapshot_count"] = dropped
+    return merged
+
+
+def _keep_earliest_first_observed(
+    events: list[dict[str, Any]],
+    *,
+    snapshot_id: object,
+) -> list[dict[str, Any]]:
+    first = [event for event in events if event.get("kind") == "first_observed"]
+    later = [event for event in events if event.get("kind") != "first_observed"]
+    if not first:
+        return later
+    chosen = None
+    for event in first:
+        if event.get("snapshot_id") == snapshot_id:
+            chosen = event
+            break
+    if chosen is None:
+        chosen = min(
+            first,
+            key=lambda item: (
+                str(item.get("generated_at") or ""),
+                str(item.get("snapshot_id") or ""),
+            ),
+        )
+    return [chosen] + later
+
+
+def _is_earlier(
+    left_id: object,
+    left_at: object,
+    right_id: object,
+    right_at: object,
+) -> bool:
+    if not left_at:
+        return False
+    if not right_at:
+        return True
+    return (str(left_at), str(left_id or "")) < (str(right_at), str(right_id or ""))
+
+
+def _dedupe_events(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    seen: set[str] = set()
+    unique: list[dict[str, Any]] = []
+    for event in events:
+        if not isinstance(event, dict):
+            continue
+        key = _event_key(event)
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(event)
+    unique.sort(
+        key=lambda item: (
+            str(item.get("generated_at") or ""),
+            str(item.get("snapshot_id") or ""),
+            str(item.get("kind") or ""),
+        )
+    )
+    return unique
+
+
+def _event_key(event: dict[str, Any]) -> str:
+    payload = {
+        "kind": event.get("kind"),
+        "classification": event.get("classification"),
+        "snapshot_id": event.get("snapshot_id"),
+        "generated_at": event.get("generated_at"),
+        "changes": event.get("changes") or [],
     }
-    return {"index": index, "documents": documents}
+    return json.dumps(payload, sort_keys=True, default=str, separators=(",", ":"))
 
 
-def load_cve_history_document(published_dir: Path, cve_id: str, *, max_bytes: int, max_depth: int) -> dict[str, Any]:
-    parsed = parse_cve_id(cve_id)
-    path = published_dir / HISTORY_CVE_DIR / f"{parsed}.json"
-    return load_json_file(path, max_bytes=max_bytes, max_depth=max_depth)
+def _frontend_events(events: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], bool]:
+    if len(events) <= MAX_HISTORY_EVENTS_PER_CVE:
+        return events, False
+    first = [event for event in events if event.get("kind") == "first_observed"][:1]
+    later = [event for event in events if event.get("kind") != "first_observed"]
+    keep = later[-(MAX_HISTORY_EVENTS_PER_CVE - len(first)) :]
+    return first + keep, True
+
+
+def _load_existing_ledgers(
+    published_dir: Path,
+    *,
+    max_bytes: int,
+    max_depth: int,
+) -> dict[str, dict[str, Any]]:
+    ledgers: dict[str, dict[str, Any]] = {}
+    for directory in (
+        published_dir / HISTORY_LEDGER_DIR,
+        published_dir / HISTORY_CVE_DIR,
+    ):
+        if not directory.is_dir():
+            continue
+        for path in sorted(directory.glob("CVE-*.json")):
+            try:
+                payload = load_json_file(path, max_bytes=max_bytes, max_depth=max_depth)
+                cve_id = parse_cve_id(payload.get("cve_id") or path.stem)
+            except (ValidationError, OSError):
+                continue
+            if cve_id in ledgers:
+                continue
+            events = payload.get("events")
+            if not isinstance(events, list):
+                continue
+            ledgers[cve_id] = payload
+    return ledgers
 
 
 def _empty_history(cve_id: str, coverage: str, dropped: int) -> dict[str, Any]:
@@ -400,19 +601,24 @@ def _canonicalize(value: Any) -> Any:
 
 
 def _replace_history_tree(published_dir: Path, built: dict[str, Any]) -> None:
-    history_root = published_dir / "history"
     cve_dir = published_dir / HISTORY_CVE_DIR
-    if history_root.exists():
-        for path in sorted(history_root.rglob("*"), reverse=True):
-            if path.is_file() or path.is_symlink():
-                path.unlink()
-            elif path.is_dir():
-                try:
-                    path.rmdir()
-                except OSError:
-                    pass
+    ledger_dir = published_dir / HISTORY_LEDGER_DIR
     cve_dir.mkdir(parents=True, exist_ok=True)
+    ledger_dir.mkdir(parents=True, exist_ok=True)
+    wanted = {parse_cve_id(document["cve_id"]) for document in built["documents"]}
     for document in built["documents"]:
-        parse_cve_id(document["cve_id"])
-        atomic_write_json(cve_dir / f"{document['cve_id']}.json", document)
+        cve_id = parse_cve_id(document["cve_id"])
+        atomic_write_json(cve_dir / f"{cve_id}.json", document)
+    for ledger in built.get("ledgers") or []:
+        cve_id = parse_cve_id(ledger["cve_id"])
+        atomic_write_json(ledger_dir / f"{cve_id}.json", ledger)
+    for directory in (cve_dir, ledger_dir):
+        for path in directory.glob("CVE-*.json"):
+            try:
+                parse_cve_id(path.stem)
+            except ValidationError:
+                path.unlink()
+                continue
+            if path.stem not in wanted:
+                path.unlink()
     atomic_write_json(published_dir / HISTORY_INDEX_NAME, built["index"])

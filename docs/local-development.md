@@ -7,7 +7,11 @@ cd silastron-security-pulse
 export PYTHONPATH=src
 python3 -m unittest discover -s tests -v
 python3 -m silastron_pulse validate preview/data/manifest.json
+cd tests/e2e && npm ci && npx playwright install chromium && npx playwright test
 ```
+
+Browser tests use Playwright against a local fixture site. They do not call
+production or live intelligence sources.
 
 ## Offline collection against fixtures
 
@@ -41,5 +45,6 @@ an unpublished placeholder, so the UI must show an unavailable state.
 | `python3 -m silastron_pulse validate dist/candidate.json` | Schema/semantic validation |
 | `python3 -m silastron_pulse promote --candidate dist/candidate.json --published-dir public/data` | Atomic replace of published files |
 | `python3 -m silastron_pulse write-unpublished --published-dir public/data` | Restore unpublished placeholders |
+| `make e2e` | Playwright explorer tests against local fixtures |
 
 `promote` refuses empty, failed, older, or sharply shrunken snapshots.

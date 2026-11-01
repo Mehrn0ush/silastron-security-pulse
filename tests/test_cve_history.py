@@ -118,7 +118,7 @@ class CveHistoryTests(unittest.TestCase):
         )
         second = (self.published / "history" / "index.json").read_bytes()
         self.assertEqual(first, second)
-        self.assertEqual(rebuilt["generated_from"], "published_snapshots")
+        self.assertEqual(rebuilt["generated_from"], "published_snapshots_and_durable_ledger")
         self.assertEqual(rebuilt["cve_count"], 2)
 
     def test_history_never_reads_candidates(self) -> None:
@@ -134,6 +134,92 @@ class CveHistoryTests(unittest.TestCase):
         self.assertIn("published-to-published only", built["index"]["note"])
         self.assertTrue((self.published / "snapshots" / f"{self.first['snapshot_id']}.json").exists())
         _ = candidate_dir
+
+    def test_first_observed_survives_beyond_36_snapshots(self) -> None:
+        self._promote(self.first)
+        first_id = self.first["snapshot_id"]
+        template = json.loads((self.published / "latest.json").read_text(encoding="utf-8"))
+        for index in range(40):
+            later = copy.deepcopy(template)
+            later["generated_at"] = f"2099-02-{(index // 24) + 1:02d}T{index % 24:02d}:00:00Z"
+            later["collection_completed_at"] = later["generated_at"]
+            later["snapshot_id"] = f"hist-{index:02d}"
+            later["records"][0]["cve"]["description"] = f"CNA text {index}"
+            (self.published / "snapshots" / f"{later['snapshot_id']}.json").write_text(
+                json.dumps(later, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+        write_cve_history(
+            self.published,
+            max_bytes=self.config.max_snapshot_bytes,
+            max_depth=self.config.max_json_depth,
+        )
+        document = json.loads(
+            (self.published / "history" / "cves" / "CVE-2099-0001.json").read_text(encoding="utf-8")
+        )
+        ledger = json.loads(
+            (self.published / "history" / "ledger" / "cves" / "CVE-2099-0001.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(document["first_observed_snapshot_id"], first_id)
+        self.assertGreater(ledger["durable_event_count"], 36)
+        newest = json.loads(
+            (self.published / "snapshots" / "hist-39.json").read_text(encoding="utf-8")
+        )
+        (self.published / "latest.json").write_text(
+            json.dumps(newest, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        (self.published / "snapshots" / f"{first_id}.json").unlink()
+        for path in (self.published / "snapshots").glob("hist-*.json"):
+            if int(path.stem.split("-")[1]) < 36:
+                path.unlink()
+        write_cve_history(
+            self.published,
+            max_bytes=self.config.max_snapshot_bytes,
+            max_depth=self.config.max_json_depth,
+        )
+        again = json.loads(
+            (self.published / "history" / "cves" / "CVE-2099-0001.json").read_text(encoding="utf-8")
+        )
+        again_ledger = json.loads(
+            (self.published / "history" / "ledger" / "cves" / "CVE-2099-0001.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(again["first_observed_snapshot_id"], first_id)
+        self.assertEqual(again_ledger["durable_event_count"], ledger["durable_event_count"])
+        kinds = [event["kind"] for event in again_ledger["events"]]
+        self.assertEqual(kinds.count("first_observed"), 1)
+        self.assertIn("cna_change", kinds)
+        self.assertTrue(all("classification" in event for event in again_ledger["events"]))
+
+    def test_retry_does_not_duplicate_events(self) -> None:
+        self._promote(self.first)
+        later = copy.deepcopy(self.first)
+        later["generated_at"] = "2099-01-10T13:00:00Z"
+        later["collection_completed_at"] = "2099-01-10T13:00:00Z"
+        later["snapshot_id"] = "retry-1"
+        later["records"][0]["cve"]["description"] = "Changed once"
+        self._promote(later, now=datetime(2099, 1, 10, 15, tzinfo=timezone.utc))
+        first = json.loads(
+            (self.published / "history" / "ledger" / "cves" / "CVE-2099-0001.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        write_cve_history(
+            self.published,
+            max_bytes=self.config.max_snapshot_bytes,
+            max_depth=self.config.max_json_depth,
+        )
+        second = json.loads(
+            (self.published / "history" / "ledger" / "cves" / "CVE-2099-0001.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(first["events"], second["events"])
+        self.assertEqual(first["durable_event_count"], second["durable_event_count"])
 
 
 if __name__ == "__main__":
