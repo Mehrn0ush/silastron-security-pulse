@@ -24,7 +24,8 @@
 | Artifact identity | Publish binds one Collect run ID, workflow path **and** name, digest, and SHA. Auto-publish accepts only scheduled Collect on main |
 | KEV catalog binding | Candidate CVE IDs and material KEV fields must match the Collect-time catalog in the same artifact. Candidate hashes are not independent proof |
 | KEV source integrity | Collect fetches only the documented CISA JSON URL, validates status/content-type/size/structure, compares parsed records to the original bytes, and stores the upstream SHA-256 plus provenance. HTTPS is not publisher authentication. CISA publishes no independent feed checksum; the kev-data git mirror is not used as corroboration |
-| Deploy/persist reconciliation | `publication-status.json` distinguishes consistent, deployed-unpersisted, unknown, and blocked states. Later publication and frontend deploy fail closed on divergence |
+| Deploy/persist reconciliation | `publication-intent.json` is persisted and verified before Pages deploy. `publication-status.json` distinguishes pending_deploy, failed, consistent, deployed-unpersisted, unknown, and blocked. Later publication and frontend deploy fail closed on unresolved publication. A successful Actions job is not treated as proof of CDN visibility |
+| Enrichment availability | Optional CVE List V5 gaps cannot invalidate a verified KEV catalog by themselves. Unclassified, unexpected, or systemic enrichment loss still rejects. No fabricated CVSS, product, version, CWE, or remediation values |
 | Untrusted interpolation | Artifact `snapshot_id` cannot enter a shell command; run IDs must be numeric; copies refuse symlinks |
 | Path-restricted links | Preview and `authoritative_href` allow only KEV catalog, CVE.org record, and cvelistV5 blob paths |
 | Least privilege | Collect may write `pulse-state` only; Pages write only on the deploy job |

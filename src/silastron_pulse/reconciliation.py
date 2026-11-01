@@ -24,6 +24,7 @@ from silastron_pulse.store import (
 )
 
 PUBLICATION_STATUS_NAME = "publication-status.json"
+PUBLICATION_INTENT_NAME = "publication-intent.json"
 DEPLOY_RECEIPT_NAME = "deploy-receipt.json"
 PUBLICATION_STATUS_SCHEMA = "1.0.0"
 CONSISTENT = "consistent"
@@ -31,16 +32,19 @@ DEPLOYED_UNPERSISTED = "deployed_unpersisted"
 UNKNOWN = "unknown"
 BLOCKED = "blocked"
 PENDING_DEPLOY = "pending_deploy"
+FAILED = "failed"
 RECOVERY_STATES = frozenset(
-    {CONSISTENT, DEPLOYED_UNPERSISTED, UNKNOWN, BLOCKED, PENDING_DEPLOY}
+    {CONSISTENT, DEPLOYED_UNPERSISTED, UNKNOWN, BLOCKED, PENDING_DEPLOY, FAILED}
 )
-BLOCKING_STATES = frozenset({DEPLOYED_UNPERSISTED, UNKNOWN, BLOCKED, PENDING_DEPLOY})
+BLOCKING_STATES = frozenset({DEPLOYED_UNPERSISTED, UNKNOWN, BLOCKED})
 RECONCILE_CONFIRM = "RECONCILE"
 CLASSIFICATION_LABELS = {
     "deployment_failed_before_publication": "Deployment failed before publication.",
     "deployment_succeeded_persist_failed": "Deployment succeeded but persistence failed.",
     "persistence_succeeded_and_consistent": "Persistence succeeded and deployment is consistent.",
     "deployment_outcome_unknown": "Deployment outcome is unknown.",
+    "intent_recorded_pending_deploy": "Publication intent is recorded; Pages deploy has not completed.",
+    "deployment_job_succeeded_content_unconfirmed": "Deploy job succeeded; the public Pages manifest is not yet confirmed.",
 }
 
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -121,6 +125,14 @@ def publication_status_block_reason(
             "Refusing to publish on an unverified baseline. "
             + operator_recovery_instructions(None)
         )
+    if status.get("state") == PENDING_DEPLOY:
+        return (
+            "Publication intent is recorded and Pages deploy is not confirmed consistent. "
+            "This is an unresolved publication, not proof the CDN serves the intended snapshot. "
+            + operator_recovery_instructions(status)
+        )
+    if status.get("state") == FAILED:
+        return None
     if status.get("state") not in BLOCKING_STATES:
         return None
     classification = status.get("classification") or "deployment_outcome_unknown"
@@ -345,13 +357,17 @@ def reconcile_publication(
 def operator_recovery_instructions(status: dict[str, Any] | None) -> str:
     identities = _identity_lines(status) if status else ""
     return (
-        "Operator recovery: 1) Do not dispatch Deploy frontend. "
-        "2) Re-run the failed persist-published job on the Publish run that "
-        "deployed this snapshot, or dispatch silastron-pulse reconcile-publication "
+        "Operator recovery: 1) Do not dispatch Deploy frontend while "
+        "publication-status state is pending_deploy, deployed_unpersisted, "
+        "unknown, or blocked. 2) If Pages deploy failed after intent was "
+        "recorded, re-run mark-deploy-failed or write publication-status "
+        "state=failed so later publication is not permanently locked. "
+        "3) If Pages deploy succeeded, re-run persist-published on that "
+        "Publish run, or dispatch silastron-pulse reconcile-publication "
         "with --confirm RECONCILE, the original Collect artifact "
         "(pulse-published / latest.json), --expected-snapshot-id, "
         "--expected-digest, and --expected-collect-run-id. "
-        "3) Recovery verifies the original validated artifact and the "
+        "4) Recovery verifies the original validated artifact and the "
         "publication transition before writing publication-status.json. "
         "It never overwrites a different published/latest or deletes "
         f"immutable snapshots. {identities}"
@@ -392,3 +408,84 @@ def _format_now(now: datetime) -> str:
     from silastron_pulse.clock import format_datetime
 
     return format_datetime(now)
+
+
+def publication_intent_path(published_dir: Path) -> Path:
+    return published_dir / PUBLICATION_INTENT_NAME
+
+
+def build_publication_intent(
+    *,
+    now: datetime,
+    snapshot_id: str,
+    collect_run_id: str,
+    candidate_digest: str,
+    expected_previous_snapshot_id: str | None,
+    deployment_run_id: str,
+    state: str = PENDING_DEPLOY,
+) -> dict[str, Any]:
+    require_safe_token(snapshot_id, label="snapshot_id")
+    require_run_id(collect_run_id)
+    require_run_id(deployment_run_id)
+    if not _SHA256_RE.fullmatch(candidate_digest):
+        raise ValidationError("publication intent digest is not a SHA-256 hex digest")
+    if expected_previous_snapshot_id:
+        require_safe_token(expected_previous_snapshot_id, label="expected_previous_snapshot_id")
+    return {
+        "schema_version": PUBLICATION_STATUS_SCHEMA,
+        "state": state,
+        "updated_at": _format_now(now),
+        "snapshot_id": snapshot_id,
+        "collect_run_id": str(collect_run_id),
+        "deployment_run_id": str(deployment_run_id),
+        "candidate_digest": candidate_digest,
+        "expected_previous_snapshot_id": expected_previous_snapshot_id,
+        "note": (
+            "Intent is recorded before Pages deploy. A successful deploy-pages "
+            "job is not proof the public CDN serves this snapshot."
+        ),
+    }
+
+
+def write_publication_intent(published_dir: Path, payload: dict[str, Any]) -> dict[str, Any]:
+    published_dir.mkdir(parents=True, exist_ok=True)
+    path = publication_intent_path(published_dir)
+    body = json.dumps(payload, indent=2, sort_keys=True) + "\n"
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.write_text(body, encoding="utf-8")
+    tmp.replace(path)
+    return payload
+
+
+def load_publication_intent(
+    published_dir: Path, *, max_bytes: int, max_depth: int
+) -> dict[str, Any]:
+    path = publication_intent_path(published_dir)
+    if not path.exists():
+        raise PublishGuardError("publication-intent.json is missing")
+    payload = load_json_file(path, max_bytes=max_bytes, max_depth=max_depth)
+    for key in ("snapshot_id", "collect_run_id", "candidate_digest", "deployment_run_id"):
+        if not payload.get(key):
+            raise PublishGuardError(f"publication intent is missing {key}")
+    return payload
+
+
+def assert_intent_matches(
+    published_dir: Path,
+    *,
+    snapshot_id: str,
+    collect_run_id: str,
+    candidate_digest: str,
+    max_bytes: int,
+    max_depth: int,
+) -> dict[str, Any]:
+    intent = load_publication_intent(
+        published_dir, max_bytes=max_bytes, max_depth=max_depth
+    )
+    if intent.get("snapshot_id") != snapshot_id:
+        raise PublishGuardError("publication intent snapshot_id does not match the validated candidate")
+    if str(intent.get("collect_run_id")) != str(collect_run_id):
+        raise PublishGuardError("publication intent collect_run_id does not match the bound Collect run")
+    if intent.get("candidate_digest") != candidate_digest:
+        raise PublishGuardError("publication intent digest does not match the validated candidate")
+    return intent
