@@ -80,7 +80,8 @@ class PreviewDashboardTests(unittest.TestCase):
         self.assertIn('id="catalog-sort"', html)
         self.assertIn("Critical (9.0–10.0)", html)
         self.assertIn('addEventListener("click", loadCatalog)', js)
-        self.assertNotIn("loadCatalog();", js.replace("function loadCatalog()", ""))
+        self.assertIn("parseCveHash", js)
+        self.assertIn('addEventListener("hashchange", applyCveHash)', js)
         self.assertIn("rowMatches", js)
         self.assertIn("cvssMatches", js)
         self.assertIn("buildRecordDetails", js)
@@ -92,7 +93,6 @@ class PreviewDashboardTests(unittest.TestCase):
         self.assertNotIn("Verified Fix", js)
         self.assertIn("fallbackRemediation", js)
         self.assertIn("safePublicHttpsUrl", js)
-        self.assertNotIn("loadCatalog();", js.replace("function loadCatalog()", ""))
 
     def test_accessibility_and_responsive_hooks(self) -> None:
         html = (ROOT / "preview" / "index.html").read_text(encoding="utf-8")

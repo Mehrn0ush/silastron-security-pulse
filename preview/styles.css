@@ -636,6 +636,36 @@ footer {
   }
 }
 
+#cve-detail {
+  margin-top: 1.5rem;
+}
+
+#cve-detail details {
+  margin: 0.75rem 0;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+#cve-detail summary {
+  cursor: pointer;
+  font-weight: 650;
+}
+
+#cve-detail table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.5rem 0 1rem;
+}
+
+#cve-detail th,
+#cve-detail td {
+  border-bottom: 1px solid var(--border);
+  padding: 0.4rem 0.5rem;
+  text-align: left;
+  vertical-align: top;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
