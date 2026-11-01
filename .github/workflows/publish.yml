@@ -216,10 +216,71 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
-  deploy:
-    name: Deploy Pages
+  record-publication-intent:
+    name: Record publication intent
     needs: build
     if: needs.build.outputs.decision == 'publish'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout publisher
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - name: Checkout pulse-state
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: pulse-state
+          path: pulse-state
+
+      - name: Persist intent before Pages deploy
+        env:
+          PYTHONPATH: src
+          SNAPSHOT_ID: ${{ needs.build.outputs.snapshot_id }}
+          COLLECT_RUN_ID: ${{ needs.build.outputs.collect_run_id }}
+          DIGEST: ${{ needs.build.outputs.digest }}
+          DEPLOYMENT_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          previous=""
+          if [ -f pulse-state/published/latest.json ]; then
+            previous="$(python3 -c 'import json; print(json.load(open("pulse-state/published/latest.json")).get("snapshot_id") or "")')"
+          fi
+          python3 -m silastron_pulse write-publication-intent \
+            --published-dir pulse-state/published \
+            --snapshot-id "${SNAPSHOT_ID}" \
+            --collect-run-id "${COLLECT_RUN_ID}" \
+            --candidate-digest "${DIGEST}" \
+            --deployment-run-id "${DEPLOYMENT_RUN_ID}" \
+            --expected-previous-snapshot-id "${previous}" \
+            --state pending_deploy
+          python3 -m silastron_pulse write-publication-status \
+            --published-dir pulse-state/published \
+            --state pending_deploy \
+            --classification intent_recorded_pending_deploy \
+            --snapshot-id "${SNAPSHOT_ID}" \
+            --collect-run-id "${COLLECT_RUN_ID}" \
+            --deployment-run-id "${DEPLOYMENT_RUN_ID}" \
+            --manifest-digest "${DIGEST}" \
+            --note "Intent recorded before Pages deploy. A successful deploy-pages job is not proof the CDN serves this snapshot."
+          python3 -m silastron_pulse verify-publication-intent \
+            --published-dir pulse-state/published \
+            --snapshot-id "${SNAPSHOT_ID}" \
+            --collect-run-id "${COLLECT_RUN_ID}" \
+            --candidate-digest "${DIGEST}"
+          cd pulse-state
+          git add published/publication-intent.json published/publication-status.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "publication-intent ${SNAPSHOT_ID}"
+          git push origin HEAD:pulse-state
+
+  deploy:
+    name: Deploy Pages
+    needs: [build, record-publication-intent]
+    if: needs.build.outputs.decision == 'publish' && needs.record-publication-intent.result == 'success'
     runs-on: ubuntu-24.04
     environment:
       name: github-pages
@@ -307,6 +368,25 @@ jobs:
           name: pulse-published
           path: published-data
 
+      - name: Observe public Pages manifest
+        env:
+          PYTHONPATH: src
+          SNAPSHOT_ID: ${{ needs.build.outputs.snapshot_id }}
+          PULSE_PAGES_MANIFEST_URL: https://pulse.silastron.com/data/manifest.json
+        run: |
+          set -euo pipefail
+          python3 -m silastron_pulse observe-pages-manifest \
+            --url "${PULSE_PAGES_MANIFEST_URL}" \
+            --expected-snapshot-id "${SNAPSHOT_ID}" \
+            --attempts 3 > /tmp/pages-observe.json || true
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("/tmp/pages-observe.json")
+          payload = json.loads(path.read_text()) if path.exists() and path.stat().st_size else {"status": "unconfirmed"}
+          print(json.dumps(payload, indent=2))
+          PY
+
       - name: Verify publication transition
         env:
           PYTHONPATH: src
@@ -353,6 +433,51 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -F /tmp/publish-commit-msg
+          git push origin HEAD:pulse-state
+
+  mark-deploy-failed:
+    name: Mark failed or skipped Pages deploy
+    needs: [build, record-publication-intent, deploy]
+    if: ${{ always() && needs.build.outputs.decision == 'publish' && needs.record-publication-intent.result == 'success' && needs.deploy.result != 'success' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout publisher
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+      - name: Checkout pulse-state
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: pulse-state
+          path: pulse-state
+      - name: Record failed deploy without locking later publication
+        env:
+          PYTHONPATH: src
+          SNAPSHOT_ID: ${{ needs.build.outputs.snapshot_id }}
+          COLLECT_RUN_ID: ${{ needs.build.outputs.collect_run_id }}
+          DIGEST: ${{ needs.build.outputs.digest }}
+          DEPLOYMENT_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python3 -m silastron_pulse write-publication-status \
+            --published-dir pulse-state/published \
+            --state failed \
+            --classification deployment_failed_before_publication \
+            --snapshot-id "${SNAPSHOT_ID}" \
+            --collect-run-id "${COLLECT_RUN_ID}" \
+            --deployment-run-id "${DEPLOYMENT_RUN_ID}" \
+            --manifest-digest "${DIGEST}" \
+            --note "Pages deploy did not succeed after intent was recorded. This is not a permanent lock. The previous published snapshot remains the publication baseline."
+          cd pulse-state
+          git add published/publication-status.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "deploy-failed ${SNAPSHOT_ID}"
           git push origin HEAD:pulse-state
 
   record-divergence:

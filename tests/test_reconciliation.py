@@ -284,6 +284,99 @@ class ReconciliationTests(unittest.TestCase):
         )
         self.assertEqual(manual.reason, "publication_diverged")
 
+    def test_pending_intent_blocks_publish_and_frontend(self) -> None:
+        copytree(self.incoming, self.published)
+        self._status(
+            "pending_deploy",
+            snapshot_id="never-deployed-snapshot",
+            classification="intent_recorded_pending_deploy",
+        )
+        decision = self._decide()
+        self.assertEqual(decision.reason, "publication_diverged")
+        self.assertEqual(
+            main(
+                [
+                    "verify-publication-status",
+                    "--published-dir",
+                    str(self.published),
+                    "--require",
+                    "consistent",
+                ]
+            ),
+            1,
+        )
+
+    def test_missing_intent_refuses_deploy(self) -> None:
+        from silastron_pulse.reconciliation import assert_intent_matches
+
+        copytree(self.incoming, self.published)
+        with self.assertRaises(PublishGuardError):
+            assert_intent_matches(
+                self.published,
+                snapshot_id=self.snapshot_id,
+                collect_run_id="99",
+                candidate_digest=self.digest,
+                max_bytes=self.config.max_snapshot_bytes,
+                max_depth=self.config.max_json_depth,
+            )
+
+    def test_intent_mismatch_refuses_deploy(self) -> None:
+        from silastron_pulse.reconciliation import (
+            assert_intent_matches,
+            build_publication_intent,
+            write_publication_intent,
+        )
+
+        write_publication_intent(
+            self.published,
+            build_publication_intent(
+                now=NOW,
+                snapshot_id=self.snapshot_id,
+                collect_run_id="99",
+                candidate_digest=self.digest,
+                expected_previous_snapshot_id=None,
+                deployment_run_id="100",
+            ),
+        )
+        with self.assertRaises(PublishGuardError):
+            assert_intent_matches(
+                self.published,
+                snapshot_id="other-snapshot",
+                collect_run_id="99",
+                candidate_digest=self.digest,
+                max_bytes=self.config.max_snapshot_bytes,
+                max_depth=self.config.max_json_depth,
+            )
+
+    def test_cdn_delay_is_unconfirmed_not_success(self) -> None:
+        from silastron_pulse.pages_observe import observe_pages_manifest
+
+        observed = observe_pages_manifest(
+            "https://pulse.silastron.com/data/manifest.json",
+            expected_snapshot_id="new-snapshot",
+            attempts=2,
+            fetcher=lambda _url: {"snapshot_id": "old-snapshot"},
+        )
+        self.assertEqual(observed["status"], "unconfirmed")
+        self.assertEqual(observed["visibility"], "unconfirmed")
+        self.assertEqual(observed["observed_snapshot_id"], "old-snapshot")
+
+    def test_failed_state_allows_later_publish(self) -> None:
+        write_publication_status(
+            self.published,
+            build_publication_status(
+                state="failed",
+                classification="deployment_failed_before_publication",
+                now=NOW,
+                snapshot_id="abandoned",
+                collect_run_id="99",
+                deployment_run_id="100",
+                manifest_digest=self.digest,
+            ),
+        )
+        decision = self._decide()
+        self.assertNotEqual(decision.reason, "publication_diverged")
+
 
 if __name__ == "__main__":
     unittest.main()
