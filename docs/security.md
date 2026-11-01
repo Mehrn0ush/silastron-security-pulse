@@ -23,6 +23,8 @@
 | Fail closed | Failed collect writes `collection-status.json` and does not rewrite pulse-state |
 | Artifact identity | Publish binds one Collect run ID, workflow path **and** name, digest, and SHA. Auto-publish accepts only scheduled Collect on main |
 | KEV catalog binding | Candidate CVE IDs and material KEV fields must match the Collect-time catalog in the same artifact. Candidate hashes are not independent proof |
+| KEV source integrity | Collect fetches only the documented CISA JSON URL, validates status/content-type/size/structure, compares parsed records to the original bytes, and stores the upstream SHA-256 plus provenance. HTTPS is not publisher authentication. CISA publishes no independent feed checksum; the kev-data git mirror is not used as corroboration |
+| Deploy/persist reconciliation | `publication-status.json` distinguishes consistent, deployed-unpersisted, unknown, and blocked states. Later publication and frontend deploy fail closed on divergence |
 | Untrusted interpolation | Artifact `snapshot_id` cannot enter a shell command; run IDs must be numeric; copies refuse symlinks |
 | Path-restricted links | Preview and `authoritative_href` allow only KEV catalog, CVE.org record, and cvelistV5 blob paths |
 | Least privilege | Collect may write `pulse-state` only; Pages write only on the deploy job |

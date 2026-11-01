@@ -47,6 +47,9 @@ jobs:
             echo "Published snapshot is missing"
             exit 1
           fi
+          python3 -m silastron_pulse verify-publication-status \
+            --published-dir pulse-state/published \
+            --require consistent
           python3 -m silastron_pulse verify-published-site \
             --published-dir pulse-state/published
           mkdir -p _site/data

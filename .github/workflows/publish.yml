@@ -233,10 +233,58 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
 
+  record-deploy-receipt:
+    name: Record deploy receipt
+    needs: [build, deploy]
+    if: needs.build.outputs.decision == 'publish' && needs.deploy.result == 'success'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout publisher
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - name: Checkout pulse-state
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: pulse-state
+          path: pulse-state
+
+      - name: Record deployed-unpersisted receipt
+        env:
+          PYTHONPATH: src
+          SNAPSHOT_ID: ${{ needs.build.outputs.snapshot_id }}
+          COLLECT_RUN_ID: ${{ needs.build.outputs.collect_run_id }}
+          DIGEST: ${{ needs.build.outputs.digest }}
+          DEPLOYMENT_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python3 -m silastron_pulse write-publication-status \
+            --published-dir pulse-state/published \
+            --state deployed_unpersisted \
+            --classification deployment_succeeded_persist_failed \
+            --snapshot-id "${SNAPSHOT_ID}" \
+            --collect-run-id "${COLLECT_RUN_ID}" \
+            --deployment-run-id "${DEPLOYMENT_RUN_ID}" \
+            --manifest-digest "${DIGEST}" \
+            --note "GitHub Pages deploy succeeded. pulse-state published/ has not yet been persisted. GitHub Pages cannot update atomically with the state branch."
+          cd pulse-state
+          git add published/publication-status.json
+          if git diff --cached --quiet; then
+            echo "Deploy receipt already recorded."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "deploy-receipt ${SNAPSHOT_ID}"
+          git push origin HEAD:pulse-state
+
   persist-published:
     name: Persist published snapshot to pulse-state
-    needs: [build, deploy]
-    if: needs.build.outputs.decision == 'publish'
+    needs: [build, deploy, record-deploy-receipt]
+    if: ${{ always() && needs.build.outputs.decision == 'publish' && needs.deploy.result == 'success' }}
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -277,6 +325,17 @@ jobs:
           python3 -m silastron_pulse safe-copy \
             --src published-data \
             --dst pulse-state/published
+          python3 -m silastron_pulse write-publication-status \
+            --published-dir pulse-state/published \
+            --state consistent \
+            --classification persistence_succeeded_and_consistent \
+            --snapshot-id "${SNAPSHOT_ID}" \
+            --collect-run-id "${{ needs.build.outputs.collect_run_id }}" \
+            --deployment-run-id "${{ github.run_id }}" \
+            --manifest-digest "${{ needs.build.outputs.digest }}" \
+            --persisted-snapshot-id "${SNAPSHOT_ID}" \
+            --persisted-manifest-digest "${{ needs.build.outputs.digest }}" \
+            --note "Persistence succeeded and matches the deployed snapshot. GitHub Pages deploy and pulse-state persist are still not atomic."
           python3 - <<'PY'
           import os, re
           from pathlib import Path
@@ -296,26 +355,69 @@ jobs:
           git commit -F /tmp/publish-commit-msg
           git push origin HEAD:pulse-state
 
-  warn-pages-state-divergence:
-    name: Warn if Pages deployed without persisted state
+  record-divergence:
+    name: Record unresolved deploy/persist divergence
     needs: [build, deploy, persist-published]
     if: ${{ always() && needs.build.outputs.decision == 'publish' && needs.deploy.result == 'success' && needs.persist-published.result != 'success' }}
     runs-on: ubuntu-24.04
     permissions:
-      contents: read
+      contents: write
     steps:
-      - name: Record reconciliation procedure
+      - name: Checkout publisher
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - name: Checkout pulse-state
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: pulse-state
+          path: pulse-state
+
+      - name: Write blocking reconciliation state
+        env:
+          PYTHONPATH: src
+          SNAPSHOT_ID: ${{ needs.build.outputs.snapshot_id }}
+          COLLECT_RUN_ID: ${{ needs.build.outputs.collect_run_id }}
+          DIGEST: ${{ needs.build.outputs.digest }}
+          DEPLOYMENT_RUN_ID: ${{ github.run_id }}
         run: |
+          set -euo pipefail
+          python3 -m silastron_pulse write-publication-status \
+            --published-dir pulse-state/published \
+            --state deployed_unpersisted \
+            --classification deployment_succeeded_persist_failed \
+            --snapshot-id "${SNAPSHOT_ID}" \
+            --collect-run-id "${COLLECT_RUN_ID}" \
+            --deployment-run-id "${DEPLOYMENT_RUN_ID}" \
+            --manifest-digest "${DIGEST}" \
+            --note "Backstop receipt: Pages deploy succeeded and persist did not. Further automated publication is blocked until reconcile-publication verifies the original artifact."
+          cd pulse-state
+          git add published/publication-status.json
+          if ! git diff --cached --quiet; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "divergence ${SNAPSHOT_ID}"
+            git push origin HEAD:pulse-state
+          fi
           {
-            echo "## Pages and pulse-state may have diverged"
+            echo "## Pages and pulse-state have diverged"
             echo
             echo "GitHub Pages deploy succeeded, but \`pulse-state\` \`published/\` was not persisted."
             echo "GitHub Pages cannot be updated atomically with the state branch."
             echo
-            echo "Reconcile before the next frontend deploy:"
-            echo "1. Re-run the failed \`persist-published\` job on this workflow run, or"
-            echo "2. Dispatch Publish with the same Collect run ID."
+            echo "- Collect run ID: \`${COLLECT_RUN_ID}\`"
+            echo "- Snapshot ID: \`${SNAPSHOT_ID}\`"
+            echo "- Manifest digest: \`${DIGEST}\`"
+            echo "- Deployment run: \`${DEPLOYMENT_RUN_ID}\`"
             echo
-            echo "Do not run Deploy frontend until persist succeeds; it copies the older pulse-state snapshot onto Pages."
+            echo "Further automated publication is blocked until reconciliation succeeds."
+            echo
+            echo "Operator recovery:"
+            echo "1. Do not dispatch Deploy frontend."
+            echo "2. Re-run the failed \`persist-published\` job on this workflow run, or"
+            echo "3. Run \`silastron-pulse reconcile-publication --confirm RECONCILE --incoming <pulse-published> --current pulse-state/published --expected-snapshot-id ${SNAPSHOT_ID} --expected-digest ${DIGEST} --expected-collect-run-id ${COLLECT_RUN_ID}\`."
+            echo
+            echo "Recovery verifies the original validated artifact before repairing state. It never overwrites a different published/latest or deletes immutable snapshots."
           } >> "$GITHUB_STEP_SUMMARY"
           exit 1

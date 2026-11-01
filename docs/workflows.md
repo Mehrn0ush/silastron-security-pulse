@@ -51,12 +51,17 @@ only until an operator dispatches Publish with that run ID.
   content SHA-256 (against `candidate.meta.json`, `SHA256SUMS`, and the expected
   content digest). GitHub `artifact.digest` is the zip archive hash and is not
   compared to `candidate.json`. Candidate records must match the Collect-time
-  KEV catalog bundled in the same artifact (`source-kev-catalog.json`).
+  KEV catalog bundled in the same artifact (`source-kev-catalog.json`) and the
+  Collect-time provenance digest (`source-kev-provenance.json`).
   Publication does not re-fetch CISA.
 - Artifact trees refuse extra files and symlinks. `snapshot_id` is not
   interpolated into a shell command.
-- `persist-published` needs `[build, deploy]` so a failed deploy is not recorded
-  as a successful publication
+- `record-deploy-receipt` writes `published/publication-status.json` as
+  `deployed_unpersisted` after a successful Pages deploy. `persist-published`
+  then copies the validated artifact and marks `consistent`.
+- `persist-published` needs `[build, deploy, record-deploy-receipt]` and still
+  runs when the receipt job fails, but only after `deploy` succeeded. A failed
+  deploy is not recorded as a successful publication.
 - Copies actual `pulse-state/published` into the promote directory so replay is
   compared against last published state
 - Deploy job permissions: `pages: write`, `id-token: write`
@@ -66,10 +71,11 @@ only until an operator dispatches Publish with that run ID.
   to `pulse-state`. A stale baseline is refused even if another Publish run
   already persisted. Workflow `concurrency: pages` is not the only guard.
 - GitHub Pages deploy and `pulse-state` persist are not a single atomic write.
-  If persist fails after a successful deploy, `warn-pages-state-divergence`
-  fails the workflow and documents reconciliation: re-run `persist-published`
-  or dispatch Publish with the same Collect run ID. Do not run Deploy frontend
-  until persist succeeds.
+  If persist fails after a successful deploy, `record-divergence` writes a
+  blocking `publication-status.json` and fails the workflow. Later automated
+  or manual Publish, and Deploy frontend, refuse to proceed until
+  `reconcile-publication` verifies the original artifact. Do not silently
+  overwrite `published/latest` or roll back production data.
 - Untrusted pull requests cannot dispatch this on `main` and cannot start Collect
   on `main`, so they cannot start automated publication
 
@@ -84,6 +90,8 @@ Publish remains the explicit fallback.
   the two cannot interleave Pages artifacts
 - Copies `pulse-state/published/` byte-for-byte into `_site/data/`, then copies
   current `preview/` HTML/CSS/JS
+- `verify-publication-status --require consistent` fails closed when Pages and
+  pulse-state have an unresolved deploy/persist divergence
 - `verify-published-site` fails closed if published JSON is missing, invalid,
   inconsistent, or mutated during the copy
 - Does not recompute `publication_comparison` or change publication timestamps

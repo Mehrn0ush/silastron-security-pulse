@@ -46,7 +46,18 @@ Persistent layout is documented in [collection-state.md](collection-state.md).
 7. **Authoritative links are constructed**, not copied from untrusted
    reference fields. Preview hyperlinks are path-restricted to the CISA KEV
    catalog page, CVE.org record pages, and CVE List V5 blob URLs.
-8. **No large upstream datasets are committed.** Tests use synthetic fixtures
+8. **Collect-time KEV integrity is independent of publication binding.** The
+   collector validates the documented CISA feed, compares parsed records to the
+   original bytes, and stores the upstream digest. Publication still does not
+   re-fetch CISA. HTTPS is not publisher authentication.
+9. **Pages deploy and pulse-state persist are not atomic.** A small
+   `publication-status.json` state machine blocks later publication and
+   frontend deploy when they diverge. Recovery verifies the original artifact
+   and never silently rolls back `published/latest`.
+10. **CVE history is published-to-published.** Compact indexes are generated
+    from immutable snapshots at promote time. The explorer loads one CVE file
+    on demand and never treats extraction enrichment as an upstream change.
+11. **No large upstream datasets are committed.** Tests use synthetic fixtures
    plus small official samples (one KEV excerpt and CVE-2021-44228). Live
    snapshots stay on `pulse-state` and workflow artifacts until publication is
    approved.

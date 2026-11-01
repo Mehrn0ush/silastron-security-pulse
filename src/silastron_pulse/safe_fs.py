@@ -18,6 +18,7 @@ ARTIFACT_FILES = frozenset(
         "SHA256SUMS",
         "source-kev-catalog.json",
         "source-kev-meta.json",
+        "source-kev-provenance.json",
     }
 )
 

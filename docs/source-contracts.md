@@ -22,6 +22,12 @@ Verification date: 2026-10-21. Statements are marked **VERIFIED**,
 - CISA typically updates weekdays during US Eastern business hours; the Git
   mirror documents hourly polling. **VERIFIED** from cisagov/kev-data README.
 - `count` must equal `vulnerabilities.length`. Empty catalogs are rejected.
+- Collect validates HTTP status, content type, payload size, catalog version,
+  required fields, CVE uniqueness, and `dateAdded` / `dueDate` calendar dates.
+  The parsed catalog is compared to the original downloaded bytes before
+  candidate generation. The upstream SHA-256 is retained in
+  `source/kev/provenance.json`. CISA does not publish an independent checksum
+  of this feed; `cisagov/kev-data` is not treated as one.
 - `notes` and descriptions are untrusted text and may contain URLs.
 - License does **not** authorize use of the CISA logo or DHS seal and is not
   an endorsement.
