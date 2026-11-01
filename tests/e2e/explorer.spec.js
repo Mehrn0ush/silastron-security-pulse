@@ -17,6 +17,30 @@ function catalogCves(page) {
 }
 
 test.describe("Pulse explorer", () => {
+  test("shows a neutral data status instead of a stale snapshot warning", async ({ page }) => {
+    await page.goto("/");
+    await expect(page.locator("#status-banner")).not.toHaveText("Loading publication status.");
+    await expect(page.locator("#status-banner")).not.toContainText("Stale snapshot");
+    await expect(page.locator("#data-status")).toContainText("Last successful verification");
+    await expect(page.locator("#data-status")).toContainText("Last published snapshot");
+    await expect(page.locator("#data-status-summary")).toContainText("independently verified");
+  });
+
+  test("data status remains readable on mobile and in each theme", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/");
+    await expect(page.locator("#data-status")).toBeVisible();
+    await page.locator('[data-theme-choice="dark"]').click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await expect(page.locator("#data-status-heading")).toBeVisible();
+    await page.locator('[data-theme-choice="light"]').click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+    await page.locator('[data-theme-choice="system"]').click();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "system");
+    await page.locator("#data-status-heading").focus();
+    await expect(page.locator("#data-status-heading")).toBeFocused();
+  });
+
   test("searches by CVE ID", async ({ page }) => {
     await loadCatalog(page);
     await page.locator("#catalog-query").fill("CVE-2099-0001");

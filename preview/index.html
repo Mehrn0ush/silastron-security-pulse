@@ -50,6 +50,7 @@
         </p>
       </div>
       <nav class="page-nav" aria-label="Page">
+        <a href="#data-status">Data status</a>
         <a href="#overview">Overview</a>
         <a href="#changes">What's changed</a>
         <a href="#recent">Recently added</a>
@@ -69,6 +70,12 @@
           intelligence is shown without it.
         </p>
       </noscript>
+
+      <section id="data-status" aria-labelledby="data-status-heading">
+        <h2 id="data-status-heading" tabindex="-1">Data status</h2>
+        <p id="data-status-summary">Waiting for published data status.</p>
+        <dl id="data-status-details" class="status-details"></dl>
+      </section>
 
       <section id="overview" aria-labelledby="overview-heading">
         <h2 id="overview-heading">Security Pulse Overview</h2>
@@ -378,9 +385,10 @@
               complete real-world product coverage or deployment exposure.
             </li>
             <li>
-              <strong>Freshness</strong> is computed at viewing time from the
-              snapshot timestamp. It is independent of collection outcome and
-              record completeness.
+              <strong>Data status</strong> separates last successful source
+              verification, last successful collection, last published snapshot,
+              and last upstream update. An unchanged but re-validated KEV
+              catalog is not labeled stale. Snapshot age is not verification.
             </li>
             <li>
               <strong>What's Changed</strong> compares the current published

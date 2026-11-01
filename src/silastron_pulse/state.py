@@ -90,6 +90,24 @@ class PulseState:
             )
         return None
 
+    def write_nvd_record(
+        self,
+        record: dict[str, Any],
+        index_entry: dict[str, Any],
+        *,
+        max_bytes: int,
+        max_depth: int,
+    ) -> None:
+        cve_id = record.get("cve_id")
+        if not isinstance(cve_id, str) or not cve_id:
+            raise ValidationError("NVD checkpoint is missing cve_id")
+        atomic_write_json(self.nvd_record_path(cve_id), record)
+        index = self.load_nvd_index(max_bytes=max_bytes, max_depth=max_depth)
+        records = index.get("records") if isinstance(index.get("records"), dict) else {}
+        records = dict(records)
+        records[cve_id] = dict(index_entry)
+        atomic_write_json(self.nvd_index_path(), {"records": records, "updated_at": index.get("updated_at")})
+
     def write_source(
         self,
         *,

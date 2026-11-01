@@ -58,6 +58,8 @@
 
   var statusBanner = document.getElementById("status-banner");
   var statusDetails = document.getElementById("status-details");
+  var dataStatusSummary = document.getElementById("data-status-summary");
+  var dataStatusDetails = document.getElementById("data-status-details");
   var technicalDetails = document.getElementById("technical-details-list");
   var overviewCards = document.getElementById("overview-cards");
   var changesNote = document.getElementById("changes-note");
@@ -245,10 +247,13 @@
 
   function bannerLabel(kind) {
     if (kind === "ok") {
-      return "Fresh collection";
+      return "Data status";
+    }
+    if (kind === "neutral") {
+      return "Data status";
     }
     if (kind === "stale") {
-      return "Stale snapshot";
+      return "Data status";
     }
     if (kind === "warn") {
       return "Degraded collection";
@@ -257,6 +262,92 @@
       return "Failed";
     }
     return "Unavailable";
+  }
+
+  function appendDataStatus(term, value) {
+    appendNamedMeta(dataStatusDetails, term, value);
+  }
+
+  function verificationIsValid(doc) {
+    return Boolean(
+      doc &&
+        doc.kind === "verification_status" &&
+        doc.schema_version === "1.0.0" &&
+        (doc.verified === true
+          ? doc.verification_state === "verified" &&
+            doc.verified_at &&
+            doc.kev &&
+            doc.kev.status === "ok" &&
+            doc.kev.content_sha256 &&
+            doc.kev.retrieved_at
+          : doc.verification_state === "failed" ||
+            doc.verification_state === "rejected" ||
+            doc.verification_state === "insufficient")
+    );
+  }
+
+  function evaluateDataStatus(manifest, preview, publicationStatus, verification) {
+    var pubState = publicationStatus && publicationStatus.state;
+    var integrity = Boolean(pubState && pubState !== "consistent");
+    var validVerification = verificationIsValid(verification) ? verification : null;
+    var verified = Boolean(validVerification && validVerification.verified === true);
+    var collectionOutcome = (preview && preview.status) || (manifest && manifest.status);
+    var headline = "Verification evidence unavailable";
+    var message =
+      "Timestamps below come from the last published snapshot only. A later successful Collect that skipped publication is not visible here.";
+    var tone = "neutral";
+    if (integrity) {
+      headline = "Publication consistency problem";
+      message =
+        "Published Pages data and persisted pulse-state may have diverged. Do not treat this page as an authoritative publication until an operator reconciles. " +
+        asText(publicationStatus && publicationStatus.classification);
+      tone = "unavailable";
+    } else if (verification && !validVerification) {
+      headline = "Verification evidence is invalid";
+      message =
+        "A verification-status document was present but failed validation. Do not treat snapshot age as proof of a recent successful collection.";
+      tone = "unavailable";
+    } else if (validVerification && validVerification.verification_state === "failed") {
+      headline = "Collection verification failed";
+      message = asText(validVerification.note) || "The latest recorded collection did not independently validate KEV.";
+      tone = "unavailable";
+    } else if (validVerification && validVerification.verification_state === "rejected") {
+      headline = "Publication rejected";
+      message = asText(validVerification.note) || "The latest Collect artifact was not published.";
+      tone = "unavailable";
+    } else if (verified && validVerification.status_only) {
+      headline = "Unchanged catalog, independently verified";
+      message = asText(validVerification.note);
+      tone = collectionOutcome === "degraded" ? "warn" : "ok";
+    } else if (verified) {
+      headline = "Published snapshot, independently verified";
+      message = asText(validVerification.note);
+      tone = collectionOutcome === "degraded" ? "warn" : "ok";
+    } else if (!validVerification && collectionOutcome === "degraded") {
+      headline = "Published snapshot";
+      message =
+        "Collection of this snapshot succeeded with incomplete extracted inventories or unavailable enrichments. " +
+        message;
+      tone = "warn";
+    }
+    var lastSuccessfulCollection = null;
+    if (
+      validVerification &&
+      (verified || validVerification.collection_outcome === "ok" || validVerification.collection_outcome === "degraded")
+    ) {
+      lastSuccessfulCollection = validVerification.collection_completed_at || null;
+    } else if (preview && (preview.status === "ok" || preview.status === "degraded")) {
+      lastSuccessfulCollection = preview.collection_completed_at || null;
+    }
+    return {
+      headline: headline,
+      message: message,
+      tone: tone,
+      verified: verified,
+      verification: validVerification,
+      lastSuccessfulVerificationAt: verified && validVerification ? validVerification.verified_at : null,
+      lastSuccessfulCollectionAt: lastSuccessfulCollection,
+    };
   }
 
   function setBanner(kind, message) {
@@ -2321,11 +2412,13 @@
     loadJson("data/manifest.json"),
     loadJson("data/preview.json"),
     loadJson("data/publication-status.json"),
+    loadJson("data/verification-status.json"),
   ])
     .then(function (results) {
       var manifest = results[0];
       var preview = results[1];
       var publicationStatus = results[2];
+      var verificationStatus = results[3];
       if (!manifest) {
         setBanner(
           "unavailable",
@@ -2358,42 +2451,25 @@
         Date.now()
       );
       var collectionOutcome = manifest.status;
+      var dataStatus = evaluateDataStatus(manifest, preview, publicationStatus, verificationStatus);
       if (freshness.invalid) {
         setBanner(
           "unavailable",
           "Snapshot timestamps are invalid. Do not treat this page as intelligence."
         );
-      } else if (freshness.stale) {
-        setBanner(
-          "stale",
-          "The published snapshot is stale at viewing time. Do not treat it as a fresh collection."
-        );
-      } else if (collectionOutcome === "degraded") {
-        setBanner(
-          "warn",
-          "Collection succeeded with incomplete extracted inventories or unavailable enrichments. This is not a failed collection. Freshness is evaluated at viewing time and is independent of record completeness."
-        );
-      } else if (collectionOutcome === "ok") {
-        setBanner(
-          "ok",
-          "Collection succeeded. Freshness is evaluated at viewing time and is independent of record completeness."
-        );
       } else if (collectionOutcome === "failed") {
         setBanner("unavailable", "Collection failed. No successful snapshot is shown.");
       } else {
-        setBanner("unavailable", "Published snapshot is unavailable.");
+        setBanner(dataStatus.tone, dataStatus.message);
+      }
+      if (dataStatusSummary) {
+        dataStatusSummary.textContent = dataStatus.headline + ". " + dataStatus.message;
       }
       if (
         publicationStatus &&
         publicationStatus.state &&
         publicationStatus.state !== "consistent"
       ) {
-        setBanner(
-          "unavailable",
-          "Published Pages data and persisted pulse-state may have diverged. " +
-            "Do not treat this page as an authoritative publication until an operator reconciles. " +
-            asText(publicationStatus.classification)
-        );
         appendMeta("Publication state", publicationStatus.state);
         appendMeta("Collect run ID", publicationStatus.collect_run_id);
         appendMeta("Snapshot ID", publicationStatus.snapshot_id);
@@ -2434,27 +2510,30 @@
           : "Baseline unavailable. This is not zero updates."
       );
       appendCard(
-        "Published Data Freshness",
-        freshness.invalid ? "Invalid" : freshness.fresh ? "Fresh" : "Stale",
-        "Collection " +
-          formatInstant(manifest.snapshot_generated_at) +
-          ". Publication " +
-          formatInstant(manifest.generated_at) +
-          ". Age " +
-          formatAge(freshness.ageHours) +
-          " at viewing time. Stale after " +
-          asText(manifest.stale_after_hours || 36) +
-          " hours.",
-        freshness.invalid ? "invalid" : freshness.stale ? "stale" : "fresh"
+        "Published snapshot",
+        formatInstant(manifest.snapshot_generated_at),
+        "This is the last published snapshot time, not last verification. Snapshot age is not proof that collection stopped or succeeded."
       );
 
+      appendDataStatus(
+        "Last successful verification",
+        dataStatus.verified ? formatInstant(dataStatus.lastSuccessfulVerificationAt) : "Unavailable"
+      );
+      appendDataStatus(
+        "Last successful collection",
+        dataStatus.lastSuccessfulCollectionAt
+          ? formatInstant(dataStatus.lastSuccessfulCollectionAt)
+          : "Unavailable"
+      );
+      appendDataStatus("Last published snapshot", formatInstant(manifest.snapshot_generated_at));
+      appendDataStatus("Publication consistency", (publicationStatus && publicationStatus.state) || "Unavailable");
+      appendDataStatus("Publication decision", dataStatus.verification ? asText(dataStatus.verification.publication_decision) : "Unavailable");
       appendMeta("Collection outcome", collectionOutcome);
-      appendMeta("Fresh at viewing time", freshness.fresh ? "yes" : "no");
-      appendMeta("Stale at viewing time", freshness.stale ? "yes" : "no");
       appendMeta(
-        "Age hours at viewing time",
+        "Published snapshot age hours",
         freshness.ageHours === null ? "Unavailable" : String(Math.round(freshness.ageHours * 1000) / 1000)
       );
+      appendMeta("Snapshot age is not verification", "yes");
       appendMeta("Snapshot generated at", manifest.snapshot_generated_at);
       appendMeta("Manifest generated at", manifest.generated_at);
       appendMeta("Collection started at", preview && preview.collection_started_at);
@@ -2472,6 +2551,16 @@
       appendMeta("KEV retrieved at", kev.retrieved_at);
       appendMeta("CVE source updated at", cve.source_updated_at);
       appendMeta("CVE retrieved at", cve.retrieved_at);
+      var kevStatus = (dataStatus.verification && dataStatus.verification.kev) || kev;
+      var cveStatus = (dataStatus.verification && dataStatus.verification.cve) || cve;
+      var nvdStatus = (dataStatus.verification && dataStatus.verification.nvd) || sources.nvd || {};
+      appendDataStatus("KEV source status", kevStatus.status);
+      appendDataStatus("KEV retrieved at", kevStatus.retrieved_at);
+      appendDataStatus("KEV upstream update", kevStatus.source_updated_at || kev.source_published_at);
+      appendDataStatus("CVE List V5 status", cveStatus.status);
+      appendDataStatus("CVE retrieved at", cveStatus.retrieved_at);
+      appendDataStatus("NVD status", nvdStatus.status || "unavailable");
+      appendDataStatus("NVD retrieved at", nvdStatus.retrieved_at);
       appendMeta("EPSS source status", epss.status);
       appendMeta("EPSS source note", presentEpssNote(epss.error || epss.notes));
       appendMeta("EPSS redistribution", epssDisabled ? "Disabled is not a zero probability." : asText(epss.status));

@@ -53,6 +53,34 @@ def build_site(out: Path) -> None:
         max_depth=32,
     )
     shutil.copytree(published, data)
+    from silastron_pulse.verification_status import build_verification_status
+
+    status = build_verification_status(
+        candidate=snapshot,
+        decision_outcome="publish",
+        decision_reason="first_publish",
+        collect_run_id="1",
+        collect_event="workflow_dispatch",
+        published=snapshot,
+        publication_state="consistent",
+        candidate_digest="a" * 64,
+    )
+    (data / "verification-status.json").write_text(
+        json.dumps(status, indent=2, sort_keys=True),
+        encoding="utf-8",
+    )
+    (data / "publication-status.json").write_text(
+        json.dumps(
+            {
+                "state": "consistent",
+                "classification": "persistence_succeeded_and_consistent",
+                "snapshot_id": snapshot["snapshot_id"],
+                "collect_run_id": "1",
+            },
+            indent=2,
+        ),
+        encoding="utf-8",
+    )
     _write_history(data)
     (out / "robots.txt").write_text("User-agent: *\nDisallow: /\n", encoding="utf-8")
 

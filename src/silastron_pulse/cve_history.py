@@ -14,6 +14,7 @@ from typing import Any
 
 from silastron_pulse.errors import ValidationError
 from silastron_pulse.ids import parse_cve_id
+from silastron_pulse.intelligence import comparable_intelligence
 from silastron_pulse.store import atomic_write_json, load_json_file, load_snapshot
 
 HISTORY_SCHEMA_VERSION = "1.1.0"
@@ -431,13 +432,13 @@ def _record_view(record: dict[str, Any]) -> dict[str, Any]:
     items = remediation.get("items") if isinstance(remediation.get("items"), list) else []
     products = cve.get("products") if isinstance(cve.get("products"), list) else None
     intelligence = record.get("intelligence") if isinstance(record.get("intelligence"), dict) else {}
-    cvss = intelligence.get("cvss") if isinstance(intelligence.get("cvss"), dict) else {}
-    assessments = cvss.get("assessments") if isinstance(cvss.get("assessments"), list) else None
-    cwes = (intelligence.get("cwes") or {}).get("assertions") if isinstance(intelligence.get("cwes"), dict) else None
-    affected = (intelligence.get("affected") or {}).get("products") if isinstance(intelligence.get("affected"), dict) else None
-    fixed = (intelligence.get("remediation") or {}).get("fixed_versions") if isinstance(intelligence.get("remediation"), dict) else None
-    conflicts = intelligence.get("conflicts") if isinstance(intelligence.get("conflicts"), list) else None
-    nvd_status = ((intelligence.get("sources") or {}).get("nvd") or {}).get("status")
+    comparable = comparable_intelligence(intelligence) if intelligence else {}
+    assessments = comparable.get("cvss") if intelligence else None
+    cwes = comparable.get("cwes") if intelligence else None
+    affected = comparable.get("affected") if intelligence else None
+    fixed = comparable.get("fixed_versions") if intelligence else None
+    conflicts = comparable.get("conflicts") if intelligence else None
+    nvd_status = ((comparable.get("source_status") or {}).get("nvd") or {}).get("status")
     return {
         "kev": {field: _present(kev.get(field)) for field in KEV_FIELDS},
         "kev_date_added": _present(kev.get("date_added")),

@@ -58,6 +58,10 @@ class PulseConfig:
     max_cve_failures_absolute: int
     max_nvd_bytes: int
     nvd_min_interval_ms: int
+    nvd_ok_ttl_hours: int
+    nvd_retry_ttl_hours: int
+    nvd_max_fetches_per_run: int
+    nvd_max_duration_seconds: int
     nvd_api_key: str | None
     output_dir: Path
 
@@ -204,6 +208,30 @@ class PulseConfig:
                 defaults["nvd_min_interval_ms"],
                 minimum=0,
                 maximum=30_000,
+            ),
+            nvd_ok_ttl_hours=_int_env(
+                "PULSE_NVD_OK_TTL_HOURS",
+                defaults["nvd_ok_ttl_hours"],
+                minimum=1,
+                maximum=720,
+            ),
+            nvd_retry_ttl_hours=_int_env(
+                "PULSE_NVD_RETRY_TTL_HOURS",
+                defaults["nvd_retry_ttl_hours"],
+                minimum=1,
+                maximum=168,
+            ),
+            nvd_max_fetches_per_run=_int_env(
+                "PULSE_NVD_MAX_FETCHES",
+                defaults["nvd_max_fetches_per_run"],
+                minimum=0,
+                maximum=2000,
+            ),
+            nvd_max_duration_seconds=_int_env(
+                "PULSE_NVD_MAX_DURATION_SECONDS",
+                defaults["nvd_max_duration_seconds"],
+                minimum=30,
+                maximum=10_800,
             ),
             nvd_api_key=_optional_secret("NVD_API_KEY"),
             output_dir=output_dir,

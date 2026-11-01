@@ -75,8 +75,13 @@ Persistent layout is documented in [collection-state.md](collection-state.md).
 13. **NVD enrichment is optional and source-attributed.** The official NVD
     CVE API 2.0 may add CVSS, CWE, product, and reference assertions. It is
     never a KEV publication dependency. CNA and NVD disagreements are
-    preserved, not merged into a composite score. See
+    preserved, not merged into a composite score. Collection is bounded and
+    resumable. See
     [vulnerability-intelligence.md](vulnerability-intelligence.md).
+14. **Public freshness is verification evidence, not snapshot age.** An
+    unchanged Collect may skip snapshot publication. A validated
+    `verification-status.json` can be published without creating a new
+    vulnerability snapshot. See [data-status.md](data-status.md).
 
 ## Runtime layout
 

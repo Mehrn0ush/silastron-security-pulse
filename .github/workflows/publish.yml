@@ -82,6 +82,7 @@ jobs:
       digest: ${{ steps.decide.outputs.digest }}
       snapshot_id: ${{ steps.decide.outputs.snapshot_id }}
       collect_run_id: ${{ steps.decide.outputs.collect_run_id }}
+      status_publish: ${{ steps.decide.outputs.status_publish }}
     steps:
       - name: Checkout publisher
         uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
@@ -167,6 +168,7 @@ jobs:
             --expected-event "${EXPECTED_EVENT}" \
             --expected-head-sha "${EXPECTED_HEAD_SHA}" \
             --artifact-dir dist \
+            --verification-status-out dist/verification-status.json \
             --github-output "${GITHUB_OUTPUT}" \
             --summary-path "${GITHUB_STEP_SUMMARY}"
 
@@ -188,6 +190,10 @@ jobs:
             --published-dir _site/data \
             --expected-digest "${{ steps.decide.outputs.digest }}" \
             --expected-collector-sha "$(python -c 'import json; print(json.load(open("/tmp/collect-run.json"))["head_sha"])')"
+          if [ -f dist/verification-status.json ]; then
+            python -m silastron_pulse validate dist/verification-status.json
+            cp dist/verification-status.json _site/data/verification-status.json
+          fi
           cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/
           python -m silastron_pulse validate _site/data/manifest.json
           python -m silastron_pulse validate _site/data/latest.json
@@ -201,8 +207,46 @@ jobs:
               raise SystemExit("latest.json missing")
           PY
 
+      - name: Build status-only site
+        if: steps.decide.outputs.decision == 'skip' && steps.decide.outputs.status_publish == 'yes'
+        env:
+          PYTHONPATH: src
+        run: |
+          set -euo pipefail
+          if [ ! -f pulse-state/published/latest.json ]; then
+            echo "No published snapshot exists for status-only publication"
+            exit 1
+          fi
+          python3 -m silastron_pulse verify-publication-status \
+            --published-dir pulse-state/published \
+            --require consistent
+          python3 -m silastron_pulse validate dist/verification-status.json
+          mkdir -p _site/data
+          python3 -m silastron_pulse safe-copy \
+            --src pulse-state/published \
+            --dst _site/data
+          cp dist/verification-status.json _site/data/verification-status.json
+          cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/
+          python3 -m silastron_pulse validate _site/data/manifest.json
+          python3 -m silastron_pulse validate _site/data/latest.json
+          python3 -m silastron_pulse validate _site/data/verification-status.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          latest = json.loads(Path("_site/data/latest.json").read_text())
+          published = json.loads(Path("pulse-state/published/latest.json").read_text())
+          if latest.get("snapshot_id") != published.get("snapshot_id"):
+              raise SystemExit("Status-only publish must not replace the published snapshot")
+          status = json.loads(Path("_site/data/verification-status.json").read_text())
+          if status.get("kind") != "verification_status":
+              raise SystemExit("verification-status kind is invalid")
+          print("status-only site built")
+          PY
+
       - name: Upload Pages artifact
-        if: steps.decide.outputs.decision == 'publish'
+        if: >
+          steps.decide.outputs.decision == 'publish' ||
+          (steps.decide.outputs.decision == 'skip' && steps.decide.outputs.status_publish == 'yes')
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: _site
@@ -546,3 +590,78 @@ jobs:
             echo "Recovery verifies the original validated artifact before repairing state. It never overwrites a different published/latest or deletes immutable snapshots."
           } >> "$GITHUB_STEP_SUMMARY"
           exit 1
+
+  deploy-status:
+    name: Deploy verification status only
+    needs: build
+    if: needs.build.outputs.decision == 'skip' && needs.build.outputs.status_publish == 'yes'
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+      contents: read
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  persist-status:
+    name: Persist verification status
+    needs: [build, deploy-status]
+    if: ${{ always() && needs.build.outputs.decision == 'skip' && needs.build.outputs.status_publish == 'yes' && needs.deploy-status.result == 'success' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout publisher
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+      - name: Checkout pulse-state
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: pulse-state
+          path: pulse-state
+      - name: Download collect artifact
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: pulse-candidate
+          path: dist
+          github-token: ${{ github.token }}
+          run-id: ${{ needs.build.outputs.collect_run_id }}
+      - name: Persist verification-status without changing snapshots
+        env:
+          PYTHONPATH: src
+        run: |
+          set -euo pipefail
+          python3 -m silastron_pulse verify-publication-status \
+            --published-dir pulse-state/published \
+            --require consistent
+          python3 -m silastron_pulse write-verification-status \
+            --candidate dist/candidate.json \
+            --published-dir pulse-state/published \
+            --decision skip \
+            --reason "${{ needs.build.outputs.reason }}" \
+            --collect-run-id "${{ needs.build.outputs.collect_run_id }}" \
+            --candidate-digest "${{ needs.build.outputs.digest }}" \
+            --output pulse-state/published/verification-status.json
+          python3 -m silastron_pulse validate pulse-state/published/verification-status.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          latest = json.loads(Path("pulse-state/published/latest.json").read_text())
+          print(latest.get("snapshot_id"))
+          PY
+          cd pulse-state
+          git add published/verification-status.json
+          if git diff --cached --quiet; then
+            echo "Verification status already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "verification-status ${{ needs.build.outputs.collect_run_id }}"
+          git push origin HEAD:pulse-state
