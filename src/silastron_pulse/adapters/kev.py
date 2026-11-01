@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
+from typing import Any
 
 from silastron_pulse.constants import (
     CISA_KEV_ATTRIBUTION,
@@ -17,6 +18,13 @@ from silastron_pulse.errors import FetchError, ValidationError
 from silastron_pulse.http import Fetcher
 from silastron_pulse.ids import parse_cve_id, parse_cwe_id
 from silastron_pulse.jsonutil import load_bounded_json, sha256_bytes
+from silastron_pulse.kev_source import (
+    assert_catalog_matches_raw,
+    build_kev_provenance,
+    require_kev_date,
+    validate_kev_catalog_metadata,
+    validate_kev_fetch,
+)
 from silastron_pulse.models import KevRecord, SourceMeta
 from silastron_pulse.sanitize import (
     authoritative_kev_url,
@@ -29,6 +37,7 @@ from silastron_pulse.sanitize import (
 class KevCatalog:
     meta: SourceMeta
     records: list[KevRecord]
+    provenance: dict[str, Any] | None = None
 
 
 def fetch_kev_catalog(fetcher: Fetcher, config: PulseConfig) -> KevCatalog:
@@ -36,13 +45,30 @@ def fetch_kev_catalog(fetcher: Fetcher, config: PulseConfig) -> KevCatalog:
         response = fetcher.get(KEV_JSON_URL, max_bytes=config.max_kev_bytes)
     except FetchError as exc:
         raise FetchError(f"KEV collection failed: {exc}") from exc
+    validate_kev_fetch(response, max_bytes=config.max_kev_bytes)
     payload = load_bounded_json(
         response.body,
         max_bytes=config.max_kev_bytes,
         max_depth=config.max_json_depth,
         source="CISA KEV",
     )
-    return parse_kev_catalog(payload, raw=response.body, retrieved_at=response.retrieved_at, config=config)
+    if not isinstance(payload, dict):
+        raise ValidationError("KEV payload must be a JSON object")
+    catalog = parse_kev_catalog(
+        payload,
+        raw=response.body,
+        retrieved_at=response.retrieved_at,
+        config=config,
+    )
+    match = assert_catalog_matches_raw(
+        catalog,
+        raw=response.body,
+        payload=payload,
+        max_bytes=config.max_kev_bytes,
+        max_depth=config.max_json_depth,
+    )
+    provenance = build_kev_provenance(response, match=match)
+    return KevCatalog(meta=catalog.meta, records=catalog.records, provenance=provenance)
 
 
 def parse_kev_catalog(
@@ -58,6 +84,7 @@ def parse_kev_catalog(
     date_released, _ = clean_text_report(payload.get("dateReleased"), 64)
     count = payload.get("count")
     vulnerabilities = payload.get("vulnerabilities")
+    validate_kev_catalog_metadata(payload)
     if not catalog_version:
         raise ValidationError("KEV catalogVersion is missing")
     if not date_released:
@@ -128,14 +155,20 @@ def _parse_item(item: object, *, index: int, config: PulseConfig) -> KevRecord:
         name, t_name = require_text_report(
             item.get("vulnerabilityName"), "vulnerabilityName", config.max_string_chars
         )
-        date_added, _ = require_text_report(item.get("dateAdded"), "dateAdded", 32)
+        date_added, t_added = require_text_report(item.get("dateAdded"), "dateAdded", 32)
+        if t_added:
+            raise ValidationError(f"KEV {cve_id}: dateAdded was truncated")
+        require_kev_date(date_added, label="dateAdded")
         description, t_desc = require_text_report(
             item.get("shortDescription"), "shortDescription", config.max_description_chars
         )
         action, t_action = require_text_report(
             item.get("requiredAction"), "requiredAction", config.max_description_chars
         )
-        due_date, _ = require_text_report(item.get("dueDate"), "dueDate", 32)
+        due_date, t_due = require_text_report(item.get("dueDate"), "dueDate", 32)
+        if t_due:
+            raise ValidationError(f"KEV {cve_id}: dueDate was truncated")
+        require_kev_date(due_date, label="dueDate")
     except ValueError as exc:
         raise ValidationError(f"KEV {cve_id}: {exc}") from exc
     if t_vendor:

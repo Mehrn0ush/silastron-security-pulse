@@ -45,6 +45,7 @@ class CollectWorkflowContractTests(unittest.TestCase):
         self.assertNotIn("github-pages", text)
         self.assertIn("git add source candidates", text)
         self.assertIn("source-kev-catalog.json", text)
+        self.assertIn("source-kev-provenance.json", text)
         self.assertIn("Collect must not modify published/", text)
         self.assertNotIn("git add published", text)
         self.assertNotIn("--promote", text)

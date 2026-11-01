@@ -13,6 +13,14 @@ from silastron_pulse.errors import PulseError
 from silastron_pulse.jsonutil import sha256_bytes
 from silastron_pulse.pipeline import collect
 from silastron_pulse.auto_publish import evaluate_publication, write_decision_outputs
+from silastron_pulse.reconciliation import (
+    RECONCILE_CONFIRM,
+    assert_publication_consistent,
+    build_publication_status,
+    classify_workflow_outcome,
+    reconcile_publication,
+    write_publication_status,
+)
 from silastron_pulse.safe_fs import (
     assert_artifact_tree,
     copy_tree_without_symlinks,
@@ -126,6 +134,43 @@ def main(argv: list[str] | None = None) -> int:
     )
     copy_tree.add_argument("--src", type=Path, required=True)
     copy_tree.add_argument("--dst", type=Path, required=True)
+
+    verify_status = sub.add_parser(
+        "verify-publication-status",
+        help="Refuse publication or frontend deploy when Pages and pulse-state diverged",
+    )
+    verify_status.add_argument("--published-dir", type=Path, required=True)
+    verify_status.add_argument("--require", default="consistent")
+
+    write_status = sub.add_parser(
+        "write-publication-status",
+        help="Record deploy/persist reconciliation state",
+    )
+    write_status.add_argument("--published-dir", type=Path, required=True)
+    write_status.add_argument("--state", required=True)
+    write_status.add_argument("--classification", default="")
+    write_status.add_argument("--snapshot-id", default=None)
+    write_status.add_argument("--collect-run-id", default=None)
+    write_status.add_argument("--deployment-run-id", default=None)
+    write_status.add_argument("--manifest-digest", default=None)
+    write_status.add_argument("--persisted-snapshot-id", default=None)
+    write_status.add_argument("--persisted-manifest-digest", default=None)
+    write_status.add_argument("--page-url", default=None)
+    write_status.add_argument("--note", default=None)
+    write_status.add_argument("--deploy-result", default=None)
+    write_status.add_argument("--persist-result", default=None)
+
+    reconcile = sub.add_parser(
+        "reconcile-publication",
+        help="Idempotent recovery after a successful deploy and failed persist",
+    )
+    reconcile.add_argument("--incoming", type=Path, required=True)
+    reconcile.add_argument("--current", type=Path, required=True)
+    reconcile.add_argument("--expected-snapshot-id", required=True)
+    reconcile.add_argument("--expected-digest", required=True)
+    reconcile.add_argument("--expected-collect-run-id", required=True)
+    reconcile.add_argument("--confirm", required=True)
+    reconcile.add_argument("--deployment-run-id", default=None)
 
     args = parser.parse_args(argv)
     try:
@@ -241,6 +286,59 @@ def main(argv: list[str] | None = None) -> int:
             copy_tree_without_symlinks(args.src, args.dst)
             print("copied")
             return 0
+        if args.command == "verify-publication-status":
+            if args.require != "consistent":
+                raise PulseError("verify-publication-status only supports --require consistent")
+            config = PulseConfig.from_env(args.published_dir)
+            status = assert_publication_consistent(
+                args.published_dir,
+                max_bytes=config.max_snapshot_bytes,
+                max_depth=config.max_json_depth,
+            )
+            print(json.dumps(status, indent=2, default=str))
+            return 0
+        if args.command == "write-publication-status":
+            classification = args.classification or classify_workflow_outcome(
+                deploy_result=args.deploy_result,
+                persist_result=args.persist_result,
+            )
+            payload = build_publication_status(
+                state=args.state,
+                classification=classification,
+                now=SystemClock().now(),
+                snapshot_id=args.snapshot_id,
+                collect_run_id=args.collect_run_id,
+                deployment_run_id=args.deployment_run_id,
+                manifest_digest=args.manifest_digest,
+                persisted_snapshot_id=args.persisted_snapshot_id,
+                persisted_manifest_digest=args.persisted_manifest_digest,
+                page_url=args.page_url,
+                note=args.note,
+            )
+            written = write_publication_status(args.published_dir, payload)
+            print(json.dumps(written, indent=2, default=str))
+            return 0
+        if args.command == "reconcile-publication":
+            if args.confirm != RECONCILE_CONFIRM:
+                raise PulseError("Reconciliation requires --confirm RECONCILE")
+            config = PulseConfig.from_env(args.incoming)
+            result = reconcile_publication(
+                incoming_dir=args.incoming,
+                current_dir=args.current,
+                expected_snapshot_id=args.expected_snapshot_id,
+                expected_digest=args.expected_digest,
+                expected_collect_run_id=args.expected_collect_run_id,
+                confirm=args.confirm,
+                now=SystemClock().now(),
+                max_bytes=config.max_snapshot_bytes,
+                max_depth=config.max_json_depth,
+                deployment_run_id=args.deployment_run_id,
+            )
+            if result.get("copy_required"):
+                copy_tree_without_symlinks(args.incoming, args.current)
+                write_publication_status(args.current, result["publication_status"])
+            print(json.dumps(result, indent=2, default=str))
+            return 0
         if args.command == "decide-publication":
             config = PulseConfig.from_env(args.published_dir)
             if args.artifact_dir is not None:
@@ -254,6 +352,9 @@ def main(argv: list[str] | None = None) -> int:
                 "source-kev-catalog.json": args.kev_catalog.read_bytes(),
                 "source-kev-meta.json": args.kev_meta.read_bytes(),
             }
+            provenance_path = args.kev_catalog.with_name("source-kev-provenance.json")
+            if provenance_path.is_file() and not provenance_path.is_symlink():
+                extra_files["source-kev-provenance.json"] = provenance_path.read_bytes()
             decision = evaluate_publication(
                 mode=args.mode,
                 run=run,

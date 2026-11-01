@@ -120,7 +120,7 @@
             </button>
           </p>
           <p>
-            <label for="catalog-query">Search CVE, vendor, or product</label>
+            <label for="catalog-query">Search CVE, vendor, product, or description</label>
             <input
               id="catalog-query"
               type="search"
@@ -128,6 +128,26 @@
               autocomplete="off"
               disabled
             />
+          </p>
+          <p>
+            <label for="catalog-vendor">Vendor</label>
+            <select id="catalog-vendor" disabled>
+              <option value="all">All vendors</option>
+            </select>
+          </p>
+          <p>
+            <label for="catalog-product">Product</label>
+            <select id="catalog-product" disabled>
+              <option value="all">All products</option>
+            </select>
+          </p>
+          <p>
+            <label for="catalog-date-from">KEV date added from</label>
+            <input id="catalog-date-from" type="date" disabled />
+          </p>
+          <p>
+            <label for="catalog-date-to">KEV date added to</label>
+            <input id="catalog-date-to" type="date" disabled />
           </p>
           <p>
             <label for="catalog-completeness">Completeness</label>
@@ -150,10 +170,53 @@
             </select>
           </p>
           <p>
+            <label for="catalog-cvss-min">CVSS minimum</label>
+            <input
+              id="catalog-cvss-min"
+              type="number"
+              min="0"
+              max="10"
+              step="0.1"
+              inputmode="decimal"
+              disabled
+            />
+          </p>
+          <p>
+            <label for="catalog-cvss-max">CVSS maximum</label>
+            <input
+              id="catalog-cvss-max"
+              type="number"
+              min="0"
+              max="10"
+              step="0.1"
+              inputmode="decimal"
+              disabled
+            />
+          </p>
+          <p>
+            <label for="catalog-cwe">CWE</label>
+            <select id="catalog-cwe" disabled>
+              <option value="all">All</option>
+              <option value="unavailable">CWE unavailable</option>
+            </select>
+          </p>
+          <p>
             <label for="catalog-truncated">Version inventory</label>
             <select id="catalog-truncated" disabled>
               <option value="all">All</option>
               <option value="truncated">Truncated versions</option>
+            </select>
+          </p>
+          <p>
+            <label for="catalog-remediation">Remediation</label>
+            <select id="catalog-remediation" disabled>
+              <option value="all">All</option>
+              <option value="available">Remediation evidence available</option>
+              <option value="unavailable">Remediation unavailable</option>
+              <option value="required_action">Required action</option>
+              <option value="verified_fix">CNA-reported solution</option>
+              <option value="mitigation">Mitigation</option>
+              <option value="reference">Reference</option>
             </select>
           </p>
           <p>
@@ -164,6 +227,10 @@
               <option value="vendor_project">Vendor</option>
               <option value="cvss_base_score">CVSS (available first)</option>
             </select>
+          </p>
+          <p class="catalog-actions">
+            <button type="button" id="catalog-clear" disabled>Clear filters</button>
+            <button type="button" id="catalog-export" disabled>Export filtered CSV</button>
           </p>
         </div>
         <p id="catalog-status" role="status" aria-live="polite"></p>

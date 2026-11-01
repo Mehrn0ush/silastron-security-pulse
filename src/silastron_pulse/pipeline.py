@@ -432,6 +432,7 @@ def _persist_state(
             "meta": kev.meta.to_dict(),
             "records": [record.to_dict() for record in kev.records],
         },
+        kev_provenance=kev.provenance,
         cve_index=cve_index,
         cve_records={cve_id: record.to_dict() for cve_id, record in cve.records.items()},
     )

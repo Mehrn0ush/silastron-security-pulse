@@ -140,6 +140,9 @@ def _promote_snapshot_locked(
     )
     atomic_write_json(published_dir / "manifest.json", manifest)
     _record_history(published_dir, candidate["snapshot_id"])
+    from silastron_pulse.cve_history import write_cve_history
+
+    write_cve_history(published_dir, max_bytes=max_bytes, max_depth=max_depth)
     validate_manifest(manifest)
     return manifest
 

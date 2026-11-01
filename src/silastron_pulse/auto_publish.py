@@ -18,6 +18,7 @@ from silastron_pulse.kev_integrity import (
     unexplained_kev_change_reason,
     verify_candidate_matches_catalog,
 )
+from silastron_pulse.reconciliation import publication_status_block_reason
 from silastron_pulse.safe_fs import require_run_id, require_safe_token
 from silastron_pulse.store import load_snapshot, parse_generated_at
 from silastron_pulse.validate import validate_snapshot
@@ -258,6 +259,19 @@ def evaluate_publication(
             digest=digest,
             details=details,
         )
+    diverge = publication_status_block_reason(
+        published_dir, max_bytes=max_bytes, max_depth=max_depth
+    )
+    if diverge:
+        return _reject(
+            "publication_diverged",
+            diverge,
+            snapshot_id=snapshot_id,
+            collect_run_id=collect_run_id,
+            digest=digest,
+            details=details,
+        )
+
     if published is None:
         details["publication_freshness"] = {"state": "none"}
         return PublicationDecision(

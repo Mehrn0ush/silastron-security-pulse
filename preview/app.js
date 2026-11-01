@@ -72,10 +72,20 @@
   var catalogBody = document.getElementById("catalog-body");
   var catalogLoad = document.getElementById("catalog-load");
   var catalogQuery = document.getElementById("catalog-query");
+  var catalogVendor = document.getElementById("catalog-vendor");
+  var catalogProduct = document.getElementById("catalog-product");
+  var catalogDateFrom = document.getElementById("catalog-date-from");
+  var catalogDateTo = document.getElementById("catalog-date-to");
   var catalogCompleteness = document.getElementById("catalog-completeness");
   var catalogCvss = document.getElementById("catalog-cvss");
+  var catalogCvssMin = document.getElementById("catalog-cvss-min");
+  var catalogCvssMax = document.getElementById("catalog-cvss-max");
+  var catalogCwe = document.getElementById("catalog-cwe");
   var catalogTruncated = document.getElementById("catalog-truncated");
+  var catalogRemediation = document.getElementById("catalog-remediation");
   var catalogSort = document.getElementById("catalog-sort");
+  var catalogClear = document.getElementById("catalog-clear");
+  var catalogExport = document.getElementById("catalog-export");
   var catalogPrev = document.getElementById("catalog-prev");
   var catalogNext = document.getElementById("catalog-next");
   var catalogPage = document.getElementById("catalog-page");
@@ -85,6 +95,8 @@
   var catalogLoaded = false;
   var catalogPageIndex = 0;
   var filteredCatalog = [];
+  var catalogSnapshotMeta = null;
+  var historyIndexIds = {};
 
   function asText(value) {
     if (value === null || value === undefined || value === "") {
@@ -427,7 +439,224 @@
       appendList(details, row.products);
     }
     details.appendChild(buildRemediation(row.remediation));
+    details.appendChild(buildCveHistory(row));
     return details;
+  }
+
+  function buildCveHistory(row) {
+    var section = document.createElement("div");
+    var heading = document.createElement("p");
+    heading.className = "detail-label";
+    heading.textContent = "Published CVE history";
+    section.appendChild(heading);
+    var status = document.createElement("p");
+    if (!historyIndexIds[row.cve_id]) {
+      status.textContent =
+        "No published history index entry. Historical coverage is incomplete for this CVE.";
+      section.appendChild(status);
+      return section;
+    }
+    if (!CVE_ID.test(row.cve_id)) {
+      status.textContent = "CVE identifier is not valid for history lookup.";
+      section.appendChild(status);
+      return section;
+    }
+    status.textContent = "Loading published-to-published history for this CVE.";
+    section.appendChild(status);
+    loadJson("data/history/cves/" + row.cve_id + ".json")
+      .then(function (documentPayload) {
+        status.textContent = "";
+        if (!documentPayload) {
+          status.textContent =
+            "History file unavailable. Values absent from earlier snapshots are not invented.";
+          return;
+        }
+        renderHistoryDocument(section, documentPayload);
+      })
+      .catch(function () {
+        status.textContent = "History could not be loaded from this site.";
+      });
+    return section;
+  }
+
+  function renderHistoryDocument(section, documentPayload) {
+    var list = document.createElement("dl");
+    list.className = "meta-list record-details";
+    appendNamedMeta(list, "First observed publication", documentPayload.first_observed_generated_at);
+    appendNamedMeta(list, "First observed snapshot", documentPayload.first_observed_snapshot_id);
+    appendNamedMeta(list, "CISA KEV dateAdded", documentPayload.kev_date_added);
+    appendNamedMeta(
+      list,
+      "Coverage",
+      documentPayload.first_observed_may_be_incomplete
+        ? "Incomplete: first observed may predate the retained snapshot window"
+        : documentPayload.coverage || "unavailable"
+    );
+    section.appendChild(list);
+    var note = document.createElement("p");
+    note.textContent =
+      "First observed publication is not CISA KEV dateAdded. Remediation and completeness events are extraction enrichment, not confirmed upstream vulnerability changes.";
+    section.appendChild(note);
+    var events = Array.isArray(documentPayload.events) ? documentPayload.events : [];
+    if (!events.length) {
+      var empty = document.createElement("p");
+      empty.textContent = "No later published-to-published field changes are stored.";
+      section.appendChild(empty);
+      return;
+    }
+    events.forEach(function (event) {
+      var block = document.createElement("div");
+      var title = document.createElement("p");
+      title.className = "detail-label";
+      title.textContent =
+        asText(event.kind) +
+        " · " +
+        asText(event.classification) +
+        " · " +
+        asText(event.generated_at);
+      block.appendChild(title);
+      if (event.note) {
+        var eventNote = document.createElement("p");
+        eventNote.textContent = asText(event.note);
+        block.appendChild(eventNote);
+      }
+      (event.changes || []).forEach(function (change) {
+        var beforeAfter = document.createElement("p");
+        beforeAfter.textContent =
+          asText(change.field) +
+          ": " +
+          formatHistoryValue(change.before) +
+          " → " +
+          formatHistoryValue(change.after);
+        block.appendChild(beforeAfter);
+      });
+      section.appendChild(block);
+    });
+  }
+
+  function formatHistoryValue(value) {
+    if (value === null || value === undefined || value === "") {
+      return "unavailable";
+    }
+    if (typeof value === "object") {
+      try {
+        return JSON.stringify(value);
+      } catch (err) {
+        return "unavailable";
+      }
+    }
+    return String(value);
+  }
+
+  var CSV_FORMULA_PREFIXES = ["=", "+", "-", "@", "\t", "\r"];
+  var CSV_COLUMNS = [
+    "cve_id",
+    "vendor_project",
+    "product",
+    "vulnerability_name",
+    "kev_date_added",
+    "kev_due_date",
+    "known_ransomware_campaign_use",
+    "short_description",
+    "required_action",
+    "cwes",
+    "completeness",
+    "cvss_base_score",
+    "cvss_severity_status",
+    "cvss_vector",
+    "cve_state",
+    "cve_description",
+    "remediation_status",
+    "remediation_kinds",
+    "omitted_product_count",
+    "omitted_version_count",
+    "snapshot_id",
+    "snapshot_generated_at",
+    "kev_catalog_url",
+    "cve_record_url",
+    "cvelist_v5_url",
+  ];
+
+  function sanitizeCsvCell(value) {
+    var text;
+    if (value === null || value === undefined || value === "") {
+      text = "unavailable";
+    } else if (Array.isArray(value)) {
+      text = value.length ? value.map(sanitizeCsvCell).join("; ") : "unavailable";
+      return neutralizeCsv(text);
+    } else {
+      text = String(value);
+    }
+    return neutralizeCsv(text);
+  }
+
+  function neutralizeCsv(text) {
+    if (CSV_FORMULA_PREFIXES.indexOf(text.charAt(0)) !== -1) {
+      return "'" + text;
+    }
+    return text;
+  }
+
+  function quoteCsv(value) {
+    return '"' + value.replace(/"/g, '""') + '"';
+  }
+
+  function csvField(row, column) {
+    if (column === "kev_due_date") {
+      return row.due_date;
+    }
+    if (column === "cvss_severity_status") {
+      return row.severity_status || "unavailable";
+    }
+    if (column === "cwes") {
+      return row.cwes && row.cwes.length ? row.cwes : "unavailable";
+    }
+    if (column === "remediation_status") {
+      return (row.remediation && row.remediation.status) || "unavailable";
+    }
+    if (column === "remediation_kinds") {
+      return row.remediation_kinds && row.remediation_kinds.length
+        ? row.remediation_kinds
+        : "unavailable";
+    }
+    if (column === "snapshot_id") {
+      return catalogSnapshotMeta && catalogSnapshotMeta.snapshot_id;
+    }
+    if (column === "snapshot_generated_at") {
+      return catalogSnapshotMeta && catalogSnapshotMeta.generated_at;
+    }
+    if (column === "kev_catalog_url") {
+      return row.links && row.links.kev_catalog;
+    }
+    if (column === "cve_record_url") {
+      return row.links && row.links.cve_record;
+    }
+    if (column === "cvelist_v5_url") {
+      return row.links && row.links.cvelist_v5;
+    }
+    return row[column];
+  }
+
+  function exportFilteredCsv() {
+    if (!catalogLoaded) {
+      return;
+    }
+    var lines = [CSV_COLUMNS.map(quoteCsv).join(",")];
+    filteredCatalog.forEach(function (row) {
+      lines.push(
+        CSV_COLUMNS.map(function (column) {
+          return quoteCsv(sanitizeCsvCell(csvField(row, column)));
+        }).join(",")
+      );
+    });
+    var blob = new Blob([lines.join("\n") + "\n"], { type: "text/csv;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "silastron-pulse-filtered.csv");
+    link.textContent = "Download filtered CSV";
+    link.click();
+    URL.revokeObjectURL(url);
   }
 
   var REMEDIATION_LABELS = {
@@ -1011,12 +1240,24 @@
           (versions.length ? " (" + versions.join(", ") + ")" : "");
       }),
       remediation: record.remediation || fallbackRemediation(kev),
+      remediation_kinds: remediationKinds(record.remediation || fallbackRemediation(kev)),
       links: {
         cve_record: links.cve_record,
         kev_catalog: links.kev_catalog,
         cvelist_v5: links.cvelist_v5,
       },
     };
+  }
+
+  function remediationKinds(remediation) {
+    if (!remediation || !Array.isArray(remediation.items)) {
+      return [];
+    }
+    return remediation.items
+      .map(function (item) {
+        return item && item.kind ? String(item.kind) : "";
+      })
+      .filter(Boolean);
   }
 
   function cvssMatches(row, band) {
@@ -1049,17 +1290,37 @@
     return true;
   }
 
-  function rowMatches(row, query, completeness, truncated, cvss) {
+  function rowMatches(row, filters) {
+    var completeness = filters.completeness || "all";
     if (completeness !== "all" && row.completeness !== completeness) {
       return false;
     }
-    if (!cvssMatches(row, cvss || "all")) {
+    if (!cvssMatches(row, filters.cvss || "all")) {
+      return false;
+    }
+    if (!cvssRangeMatches(row, filters.cvssMin, filters.cvssMax)) {
       return false;
     }
     var isTruncated = (row.truncated_fields || []).indexOf("versions") !== -1 || Number(row.omitted_version_count) > 0;
-    if (truncated === "truncated" && !isTruncated) {
+    if (filters.truncated === "truncated" && !isTruncated) {
       return false;
     }
+    if (filters.vendor && filters.vendor !== "all" && (row.vendor_project || "") !== filters.vendor) {
+      return false;
+    }
+    if (filters.product && filters.product !== "all" && (row.product || "") !== filters.product) {
+      return false;
+    }
+    if (!dateInRange(row.kev_date_added, filters.dateFrom, filters.dateTo)) {
+      return false;
+    }
+    if (!cweMatches(row, filters.cwe)) {
+      return false;
+    }
+    if (!remediationMatches(row, filters.remediation)) {
+      return false;
+    }
+    var query = filters.query || "";
     if (!query) {
       return true;
     }
@@ -1068,10 +1329,73 @@
       row.vendor_project,
       row.product,
       row.vulnerability_name,
+      row.cve_description,
     ]
       .join(" ")
       .toLowerCase();
     return haystack.indexOf(query) !== -1;
+  }
+
+  function cvssRangeMatches(row, minValue, maxValue) {
+    if ((minValue === "" || minValue == null) && (maxValue === "" || maxValue == null)) {
+      return true;
+    }
+    if (row.severity_status !== "available" || row.cvss_base_score == null) {
+      return false;
+    }
+    var numeric = Number(row.cvss_base_score);
+    if (!isFinite(numeric)) {
+      return false;
+    }
+    if (minValue !== "" && minValue != null && numeric < Number(minValue)) {
+      return false;
+    }
+    if (maxValue !== "" && maxValue != null && numeric > Number(maxValue)) {
+      return false;
+    }
+    return true;
+  }
+
+  function dateInRange(value, start, end) {
+    if (!start && !end) {
+      return true;
+    }
+    if (!value) {
+      return false;
+    }
+    if (start && String(value) < String(start)) {
+      return false;
+    }
+    if (end && String(value) > String(end)) {
+      return false;
+    }
+    return true;
+  }
+
+  function cweMatches(row, wanted) {
+    if (!wanted || wanted === "all") {
+      return true;
+    }
+    var cwes = Array.isArray(row.cwes) ? row.cwes : [];
+    if (wanted === "unavailable") {
+      return cwes.length === 0;
+    }
+    return cwes.indexOf(wanted) !== -1;
+  }
+
+  function remediationMatches(row, wanted) {
+    if (!wanted || wanted === "all") {
+      return true;
+    }
+    var status = row.remediation && row.remediation.status ? row.remediation.status : "unavailable";
+    var kinds = row.remediation_kinds || [];
+    if (wanted === "unavailable") {
+      return status !== "available";
+    }
+    if (wanted === "available") {
+      return status === "available";
+    }
+    return kinds.indexOf(wanted) !== -1;
   }
 
   function sortRows(rows, key) {
@@ -1104,14 +1428,29 @@
     return copy;
   }
 
+  function currentCatalogFilters() {
+    return {
+      query: catalogQuery ? (catalogQuery.value || "").trim().toLowerCase() : "",
+      vendor: catalogVendor ? catalogVendor.value : "all",
+      product: catalogProduct ? catalogProduct.value : "all",
+      dateFrom: catalogDateFrom ? catalogDateFrom.value : "",
+      dateTo: catalogDateTo ? catalogDateTo.value : "",
+      completeness: catalogCompleteness ? catalogCompleteness.value : "all",
+      truncated: catalogTruncated ? catalogTruncated.value : "all",
+      cvss: catalogCvss ? catalogCvss.value : "all",
+      cvssMin: catalogCvssMin ? catalogCvssMin.value : "",
+      cvssMax: catalogCvssMax ? catalogCvssMax.value : "",
+      cwe: catalogCwe ? catalogCwe.value : "all",
+      remediation: catalogRemediation ? catalogRemediation.value : "all",
+      sort: catalogSort ? catalogSort.value : "kev_date_added",
+    };
+  }
+
   function applyCatalogFilters() {
-    var query = (catalogQuery.value || "").trim().toLowerCase();
-    var completeness = catalogCompleteness.value;
-    var truncated = catalogTruncated.value;
-    var cvss = catalogCvss ? catalogCvss.value : "all";
-    var sorted = sortRows(catalogRows, catalogSort.value);
+    var filters = currentCatalogFilters();
+    var sorted = sortRows(catalogRows, filters.sort);
     filteredCatalog = sorted.filter(function (row) {
-      return rowMatches(row, query, completeness, truncated, cvss);
+      return rowMatches(row, filters);
     });
     var maxPage = Math.max(0, Math.ceil(filteredCatalog.length / PAGE_SIZE) - 1);
     if (catalogPageIndex > maxPage) {
@@ -1140,13 +1479,105 @@
   }
 
   function setCatalogEnabled(enabled) {
-    catalogQuery.disabled = !enabled;
-    catalogCompleteness.disabled = !enabled;
-    catalogTruncated.disabled = !enabled;
-    catalogSort.disabled = !enabled;
-    if (catalogCvss) {
-      catalogCvss.disabled = !enabled;
+    var controls = [
+      catalogQuery,
+      catalogVendor,
+      catalogProduct,
+      catalogDateFrom,
+      catalogDateTo,
+      catalogCompleteness,
+      catalogTruncated,
+      catalogSort,
+      catalogCvss,
+      catalogCvssMin,
+      catalogCvssMax,
+      catalogCwe,
+      catalogRemediation,
+      catalogClear,
+      catalogExport,
+    ];
+    controls.forEach(function (control) {
+      if (control) {
+        control.disabled = !enabled;
+      }
+    });
+  }
+
+  function fillSelect(select, values, allLabel, unavailableLabel) {
+    if (!select) {
+      return;
     }
+    var current = select.value || "all";
+    select.textContent = "";
+    var all = document.createElement("option");
+    all.value = "all";
+    all.textContent = allLabel;
+    select.appendChild(all);
+    if (unavailableLabel) {
+      var missing = document.createElement("option");
+      missing.value = "unavailable";
+      missing.textContent = unavailableLabel;
+      select.appendChild(missing);
+    }
+    values.forEach(function (value) {
+      var option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      select.appendChild(option);
+    });
+    select.value = current;
+    if (select.value !== current) {
+      select.value = "all";
+    }
+  }
+
+  function uniqueSorted(values) {
+    var seen = {};
+    var out = [];
+    values.forEach(function (value) {
+      if (!value || seen[value]) {
+        return;
+      }
+      seen[value] = true;
+      out.push(value);
+    });
+    out.sort(function (left, right) {
+      return left.localeCompare(right);
+    });
+    return out;
+  }
+
+  function populateCatalogFacets() {
+    fillSelect(
+      catalogVendor,
+      uniqueSorted(
+        catalogRows.map(function (row) {
+          return row.vendor_project;
+        })
+      ),
+      "All vendors"
+    );
+    var vendor = catalogVendor && catalogVendor.value !== "all" ? catalogVendor.value : "";
+    fillSelect(
+      catalogProduct,
+      uniqueSorted(
+        catalogRows
+          .filter(function (row) {
+            return !vendor || row.vendor_project === vendor;
+          })
+          .map(function (row) {
+            return row.product;
+          })
+      ),
+      "All products"
+    );
+    var cwes = [];
+    catalogRows.forEach(function (row) {
+      (row.cwes || []).forEach(function (cwe) {
+        cwes.push(cwe);
+      });
+    });
+    fillSelect(catalogCwe, uniqueSorted(cwes), "All", "CWE unavailable");
   }
 
   function loadJson(path) {
@@ -1174,12 +1605,27 @@
           throw new Error("Published snapshot unavailable");
         }
         catalogRows = snapshot.records.map(compactRecord);
+        catalogSnapshotMeta = {
+          snapshot_id: snapshot.snapshot_id,
+          generated_at: snapshot.generated_at,
+        };
         catalogLoaded = true;
         catalogPageIndex = 0;
+        populateCatalogFacets();
         setCatalogEnabled(true);
         catalogStatus.textContent =
           "Loaded " + String(catalogRows.length) + " published records. Search is local to this snapshot.";
         applyCatalogFilters();
+        loadJson("data/history/index.json").then(function (index) {
+          historyIndexIds = {};
+          if (index && Array.isArray(index.cves)) {
+            index.cves.forEach(function (item) {
+              if (item && item.cve_id) {
+                historyIndexIds[item.cve_id] = item;
+              }
+            });
+          }
+        });
       })
       .catch(function () {
         catalogLoad.disabled = false;
@@ -1189,29 +1635,77 @@
       });
   }
 
+  function resetCatalogPage() {
+    catalogPageIndex = 0;
+    applyCatalogFilters();
+  }
+
   catalogLoad.addEventListener("click", loadCatalog);
-  catalogQuery.addEventListener("input", function () {
-    catalogPageIndex = 0;
-    applyCatalogFilters();
-  });
-  catalogCompleteness.addEventListener("change", function () {
-    catalogPageIndex = 0;
-    applyCatalogFilters();
-  });
+  catalogQuery.addEventListener("input", resetCatalogPage);
+  catalogCompleteness.addEventListener("change", resetCatalogPage);
   if (catalogCvss) {
-    catalogCvss.addEventListener("change", function () {
-      catalogPageIndex = 0;
-      applyCatalogFilters();
+    catalogCvss.addEventListener("change", resetCatalogPage);
+  }
+  catalogTruncated.addEventListener("change", resetCatalogPage);
+  catalogSort.addEventListener("change", resetCatalogPage);
+  [
+    catalogVendor,
+    catalogProduct,
+    catalogDateFrom,
+    catalogDateTo,
+    catalogCvssMin,
+    catalogCvssMax,
+    catalogCwe,
+    catalogRemediation,
+  ].forEach(function (control) {
+    if (!control) {
+      return;
+    }
+    control.addEventListener("change", function () {
+      if (control === catalogVendor) {
+        populateCatalogFacets();
+      }
+      resetCatalogPage();
+    });
+  });
+  if (catalogClear) {
+    catalogClear.addEventListener("click", function () {
+      if (catalogQuery) {
+        catalogQuery.value = "";
+      }
+      [
+        catalogVendor,
+        catalogProduct,
+        catalogCompleteness,
+        catalogCvss,
+        catalogCwe,
+        catalogTruncated,
+        catalogRemediation,
+        catalogSort,
+      ].forEach(function (control) {
+        if (control) {
+          control.value = control === catalogSort ? "kev_date_added" : "all";
+        }
+      });
+      if (catalogDateFrom) {
+        catalogDateFrom.value = "";
+      }
+      if (catalogDateTo) {
+        catalogDateTo.value = "";
+      }
+      if (catalogCvssMin) {
+        catalogCvssMin.value = "";
+      }
+      if (catalogCvssMax) {
+        catalogCvssMax.value = "";
+      }
+      populateCatalogFacets();
+      resetCatalogPage();
     });
   }
-  catalogTruncated.addEventListener("change", function () {
-    catalogPageIndex = 0;
-    applyCatalogFilters();
-  });
-  catalogSort.addEventListener("change", function () {
-    catalogPageIndex = 0;
-    applyCatalogFilters();
-  });
+  if (catalogExport) {
+    catalogExport.addEventListener("click", exportFilteredCsv);
+  }
   catalogPrev.addEventListener("click", function () {
     catalogPageIndex -= 1;
     applyCatalogFilters();
@@ -1220,11 +1714,28 @@
     catalogPageIndex += 1;
     applyCatalogFilters();
   });
+  catalogPrev.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      catalogPrev.click();
+    }
+  });
+  catalogNext.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      catalogNext.click();
+    }
+  });
 
-  Promise.all([loadJson("data/manifest.json"), loadJson("data/preview.json")])
+  Promise.all([
+    loadJson("data/manifest.json"),
+    loadJson("data/preview.json"),
+    loadJson("data/publication-status.json"),
+  ])
     .then(function (results) {
       var manifest = results[0];
       var preview = results[1];
+      var publicationStatus = results[2];
       if (!manifest) {
         setBanner(
           "unavailable",
@@ -1281,6 +1792,23 @@
         setBanner("unavailable", "Collection failed. No successful snapshot is shown.");
       } else {
         setBanner("unavailable", "Published snapshot is unavailable.");
+      }
+      if (
+        publicationStatus &&
+        publicationStatus.state &&
+        publicationStatus.state !== "consistent"
+      ) {
+        setBanner(
+          "unavailable",
+          "Published Pages data and persisted pulse-state may have diverged. " +
+            "Do not treat this page as an authoritative publication until an operator reconciles. " +
+            asText(publicationStatus.classification)
+        );
+        appendMeta("Publication state", publicationStatus.state);
+        appendMeta("Collect run ID", publicationStatus.collect_run_id);
+        appendMeta("Snapshot ID", publicationStatus.snapshot_id);
+        appendMeta("Manifest digest", publicationStatus.manifest_digest);
+        appendMeta("Deployment run", publicationStatus.deployment_run_id);
       }
       var summary = (preview && preview.summary) || {};
       epssDisabled = Boolean(

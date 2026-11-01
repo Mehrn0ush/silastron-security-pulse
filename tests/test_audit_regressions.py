@@ -381,7 +381,8 @@ class PublishWorkflowTests(unittest.TestCase):
         build = self._job("build")
         persist = self._job("persist-published")
         self.assertIn("snapshot_id: ${{ steps.decide.outputs.snapshot_id }}", build)
-        self.assertIn("needs: [build, deploy]", persist)
+        self.assertIn("needs: [build, deploy, record-deploy-receipt]", persist)
+        self.assertIn("write-publication-status", persist)
         self.assertIn(
             "git commit -F /tmp/publish-commit-msg",
             persist,

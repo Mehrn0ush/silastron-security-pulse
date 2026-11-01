@@ -83,6 +83,7 @@ jobs:
           mapping = {
               "catalog.json": "source-kev-catalog.json",
               "meta.json": "source-kev-meta.json",
+              "provenance.json": "source-kev-provenance.json",
           }
           for src_name, dest_name in mapping.items():
               src = Path("pulse-state/source/kev") / src_name
@@ -95,6 +96,7 @@ jobs:
               "collection-status.json",
               "source-kev-catalog.json",
               "source-kev-meta.json",
+              "source-kev-provenance.json",
           )
           lines = []
           for name in names:
@@ -116,6 +118,7 @@ jobs:
             dist/SHA256SUMS
             dist/source-kev-catalog.json
             dist/source-kev-meta.json
+            dist/source-kev-provenance.json
           if-no-files-found: error
           retention-days: 14
 

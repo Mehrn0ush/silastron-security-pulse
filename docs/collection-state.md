@@ -42,9 +42,10 @@ a crash mid-write does not claim that source state is complete.
    the previous valid snapshot from `published/latest.json` or
    `candidates/latest.json`, fetches KEV, incrementally enriches CVE List V5
    (`delta.json` / `deltaLog.json`, not a per-CVE poll of the full KEV set),
-   writes `dist/candidate.json`, copies the Collect-time KEV catalog into the
-   `pulse-candidate` artifact, commits `source/` and `candidates/` to
-   `pulse-state`, and uploads that artifact. It never writes `published/`.
+   writes `dist/candidate.json`, copies the Collect-time KEV catalog and
+   provenance digest into the `pulse-candidate` artifact, commits `source/`
+   and `candidates/` to `pulse-state`, and uploads that artifact. It never
+   writes `published/`.
    See [cve-sync.md](cve-sync.md).
 2. **Publish** binds one Collect run. A successful scheduled Collect on `main`
    starts Publish via `workflow_run` with that exact run ID. Manual dispatch

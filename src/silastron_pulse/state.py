@@ -30,6 +30,9 @@ class PulseState:
     def kev_catalog_path(self) -> Path:
         return self.source / "kev" / "catalog.json"
 
+    def kev_provenance_path(self) -> Path:
+        return self.source / "kev" / "provenance.json"
+
     def cve_index_path(self) -> Path:
         return self.source / "cve" / "index.json"
 
@@ -85,9 +88,12 @@ class PulseState:
         kev_catalog: dict[str, Any],
         cve_index: dict[str, Any],
         cve_records: dict[str, dict[str, Any]],
+        kev_provenance: dict[str, Any] | None = None,
     ) -> None:
         atomic_write_json(self.kev_meta_path(), kev_meta)
         atomic_write_json(self.kev_catalog_path(), kev_catalog)
+        if kev_provenance is not None:
+            atomic_write_json(self.kev_provenance_path(), kev_provenance)
         atomic_write_json(self.cve_index_path(), cve_index)
         for cve_id, record in cve_records.items():
             atomic_write_json(self.cve_record_path(cve_id), record)

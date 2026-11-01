@@ -438,6 +438,17 @@ thead th {
   margin-bottom: 0.25rem;
 }
 
+.catalog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: end;
+}
+
+.catalog-actions button {
+  width: auto;
+}
+
 input,
 select,
 button {
