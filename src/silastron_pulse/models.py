@@ -188,6 +188,7 @@ class CveRecord:
     omitted_version_count: int = 0
     cached: bool = False
     remediation_items: tuple[RemediationItem, ...] = ()
+    enrichment_availability: dict[str, Any] | None = None
 
     def comparable(self) -> dict[str, Any]:
         return {
@@ -238,6 +239,7 @@ class CveRecord:
             "omitted_version_count": self.omitted_version_count,
             "cached": self.cached,
             "remediation_items": [item.to_dict() for item in self.remediation_items],
+            "enrichment_availability": self.enrichment_availability,
         }
 
 

@@ -129,4 +129,7 @@ characters so KEV-sized batches must use the CSV.
 - `CVE-2099-0001` is never treated as `CVE-2099-00001`.
 - KEV is the only confirmed-exploitation signal.
 - Missing CVE enrichment marks that record `unavailable`; it does not drop the
-  KEV event and does not invent CVE fields.
+  KEV event and does not invent CVE fields. Publication uses structured
+  `enrichment_availability` so a reserved or absent CVE List V5 file can be
+  distinguished from a transient or unclassified failure. See
+  [enrichment-policy.md](enrichment-policy.md).

@@ -42,7 +42,7 @@ def _run(**overrides: object) -> dict:
     return payload
 
 
-class AutoPublishHelperTests(unittest.TestCase):
+class AutoPublishFixtures(unittest.TestCase):
     def setUp(self) -> None:
         self.tmp = tempfile.TemporaryDirectory()
         self.root = Path(self.tmp.name)
@@ -138,6 +138,8 @@ class AutoPublishHelperTests(unittest.TestCase):
             max_depth=self.config.max_json_depth,
         )
 
+
+class AutoPublishHelperTests(AutoPublishFixtures):
     def test_first_scheduled_collect_is_eligible(self) -> None:
         decision, _ = self._decide(self.snapshot)
         self.assertEqual(decision.outcome, "publish")
@@ -544,6 +546,11 @@ class AutoPublishWorkflowTests(unittest.TestCase):
         self.assertIn("git commit -F /tmp/publish-commit-msg", publish)
         self.assertIn("record-divergence:", publish)
         self.assertIn("record-deploy-receipt:", publish)
+        self.assertIn("record-publication-intent:", publish)
+        self.assertIn("write-publication-intent", publish)
+        self.assertIn("needs.record-publication-intent.result == 'success'", publish)
+        self.assertIn("observe-pages-manifest", publish)
+        self.assertIn("mark-deploy-failed:", publish)
         self.assertIn("write-publication-status", publish)
         self.assertIn("source-kev-catalog.json", collect)
         self.assertIn("source-kev-provenance.json", collect)

@@ -50,14 +50,21 @@ Persistent layout is documented in [collection-state.md](collection-state.md).
    collector validates the documented CISA feed, compares parsed records to the
    original bytes, and stores the upstream digest. Publication still does not
    re-fetch CISA. HTTPS is not publisher authentication.
-9. **Pages deploy and pulse-state persist are not atomic.** A small
-   `publication-status.json` state machine blocks later publication and
-   frontend deploy when they diverge. Recovery verifies the original artifact
-   and never silently rolls back `published/latest`.
+9. **Pages deploy and pulse-state persist are not atomic.** Intent is
+   persisted before deploy. `publication-status.json` records pending,
+   deployed, persisted, failed, and uncertain outcomes. Later publication
+   and frontend deploy fail closed on unresolved publication. Recovery
+   verifies the original artifact and never silently rolls back
+   `published/latest`. A successful Actions job is not proof of CDN
+   visibility.
 10. **CVE history is published-to-published.** Compact indexes are generated
     from immutable snapshots at promote time. The explorer loads one CVE file
     on demand and never treats extraction enrichment as an upstream change.
-11. **No large upstream datasets are committed.** Tests use synthetic fixtures
+11. **KEV integrity and CVE enrichment are separate.** Publication can accept
+    bounded, classified CVE List V5 absence. Missing enrichment never drops
+    a verified KEV row and never fabricates CNA fields. See
+    [enrichment-policy.md](enrichment-policy.md).
+12. **No large upstream datasets are committed.** Tests use synthetic fixtures
    plus small official samples (one KEV excerpt and CVE-2021-44228). Live
    snapshots stay on `pulse-state` and workflow artifacts until publication is
    approved.

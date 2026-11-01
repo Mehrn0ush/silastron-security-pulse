@@ -13,12 +13,16 @@ from silastron_pulse.errors import PulseError
 from silastron_pulse.jsonutil import sha256_bytes
 from silastron_pulse.pipeline import collect
 from silastron_pulse.auto_publish import evaluate_publication, write_decision_outputs
+from silastron_pulse.pages_observe import observe_pages_manifest
 from silastron_pulse.reconciliation import (
     RECONCILE_CONFIRM,
+    assert_intent_matches,
     assert_publication_consistent,
+    build_publication_intent,
     build_publication_status,
     classify_workflow_outcome,
     reconcile_publication,
+    write_publication_intent,
     write_publication_status,
 )
 from silastron_pulse.safe_fs import (
@@ -171,6 +175,36 @@ def main(argv: list[str] | None = None) -> int:
     reconcile.add_argument("--expected-collect-run-id", required=True)
     reconcile.add_argument("--confirm", required=True)
     reconcile.add_argument("--deployment-run-id", default=None)
+
+    write_intent = sub.add_parser(
+        "write-publication-intent",
+        help="Persist publication intent before Pages deploy",
+    )
+    write_intent.add_argument("--published-dir", type=Path, required=True)
+    write_intent.add_argument("--snapshot-id", required=True)
+    write_intent.add_argument("--collect-run-id", required=True)
+    write_intent.add_argument("--candidate-digest", required=True)
+    write_intent.add_argument("--deployment-run-id", required=True)
+    write_intent.add_argument("--expected-previous-snapshot-id", default="")
+    write_intent.add_argument("--state", default="pending_deploy")
+
+    verify_intent = sub.add_parser(
+        "verify-publication-intent",
+        help="Refuse deploy when the recorded intent does not match the validated candidate",
+    )
+    verify_intent.add_argument("--published-dir", type=Path, required=True)
+    verify_intent.add_argument("--snapshot-id", required=True)
+    verify_intent.add_argument("--collect-run-id", required=True)
+    verify_intent.add_argument("--candidate-digest", required=True)
+
+    observe = sub.add_parser(
+        "observe-pages-manifest",
+        help="Observe the public Pages manifest without treating job status as proof",
+    )
+    observe.add_argument("--url", required=True)
+    observe.add_argument("--expected-snapshot-id", required=True)
+    observe.add_argument("--expected-digest", default=None)
+    observe.add_argument("--attempts", type=int, default=3)
 
     args = parser.parse_args(argv)
     try:
@@ -337,6 +371,40 @@ def main(argv: list[str] | None = None) -> int:
             if result.get("copy_required"):
                 copy_tree_without_symlinks(args.incoming, args.current)
                 write_publication_status(args.current, result["publication_status"])
+            print(json.dumps(result, indent=2, default=str))
+            return 0
+        if args.command == "write-publication-intent":
+            payload = build_publication_intent(
+                now=SystemClock().now(),
+                snapshot_id=args.snapshot_id,
+                collect_run_id=args.collect_run_id,
+                candidate_digest=args.candidate_digest,
+                expected_previous_snapshot_id=args.expected_previous_snapshot_id or None,
+                deployment_run_id=args.deployment_run_id,
+                state=args.state,
+            )
+            written = write_publication_intent(args.published_dir, payload)
+            print(json.dumps(written, indent=2, default=str))
+            return 0
+        if args.command == "verify-publication-intent":
+            config = PulseConfig.from_env(args.published_dir)
+            intent = assert_intent_matches(
+                args.published_dir,
+                snapshot_id=args.snapshot_id,
+                collect_run_id=args.collect_run_id,
+                candidate_digest=args.candidate_digest,
+                max_bytes=config.max_snapshot_bytes,
+                max_depth=config.max_json_depth,
+            )
+            print(json.dumps(intent, indent=2, default=str))
+            return 0
+        if args.command == "observe-pages-manifest":
+            result = observe_pages_manifest(
+                args.url,
+                expected_snapshot_id=args.expected_snapshot_id,
+                expected_digest=args.expected_digest,
+                attempts=args.attempts,
+            )
             print(json.dumps(result, indent=2, default=str))
             return 0
         if args.command == "decide-publication":

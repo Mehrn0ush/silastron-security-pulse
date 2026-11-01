@@ -56,9 +56,26 @@ only until an operator dispatches Publish with that run ID.
   Publication does not re-fetch CISA.
 - Artifact trees refuse extra files and symlinks. `snapshot_id` is not
   interpolated into a shell command.
+- `decide-publication` applies the enrichment availability policy after KEV
+  catalog binding. Invalid KEV remains a hard reject. A verified KEV catalog
+  may publish with bounded, classified CVE List V5 gaps. Unclassified
+  historical 404 strings still reject. See
+  [enrichment-policy.md](enrichment-policy.md).
+- `record-publication-intent` persists `publication-intent.json` and
+  `publication-status.json` (`pending_deploy`) **before** Pages deploy. The
+  intent is bound to snapshot ID, Collect run ID, candidate digest, expected
+  previous published snapshot, and the deployment run ID. Deploy is refused
+  unless that write succeeds and `verify-publication-intent` matches the
+  validated candidate. A successful `deploy-pages` job is not treated as
+  proof the public CDN serves the snapshot.
+- `mark-deploy-failed` writes `failed` when Pages deploy does not succeed
+  after intent was recorded. That is not a permanent lock.
 - `record-deploy-receipt` writes `published/publication-status.json` as
   `deployed_unpersisted` after a successful Pages deploy. `persist-published`
   then copies the validated artifact and marks `consistent`.
+- `persist-published` observes `https://pulse.silastron.com/data/manifest.json`
+  (allowlisted). A CDN or Pages delay is recorded as unconfirmed visibility
+  and does not by itself fail persist or overwrite newer published state.
 - `persist-published` needs `[build, deploy, record-deploy-receipt]` and still
   runs when the receipt job fails, but only after `deploy` succeeded. A failed
   deploy is not recorded as a successful publication.

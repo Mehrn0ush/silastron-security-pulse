@@ -21,6 +21,7 @@ from silastron_pulse.adapters.delta import (
 )
 from silastron_pulse.config import PulseConfig
 from silastron_pulse.constants import CVE_PARSER_VERSION, MITRE_CVE_ATTRIBUTION
+from silastron_pulse.enrichment_policy import AVAILABLE, PARTIAL, classify_fetch_failure
 from silastron_pulse.errors import CorrelationError, FetchError, ValidationError
 from silastron_pulse.http import Fetcher
 from silastron_pulse.ids import cvelist_v5_raw_url, parse_cve_id, same_cve_id
@@ -304,7 +305,13 @@ def _failed_enrichment(
     )
 
 
-def _unavailable(cve_id: str, url: str, error: str) -> CveRecord:
+def _unavailable(
+    cve_id: str,
+    url: str,
+    error: str,
+    *,
+    availability: dict[str, Any] | None = None,
+) -> CveRecord:
     return CveRecord(
         cve_id=cve_id,
         state="unavailable",
@@ -321,6 +328,7 @@ def _unavailable(cve_id: str, url: str, error: str) -> CveRecord:
         record_sha256="",
         status="unavailable",
         error=error,
+        enrichment_availability=availability,
     )
 
 
@@ -346,7 +354,7 @@ def _fetch_one(
             max_depth=config.max_json_depth,
             source=cve_id,
         )
-        return parse_cve_record(
+        record = parse_cve_record(
             payload,
             expected_cve_id=cve_id,
             raw=response.body,
@@ -355,8 +363,28 @@ def _fetch_one(
             retrieved_at=response.retrieved_at,
             etag=response.etag,
         )
+        return replace(
+            record,
+            enrichment_availability={
+                "state": (
+                    PARTIAL
+                    if record.truncated_fields
+                    or record.omitted_product_count
+                    or record.omitted_version_count
+                    else AVAILABLE
+                ),
+                "http_status": response.status_code,
+                "requested_url": url,
+                "constructed_path_valid": True,
+            },
+        )
     except (FetchError, ValidationError, CorrelationError) as exc:
-        return _unavailable(cve_id, url, str(exc))
+        return _unavailable(
+            cve_id,
+            url,
+            str(exc),
+            availability=classify_fetch_failure(cve_id, url, exc),
+        )
 
 
 def parse_cve_record(
@@ -474,6 +502,11 @@ def cve_record_from_dict(payload: dict[str, Any], *, cached: bool = False) -> Cv
         omitted_version_count=int(payload.get("omitted_version_count") or 0),
         cached=cached,
         remediation_items=tuple(_remediation_from_dict(payload.get("remediation_items"))),
+        enrichment_availability=(
+            payload.get("enrichment_availability")
+            if isinstance(payload.get("enrichment_availability"), dict)
+            else None
+        ),
     )
 
 

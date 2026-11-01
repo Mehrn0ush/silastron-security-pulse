@@ -18,6 +18,11 @@ from silastron_pulse.kev_integrity import (
     unexplained_kev_change_reason,
     verify_candidate_matches_catalog,
 )
+from silastron_pulse.enrichment_policy import (
+    enrichment_improved,
+    evaluate_enrichment_policy,
+    kev_digest,
+)
 from silastron_pulse.reconciliation import publication_status_block_reason
 from silastron_pulse.safe_fs import require_run_id, require_safe_token
 from silastron_pulse.store import load_snapshot, parse_generated_at
@@ -222,17 +227,6 @@ def evaluate_publication(
             details=details,
         )
 
-    degraded_reason = _degraded_policy_reason(candidate)
-    if degraded_reason:
-        return _reject(
-            "degraded_blocked",
-            degraded_reason,
-            snapshot_id=snapshot_id,
-            collect_run_id=collect_run_id,
-            digest=digest,
-            details=details,
-        )
-
     if fresh["stale"]:
         return _reject(
             "stale_candidate",
@@ -266,6 +260,24 @@ def evaluate_publication(
         return _reject(
             "publication_diverged",
             diverge,
+            snapshot_id=snapshot_id,
+            collect_run_id=collect_run_id,
+            digest=digest,
+            details=details,
+        )
+
+    enrichment = evaluate_enrichment_policy(candidate, published=published)
+    details["enrichment_policy"] = {
+        "counts": enrichment["counts"],
+        "affected": enrichment["affected"],
+        "eligible": enrichment["eligible"],
+        "block_reason": enrichment["block_reason"],
+        "thresholds": enrichment["thresholds"],
+    }
+    if enrichment["block_reason"]:
+        return _reject(
+            "degraded_blocked",
+            enrichment["block_reason"],
             snapshot_id=snapshot_id,
             collect_run_id=collect_run_id,
             digest=digest,
@@ -325,6 +337,16 @@ def evaluate_publication(
         return _reject(
             code,
             message,
+            snapshot_id=snapshot_id,
+            collect_run_id=collect_run_id,
+            digest=digest,
+            details=details,
+        )
+
+    if published is not None and enrichment_improved(published, candidate):
+        return PublicationDecision(
+            outcome="publish",
+            reason="enrichment_update",
             snapshot_id=snapshot_id,
             collect_run_id=collect_run_id,
             digest=digest,
@@ -456,28 +478,6 @@ def _source_integrity_reason(candidate: dict[str, Any]) -> tuple[str, str] | Non
     ids = [item.get("cve_id") for item in records]
     if len(ids) != len(set(ids)):
         return ("source_inconsistent", "Snapshot contains duplicate CVE IDs")
-    return None
-
-
-def _degraded_policy_reason(candidate: dict[str, Any]) -> str | None:
-    if candidate.get("status") != "degraded":
-        return None
-    cve = (candidate.get("sources") or {}).get("cve") or {}
-    if cve.get("status") not in {"ok", "degraded"}:
-        return f"Degraded snapshot has unverified CVE source status {cve.get('status')!r}"
-    summary = candidate.get("summary") or {}
-    unavailable = summary.get("unavailable_records") or 0
-    if unavailable:
-        return (
-            "Degraded snapshot has unavailable CVE enrichments; "
-            "only bounded partial extraction is allowed"
-        )
-    partial = summary.get("partial_records") or 0
-    truncated = summary.get("truncated_records") or 0
-    if not partial and not truncated:
-        return "Degraded snapshot has no bounded partial CVE extraction"
-    if partial and truncated == 0:
-        return "Degraded snapshot reports partial records without truncated extraction"
     return None
 
 
