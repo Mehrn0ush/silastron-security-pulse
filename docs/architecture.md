@@ -58,16 +58,18 @@ Persistent layout is documented in [collection-state.md](collection-state.md).
    `published/latest`. A successful Actions job is not proof of CDN
    visibility.
 10. **CVE history is published-to-published.** Compact indexes are generated
-    from immutable snapshots at promote time. The explorer loads one CVE file
-    on demand and never treats extraction enrichment as an upstream change.
+    from immutable snapshots at promote time and merged into a durable ledger
+    so first-observed dates survive the 36-snapshot comparison window. The
+    explorer loads one bounded CVE file on demand and never treats extraction
+    enrichment as an upstream change. See [cve-history.md](cve-history.md).
 11. **KEV integrity and CVE enrichment are separate.** Publication can accept
     bounded, classified CVE List V5 absence. Missing enrichment never drops
     a verified KEV row and never fabricates CNA fields. See
     [enrichment-policy.md](enrichment-policy.md).
 12. **No large upstream datasets are committed.** Tests use synthetic fixtures
-   plus small official samples (one KEV excerpt and CVE-2021-44228). Live
-   snapshots stay on `pulse-state` and workflow artifacts until publication is
-   approved.
+    plus small official samples (one KEV excerpt and CVE-2021-44228). Live
+    snapshots stay on `pulse-state` and workflow artifacts until publication is
+    approved.
 
 ## Runtime layout
 

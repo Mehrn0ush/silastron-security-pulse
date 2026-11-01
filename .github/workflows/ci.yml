@@ -44,3 +44,24 @@ jobs:
           python -m silastron_pulse validate preview/data/manifest.json
           python -m silastron_pulse validate public/data/manifest.json
           python -c "import json,pathlib; json.loads(pathlib.Path('schemas/pulse-snapshot.v1.schema.json').read_text()); json.loads(pathlib.Path('schemas/pulse-manifest.v1.schema.json').read_text())"
+
+  e2e:
+    name: Browser explorer
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+
+      - name: Install Playwright and Chromium
+        working-directory: tests/e2e
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Run browser tests against local fixtures
+        working-directory: tests/e2e
+        env:
+          PYTHONPATH: ${{ github.workspace }}/src:${{ github.workspace }}
+        run: npx playwright test
