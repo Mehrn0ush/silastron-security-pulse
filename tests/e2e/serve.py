@@ -72,6 +72,8 @@ def _expand_snapshot(snapshot: dict) -> dict:
             f"https://github.com/CVEProject/cvelistV5/blob/main/cves/2099/"
             f"{(1000 + index) // 1000:d}xxx/{cve_id}.json"
         )
+        record["links"]["nvd"] = f"https://nvd.nist.gov/vuln/detail/{cve_id}"
+        _sync_intelligence_id(record)
         if index == 0:
             record["kev"]["vendor_project"] = "=1+1"
             record["kev"]["product"] = "Formula Product"
@@ -79,6 +81,39 @@ def _expand_snapshot(snapshot: dict) -> dict:
             record["kev"]["cwes"] = ["CWE-94"]
             record["cve"]["severity"]["base_score"] = 9.8
             record["cve"]["severity"]["base_severity"] = "CRITICAL"
+            _set_intel(
+                record,
+                assessments=[
+                    {
+                        "source": "cve_cna",
+                        "cvss_version": "3.1",
+                        "base_score": 7.5,
+                        "severity": "HIGH",
+                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+                        "metrics": {
+                            "attackVector": "NETWORK",
+                            "privilegesRequired": "NONE",
+                            "userInteraction": "NONE",
+                        },
+                    },
+                    {
+                        "source": "nvd",
+                        "cvss_version": "3.1",
+                        "base_score": 9.8,
+                        "severity": "CRITICAL",
+                        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                        "metrics": {
+                            "attackVector": "NETWORK",
+                            "privilegesRequired": "NONE",
+                            "userInteraction": "NONE",
+                        },
+                    },
+                ],
+                cwes=[{"cwe_id": "CWE-94", "name": "Code Injection", "source": "cve_cna"}],
+                fixed=False,
+                nvd_status="ok",
+                conflicts=[{"kind": "cvss", "note": "CNA and NVD CVSS 3.1 scores differ."}],
+            )
         elif index == 1:
             record["kev"]["vendor_project"] = "Acme"
             record["kev"]["product"] = "Widget"
@@ -89,6 +124,19 @@ def _expand_snapshot(snapshot: dict) -> dict:
             record["cve"]["error"] = "unavailable fixture"
             record["completeness"] = "unavailable"
             record["remediation"] = {"status": "unavailable", "items": []}
+            _set_intel(
+                record,
+                assessments=[],
+                cwes=[],
+                fixed=False,
+                nvd_status="unavailable",
+                descriptions=[
+                    {
+                        "text": "<img src=x onerror=alert(1)>",
+                        "source": "nvd",
+                    }
+                ],
+            )
         elif index == 2:
             record["kev"]["vendor_project"] = "Acme"
             record["kev"]["product"] = "Gadget"
@@ -98,6 +146,34 @@ def _expand_snapshot(snapshot: dict) -> dict:
             record["completeness"] = "partial"
             record["cve"]["severity"]["base_score"] = 4.3
             record["cve"]["severity"]["base_severity"] = "MEDIUM"
+            _set_intel(
+                record,
+                assessments=[
+                    {
+                        "source": "cve_cna",
+                        "cvss_version": "3.1",
+                        "base_score": 4.3,
+                        "severity": "MEDIUM",
+                        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:R/S:U/C:L/I:N/A:N",
+                        "metrics": {
+                            "attackVector": "NETWORK",
+                            "privilegesRequired": "LOW",
+                            "userInteraction": "REQUIRED",
+                        },
+                    }
+                ],
+                cwes=[{"cwe_id": "CWE-79", "name": "XSS", "source": "nvd"}],
+                fixed=True,
+                nvd_status="ok",
+                advisories=[
+                    {
+                        "url": "https://vendor.example/advisory/CVE-2099-1002",
+                        "title": "Vendor advisory",
+                        "classification": "vendor_advisory",
+                        "source": "cve_cna",
+                    }
+                ],
+            )
         else:
             record["kev"]["vendor_project"] = "OtherCo"
             record["kev"]["product"] = f"App {index}"
@@ -114,7 +190,98 @@ def _expand_snapshot(snapshot: dict) -> dict:
         1 for item in payload["records"] if item["completeness"] == "unavailable"
     )
     payload["snapshot_id"] = "e2e-fixture-1"
+    for record in payload["records"]:
+        _sync_intelligence_id(record)
     return payload
+
+
+def _sync_intelligence_id(record: dict) -> None:
+    intel = record.get("intelligence")
+    if not isinstance(intel, dict):
+        return
+    identity = intel.setdefault("identity", {})
+    identity["cve_id"] = record["cve_id"]
+
+
+def _set_intel(
+    record: dict,
+    *,
+    assessments: list,
+    cwes: list,
+    fixed: bool,
+    nvd_status: str,
+    conflicts: list | None = None,
+    descriptions: list | None = None,
+    references: list | None = None,
+    advisories: list | None = None,
+) -> None:
+    intel = record.setdefault("intelligence", {})
+    intel["schema_version"] = "1.0.0"
+    intel.setdefault("identity", {})["cve_id"] = record["cve_id"]
+    intel["descriptions"] = descriptions or []
+    intel["cvss"] = {
+        "assessments": assessments,
+        "display_preference_note": (
+            "Display preference is a deterministic UI order, not a correctness ranking."
+        ),
+    }
+    intel["cwes"] = {"assertions": cwes}
+    intel["affected"] = {
+        "products": [
+            {
+                "vendor": record["kev"]["vendor_project"],
+                "product": record["kev"]["product"],
+                "source": "cve_cna",
+                "ranges": [
+                    {
+                        "status": "affected",
+                        "version": "1.0",
+                        "less_than": "2.0",
+                        "less_than_or_equal": None,
+                        "greater_than": None,
+                        "greater_than_or_equal": None,
+                        "version_type": "semver",
+                    }
+                ],
+            }
+        ],
+        "note": "Affected ranges are not merged across sources.",
+    }
+    intel["remediation"] = {
+        "fixed_versions": (
+            [
+                {
+                    "vendor": record["kev"]["vendor_project"],
+                    "product": record["kev"]["product"],
+                    "version": "2.0.0",
+                    "source": "cve_cna",
+                    "evidence": "cna_changes_status_fixed",
+                }
+            ]
+            if fixed
+            else []
+        ),
+        "vendor_advisories": advisories or [],
+        "note": "Fixed versions appear only from explicit CNA fixed evidence.",
+    }
+    intel["references"] = (advisories or []) + (references or [])
+    intel["sources"] = {
+        "cisa_kev": {"status": "ok", "completeness": "available"},
+        "cve_list_v5": {
+            "status": record["cve"].get("status") or "ok",
+            "completeness": "unavailable" if record["completeness"] == "unavailable" else "available",
+        },
+        "nvd": {"status": nvd_status, "completeness": "available" if nvd_status == "ok" else "unavailable"},
+    }
+    intel["conflicts"] = conflicts or []
+    intel["coverage"] = {
+        "has_cvss": bool(assessments),
+        "has_cwe": bool(cwes),
+        "has_affected_versions": True,
+        "has_fixed_version": fixed,
+        "has_vendor_advisory": bool(advisories),
+        "nvd_available": nvd_status == "ok",
+    }
 
 
 def _write_history(data: Path) -> None:

@@ -48,6 +48,23 @@ def row_matches(row: dict[str, Any], filters: dict[str, Any]) -> bool:
     remediation = filters.get("remediation") or "all"
     if not _remediation_matches(row, remediation):
         return False
+    if not _list_filter(row.get("cvss_versions"), filters.get("cvss_version")):
+        return False
+    if not _list_filter(row.get("attack_vector"), filters.get("attack_vector")):
+        return False
+    if not _list_filter(row.get("privileges_required"), filters.get("privileges_required")):
+        return False
+    if not _list_filter(row.get("user_interaction"), filters.get("user_interaction")):
+        return False
+    if not _flag_filter(row.get("has_fixed_version"), filters.get("fixed_version")):
+        return False
+    if not _flag_filter(row.get("has_vendor_advisory"), filters.get("vendor_advisory")):
+        return False
+    nvd = filters.get("nvd") or "all"
+    if nvd == "ok" and row.get("nvd_status") != "ok":
+        return False
+    if nvd == "unavailable" and row.get("nvd_status") == "ok":
+        return False
     return True
 
 
@@ -179,3 +196,20 @@ def _remediation_matches(row: dict[str, Any], wanted: str) -> bool:
     if wanted == "available":
         return status == "available"
     return isinstance(kinds, list) and wanted in kinds
+
+
+def _list_filter(values: object, wanted: object) -> bool:
+    if not wanted or wanted == "all":
+        return True
+    items = values if isinstance(values, list) else []
+    if wanted == "unavailable":
+        return not items
+    return wanted in items
+
+
+def _flag_filter(value: object, wanted: object) -> bool:
+    if not wanted or wanted == "all":
+        return True
+    if wanted == "available":
+        return value is True
+    return value is not True
