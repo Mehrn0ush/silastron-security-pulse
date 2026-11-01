@@ -4,7 +4,12 @@ from __future__ import annotations
 
 import re
 
-from silastron_pulse.constants import CVE_ID_PATTERN, CWE_ID_PATTERN, CVE_LIST_V5_RAW_BASE
+from silastron_pulse.constants import (
+    CVE_ID_PATTERN,
+    CWE_ID_PATTERN,
+    CVE_LIST_V5_RAW_BASE,
+    NVD_CVE_API_URL,
+)
 from silastron_pulse.errors import ValidationError
 
 CVE_ID_RE = re.compile(CVE_ID_PATTERN)
@@ -34,6 +39,11 @@ def cvelist_v5_relpath(cve_id: str) -> str:
 
 def cvelist_v5_raw_url(cve_id: str) -> str:
     return CVE_LIST_V5_RAW_BASE + cvelist_v5_relpath(cve_id)
+
+
+def nvd_cve_api_url(cve_id: str) -> str:
+    parsed = parse_cve_id(cve_id)
+    return f"{NVD_CVE_API_URL}?cveId={parsed}"
 
 
 def parse_cwe_id(value: object) -> str | None:

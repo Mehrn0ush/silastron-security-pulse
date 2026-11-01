@@ -8,7 +8,11 @@ from urllib.parse import urlparse
 
 from silastron_pulse.constants import ALLOWED_HTTPS_HOSTS, AUTHORITATIVE_LINK_HOSTS
 from silastron_pulse.ids import parse_cve_id
-from silastron_pulse.constants import CVE_RECORD_PAGE_TEMPLATE, KEV_CATALOG_PAGE_URL
+from silastron_pulse.constants import (
+    CVE_RECORD_PAGE_TEMPLATE,
+    KEV_CATALOG_PAGE_URL,
+    NVD_HOME_URL,
+)
 
 
 CONTROL_CHARS = dict.fromkeys(range(32))
@@ -132,4 +136,13 @@ def authoritative_kev_url() -> str:
     safe = sanitize_https_url(KEV_CATALOG_PAGE_URL, hosts=AUTHORITATIVE_LINK_HOSTS)
     if safe is None:
         raise ValueError("Failed to construct authoritative KEV URL")
+    return safe
+
+
+def authoritative_nvd_url(cve_id: str) -> str:
+    parsed = parse_cve_id(cve_id)
+    url = f"{NVD_HOME_URL.rstrip('/')}/vuln/detail/{parsed}"
+    safe = sanitize_https_url(url, hosts=AUTHORITATIVE_LINK_HOSTS)
+    if safe is None:
+        raise ValueError("Failed to construct authoritative NVD URL")
     return safe

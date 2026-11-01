@@ -8,6 +8,8 @@ CISA KEV JSON ──► KEV adapter ──► selected CVE IDs
                                       │
 CVE List V5 delta.json / deltaLog / raw ─┴──► CVE adapter
                                       │
+NVD CVE API 2.0 ──► optional NVD adapter ─┘
+                                      │
 FIRST EPSS ──► disabled adapter ──────┘
                                       │
                                       ▼
@@ -70,6 +72,11 @@ Persistent layout is documented in [collection-state.md](collection-state.md).
     plus small official samples (one KEV excerpt and CVE-2021-44228). Live
     snapshots stay on `pulse-state` and workflow artifacts until publication is
     approved.
+13. **NVD enrichment is optional and source-attributed.** The official NVD
+    CVE API 2.0 may add CVSS, CWE, product, and reference assertions. It is
+    never a KEV publication dependency. CNA and NVD disagreements are
+    preserved, not merged into a composite score. See
+    [vulnerability-intelligence.md](vulnerability-intelligence.md).
 
 ## Runtime layout
 

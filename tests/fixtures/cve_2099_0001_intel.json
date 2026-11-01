@@ -1,0 +1,96 @@
+{
+  "dataType": "CVE_RECORD",
+  "dataVersion": "5.1",
+  "cveMetadata": {
+    "cveId": "CVE-2099-0001",
+    "state": "PUBLISHED",
+    "assignerShortName": "fixture",
+    "datePublished": "2099-01-01T00:00:00.000Z",
+    "dateUpdated": "2099-01-02T00:00:00.000Z"
+  },
+  "containers": {
+    "cna": {
+      "title": "TEST FIXTURE ONLY",
+      "descriptions": [
+        {
+          "lang": "en",
+          "value": "Synthetic CVE record used only for automated tests."
+        }
+      ],
+      "problemTypes": [
+        {
+          "descriptions": [
+            {
+              "lang": "en",
+              "type": "CWE",
+              "cweId": "CWE-79",
+              "description": "CWE-79: Cross-site Scripting"
+            }
+          ]
+        }
+      ],
+      "affected": [
+        {
+          "vendor": "Fixture Vendor",
+          "product": "Fixture Product",
+          "defaultStatus": "affected",
+          "versions": [
+            {
+              "version": "0",
+              "status": "affected",
+              "lessThan": "1.1",
+              "versionType": "semver",
+              "changes": [
+                {
+                  "at": "1.1.0",
+                  "status": "fixed"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "metrics": [
+        {
+          "cvssV3_1": {
+            "version": "3.1",
+            "baseScore": 7.5,
+            "baseSeverity": "HIGH",
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+            "attackVector": "NETWORK",
+            "attackComplexity": "LOW",
+            "privilegesRequired": "NONE",
+            "userInteraction": "NONE",
+            "scope": "UNCHANGED",
+            "confidentialityImpact": "HIGH",
+            "integrityImpact": "NONE",
+            "availabilityImpact": "NONE"
+          }
+        },
+        {
+          "cvssV4_0": {
+            "version": "4.0",
+            "baseScore": 8.7,
+            "baseSeverity": "HIGH",
+            "vectorString": "CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:N/VA:N/SC:N/SI:N/SA:N",
+            "attackVector": "NETWORK",
+            "attackComplexity": "LOW",
+            "attackRequirements": "NONE",
+            "privilegesRequired": "NONE",
+            "userInteraction": "NONE",
+            "vulnConfidentialityImpact": "HIGH",
+            "vulnIntegrityImpact": "NONE",
+            "vulnAvailabilityImpact": "NONE"
+          }
+        }
+      ],
+      "references": [
+        {
+          "url": "https://vendor.example/security/CVE-2099-0001",
+          "name": "Vendor advisory",
+          "tags": ["vendor-advisory"]
+        }
+      ]
+    }
+  }
+}

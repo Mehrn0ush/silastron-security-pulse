@@ -343,7 +343,9 @@ def evaluate_publication(
             details=details,
         )
 
-    if published is not None and enrichment_improved(published, candidate):
+    if published is not None and (
+        enrichment_improved(published, candidate) or _intelligence_improved(published, candidate)
+    ):
         return PublicationDecision(
             outcome="publish",
             reason="enrichment_update",
@@ -498,15 +500,44 @@ def _upstream_identity(snapshot: dict[str, Any]) -> tuple[object, ...]:
     cve = sources.get("cve") or {}
     summary = snapshot.get("summary") or {}
     ids = tuple(item.get("cve_id") for item in snapshot.get("records") or [])
+    nvd = sources.get("nvd") or {}
+    intelligence = summary.get("intelligence") if isinstance(summary.get("intelligence"), dict) else {}
     return (
         kev.get("content_sha256"),
         cve.get("content_sha256"),
         cve.get("source_revision"),
+        nvd.get("content_sha256"),
+        nvd.get("source_revision"),
         summary.get("complete_records"),
         summary.get("partial_records"),
         summary.get("unavailable_records"),
+        summary.get("nvd_ok"),
+        intelligence.get("records_with_cvss"),
+        intelligence.get("records_with_cwe"),
+        intelligence.get("records_with_affected_versions"),
+        intelligence.get("records_with_fixed_version"),
+        intelligence.get("records_with_vendor_advisory"),
         ids,
     )
+
+
+def _intelligence_coverage(snapshot: dict[str, Any]) -> tuple[int, ...]:
+    summary = snapshot.get("summary") or {}
+    intelligence = summary.get("intelligence") if isinstance(summary.get("intelligence"), dict) else {}
+    return (
+        int(summary.get("nvd_ok") or 0),
+        int(intelligence.get("records_with_cvss") or 0),
+        int(intelligence.get("records_with_cwe") or 0),
+        int(intelligence.get("records_with_affected_versions") or 0),
+        int(intelligence.get("records_with_fixed_version") or 0),
+        int(intelligence.get("records_with_vendor_advisory") or 0),
+    )
+
+
+def _intelligence_improved(published: dict[str, Any], candidate: dict[str, Any]) -> bool:
+    published_coverage = _intelligence_coverage(published)
+    candidate_coverage = _intelligence_coverage(candidate)
+    return any(left < right for left, right in zip(published_coverage, candidate_coverage))
 
 
 def _regression_reason(

@@ -15,12 +15,14 @@ from silastron_pulse.adapters.cve import (
 )
 from silastron_pulse.adapters.epss import collect_epss, unavailable_record
 from silastron_pulse.adapters.kev import KevCatalog, fetch_kev_catalog
+from silastron_pulse.adapters.nvd import NvdEnrichment, collect_nvd
 from silastron_pulse.clock import Clock, SystemClock, format_datetime
 from silastron_pulse.config import PulseConfig
 from silastron_pulse.constants import (
     CISA_KEV_ATTRIBUTION,
     CVE_LIST_V5_BLOB_BASE,
     MITRE_CVE_ATTRIBUTION,
+    NVD_ATTRIBUTION,
     PACKAGE_VERSION,
     SNAPSHOT_SCHEMA_VERSION,
 )
@@ -28,10 +30,15 @@ from silastron_pulse.diff import detect_changes, entries_from_snapshot
 from silastron_pulse.errors import FetchError, ValidationError
 from silastron_pulse.http import CountingFetcher, Fetcher, HttpsFetcher
 from silastron_pulse.ids import cvelist_v5_relpath
+from silastron_pulse.intelligence import assemble_intelligence, coverage_metrics
 from silastron_pulse.jsonutil import sha256_bytes
 from silastron_pulse.lock import CollectionLock
 from silastron_pulse.models import ChangeSet, KevRecord, PulseEntry, Signals, SourceMeta
-from silastron_pulse.sanitize import authoritative_cve_url, authoritative_kev_url
+from silastron_pulse.sanitize import (
+    authoritative_cve_url,
+    authoritative_kev_url,
+    authoritative_nvd_url,
+)
 from silastron_pulse.signals import build_signals
 from silastron_pulse.state import PulseState
 from silastron_pulse.store import (
@@ -196,8 +203,16 @@ def _collect_locked(
             ),
         )
         return CollectionResult(status="failed", snapshot=None, error=error)
+    nvd_index, nvd_cached = _load_nvd_cache(state, config)
+    nvd = collect_nvd(
+        [record.cve_id for record in kev.records],
+        fetcher,
+        config,
+        cache_index=nvd_index,
+        cached_records=nvd_cached,
+    )
     epss = collect_epss([record.cve_id for record in kev.records], enabled=False)
-    entries = _build_entries(kev, cve, epss)
+    entries = _build_entries(kev, cve, epss, nvd)
     if previous:
         previous_entries = _entries_from_snapshot(previous)
         changes = detect_changes(
@@ -208,11 +223,12 @@ def _collect_locked(
                 "kev": kev.meta.to_dict(),
                 "cve": cve.meta.to_dict(),
                 "epss": epss.meta.to_dict(),
+                "nvd": nvd.meta.to_dict(),
             },
         )
     else:
         changes = ChangeSet()
-    source_state_revision = _source_revision(kev, cve)
+    source_state_revision = _source_revision(kev, cve, nvd)
     completed = clock.now()
     completed_at = format_datetime(completed)
     generated_at = completed_at
@@ -226,6 +242,8 @@ def _collect_locked(
             "cve_delta_sha256": cve.delta_sha256,
             "cve_delta_log_sha256": cve.delta_log_sha256,
             "cve_records_sha256": cve.meta.content_sha256,
+            "nvd_records_sha256": nvd.meta.content_sha256,
+            "nvd_api_key_configured": nvd.api_key_configured,
         },
     )
     snapshot = _build_snapshot(
@@ -234,6 +252,7 @@ def _collect_locked(
         collection_completed_at=completed_at,
         kev=kev,
         cve=cve,
+        nvd=nvd,
         epss_meta=epss.meta,
         entries=entries,
         changes=changes,
@@ -273,6 +292,7 @@ def _collect_locked(
             meta,
             kev,
             cve,
+            nvd,
             generated_at,
             collector_commit_sha,
             config,
@@ -295,6 +315,8 @@ def _collect_locked(
             "kev_content_sha256": kev.meta.content_sha256,
             "cve_delta_sha256": cve.delta_sha256,
             "cve_delta_log_sha256": cve.delta_log_sha256,
+            "nvd_records_sha256": nvd.meta.content_sha256,
+            "nvd_api_key_configured": nvd.api_key_configured,
             "bytes_transferred": metrics["bytes_transferred"],
             "http_gets": metrics["http_gets"],
             "http_heads": metrics["http_heads"],
@@ -380,10 +402,30 @@ def _load_cve_cache(
     return index, cached
 
 
-def _source_revision(kev: KevCatalog, cve: CveEnrichment) -> str:
+def _load_nvd_cache(
+    state: PulseState | None, config: PulseConfig
+) -> tuple[dict[str, Any] | None, dict[str, dict[str, Any]]]:
+    if state is None or not state.nvd_index_path().exists():
+        return None, {}
+    index = state.load_nvd_index(max_bytes=config.max_kev_bytes, max_depth=config.max_json_depth)
+    cached: dict[str, dict[str, Any]] = {}
+    records = index.get("records") if isinstance(index.get("records"), dict) else {}
+    for cve_id in records:
+        payload = state.load_json(
+            state.nvd_record_path(cve_id),
+            max_bytes=config.max_nvd_bytes,
+            max_depth=config.max_json_depth,
+        )
+        if payload:
+            cached[cve_id] = payload
+    return index, cached
+
+
+def _source_revision(kev: KevCatalog, cve: CveEnrichment, nvd: NvdEnrichment) -> str:
     kev_rev = kev.meta.source_revision or kev.meta.content_sha256 or "unknown-kev"
     cve_rev = cve.meta.source_revision or cve.meta.content_sha256 or "unknown-cve"
-    return f"{kev_rev}:{cve_rev}"
+    nvd_rev = nvd.meta.source_revision or nvd.meta.content_sha256 or "unknown-nvd"
+    return f"{kev_rev}:{cve_rev}:{nvd_rev}"
 
 
 def _persist_state(
@@ -392,6 +434,7 @@ def _persist_state(
     meta: dict[str, Any],
     kev: KevCatalog,
     cve: CveEnrichment,
+    nvd: NvdEnrichment,
     generated_at: str,
     collector_commit_sha: str | None,
     config: PulseConfig,
@@ -425,6 +468,7 @@ def _persist_state(
             "source_state_revision": meta["source_state_revision"],
             "kev_revision": kev.meta.source_revision,
             "cve_revision": cve.meta.source_revision,
+            "nvd_revision": nvd.meta.source_revision,
             "record_count": len(kev.records),
         },
         kev_meta=kev.meta.to_dict(),
@@ -435,6 +479,20 @@ def _persist_state(
         kev_provenance=kev.provenance,
         cve_index=cve_index,
         cve_records={cve_id: record.to_dict() for cve_id, record in cve.records.items()},
+        nvd_index={
+            "updated_at": generated_at,
+            "records": {
+                cve_id: {
+                    "sha256": record.record_sha256,
+                    "etag": record.etag,
+                    "retrieved_at": record.retrieved_at,
+                    "last_modified": record.last_modified,
+                    "status": record.status,
+                }
+                for cve_id, record in nvd.records.items()
+            },
+        },
+        nvd_records={cve_id: record.to_dict() for cve_id, record in nvd.records.items()},
     )
     state.write_candidate(snapshot, meta)
 
@@ -443,6 +501,7 @@ def _build_entries(
     kev: KevCatalog,
     cve: CveEnrichment,
     epss: Any,
+    nvd: NvdEnrichment,
 ) -> dict[str, PulseEntry]:
     entries: dict[str, PulseEntry] = {}
     for kev_record in kev.records:
@@ -450,10 +509,12 @@ def _build_entries(
         epss_record = epss.records.get(kev_record.cve_id) or unavailable_record(
             kev_record.cve_id
         )
+        nvd_record = nvd.records.get(kev_record.cve_id)
         links = {
             "kev_catalog": authoritative_kev_url(),
             "cve_record": authoritative_cve_url(kev_record.cve_id),
             "cvelist_v5": CVE_LIST_V5_BLOB_BASE + cvelist_v5_relpath(kev_record.cve_id),
+            "nvd": authoritative_nvd_url(kev_record.cve_id),
         }
         entries[kev_record.cve_id] = PulseEntry(
             cve_id=kev_record.cve_id,
@@ -462,6 +523,9 @@ def _build_entries(
             epss=epss_record,
             signals=build_signals(kev_record, cve_record, epss_record),
             links=links,
+            intelligence=assemble_intelligence(
+                kev=kev_record, cve=cve_record, nvd=nvd_record
+            ),
         )
     return entries
 
@@ -473,6 +537,7 @@ def _build_snapshot(
     collection_completed_at: str,
     kev: KevCatalog,
     cve: CveEnrichment,
+    nvd: NvdEnrichment,
     epss_meta: SourceMeta,
     entries: dict[str, PulseEntry],
     changes: Any,
@@ -518,6 +583,12 @@ def _build_snapshot(
         "cve_delta_sha256": cve.delta_sha256,
         "cve_delta_log_sha256": cve.delta_log_sha256,
         "kev_content_sha256": kev.meta.content_sha256,
+        "nvd_ok": sum(1 for item in nvd.records.values() if item.status == "ok"),
+        "nvd_unavailable": sum(1 for item in nvd.records.values() if item.status != "ok"),
+        "nvd_fetched": len(nvd.fetched_ids),
+        "nvd_reused": len(nvd.reused_ids),
+        "nvd_api_key_configured": nvd.api_key_configured,
+        "intelligence": coverage_metrics(records),
         "bytes_transferred": (metrics or {}).get("bytes_transferred"),
         "http_gets": (metrics or {}).get("http_gets"),
         "http_heads": (metrics or {}).get("http_heads"),
@@ -550,6 +621,7 @@ def _build_snapshot(
         "attribution": {
             "cisa_kev": CISA_KEV_ATTRIBUTION,
             "cve": MITRE_CVE_ATTRIBUTION,
+            "nvd": NVD_ATTRIBUTION,
             "epss": epss_meta.notes,
         },
         "limits": {
@@ -561,12 +633,14 @@ def _build_snapshot(
             "max_versions_per_product": config.max_versions_per_product,
             "max_description_chars": config.max_description_chars,
             "max_cve_bytes": config.max_cve_bytes,
+            "max_nvd_bytes": config.max_nvd_bytes,
             "stale_after_hours": config.stale_after_hours,
         },
         "sources": {
             "kev": kev.meta.to_dict(),
             "cve": cve.meta.to_dict(),
             "epss": epss_meta.to_dict(),
+            "nvd": nvd.meta.to_dict(),
         },
         "summary": summary,
         "changes": changes.to_dict(),

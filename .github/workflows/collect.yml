@@ -46,8 +46,14 @@ jobs:
           PULSE_MAX_REDIRECTS: "3"
           PULSE_CVE_WORKERS: "2"
           PULSE_HTTP_MAX_ATTEMPTS: "3"
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: |
           set -euo pipefail
+          if [ -n "${NVD_API_KEY:-}" ]; then
+            export PULSE_NVD_MIN_INTERVAL_MS=650
+          else
+            export PULSE_NVD_MIN_INTERVAL_MS=6200
+          fi
           mkdir -p dist
           python -m silastron_pulse collect \
             --output-dir dist \

@@ -22,7 +22,7 @@ SOURCE_IDENTITY_KEYS = (
     "parser_version",
     "schema_version",
 )
-COMPARED_SOURCES = ("kev", "cve")
+COMPARED_SOURCES = ("kev", "cve", "nvd")
 
 
 def source_identity(meta: Mapping[str, Any] | None) -> dict[str, Any]:
@@ -60,7 +60,13 @@ def detect_changes(
             continue
         if previous.kev.comparable() != current.kev.comparable():
             changes.updated_kev_entries.append(cve_id)
-        if previous.cve.comparable() != current.cve.comparable():
+        previous_intel = (
+            previous.intelligence.comparable() if previous.intelligence is not None else {}
+        )
+        current_intel = (
+            current.intelligence.comparable() if current.intelligence is not None else {}
+        )
+        if previous.cve.comparable() != current.cve.comparable() or previous_intel != current_intel:
             changes.changed_cve_information.append(cve_id)
         if previous.epss.comparable() != current.epss.comparable():
             if current.epss.status == "ok" or previous.epss.status == "ok":
@@ -148,6 +154,12 @@ def entries_from_snapshot(payload: Mapping[str, Any]) -> dict[str, PulseEntry]:
         signals_raw = item.get("signals") or {}
         if not isinstance(signals_raw, dict):
             signals_raw = {}
+        intelligence = None
+        raw_intel = item.get("intelligence")
+        if isinstance(raw_intel, dict):
+            from silastron_pulse.intelligence import VulnerabilityIntelligence
+
+            intelligence = VulnerabilityIntelligence(payload=raw_intel)
         entries[item["cve_id"]] = PulseEntry(
             cve_id=item["cve_id"],
             kev=kev_record,
@@ -164,6 +176,7 @@ def entries_from_snapshot(payload: Mapping[str, Any]) -> dict[str, PulseEntry]:
                 deployment_exposure=signals_raw.get("deployment_exposure") or {},
             ),
             links=item.get("links") or {},
+            intelligence=intelligence,
         )
     return entries
 

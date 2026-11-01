@@ -15,6 +15,7 @@ _KEV_PATHS = {
 _CVELIST_BLOB = re.compile(
     r"^/CVEProject/cvelistV5/blob/main/cves/[0-9]{4}/[0-9]+xxx/CVE-[0-9]{4}-[0-9]{4,}\.json$"
 )
+_NVD_DETAIL = re.compile(r"^/vuln/detail/CVE-[0-9]{4}-[0-9]{4,}$")
 
 
 def authoritative_href(value: object) -> str | None:
@@ -37,6 +38,10 @@ def authoritative_href(value: object) -> str | None:
         return safe
     if host == "github.com":
         if _CVELIST_BLOB.fullmatch(path):
+            return safe
+        return None
+    if host == "nvd.nist.gov":
+        if _NVD_DETAIL.fullmatch(path):
             return safe
         return None
     return None
