@@ -62,9 +62,10 @@ class ThemeBootstrapTests(unittest.TestCase):
         self.assertIn('return "Degraded collection"', js)
         self.assertIn("labeledCell", js)
         self.assertIn("cvssBand", js)
-        self.assertIn('freshness.invalid ? "invalid" : freshness.stale ? "stale" : "fresh"', js)
-        self.assertIn("Collection succeeded with incomplete extracted inventories", js)
-        self.assertIn("The published snapshot is stale at viewing time", js)
+        self.assertIn("evaluateDataStatus", js)
+        self.assertIn("Unchanged catalog, independently verified", js)
+        self.assertIn("Verification evidence unavailable", js)
+        self.assertNotIn("The published snapshot is stale at viewing time", js)
         self.assertNotIn("innerHTML", js)
 
 

@@ -120,6 +120,10 @@ DEFAULT_LIMITS = {
     "max_cve_failures_absolute": 25,
     "max_nvd_bytes": 2_000_000,
     "nvd_min_interval_ms": 0,
+    "nvd_ok_ttl_hours": 168,
+    "nvd_retry_ttl_hours": 12,
+    "nvd_max_fetches_per_run": 120,
+    "nvd_max_duration_seconds": 1500,
 }
 
 CVE_ID_PATTERN = r"^CVE-[0-9]{4}-[0-9]{4,}$"

@@ -168,11 +168,17 @@ class ExplorerExportTests(unittest.TestCase):
             "catalog-cvss-max",
             "catalog-cwe",
             "catalog-remediation",
+            "catalog-cvss-version",
+            "catalog-attack-vector",
+            "catalog-nvd",
+            "catalog-fixed-version",
             "catalog-clear",
             "catalog-export",
         ):
             self.assertIn(f'id="{element_id}"', html)
         self.assertIn("exportFilteredCsv", js)
+        self.assertIn("#cve/", js)
+        self.assertIn("renderCveDetail", js)
         self.assertIn("sanitizeCsvCell", js)
         self.assertIn("CSV_FORMULA_PREFIXES", js)
         self.assertIn("buildCveHistory", js)

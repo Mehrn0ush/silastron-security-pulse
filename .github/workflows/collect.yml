@@ -51,9 +51,14 @@ jobs:
           set -euo pipefail
           if [ -n "${NVD_API_KEY:-}" ]; then
             export PULSE_NVD_MIN_INTERVAL_MS=650
+            export PULSE_NVD_MAX_FETCHES=400
           else
             export PULSE_NVD_MIN_INTERVAL_MS=6200
+            export PULSE_NVD_MAX_FETCHES=120
           fi
+          export PULSE_NVD_OK_TTL_HOURS=168
+          export PULSE_NVD_RETRY_TTL_HOURS=12
+          export PULSE_NVD_MAX_DURATION_SECONDS=1500
           mkdir -p dist
           python -m silastron_pulse collect \
             --output-dir dist \

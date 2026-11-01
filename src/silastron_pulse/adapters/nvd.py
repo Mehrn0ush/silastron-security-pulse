@@ -8,9 +8,12 @@ NVD condition in this adapter only; it is not added to the global retry set.
 from __future__ import annotations
 
 import time
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
+from datetime import datetime, timezone
 from typing import Any, Callable
 from urllib.parse import parse_qs, urlparse
+
+from silastron_pulse.clock import parse_generated_at
 
 from silastron_pulse.config import PulseConfig
 from silastron_pulse.constants import (
@@ -149,7 +152,15 @@ class NvdEnrichment:
     records: dict[str, NvdRecord]
     fetched_ids: tuple[str, ...] = ()
     reused_ids: tuple[str, ...] = ()
+    pending_ids: tuple[str, ...] = ()
     api_key_configured: bool = False
+    metrics: dict[str, Any] = field(default_factory=dict)
+
+
+PRIORITY_NEW = 0
+PRIORITY_MISSING = 1
+PRIORITY_FAILED = 2
+PRIORITY_EXPIRED = 3
 
 
 def collect_nvd(
@@ -160,6 +171,9 @@ def collect_nvd(
     cache_index: dict[str, Any] | None = None,
     cached_records: dict[str, dict[str, Any]] | None = None,
     sleep: Callable[[float], None] | None = None,
+    now: datetime | None = None,
+    previous_ids: list[str] | None = None,
+    persist: Callable[[NvdRecord], None] | None = None,
 ) -> NvdEnrichment:
     unique_ids = sorted({parse_cve_id(cve_id) for cve_id in cve_ids})
     sleeper = sleep or time.sleep
@@ -171,11 +185,54 @@ def collect_nvd(
         if isinstance(cache_index, dict) and isinstance(cache_index.get("records"), dict)
         else {}
     )
+    current = now if now is not None else datetime.now(timezone.utc)
+    if current.tzinfo is None:
+        current = current.replace(tzinfo=timezone.utc)
+    known_previous = {parse_cve_id(item) for item in (previous_ids or [])}
+    planned: list[tuple[int, str, str]] = []
+    warm: list[str] = []
+    for cve_id in unique_ids:
+        cached = cached_records.get(cve_id)
+        priority, due = _refresh_priority(
+            cve_id,
+            cached if isinstance(cached, dict) else None,
+            now=current,
+            previous_ids=known_previous,
+            ok_ttl_hours=config.nvd_ok_ttl_hours,
+            retry_ttl_hours=config.nvd_retry_ttl_hours,
+        )
+        if due:
+            planned.append((priority, _checked_sort_key(cached if isinstance(cached, dict) else None), cve_id))
+        else:
+            warm.append(cve_id)
+    planned.sort()
+    max_fetches = max(0, config.nvd_max_fetches_per_run)
+    max_duration = max(30, config.nvd_max_duration_seconds)
+    scheduled = [item[2] for item in planned[:max_fetches]]
+    deferred = [item[2] for item in planned[max_fetches:]]
     records: dict[str, NvdRecord] = {}
     fetched: list[str] = []
     reused: list[str] = []
+    pending: list[str] = []
     first_error: str | None = None
-    for offset, cve_id in enumerate(unique_ids):
+    requests_attempted = 0
+    cache_hits = 0
+    records_refreshed = 0
+    rate_limited = 0
+    failed_requests = 0
+    started = time.monotonic()
+    for cve_id in warm:
+        cached = cached_records.get(cve_id)
+        record = nvd_record_from_dict(cached if isinstance(cached, dict) else {}, cached=True)
+        record = replace(record, cve_id=cve_id, cached=True)
+        records[cve_id] = record
+        reused.append(cve_id)
+        cache_hits += 1
+    for offset, cve_id in enumerate(scheduled):
+        elapsed = time.monotonic() - started
+        if elapsed >= max_duration:
+            deferred.extend(scheduled[offset:])
+            break
         if offset and interval:
             sleeper(interval)
         cached = cached_records.get(cve_id)
@@ -184,6 +241,7 @@ def collect_nvd(
             etag = index_records[cve_id].get("etag")
         elif isinstance(cached, dict):
             etag = cached.get("etag")
+        requests_attempted += 1
         record = _fetch_one(
             cve_id,
             fetcher,
@@ -193,12 +251,37 @@ def collect_nvd(
             etag=etag if isinstance(etag, str) and etag else None,
         )
         records[cve_id] = record
-        if record.cached:
-            reused.append(cve_id)
-        else:
-            fetched.append(cve_id)
+        if persist is not None:
+            persist(record)
+        http_status = (record.availability or {}).get("http_status") if record.availability else None
+        if http_status == 429:
+            rate_limited += 1
         if record.status != "ok" and first_error is None:
             first_error = record.error
+        if record.status != "ok" and not record.cached:
+            failed_requests += 1
+        if record.cached:
+            reused.append(cve_id)
+            cache_hits += 1
+        else:
+            fetched.append(cve_id)
+            records_refreshed += 1
+    for cve_id in deferred:
+        pending.append(cve_id)
+        cached = cached_records.get(cve_id)
+        if isinstance(cached, dict) and cached.get("status") == "ok":
+            record = nvd_record_from_dict(cached, cached=True)
+            records[cve_id] = replace(record, cached=True)
+            reused.append(cve_id)
+            cache_hits += 1
+        elif cve_id not in records:
+            records[cve_id] = _unavailable(
+                cve_id,
+                nvd_cve_api_url(cve_id),
+                "NVD enrichment is queued for a later bounded backfill run",
+                availability=_availability("pending_backfill", None, nvd_cve_api_url(cve_id)),
+            )
+    processing_ms = int((time.monotonic() - started) * 1000)
     ok = sum(1 for item in records.values() if item.status == "ok")
     unavailable = len(records) - ok
     if not records:
@@ -218,13 +301,32 @@ def collect_nvd(
         )
     else:
         status = "ok"
-        notes = "NVD CVE API 2.0 enrichment completed for the KEV identifier set."
+        notes = "NVD CVE API 2.0 enrichment completed for the scheduled identifier set."
+    if pending:
+        notes += f" Pending bounded backfill: {len(pending)} identifiers."
     comparable = [records[key].comparable() for key in sorted(records)]
     digest = sha256_bytes(dump_canonical(comparable).encode("utf-8"))
     retrieved = next(
-        (item.retrieved_at or item.last_checked_at for item in records.values() if item.retrieved_at or item.last_checked_at),
+        (
+            item.retrieved_at or item.last_checked_at
+            for item in records.values()
+            if item.retrieved_at or item.last_checked_at
+        ),
         None,
     )
+    metrics = {
+        "requests_attempted": requests_attempted,
+        "cache_hits": cache_hits,
+        "records_refreshed": records_refreshed,
+        "pending_backfill": len(pending),
+        "rate_limited": rate_limited,
+        "failed_requests": failed_requests,
+        "processing_ms": processing_ms,
+        "api_key_configured": config.nvd_api_key is not None,
+        "max_fetches": max_fetches,
+        "ok_ttl_hours": config.nvd_ok_ttl_hours,
+        "retry_ttl_hours": config.nvd_retry_ttl_hours,
+    }
     meta = SourceMeta(
         id="nvd",
         name="NVD CVE API 2.0",
@@ -246,8 +348,60 @@ def collect_nvd(
         records=records,
         fetched_ids=tuple(fetched),
         reused_ids=tuple(reused),
+        pending_ids=tuple(pending),
         api_key_configured=config.nvd_api_key is not None,
+        metrics=metrics,
     )
+
+
+def _refresh_priority(
+    cve_id: str,
+    cached: dict[str, Any] | None,
+    *,
+    now: datetime,
+    previous_ids: set[str],
+    ok_ttl_hours: int,
+    retry_ttl_hours: int,
+) -> tuple[int, bool]:
+    is_new = cve_id not in previous_ids
+    if not cached:
+        return (PRIORITY_NEW if is_new else PRIORITY_MISSING, True)
+    status = cached.get("status")
+    checked = _parse_checked_at(cached)
+    if status != "ok":
+        expired = checked is None or _age_hours(now, checked) > retry_ttl_hours
+        return (PRIORITY_NEW if is_new else PRIORITY_FAILED, True if is_new or expired or checked is None else False)
+    if is_new:
+        return (PRIORITY_NEW, True)
+    if checked is None:
+        return (PRIORITY_EXPIRED, True)
+    if _age_hours(now, checked) > ok_ttl_hours:
+        return (PRIORITY_EXPIRED, True)
+    return (PRIORITY_EXPIRED, False)
+
+
+def _parse_checked_at(cached: dict[str, Any]) -> datetime | None:
+    for key in ("last_checked_at", "retrieved_at"):
+        value = cached.get(key)
+        if isinstance(value, str) and value:
+            try:
+                return parse_generated_at(value)
+            except ValueError:
+                continue
+    return None
+
+
+def _checked_sort_key(cached: dict[str, Any] | None) -> str:
+    if not cached:
+        return ""
+    checked = _parse_checked_at(cached)
+    return checked.strftime("%Y-%m-%dT%H:%M:%SZ") if checked else ""
+
+
+def _age_hours(now: datetime, then: datetime) -> float:
+    current = now if now.tzinfo else now.replace(tzinfo=timezone.utc)
+    previous = then if then.tzinfo else then.replace(tzinfo=timezone.utc)
+    return (current.astimezone(timezone.utc) - previous.astimezone(timezone.utc)).total_seconds() / 3600.0
 
 
 def nvd_record_from_dict(payload: dict[str, Any], *, cached: bool = False) -> NvdRecord:

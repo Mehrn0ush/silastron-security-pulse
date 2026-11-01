@@ -26,8 +26,10 @@ from silastron_pulse.enrichment_policy import (
 from silastron_pulse.reconciliation import publication_status_block_reason
 from silastron_pulse.safe_fs import require_run_id, require_safe_token
 from silastron_pulse.store import load_snapshot, parse_generated_at
+from silastron_pulse.intelligence import comparable_intelligence
 from silastron_pulse.validate import validate_snapshot
 from silastron_pulse.verify_run import ALLOWED_COLLECT_EVENTS, parse_sha256sums, verify_collect_run
+from silastron_pulse.verification_status import STATUS_ONLY_REASONS, build_verification_status
 
 AUTO_COLLECT_EVENTS = frozenset({"schedule"})
 # Last-resort completeness guard for CVE extraction quality when the KEV
@@ -355,7 +357,9 @@ def evaluate_publication(
             details=details,
         )
 
-    if _upstream_identity(candidate) == _upstream_identity(published):
+    if _upstream_identity(candidate) == _upstream_identity(published) and not _semantic_intelligence_changed(
+        published, candidate
+    ):
         return PublicationDecision(
             outcome="skip",
             reason="unchanged_upstream",
@@ -400,6 +404,7 @@ def write_decision_outputs(
             handle.write(f"snapshot_id={_output_token(decision.snapshot_id)}\n")
             handle.write(f"digest={_output_token(decision.digest)}\n")
             handle.write(f"collect_run_id={_output_token(decision.collect_run_id)}\n")
+            handle.write(f"status_publish={'yes' if should_publish_status_only(decision) else 'no'}\n")
     if summary_path is not None:
         with summary_path.open("a", encoding="utf-8") as handle:
             handle.write(_format_summary(decision))
@@ -534,10 +539,50 @@ def _intelligence_coverage(snapshot: dict[str, Any]) -> tuple[int, ...]:
     )
 
 
+def _intelligence_semantic(snapshot: dict[str, Any]) -> list[tuple[object, dict[str, Any]]]:
+    rows = []
+    for record in snapshot.get("records") or []:
+        if not isinstance(record, dict):
+            continue
+        rows.append((record.get("cve_id"), comparable_intelligence(record.get("intelligence"))))
+    return rows
+
+
+def _semantic_intelligence_changed(published: dict[str, Any], candidate: dict[str, Any]) -> bool:
+    return _intelligence_semantic(published) != _intelligence_semantic(candidate)
+
+
 def _intelligence_improved(published: dict[str, Any], candidate: dict[str, Any]) -> bool:
+    if kev_digest(published) != kev_digest(candidate):
+        return False
+    if _semantic_intelligence_changed(published, candidate):
+        return True
     published_coverage = _intelligence_coverage(published)
     candidate_coverage = _intelligence_coverage(candidate)
     return any(left < right for left, right in zip(published_coverage, candidate_coverage))
+
+
+def should_publish_status_only(decision: PublicationDecision) -> bool:
+    return decision.outcome == "skip" and decision.reason in STATUS_ONLY_REASONS
+
+
+def attach_verification_status(
+    decision: PublicationDecision,
+    *,
+    candidate: dict[str, Any],
+    published: dict[str, Any] | None,
+    publication_state: str | None,
+) -> dict[str, Any]:
+    return build_verification_status(
+        candidate=candidate,
+        decision_outcome=decision.outcome,
+        decision_reason=decision.reason,
+        collect_run_id=decision.collect_run_id,
+        collect_event=(decision.details or {}).get("collect_event"),
+        published=published,
+        publication_state=publication_state,
+        candidate_digest=decision.digest,
+    )
 
 
 def _regression_reason(

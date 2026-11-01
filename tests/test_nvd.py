@@ -4,6 +4,7 @@ import json
 import tempfile
 import unittest
 from dataclasses import replace
+from datetime import datetime, timezone
 from pathlib import Path
 
 from silastron_pulse.adapters.nvd import collect_nvd, parse_nvd_response
@@ -142,8 +143,13 @@ class NvdCollectorTests(unittest.TestCase):
                 ]
             }
         )
-        config = test_config(Path("."))
-        first = collect_nvd(["CVE-2099-0001"], scripted, config)
+        config = replace(test_config(Path(".")), nvd_ok_ttl_hours=1)
+        first = collect_nvd(
+            ["CVE-2099-0001"],
+            scripted,
+            config,
+            now=datetime(2099, 1, 10, 12, tzinfo=timezone.utc),
+        )
         cached = {first.records["CVE-2099-0001"].cve_id: first.records["CVE-2099-0001"].to_dict()}
         index = {
             "records": {
@@ -156,11 +162,58 @@ class NvdCollectorTests(unittest.TestCase):
             config,
             cache_index=index,
             cached_records=cached,
+            now=datetime(2099, 1, 10, 14, tzinfo=timezone.utc),
         )
         self.assertEqual(first.records["CVE-2099-0001"].status, "ok")
         self.assertTrue(second.records["CVE-2099-0001"].cached)
         self.assertEqual(second.records["CVE-2099-0001"].comparable(), first.records["CVE-2099-0001"].comparable())
         self.assertEqual(len(scripted.calls), 2)
+
+    def test_configured_api_key_is_flagged_and_never_serialized(self) -> None:
+        url = nvd_cve_api_url("CVE-2099-0001")
+        config = replace(test_config(Path(".")), nvd_api_key="test-nvd-key-not-real")
+        result = collect_nvd(
+            ["CVE-2099-0001"],
+            MapFetcher({url: fetch_result(url, "nvd_2099_0001.json")}),
+            config,
+            now=datetime(2099, 1, 10, 12, tzinfo=timezone.utc),
+        )
+        self.assertTrue(result.metrics["api_key_configured"])
+        blob = json.dumps({cve_id: record.to_dict() for cve_id, record in result.records.items()})
+        self.assertNotIn("test-nvd-key-not-real", blob)
+        self.assertNotIn("apiKey", blob)
+        self.assertNotIn("NVD_API_KEY", blob)
+
+    def test_previously_failed_enrichment_is_recovered(self) -> None:
+        url = nvd_cve_api_url("CVE-2099-0001")
+        config = replace(test_config(Path(".")), nvd_retry_ttl_hours=1, nvd_ok_ttl_hours=24)
+        cached = {
+            "CVE-2099-0001": {
+                "cve_id": "CVE-2099-0001",
+                "status": "unavailable",
+                "assessments": [],
+                "cwes": [],
+                "products": [],
+                "references": [],
+                "source_url": url,
+                "record_page_url": "https://nvd.nist.gov/vuln/detail/CVE-2099-0001",
+                "record_sha256": "a",
+                "retrieved_at": "2099-01-01T00:00:00Z",
+                "last_checked_at": "2099-01-01T00:00:00Z",
+            }
+        }
+        recovered = collect_nvd(
+            ["CVE-2099-0001"],
+            MapFetcher({url: fetch_result(url, "nvd_2099_0001.json")}),
+            config,
+            cached_records=cached,
+            now=datetime(2099, 1, 10, 12, tzinfo=timezone.utc),
+            previous_ids=["CVE-2099-0001"],
+        )
+        self.assertEqual(recovered.records["CVE-2099-0001"].status, "ok")
+        self.assertEqual(recovered.metrics["records_refreshed"], 1)
+        self.assertEqual(recovered.metrics["requests_attempted"], 1)
+        self.assertFalse(recovered.records["CVE-2099-0001"].cached)
 
     def test_api_key_is_optional_and_never_serialized(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -175,6 +228,104 @@ class NvdCollectorTests(unittest.TestCase):
         self.assertNotIn("NVD_API_KEY", blob)
         self.assertFalse(result.snapshot["summary"]["nvd_api_key_configured"])
         self.assertIn("not endorsed or certified by the NVD", result.snapshot["attribution"]["nvd"])
+
+    def test_warm_cache_skips_http_and_cold_cache_fetches(self) -> None:
+        url = nvd_cve_api_url("CVE-2099-0001")
+        now = datetime(2099, 1, 10, 12, tzinfo=timezone.utc)
+        config = replace(test_config(Path(".")), nvd_ok_ttl_hours=24, nvd_max_fetches_per_run=8)
+        first = collect_nvd(
+            ["CVE-2099-0001"],
+            MapFetcher({url: fetch_result(url, "nvd_2099_0001.json")}),
+            config,
+            now=now,
+        )
+        cached = {first.records["CVE-2099-0001"].cve_id: first.records["CVE-2099-0001"].to_dict()}
+        scripted = ScriptedFetcher({url: []})
+        warm = collect_nvd(
+            ["CVE-2099-0001"],
+            scripted,
+            config,
+            cached_records=cached,
+            now=now,
+            previous_ids=["CVE-2099-0001"],
+        )
+        self.assertEqual(warm.metrics["requests_attempted"], 0)
+        self.assertEqual(warm.metrics["cache_hits"], 1)
+        self.assertEqual(len(scripted.calls), 0)
+
+    def test_partial_backfill_resumes_and_prioritizes_missing(self) -> None:
+        ids = ["CVE-2099-0001", "CVE-2099-0002"]
+        config = replace(
+            test_config(Path(".")),
+            nvd_max_fetches_per_run=1,
+            nvd_ok_ttl_hours=24,
+            nvd_retry_ttl_hours=1,
+        )
+        now = datetime(2099, 1, 10, 12, tzinfo=timezone.utc)
+        mixed = valid_fetcher(
+            **{
+                nvd_cve_api_url("CVE-2099-0001"): fetch_result(
+                    nvd_cve_api_url("CVE-2099-0001"), "nvd_2099_0001.json"
+                ),
+                nvd_cve_api_url("CVE-2099-0002"): fetch_result(
+                    nvd_cve_api_url("CVE-2099-0002"), "nvd_empty.json"
+                ),
+            }
+        )
+        first = collect_nvd(
+            ids,
+            mixed,
+            config,
+            now=now,
+            previous_ids=[],
+        )
+        self.assertEqual(first.metrics["requests_attempted"], 1)
+        self.assertEqual(first.metrics["pending_backfill"], 1)
+        pending = first.pending_ids[0]
+        cached = {
+            cve_id: record.to_dict()
+            for cve_id, record in first.records.items()
+            if record.status == "ok"
+        }
+        second = collect_nvd(
+            ids,
+            mixed,
+            config,
+            cached_records=cached,
+            now=now,
+            previous_ids=["CVE-2099-0001", "CVE-2099-0002"],
+        )
+        self.assertIn(pending, second.fetched_ids)
+        self.assertEqual(second.metrics["pending_backfill"], 0)
+
+    def test_expired_cache_is_refreshed_and_rate_limit_is_counted(self) -> None:
+        url = nvd_cve_api_url("CVE-2099-0001")
+        config = replace(test_config(Path(".")), nvd_ok_ttl_hours=1)
+        cached = {
+            "CVE-2099-0001": {
+                "cve_id": "CVE-2099-0001",
+                "status": "ok",
+                "assessments": [],
+                "cwes": [],
+                "products": [],
+                "references": [],
+                "source_url": url,
+                "record_page_url": "https://nvd.nist.gov/vuln/detail/CVE-2099-0001",
+                "record_sha256": "a",
+                "retrieved_at": "2099-01-01T00:00:00Z",
+                "last_checked_at": "2099-01-01T00:00:00Z",
+            }
+        }
+        limited = collect_nvd(
+            ["CVE-2099-0001"],
+            MapFetcher({url: FetchError("HTTP 429 fetching NVD", retryable=True, status_code=429)}),
+            config,
+            cached_records=cached,
+            now=datetime(2099, 1, 10, 12, tzinfo=timezone.utc),
+            previous_ids=["CVE-2099-0001"],
+        )
+        self.assertEqual(limited.metrics["rate_limited"], 1)
+        self.assertEqual(limited.metrics["requests_attempted"], 1)
 
     def test_wrong_identifier_is_rejected(self) -> None:
         payload = json.loads(fixture_bytes("nvd_2099_0001.json"))

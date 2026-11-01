@@ -58,6 +58,8 @@
 
   var statusBanner = document.getElementById("status-banner");
   var statusDetails = document.getElementById("status-details");
+  var dataStatusSummary = document.getElementById("data-status-summary");
+  var dataStatusDetails = document.getElementById("data-status-details");
   var technicalDetails = document.getElementById("technical-details-list");
   var overviewCards = document.getElementById("overview-cards");
   var changesNote = document.getElementById("changes-note");
@@ -83,12 +85,24 @@
   var catalogCwe = document.getElementById("catalog-cwe");
   var catalogTruncated = document.getElementById("catalog-truncated");
   var catalogRemediation = document.getElementById("catalog-remediation");
+  var catalogCvssVersion = document.getElementById("catalog-cvss-version");
+  var catalogAttackVector = document.getElementById("catalog-attack-vector");
+  var catalogPrivileges = document.getElementById("catalog-privileges");
+  var catalogUserInteraction = document.getElementById("catalog-user-interaction");
+  var catalogFixedVersion = document.getElementById("catalog-fixed-version");
+  var catalogVendorAdvisory = document.getElementById("catalog-vendor-advisory");
+  var catalogNvd = document.getElementById("catalog-nvd");
   var catalogSort = document.getElementById("catalog-sort");
   var catalogClear = document.getElementById("catalog-clear");
   var catalogExport = document.getElementById("catalog-export");
   var catalogPrev = document.getElementById("catalog-prev");
   var catalogNext = document.getElementById("catalog-next");
   var catalogPage = document.getElementById("catalog-page");
+  var cveDetail = document.getElementById("cve-detail");
+  var cveDetailHeading = document.getElementById("cve-detail-heading");
+  var cveDetailStatus = document.getElementById("cve-detail-status");
+  var cveDetailBody = document.getElementById("cve-detail-body");
+  var NVD_DETAIL = /^\/vuln\/detail\/CVE-[0-9]{4}-[0-9]{4,}$/;
 
   var epssDisabled = false;
   var catalogRows = [];
@@ -188,6 +202,9 @@
       if (host === "github.com") {
         return CVELIST_BLOB.test(path) ? parsed.href : null;
       }
+      if (host === "nvd.nist.gov") {
+        return NVD_DETAIL.test(path) ? parsed.href : null;
+      }
       return null;
     } catch (err) {
       return null;
@@ -230,10 +247,13 @@
 
   function bannerLabel(kind) {
     if (kind === "ok") {
-      return "Fresh collection";
+      return "Data status";
+    }
+    if (kind === "neutral") {
+      return "Data status";
     }
     if (kind === "stale") {
-      return "Stale snapshot";
+      return "Data status";
     }
     if (kind === "warn") {
       return "Degraded collection";
@@ -244,6 +264,92 @@
     return "Unavailable";
   }
 
+  function appendDataStatus(term, value) {
+    appendNamedMeta(dataStatusDetails, term, value);
+  }
+
+  function verificationIsValid(doc) {
+    return Boolean(
+      doc &&
+        doc.kind === "verification_status" &&
+        doc.schema_version === "1.0.0" &&
+        (doc.verified === true
+          ? doc.verification_state === "verified" &&
+            doc.verified_at &&
+            doc.kev &&
+            doc.kev.status === "ok" &&
+            doc.kev.content_sha256 &&
+            doc.kev.retrieved_at
+          : doc.verification_state === "failed" ||
+            doc.verification_state === "rejected" ||
+            doc.verification_state === "insufficient")
+    );
+  }
+
+  function evaluateDataStatus(manifest, preview, publicationStatus, verification) {
+    var pubState = publicationStatus && publicationStatus.state;
+    var integrity = Boolean(pubState && pubState !== "consistent");
+    var validVerification = verificationIsValid(verification) ? verification : null;
+    var verified = Boolean(validVerification && validVerification.verified === true);
+    var collectionOutcome = (preview && preview.status) || (manifest && manifest.status);
+    var headline = "Verification evidence unavailable";
+    var message =
+      "Timestamps below come from the last published snapshot only. A later successful Collect that skipped publication is not visible here.";
+    var tone = "neutral";
+    if (integrity) {
+      headline = "Publication consistency problem";
+      message =
+        "Published Pages data and persisted pulse-state may have diverged. Do not treat this page as an authoritative publication until an operator reconciles. " +
+        asText(publicationStatus && publicationStatus.classification);
+      tone = "unavailable";
+    } else if (verification && !validVerification) {
+      headline = "Verification evidence is invalid";
+      message =
+        "A verification-status document was present but failed validation. Do not treat snapshot age as proof of a recent successful collection.";
+      tone = "unavailable";
+    } else if (validVerification && validVerification.verification_state === "failed") {
+      headline = "Collection verification failed";
+      message = asText(validVerification.note) || "The latest recorded collection did not independently validate KEV.";
+      tone = "unavailable";
+    } else if (validVerification && validVerification.verification_state === "rejected") {
+      headline = "Publication rejected";
+      message = asText(validVerification.note) || "The latest Collect artifact was not published.";
+      tone = "unavailable";
+    } else if (verified && validVerification.status_only) {
+      headline = "Unchanged catalog, independently verified";
+      message = asText(validVerification.note);
+      tone = collectionOutcome === "degraded" ? "warn" : "ok";
+    } else if (verified) {
+      headline = "Published snapshot, independently verified";
+      message = asText(validVerification.note);
+      tone = collectionOutcome === "degraded" ? "warn" : "ok";
+    } else if (!validVerification && collectionOutcome === "degraded") {
+      headline = "Published snapshot";
+      message =
+        "Collection of this snapshot succeeded with incomplete extracted inventories or unavailable enrichments. " +
+        message;
+      tone = "warn";
+    }
+    var lastSuccessfulCollection = null;
+    if (
+      validVerification &&
+      (verified || validVerification.collection_outcome === "ok" || validVerification.collection_outcome === "degraded")
+    ) {
+      lastSuccessfulCollection = validVerification.collection_completed_at || null;
+    } else if (preview && (preview.status === "ok" || preview.status === "degraded")) {
+      lastSuccessfulCollection = preview.collection_completed_at || null;
+    }
+    return {
+      headline: headline,
+      message: message,
+      tone: tone,
+      verified: verified,
+      verification: validVerification,
+      lastSuccessfulVerificationAt: verified && validVerification ? validVerification.verified_at : null,
+      lastSuccessfulCollectionAt: lastSuccessfulCollection,
+    };
+  }
+
   function setBanner(kind, message) {
     statusBanner.className = "banner " + kind;
     statusBanner.textContent = "";
@@ -252,6 +358,17 @@
     label.textContent = bannerLabel(kind);
     statusBanner.appendChild(label);
     statusBanner.appendChild(document.createTextNode(" " + message));
+  }
+
+  function appendCvePulseLink(container, cveId) {
+    if (CVE_ID.test(cveId)) {
+      var pulseLink = document.createElement("a");
+      pulseLink.setAttribute("href", "#cve/" + cveId);
+      pulseLink.textContent = asText(cveId);
+      container.appendChild(pulseLink);
+      return;
+    }
+    container.textContent = asText(cveId);
   }
 
   function addLink(container, href, label) {
@@ -575,6 +692,18 @@
     "kev_catalog_url",
     "cve_record_url",
     "cvelist_v5_url",
+    "nvd_url",
+    "nvd_status",
+    "cvss_versions",
+    "cvss_sources",
+    "attack_vector",
+    "privileges_required",
+    "user_interaction",
+    "cwe_ids",
+    "has_fixed_version",
+    "has_vendor_advisory",
+    "has_affected_versions",
+    "source_conflicts",
   ];
 
   function sanitizeCsvCell(value) {
@@ -633,6 +762,56 @@
     }
     if (column === "cvelist_v5_url") {
       return row.links && row.links.cvelist_v5;
+    }
+    if (column === "nvd_url") {
+      return row.links && row.links.nvd;
+    }
+    if (column === "nvd_status") {
+      return row.nvd_status || "unavailable";
+    }
+    if (column === "cvss_versions") {
+      return row.cvss_versions && row.cvss_versions.length ? row.cvss_versions : "unavailable";
+    }
+    if (column === "cvss_sources") {
+      return row.cvss_sources && row.cvss_sources.length ? row.cvss_sources : "unavailable";
+    }
+    if (column === "attack_vector") {
+      return row.attack_vector && row.attack_vector.length ? row.attack_vector : "unavailable";
+    }
+    if (column === "privileges_required") {
+      return row.privileges_required && row.privileges_required.length
+        ? row.privileges_required
+        : "unavailable";
+    }
+    if (column === "user_interaction") {
+      return row.user_interaction && row.user_interaction.length
+        ? row.user_interaction
+        : "unavailable";
+    }
+    if (column === "cwe_ids") {
+      return row.cwe_ids && row.cwe_ids.length ? row.cwe_ids : "unavailable";
+    }
+    if (column === "has_fixed_version") {
+      return row.has_fixed_version === true ? true : row.has_fixed_version === false ? false : "unavailable";
+    }
+    if (column === "has_vendor_advisory") {
+      return row.has_vendor_advisory === true
+        ? true
+        : row.has_vendor_advisory === false
+          ? false
+          : "unavailable";
+    }
+    if (column === "has_affected_versions") {
+      return row.has_affected_versions === true
+        ? true
+        : row.has_affected_versions === false
+          ? false
+          : "unavailable";
+    }
+    if (column === "source_conflicts") {
+      return row.source_conflicts && row.source_conflicts.length
+        ? row.source_conflicts
+        : "unavailable";
     }
     return row[column];
   }
@@ -729,12 +908,7 @@
     rows.forEach(function (row) {
       var tr = document.createElement("tr");
       var cve = labeledCell("CVE");
-      var cveLink = row.links && row.links.cve_record;
-      if (safeHttpsUrl(cveLink)) {
-        addLink(cve, cveLink, asText(row.cve_id));
-      } else {
-        cve.textContent = asText(row.cve_id);
-      }
+      appendCvePulseLink(cve, row.cve_id);
       tr.appendChild(cve);
       if (showChange) {
         var change = labeledCell("Change");
@@ -782,6 +956,7 @@
       addLink(links, row.links && row.links.cve_record, "CVE record");
       addLink(links, row.links && row.links.kev_catalog, "KEV catalog");
       addLink(links, row.links && row.links.cvelist_v5, "CVE List V5");
+      addLink(links, row.links && row.links.nvd, "NVD");
       tr.appendChild(links);
       if (showDetails) {
         var detailsCell = labeledCell("Details");
@@ -1047,12 +1222,7 @@
     rows.forEach(function (row) {
       var tr = document.createElement("tr");
       var cve = labeledCell("CVE");
-      var cveLink = row.links && row.links.cve_record;
-      if (safeHttpsUrl(cveLink)) {
-        addLink(cve, cveLink, asText(row.cve_id));
-      } else {
-        cve.textContent = asText(row.cve_id);
-      }
+      appendCvePulseLink(cve, row.cve_id);
       tr.appendChild(cve);
       var cats = labeledCell("Categories");
       cats.textContent = (row.categories || [])
@@ -1068,6 +1238,7 @@
       addLink(links, row.links && row.links.cve_record, "CVE record");
       addLink(links, row.links && row.links.kev_catalog, "KEV catalog");
       addLink(links, row.links && row.links.cvelist_v5, "CVE List V5");
+      addLink(links, row.links && row.links.nvd, "NVD");
       tr.appendChild(links);
       var detailsCell = labeledCell("Details");
       var beforeAfter = buildBeforeAfter(row);
@@ -1245,8 +1416,98 @@
         cve_record: links.cve_record,
         kev_catalog: links.kev_catalog,
         cvelist_v5: links.cvelist_v5,
+        nvd: links.nvd,
       },
+      intelligence: record.intelligence && typeof record.intelligence === "object" ? record.intelligence : null,
+      cwe_ids: intelligenceCweIds(record),
+      cvss_versions: intelligenceValues(record, "cvss_version"),
+      cvss_sources: intelligenceValues(record, "source"),
+      attack_vector: intelligenceMetrics(record, "attackVector"),
+      privileges_required: intelligenceMetrics(record, "privilegesRequired"),
+      user_interaction: intelligenceMetrics(record, "userInteraction"),
+      has_fixed_version: coverageFlag(record, "has_fixed_version"),
+      has_vendor_advisory: coverageFlag(record, "has_vendor_advisory"),
+      has_affected_versions: coverageFlag(record, "has_affected_versions"),
+      nvd_status: nvdStatus(record),
+      source_conflicts: conflictKinds(record),
     };
+  }
+
+  function coverageFlag(record, key) {
+    var intel = record.intelligence;
+    if (!intel || !intel.coverage) {
+      return null;
+    }
+    return intel.coverage[key] === true;
+  }
+
+  function nvdStatus(record) {
+    var intel = record.intelligence;
+    if (!intel || !intel.sources || !intel.sources.nvd) {
+      return "unavailable";
+    }
+    return intel.sources.nvd.status || "unavailable";
+  }
+
+  function conflictKinds(record) {
+    var intel = record.intelligence;
+    if (!intel || !Array.isArray(intel.conflicts)) {
+      return [];
+    }
+    return intel.conflicts
+      .map(function (item) {
+        return item && item.kind ? String(item.kind) : "";
+      })
+      .filter(Boolean);
+  }
+
+  function intelligenceCweIds(record) {
+    var ids = {};
+    (record.kev && Array.isArray(record.kev.cwes) ? record.kev.cwes : []).forEach(function (item) {
+      if (item) {
+        ids[String(item)] = true;
+      }
+    });
+    var assertions =
+      record.intelligence && record.intelligence.cwes && Array.isArray(record.intelligence.cwes.assertions)
+        ? record.intelligence.cwes.assertions
+        : [];
+    assertions.forEach(function (item) {
+      if (item && item.cwe_id) {
+        ids[String(item.cwe_id)] = true;
+      }
+    });
+    return Object.keys(ids).sort();
+  }
+
+  function intelligenceAssessments(record) {
+    var intel = record.intelligence;
+    if (!intel || !intel.cvss || !Array.isArray(intel.cvss.assessments)) {
+      return [];
+    }
+    return intel.cvss.assessments;
+  }
+
+  function intelligenceValues(record, key) {
+    var seen = {};
+    intelligenceAssessments(record).forEach(function (item) {
+      if (item && item[key]) {
+        seen[String(item[key])] = true;
+      }
+    });
+    return Object.keys(seen).sort();
+  }
+
+  function intelligenceMetrics(record, key) {
+    var seen = {};
+    intelligenceAssessments(record).forEach(function (item) {
+      var metrics = item && item.metrics && typeof item.metrics === "object" ? item.metrics : {};
+      var value = metrics[key] || (key === "attackVector" ? metrics.accessVector : "");
+      if (value) {
+        seen[String(value)] = true;
+      }
+    });
+    return Object.keys(seen).sort();
   }
 
   function remediationKinds(remediation) {
@@ -1317,6 +1578,27 @@
     if (!cweMatches(row, filters.cwe)) {
       return false;
     }
+    if (!listFilterMatches(row.cvss_versions, filters.cvssVersion)) {
+      return false;
+    }
+    if (!listFilterMatches(row.attack_vector, filters.attackVector)) {
+      return false;
+    }
+    if (!listFilterMatches(row.privileges_required, filters.privilegesRequired)) {
+      return false;
+    }
+    if (!listFilterMatches(row.user_interaction, filters.userInteraction)) {
+      return false;
+    }
+    if (!flagFilterMatches(row.has_fixed_version, filters.fixedVersion)) {
+      return false;
+    }
+    if (!flagFilterMatches(row.has_vendor_advisory, filters.vendorAdvisory)) {
+      return false;
+    }
+    if (!nvdFilterMatches(row.nvd_status, filters.nvd)) {
+      return false;
+    }
     if (!remediationMatches(row, filters.remediation)) {
       return false;
     }
@@ -1376,11 +1658,42 @@
     if (!wanted || wanted === "all") {
       return true;
     }
-    var cwes = Array.isArray(row.cwes) ? row.cwes : [];
+    var cwes = Array.isArray(row.cwe_ids) && row.cwe_ids.length ? row.cwe_ids : row.cwes || [];
     if (wanted === "unavailable") {
       return cwes.length === 0;
     }
     return cwes.indexOf(wanted) !== -1;
+  }
+
+  function listFilterMatches(values, wanted) {
+    if (!wanted || wanted === "all") {
+      return true;
+    }
+    var items = Array.isArray(values) ? values : [];
+    if (wanted === "unavailable") {
+      return items.length === 0;
+    }
+    return items.indexOf(wanted) !== -1;
+  }
+
+  function flagFilterMatches(value, wanted) {
+    if (!wanted || wanted === "all") {
+      return true;
+    }
+    if (wanted === "available") {
+      return value === true;
+    }
+    return value !== true;
+  }
+
+  function nvdFilterMatches(status, wanted) {
+    if (!wanted || wanted === "all") {
+      return true;
+    }
+    if (wanted === "ok") {
+      return status === "ok";
+    }
+    return status !== "ok";
   }
 
   function remediationMatches(row, wanted) {
@@ -1441,6 +1754,13 @@
       cvssMin: catalogCvssMin ? catalogCvssMin.value : "",
       cvssMax: catalogCvssMax ? catalogCvssMax.value : "",
       cwe: catalogCwe ? catalogCwe.value : "all",
+      cvssVersion: catalogCvssVersion ? catalogCvssVersion.value : "all",
+      attackVector: catalogAttackVector ? catalogAttackVector.value : "all",
+      privilegesRequired: catalogPrivileges ? catalogPrivileges.value : "all",
+      userInteraction: catalogUserInteraction ? catalogUserInteraction.value : "all",
+      fixedVersion: catalogFixedVersion ? catalogFixedVersion.value : "all",
+      vendorAdvisory: catalogVendorAdvisory ? catalogVendorAdvisory.value : "all",
+      nvd: catalogNvd ? catalogNvd.value : "all",
       remediation: catalogRemediation ? catalogRemediation.value : "all",
       sort: catalogSort ? catalogSort.value : "kev_date_added",
     };
@@ -1492,6 +1812,13 @@
       catalogCvssMin,
       catalogCvssMax,
       catalogCwe,
+      catalogCvssVersion,
+      catalogAttackVector,
+      catalogPrivileges,
+      catalogUserInteraction,
+      catalogFixedVersion,
+      catalogVendorAdvisory,
+      catalogNvd,
       catalogRemediation,
       catalogClear,
       catalogExport,
@@ -1573,7 +1900,7 @@
     );
     var cwes = [];
     catalogRows.forEach(function (row) {
-      (row.cwes || []).forEach(function (cwe) {
+      (row.cwe_ids && row.cwe_ids.length ? row.cwe_ids : row.cwes || []).forEach(function (cwe) {
         cwes.push(cwe);
       });
     });
@@ -1590,6 +1917,345 @@
       }
       return response.json();
     });
+  }
+
+  function parseCveHash() {
+    var match = String(window.location.hash || "").match(/^#cve\/(CVE-[0-9]{4}-[0-9]{4,})$/);
+    return match ? match[1] : null;
+  }
+
+  function applyCveHash() {
+    var cveId = parseCveHash();
+    if (!cveDetail) {
+      return;
+    }
+    if (!cveId) {
+      cveDetail.hidden = true;
+      if (cveDetailBody) {
+        cveDetailBody.textContent = "";
+      }
+      return;
+    }
+    cveDetail.hidden = false;
+    if (!catalogLoaded) {
+      if (cveDetailStatus) {
+        cveDetailStatus.textContent = "Loading published catalog for " + cveId + ".";
+      }
+      loadCatalog();
+      return;
+    }
+    renderCveDetail(cveId);
+  }
+
+  function renderCveDetail(cveId) {
+    if (!cveDetailBody || !cveDetailHeading) {
+      return;
+    }
+    cveDetailBody.textContent = "";
+    cveDetailHeading.textContent = cveId;
+    var row = null;
+    catalogRows.forEach(function (item) {
+      if (item.cve_id === cveId) {
+        row = item;
+      }
+    });
+    if (!row) {
+      if (cveDetailStatus) {
+        cveDetailStatus.textContent = "This CVE is not in the published snapshot.";
+      }
+      return;
+    }
+    if (cveDetailStatus) {
+      cveDetailStatus.textContent = "Source-attributed intelligence for " + cveId + ". No composite risk score.";
+    }
+    var intel = row.intelligence || {};
+    appendDetailSection(cveDetailBody, "Identity", function (section) {
+      var list = document.createElement("dl");
+      list.className = "meta-list";
+      var identity = intel.identity || {};
+      appendNamedMeta(list, "CVE ID", row.cve_id);
+      appendNamedMeta(list, "CVE publication status", identity.cve_status || row.cve_state || "unavailable");
+      appendNamedMeta(list, "CNA organization", identity.cna_organization || "unavailable");
+      appendNamedMeta(list, "CVE published", identity.cve_published_at || "unavailable");
+      appendNamedMeta(list, "CVE updated", identity.cve_updated_at || "unavailable");
+      section.appendChild(list);
+    });
+    appendDetailSection(cveDetailBody, "KEV exploitation confirmation", function (section) {
+      var kev = intel.kev || {};
+      var list = document.createElement("dl");
+      list.className = "meta-list";
+      appendNamedMeta(list, "KEV added", kev.date_added || row.kev_date_added);
+      appendNamedMeta(list, "Due date", kev.due_date || row.due_date);
+      appendNamedMeta(list, "Required action", kev.required_action || row.required_action);
+      appendNamedMeta(list, "Known ransomware campaign use", kev.known_ransomware_campaign_use || row.known_ransomware_campaign_use);
+      appendNamedMeta(list, "CISA notes", kev.notes || "unavailable");
+      appendNamedMeta(list, "Source", kev.source || "cisa_kev");
+      section.appendChild(list);
+    });
+    appendDetailSection(cveDetailBody, "Technical description", function (section) {
+      var descriptions = Array.isArray(intel.descriptions) ? intel.descriptions : [];
+      if (!descriptions.length) {
+        var fallback = document.createElement("p");
+        fallback.textContent = asText(row.cve_description || row.short_description || "unavailable");
+        section.appendChild(fallback);
+        return;
+      }
+      descriptions.forEach(function (item) {
+        var block = document.createElement("p");
+        block.textContent =
+          asText(item.source) +
+          ": " +
+          asText(item.text) +
+          (item.source_updated_at ? " (updated " + asText(item.source_updated_at) + ")" : "");
+        section.appendChild(block);
+      });
+    });
+    appendDetailSection(cveDetailBody, "CVSS assessments", function (section) {
+      var assessments = intel.cvss && Array.isArray(intel.cvss.assessments) ? intel.cvss.assessments : [];
+      if (intel.cvss && intel.cvss.display_preference_note) {
+        var note = document.createElement("p");
+        note.textContent = asText(intel.cvss.display_preference_note);
+        section.appendChild(note);
+      }
+      if (!assessments.length) {
+        var empty = document.createElement("p");
+        empty.textContent = "No structured CVSS assessment is available.";
+        section.appendChild(empty);
+        return;
+      }
+      section.appendChild(
+        buildTable(
+          ["Source", "Version", "Score", "Severity", "Vector", "AV", "PR", "UI"],
+          assessments.map(function (item) {
+            var metrics = item.metrics || {};
+            return [
+              item.source,
+              item.cvss_version,
+              item.base_score,
+              item.severity,
+              item.vector,
+              metrics.attackVector || metrics.accessVector || "unavailable",
+              metrics.privilegesRequired || "unavailable",
+              metrics.userInteraction || "unavailable",
+            ];
+          })
+        )
+      );
+    });
+    appendDetailSection(cveDetailBody, "CWE classifications", function (section) {
+      var assertions = intel.cwes && Array.isArray(intel.cwes.assertions) ? intel.cwes.assertions : [];
+      if (!assertions.length) {
+        var empty = document.createElement("p");
+        empty.textContent = row.cwes && row.cwes.length ? row.cwes.join(", ") : "No CWE classification is available.";
+        section.appendChild(empty);
+        return;
+      }
+      section.appendChild(
+        buildTable(
+          ["CWE", "Name", "Source"],
+          assertions.map(function (item) {
+            return [item.cwe_id, item.name || "unavailable", item.source];
+          })
+        )
+      );
+    });
+    appendDetailSection(cveDetailBody, "Affected products and versions", function (section) {
+      var note = document.createElement("p");
+      note.textContent =
+        (intel.affected && intel.affected.note) ||
+        "Affected ranges are source-specific. An upper bound is not a fixed version.";
+      section.appendChild(note);
+      var products = intel.affected && Array.isArray(intel.affected.products) ? intel.affected.products : [];
+      if (!products.length) {
+        var empty = document.createElement("p");
+        empty.textContent = "No structured affected-version evidence is available.";
+        section.appendChild(empty);
+        return;
+      }
+      products.forEach(function (product) {
+        var heading = document.createElement("p");
+        heading.className = "detail-label";
+        heading.textContent =
+          asText(product.source) +
+          " · " +
+          asText(product.vendor || "unavailable") +
+          " / " +
+          asText(product.product || "unavailable");
+        section.appendChild(heading);
+        var ranges = Array.isArray(product.ranges) ? product.ranges : [];
+        if (!ranges.length) {
+          var missing = document.createElement("p");
+          missing.textContent = "No version range evidence from this source.";
+          section.appendChild(missing);
+          return;
+        }
+        section.appendChild(
+          buildTable(
+            ["Status", "Version", "Greater than", "Greater or equal", "Less than", "Less or equal", "Type"],
+            ranges.map(function (item) {
+              return [
+                item.status,
+                item.version,
+                item.greater_than,
+                item.greater_than_or_equal,
+                item.less_than,
+                item.less_than_or_equal,
+                item.version_type,
+              ];
+            })
+          )
+        );
+      });
+    });
+    appendDetailSection(cveDetailBody, "Remediation and advisories", function (section) {
+      var rem = intel.remediation || {};
+      if (rem.note) {
+        var note = document.createElement("p");
+        note.textContent = asText(rem.note);
+        section.appendChild(note);
+      }
+      var fixed = Array.isArray(rem.fixed_versions) ? rem.fixed_versions : [];
+      if (!fixed.length) {
+        var missing = document.createElement("p");
+        missing.textContent = "No explicit fixed-version evidence. Affected-range upper bounds are not treated as patches.";
+        section.appendChild(missing);
+      } else {
+        section.appendChild(
+          buildTable(
+            ["Vendor", "Product", "Fixed version", "Source", "Evidence"],
+            fixed.map(function (item) {
+              return [item.vendor, item.product, item.version, item.source, item.evidence];
+            })
+          )
+        );
+      }
+      var advisories = Array.isArray(rem.vendor_advisories) ? rem.vendor_advisories : [];
+      if (advisories.length) {
+        var heading = document.createElement("p");
+        heading.className = "detail-label";
+        heading.textContent = "Vendor advisories";
+        section.appendChild(heading);
+        appendReferenceList(section, advisories);
+      } else {
+        var noAdv = document.createElement("p");
+        noAdv.textContent = "No vendor advisory URL is available.";
+        section.appendChild(noAdv);
+      }
+      section.appendChild(buildRemediation(row.remediation));
+    });
+    appendDetailSection(cveDetailBody, "References", function (section) {
+      var refs = Array.isArray(intel.references) ? intel.references : [];
+      if (!refs.length) {
+        var empty = document.createElement("p");
+        empty.textContent = "No validated HTTPS references are available.";
+        section.appendChild(empty);
+        return;
+      }
+      appendReferenceList(section, refs);
+    });
+    appendDetailSection(cveDetailBody, "Source availability and freshness", function (section) {
+      var sources = intel.sources || {};
+      section.appendChild(
+        buildTable(
+          ["Source", "Status", "Retrieved", "Upstream modified", "Completeness", "Error"],
+          ["cisa_kev", "cve_list_v5", "nvd"].map(function (name) {
+            var meta = sources[name] || {};
+            return [
+              name,
+              meta.status || "unavailable",
+              meta.retrieved_at || "unavailable",
+              meta.upstream_modified_at || "unavailable",
+              meta.completeness || "unavailable",
+              meta.error || "none",
+            ];
+          })
+        )
+      );
+      var conflicts = Array.isArray(intel.conflicts) ? intel.conflicts : [];
+      if (conflicts.length) {
+        var heading = document.createElement("p");
+        heading.className = "detail-label";
+        heading.textContent = "Conflicting source assertions";
+        section.appendChild(heading);
+        conflicts.forEach(function (item) {
+          var block = document.createElement("p");
+          block.textContent = asText(item.kind) + ": " + asText(item.note);
+          section.appendChild(block);
+        });
+      } else {
+        var none = document.createElement("p");
+        none.textContent = "No contradictory source assertions were recorded.";
+        section.appendChild(none);
+      }
+    });
+    appendDetailSection(cveDetailBody, "Published CVE history", function (section) {
+      section.appendChild(buildCveHistory(row));
+    });
+  }
+
+  function appendDetailSection(parent, title, builder) {
+    var details = document.createElement("details");
+    details.open = true;
+    var summary = document.createElement("summary");
+    summary.textContent = title;
+    details.appendChild(summary);
+    var body = document.createElement("div");
+    builder(body);
+    details.appendChild(body);
+    parent.appendChild(details);
+  }
+
+  function buildTable(headers, rows) {
+    var wrap = document.createElement("div");
+    wrap.className = "table-wrap";
+    var table = document.createElement("table");
+    var caption = document.createElement("caption");
+    caption.className = "visually-hidden";
+    caption.textContent = headers.join(", ");
+    table.appendChild(caption);
+    var thead = document.createElement("thead");
+    var headRow = document.createElement("tr");
+    headers.forEach(function (label) {
+      var th = document.createElement("th");
+      th.scope = "col";
+      th.textContent = asText(label);
+      headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+    var tbody = document.createElement("tbody");
+    rows.forEach(function (row) {
+      var tr = document.createElement("tr");
+      row.forEach(function (value) {
+        var td = document.createElement("td");
+        td.textContent = asText(value);
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    return wrap;
+  }
+
+  function appendReferenceList(parent, refs) {
+    var list = document.createElement("ul");
+    refs.forEach(function (item) {
+      var li = document.createElement("li");
+      li.appendChild(document.createTextNode(asText(item.source) + " · " + asText(item.classification) + " · "));
+      var url = safePublicHttpsUrl(item.url);
+      if (url) {
+        var anchor = document.createElement("a");
+        anchor.setAttribute("href", url);
+        anchor.setAttribute("rel", "noopener noreferrer");
+        anchor.textContent = asText(item.title || url);
+        li.appendChild(anchor);
+      } else {
+        li.appendChild(document.createTextNode(asText(item.title || "unavailable URL rejected")));
+      }
+      list.appendChild(li);
+    });
+    parent.appendChild(list);
   }
 
   function loadCatalog() {
@@ -1616,6 +2282,7 @@
         catalogStatus.textContent =
           "Loaded " + String(catalogRows.length) + " published records. Search is local to this snapshot.";
         applyCatalogFilters();
+        applyCveHash();
         loadJson("data/history/index.json").then(function (index) {
           historyIndexIds = {};
           if (index && Array.isArray(index.cves)) {
@@ -1656,6 +2323,13 @@
     catalogCvssMin,
     catalogCvssMax,
     catalogCwe,
+    catalogCvssVersion,
+    catalogAttackVector,
+    catalogPrivileges,
+    catalogUserInteraction,
+    catalogFixedVersion,
+    catalogVendorAdvisory,
+    catalogNvd,
     catalogRemediation,
   ].forEach(function (control) {
     if (!control) {
@@ -1679,6 +2353,13 @@
         catalogCompleteness,
         catalogCvss,
         catalogCwe,
+        catalogCvssVersion,
+        catalogAttackVector,
+        catalogPrivileges,
+        catalogUserInteraction,
+        catalogFixedVersion,
+        catalogVendorAdvisory,
+        catalogNvd,
         catalogTruncated,
         catalogRemediation,
         catalogSort,
@@ -1731,11 +2412,13 @@
     loadJson("data/manifest.json"),
     loadJson("data/preview.json"),
     loadJson("data/publication-status.json"),
+    loadJson("data/verification-status.json"),
   ])
     .then(function (results) {
       var manifest = results[0];
       var preview = results[1];
       var publicationStatus = results[2];
+      var verificationStatus = results[3];
       if (!manifest) {
         setBanner(
           "unavailable",
@@ -1768,42 +2451,25 @@
         Date.now()
       );
       var collectionOutcome = manifest.status;
+      var dataStatus = evaluateDataStatus(manifest, preview, publicationStatus, verificationStatus);
       if (freshness.invalid) {
         setBanner(
           "unavailable",
           "Snapshot timestamps are invalid. Do not treat this page as intelligence."
         );
-      } else if (freshness.stale) {
-        setBanner(
-          "stale",
-          "The published snapshot is stale at viewing time. Do not treat it as a fresh collection."
-        );
-      } else if (collectionOutcome === "degraded") {
-        setBanner(
-          "warn",
-          "Collection succeeded with incomplete extracted inventories or unavailable enrichments. This is not a failed collection. Freshness is evaluated at viewing time and is independent of record completeness."
-        );
-      } else if (collectionOutcome === "ok") {
-        setBanner(
-          "ok",
-          "Collection succeeded. Freshness is evaluated at viewing time and is independent of record completeness."
-        );
       } else if (collectionOutcome === "failed") {
         setBanner("unavailable", "Collection failed. No successful snapshot is shown.");
       } else {
-        setBanner("unavailable", "Published snapshot is unavailable.");
+        setBanner(dataStatus.tone, dataStatus.message);
+      }
+      if (dataStatusSummary) {
+        dataStatusSummary.textContent = dataStatus.headline + ". " + dataStatus.message;
       }
       if (
         publicationStatus &&
         publicationStatus.state &&
         publicationStatus.state !== "consistent"
       ) {
-        setBanner(
-          "unavailable",
-          "Published Pages data and persisted pulse-state may have diverged. " +
-            "Do not treat this page as an authoritative publication until an operator reconciles. " +
-            asText(publicationStatus.classification)
-        );
         appendMeta("Publication state", publicationStatus.state);
         appendMeta("Collect run ID", publicationStatus.collect_run_id);
         appendMeta("Snapshot ID", publicationStatus.snapshot_id);
@@ -1844,27 +2510,30 @@
           : "Baseline unavailable. This is not zero updates."
       );
       appendCard(
-        "Published Data Freshness",
-        freshness.invalid ? "Invalid" : freshness.fresh ? "Fresh" : "Stale",
-        "Collection " +
-          formatInstant(manifest.snapshot_generated_at) +
-          ". Publication " +
-          formatInstant(manifest.generated_at) +
-          ". Age " +
-          formatAge(freshness.ageHours) +
-          " at viewing time. Stale after " +
-          asText(manifest.stale_after_hours || 36) +
-          " hours.",
-        freshness.invalid ? "invalid" : freshness.stale ? "stale" : "fresh"
+        "Published snapshot",
+        formatInstant(manifest.snapshot_generated_at),
+        "This is the last published snapshot time, not last verification. Snapshot age is not proof that collection stopped or succeeded."
       );
 
+      appendDataStatus(
+        "Last successful verification",
+        dataStatus.verified ? formatInstant(dataStatus.lastSuccessfulVerificationAt) : "Unavailable"
+      );
+      appendDataStatus(
+        "Last successful collection",
+        dataStatus.lastSuccessfulCollectionAt
+          ? formatInstant(dataStatus.lastSuccessfulCollectionAt)
+          : "Unavailable"
+      );
+      appendDataStatus("Last published snapshot", formatInstant(manifest.snapshot_generated_at));
+      appendDataStatus("Publication consistency", (publicationStatus && publicationStatus.state) || "Unavailable");
+      appendDataStatus("Publication decision", dataStatus.verification ? asText(dataStatus.verification.publication_decision) : "Unavailable");
       appendMeta("Collection outcome", collectionOutcome);
-      appendMeta("Fresh at viewing time", freshness.fresh ? "yes" : "no");
-      appendMeta("Stale at viewing time", freshness.stale ? "yes" : "no");
       appendMeta(
-        "Age hours at viewing time",
+        "Published snapshot age hours",
         freshness.ageHours === null ? "Unavailable" : String(Math.round(freshness.ageHours * 1000) / 1000)
       );
+      appendMeta("Snapshot age is not verification", "yes");
       appendMeta("Snapshot generated at", manifest.snapshot_generated_at);
       appendMeta("Manifest generated at", manifest.generated_at);
       appendMeta("Collection started at", preview && preview.collection_started_at);
@@ -1882,6 +2551,16 @@
       appendMeta("KEV retrieved at", kev.retrieved_at);
       appendMeta("CVE source updated at", cve.source_updated_at);
       appendMeta("CVE retrieved at", cve.retrieved_at);
+      var kevStatus = (dataStatus.verification && dataStatus.verification.kev) || kev;
+      var cveStatus = (dataStatus.verification && dataStatus.verification.cve) || cve;
+      var nvdStatus = (dataStatus.verification && dataStatus.verification.nvd) || sources.nvd || {};
+      appendDataStatus("KEV source status", kevStatus.status);
+      appendDataStatus("KEV retrieved at", kevStatus.retrieved_at);
+      appendDataStatus("KEV upstream update", kevStatus.source_updated_at || kev.source_published_at);
+      appendDataStatus("CVE List V5 status", cveStatus.status);
+      appendDataStatus("CVE retrieved at", cveStatus.retrieved_at);
+      appendDataStatus("NVD status", nvdStatus.status || "unavailable");
+      appendDataStatus("NVD retrieved at", nvdStatus.retrieved_at);
       appendMeta("EPSS source status", epss.status);
       appendMeta("EPSS source note", presentEpssNote(epss.error || epss.notes));
       appendMeta("EPSS redistribution", epssDisabled ? "Disabled is not a zero probability." : asText(epss.status));
@@ -1929,4 +2608,6 @@
       renderRows(recentBody, [], { showChange: false });
       renderPublicationComparison(null);
     });
+  window.addEventListener("hashchange", applyCveHash);
+  applyCveHash();
 })();

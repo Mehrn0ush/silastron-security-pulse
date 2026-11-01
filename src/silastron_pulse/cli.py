@@ -12,7 +12,11 @@ from silastron_pulse.config import PulseConfig
 from silastron_pulse.errors import PulseError
 from silastron_pulse.jsonutil import sha256_bytes
 from silastron_pulse.pipeline import collect
-from silastron_pulse.auto_publish import evaluate_publication, write_decision_outputs
+from silastron_pulse.auto_publish import (
+    attach_verification_status,
+    evaluate_publication,
+    write_decision_outputs,
+)
 from silastron_pulse.pages_observe import observe_pages_manifest
 from silastron_pulse.reconciliation import (
     RECONCILE_CONFIRM,
@@ -21,10 +25,13 @@ from silastron_pulse.reconciliation import (
     build_publication_intent,
     build_publication_status,
     classify_workflow_outcome,
+    publication_status_path,
     reconcile_publication,
     write_publication_intent,
     write_publication_status,
 )
+from silastron_pulse.verify_operations import verify_operations
+from silastron_pulse.verification_status import validate_verification_status
 from silastron_pulse.safe_fs import (
     assert_artifact_tree,
     copy_tree_without_symlinks,
@@ -125,6 +132,7 @@ def main(argv: list[str] | None = None) -> int:
     decide.add_argument("--expected-event", default=None)
     decide.add_argument("--expected-head-sha", default=None)
     decide.add_argument("--artifact-dir", type=Path, default=None)
+    decide.add_argument("--verification-status-out", type=Path, default=None)
 
     artifact_dir = sub.add_parser(
         "verify-artifact-dir",
@@ -197,6 +205,26 @@ def main(argv: list[str] | None = None) -> int:
     verify_intent.add_argument("--collect-run-id", required=True)
     verify_intent.add_argument("--candidate-digest", required=True)
 
+    write_verification = sub.add_parser(
+        "write-verification-status",
+        help="Write a validated operational verification-status document",
+    )
+    write_verification.add_argument("--candidate", type=Path, required=True)
+    write_verification.add_argument("--published-dir", type=Path, required=True)
+    write_verification.add_argument("--decision", required=True)
+    write_verification.add_argument("--reason", required=True)
+    write_verification.add_argument("--collect-run-id", default=None)
+    write_verification.add_argument("--collect-event", default=None)
+    write_verification.add_argument("--candidate-digest", default=None)
+    write_verification.add_argument("--output", type=Path, required=True)
+
+    verify_ops = sub.add_parser(
+        "verify-operations",
+        help="Read-only operational verification. Never writes or dispatches.",
+    )
+    verify_ops.add_argument("--pages-url", default="https://pulse.silastron.com")
+    verify_ops.add_argument("--repository", default="Mehrn0ush/silastron-security-pulse")
+
     observe = sub.add_parser(
         "observe-pages-manifest",
         help="Observe the public Pages manifest without treating job status as proof",
@@ -224,7 +252,9 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command == "validate":
             payload = json.loads(args.path.read_text(encoding="utf-8"))
-            if "records" in payload:
+            if payload.get("kind") == "verification_status":
+                validate_verification_status(payload)
+            elif "records" in payload:
                 validate_snapshot(payload)
             else:
                 validate_manifest(payload)
@@ -449,6 +479,28 @@ def main(argv: list[str] | None = None) -> int:
                 output_path=args.github_output,
                 summary_path=args.summary_path,
             )
+            if args.verification_status_out is not None and decision.outcome in {"publish", "skip"}:
+                published = None
+                latest = args.published_dir / "latest.json"
+                if latest.exists():
+                    published = load_snapshot(
+                        latest,
+                        max_bytes=config.max_snapshot_bytes,
+                        max_depth=config.max_json_depth,
+                        compatible=True,
+                    )
+                publication_state = None
+                status_file = publication_status_path(args.published_dir)
+                if status_file.exists():
+                    publication_state = json.loads(status_file.read_text(encoding="utf-8")).get("state")
+                candidate = json.loads(args.candidate.read_text(encoding="utf-8"))
+                payload = attach_verification_status(
+                    decision,
+                    candidate=candidate,
+                    published=published,
+                    publication_state=publication_state,
+                )
+                atomic_write_json(args.verification_status_out, payload)
             print(json.dumps(
                 {
                     "outcome": decision.outcome,
@@ -462,6 +514,50 @@ def main(argv: list[str] | None = None) -> int:
                 default=str,
             ))
             return 0 if decision.outcome in {"publish", "skip"} else 1
+        if args.command == "write-verification-status":
+            config = PulseConfig.from_env(args.published_dir)
+            candidate = json.loads(args.candidate.read_text(encoding="utf-8"))
+            published = None
+            latest = args.published_dir / "latest.json"
+            if latest.exists():
+                published = load_snapshot(
+                    latest,
+                    max_bytes=config.max_snapshot_bytes,
+                    max_depth=config.max_json_depth,
+                    compatible=True,
+                )
+            publication_state = None
+            status_file = publication_status_path(args.published_dir)
+            if status_file.exists():
+                publication_state = json.loads(status_file.read_text(encoding="utf-8")).get("state")
+            from silastron_pulse.auto_publish import PublicationDecision
+
+            decision = PublicationDecision(
+                outcome=args.decision,
+                reason=args.reason,
+                snapshot_id=candidate.get("snapshot_id"),
+                collect_run_id=args.collect_run_id,
+                digest=args.candidate_digest,
+                details={"collect_event": args.collect_event},
+            )
+            payload = attach_verification_status(
+                decision,
+                candidate=candidate,
+                published=published,
+                publication_state=publication_state,
+            )
+            atomic_write_json(args.output, payload)
+            print("verification status written")
+            return 0
+        if args.command == "verify-operations":
+            report = verify_operations(
+                pages_url=args.pages_url,
+                repository=args.repository,
+            )
+            print(json.dumps(report, indent=2, default=str))
+            if report.get("verdict") == "verified_operational_failure":
+                return 1
+            return 0
         if args.command == "write-unpublished":
             clock = SystemClock()
             payload = unpublished_status(generated_at=format_datetime(clock.now()))

@@ -221,6 +221,29 @@ class CveHistoryTests(unittest.TestCase):
         self.assertEqual(first["events"], second["events"])
         self.assertEqual(first["durable_event_count"], second["durable_event_count"])
 
+    def test_reordered_intelligence_arrays_do_not_create_history_events(self) -> None:
+        self._promote(self.first)
+        later = copy.deepcopy(self.first)
+        later["generated_at"] = "2099-01-10T13:00:00Z"
+        later["collection_completed_at"] = "2099-01-10T13:00:00Z"
+        later["snapshot_id"] = "reorder-1"
+        intel = later["records"][0].setdefault("intelligence", {})
+        assessments = list(intel.get("cvss", {}).get("assessments") or [])
+        intel.setdefault("cvss", {})["assessments"] = list(reversed(assessments))
+        sources = intel.setdefault("sources", {})
+        for name in ("nvd", "cve_list_v5"):
+            sources.setdefault(name, {})["retrieved_at"] = "2099-01-11T00:00:00Z"
+        self._promote(later, now=datetime(2099, 1, 10, 15, tzinfo=timezone.utc))
+        ledger = json.loads(
+            (self.published / "history" / "ledger" / "cves" / "CVE-2099-0001.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        kinds = [event["kind"] for event in ledger["events"]]
+        self.assertNotIn("cvss_assessment_change", kinds)
+        self.assertNotIn("nvd_change", kinds)
+
 
 if __name__ == "__main__":
     unittest.main()
+

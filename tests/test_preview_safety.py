@@ -37,13 +37,13 @@ class PreviewSafetyTests(unittest.TestCase):
     def test_preview_does_not_treat_stale_manifest_flag_as_fresh(self) -> None:
         source = (ROOT / "preview" / "app.js").read_text(encoding="utf-8")
         self.assertIn("evaluateFreshness", source)
+        self.assertIn("evaluateDataStatus", source)
         self.assertIn("Date.now()", source)
         self.assertIn("Collection outcome", source)
         self.assertIn("Complete extracted inventories", source)
         self.assertIn("Partial extracted inventories", source)
         self.assertIn("Unavailable enrichments", source)
-        self.assertIn("Collection succeeded", source)
-        self.assertIn("not a failed collection", source)
+        self.assertIn("Snapshot age is not verification", source)
         self.assertIn("Partial extracted inventory", source)
         self.assertIn("Unavailable enrichment", source)
         self.assertNotIn('infoState = "partial"', source)
@@ -64,7 +64,7 @@ class PreviewSafetyTests(unittest.TestCase):
         self.assertIn("Collection outcome", html)
         self.assertIn("Record completeness", html)
         self.assertIn("does not prove", html)
-        self.assertIn("Freshness", html)
+        self.assertIn("Data status", html)
 
 
 if __name__ == "__main__":

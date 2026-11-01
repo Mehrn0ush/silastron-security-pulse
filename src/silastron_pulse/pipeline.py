@@ -5,7 +5,7 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from silastron_pulse.adapters.cve import (
     CveEnrichment,
@@ -16,7 +16,7 @@ from silastron_pulse.adapters.cve import (
 from silastron_pulse.adapters.epss import collect_epss, unavailable_record
 from silastron_pulse.adapters.kev import KevCatalog, fetch_kev_catalog
 from silastron_pulse.adapters.nvd import NvdEnrichment, collect_nvd
-from silastron_pulse.clock import Clock, SystemClock, format_datetime
+from silastron_pulse.clock import Clock, SystemClock, format_datetime, parse_generated_at
 from silastron_pulse.config import PulseConfig
 from silastron_pulse.constants import (
     CISA_KEV_ATTRIBUTION,
@@ -204,12 +204,20 @@ def _collect_locked(
         )
         return CollectionResult(status="failed", snapshot=None, error=error)
     nvd_index, nvd_cached = _load_nvd_cache(state, config)
+    previous_ids = [
+        item.get("cve_id")
+        for item in (previous or {}).get("records") or []
+        if isinstance(item, dict) and item.get("cve_id")
+    ]
     nvd = collect_nvd(
         [record.cve_id for record in kev.records],
         fetcher,
         config,
         cache_index=nvd_index,
         cached_records=nvd_cached,
+        now=parse_generated_at(started_at),
+        previous_ids=previous_ids,
+        persist=_nvd_checkpoint(state, config) if state is not None else None,
     )
     epss = collect_epss([record.cve_id for record in kev.records], enabled=False)
     entries = _build_entries(kev, cve, epss, nvd)
@@ -244,6 +252,13 @@ def _collect_locked(
             "cve_records_sha256": cve.meta.content_sha256,
             "nvd_records_sha256": nvd.meta.content_sha256,
             "nvd_api_key_configured": nvd.api_key_configured,
+            "nvd_requests_attempted": (nvd.metrics or {}).get("requests_attempted"),
+            "nvd_cache_hits": (nvd.metrics or {}).get("cache_hits"),
+            "nvd_records_refreshed": (nvd.metrics or {}).get("records_refreshed"),
+            "nvd_pending_backfill": (nvd.metrics or {}).get("pending_backfill"),
+            "nvd_rate_limited": (nvd.metrics or {}).get("rate_limited"),
+            "nvd_failed_requests": (nvd.metrics or {}).get("failed_requests"),
+            "nvd_processing_ms": (nvd.metrics or {}).get("processing_ms"),
         },
     )
     snapshot = _build_snapshot(
@@ -317,6 +332,13 @@ def _collect_locked(
             "cve_delta_log_sha256": cve.delta_log_sha256,
             "nvd_records_sha256": nvd.meta.content_sha256,
             "nvd_api_key_configured": nvd.api_key_configured,
+            "nvd_requests_attempted": (nvd.metrics or {}).get("requests_attempted"),
+            "nvd_cache_hits": (nvd.metrics or {}).get("cache_hits"),
+            "nvd_records_refreshed": (nvd.metrics or {}).get("records_refreshed"),
+            "nvd_pending_backfill": (nvd.metrics or {}).get("pending_backfill"),
+            "nvd_rate_limited": (nvd.metrics or {}).get("rate_limited"),
+            "nvd_failed_requests": (nvd.metrics or {}).get("failed_requests"),
+            "nvd_processing_ms": (nvd.metrics or {}).get("processing_ms"),
             "bytes_transferred": metrics["bytes_transferred"],
             "http_gets": metrics["http_gets"],
             "http_heads": metrics["http_heads"],
@@ -400,6 +422,30 @@ def _load_cve_cache(
         if payload:
             cached[cve_id] = payload
     return index, cached
+
+
+def _nvd_checkpoint(
+    state: PulseState, config: PulseConfig
+) -> Callable[[Any], None]:
+    def persist(record: Any) -> None:
+        payload = record.to_dict() if hasattr(record, "to_dict") else None
+        if not isinstance(payload, dict) or not payload.get("cve_id"):
+            return
+        state.write_nvd_record(
+            payload,
+            {
+                "sha256": payload.get("record_sha256"),
+                "etag": payload.get("etag"),
+                "retrieved_at": payload.get("retrieved_at"),
+                "last_checked_at": payload.get("last_checked_at"),
+                "last_modified": payload.get("last_modified"),
+                "status": payload.get("status"),
+            },
+            max_bytes=config.max_nvd_bytes,
+            max_depth=config.max_json_depth,
+        )
+
+    return persist
 
 
 def _load_nvd_cache(
@@ -486,6 +532,7 @@ def _persist_state(
                     "sha256": record.record_sha256,
                     "etag": record.etag,
                     "retrieved_at": record.retrieved_at,
+                    "last_checked_at": record.last_checked_at,
                     "last_modified": record.last_modified,
                     "status": record.status,
                 }
@@ -587,6 +634,13 @@ def _build_snapshot(
         "nvd_unavailable": sum(1 for item in nvd.records.values() if item.status != "ok"),
         "nvd_fetched": len(nvd.fetched_ids),
         "nvd_reused": len(nvd.reused_ids),
+        "nvd_pending_backfill": len(nvd.pending_ids),
+        "nvd_requests_attempted": (nvd.metrics or {}).get("requests_attempted"),
+        "nvd_cache_hits": (nvd.metrics or {}).get("cache_hits"),
+        "nvd_records_refreshed": (nvd.metrics or {}).get("records_refreshed"),
+        "nvd_rate_limited": (nvd.metrics or {}).get("rate_limited"),
+        "nvd_failed_requests": (nvd.metrics or {}).get("failed_requests"),
+        "nvd_processing_ms": (nvd.metrics or {}).get("processing_ms"),
         "nvd_api_key_configured": nvd.api_key_configured,
         "intelligence": coverage_metrics(records),
         "bytes_transferred": (metrics or {}).get("bytes_transferred"),

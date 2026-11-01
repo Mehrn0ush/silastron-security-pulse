@@ -156,6 +156,49 @@ class AutoPublishHelperTests(AutoPublishFixtures):
         self.assertEqual(decision.outcome, "skip")
         self.assertEqual(decision.reason, "unchanged_upstream")
 
+    def test_semantic_intelligence_change_publishes_when_kev_is_unchanged(self) -> None:
+        self._promote(self.snapshot)
+        later = deepcopy(self.snapshot)
+        later["generated_at"] = "2099-01-10T13:00:00Z"
+        later["collection_completed_at"] = "2099-01-10T13:00:00Z"
+        later["snapshot_id"] = "20990110T130000Z_intel"
+        assessments = (
+            later["records"][0].get("intelligence", {}).get("cvss", {}).get("assessments") or []
+        )
+        if assessments:
+            assessments[0] = dict(assessments[0])
+            assessments[0]["base_score"] = 9.9
+        else:
+            later["records"][0].setdefault("intelligence", {}).setdefault("cvss", {})["assessments"] = [
+                {"source": "nvd", "cvss_version": "3.1", "base_score": 9.9, "vector": "CVSS:3.1/AV:N"}
+            ]
+            later["summary"].setdefault("intelligence", {})
+            later["summary"]["intelligence"]["records_with_cvss"] = (
+                int((later["summary"].get("intelligence") or {}).get("records_with_cvss") or 0) + 1
+            )
+        decision, _ = self._decide(later)
+        self.assertEqual(decision.outcome, "publish")
+        self.assertEqual(decision.reason, "enrichment_update")
+
+    def test_metadata_only_and_reordered_intelligence_do_not_publish(self) -> None:
+        self._promote(self.snapshot)
+        later = deepcopy(self.snapshot)
+        later["generated_at"] = "2099-01-10T13:00:00Z"
+        later["collection_completed_at"] = "2099-01-10T13:00:00Z"
+        later["snapshot_id"] = "20990110T130000Z_meta"
+        intel = later["records"][0].setdefault("intelligence", {})
+        sources = intel.setdefault("sources", {})
+        for name in ("cisa_kev", "cve_list_v5", "nvd"):
+            row = sources.setdefault(name, {})
+            row["retrieved_at"] = "2099-01-11T00:00:00Z"
+        assessments = intel.setdefault("cvss", {}).setdefault("assessments", [])
+        intel["cvss"]["assessments"] = list(reversed(assessments))
+        later["sources"]["nvd"]["retrieved_at"] = "2099-01-11T00:00:00Z"
+        later["sources"]["nvd"]["etag"] = '"changed-etag"'
+        decision, _ = self._decide(later)
+        self.assertEqual(decision.outcome, "skip")
+        self.assertEqual(decision.reason, "unchanged_upstream")
+
     def test_already_published_snapshot_is_skipped(self) -> None:
         self._promote(self.snapshot)
         decision, _ = self._decide(self.snapshot)
@@ -491,6 +534,7 @@ class AutoPublishHelperTests(AutoPublishFixtures):
         text = output.read_text(encoding="utf-8")
         self.assertIn("decision=skip", text)
         self.assertIn("reason=unchanged_upstream", text)
+        self.assertIn("status_publish=yes", text)
         self.assertIn("Unchanged upstream", summary.read_text(encoding="utf-8"))
 
     def test_cli_rejects_invalid_artifacts(self) -> None:
@@ -554,6 +598,11 @@ class AutoPublishWorkflowTests(unittest.TestCase):
         self.assertIn("record-deploy-receipt:", publish)
         self.assertIn("record-publication-intent:", publish)
         self.assertIn("write-publication-intent", publish)
+        self.assertIn("verification-status.json", publish)
+        self.assertIn("deploy-status:", publish)
+        self.assertIn("status_publish", publish)
+        self.assertIn("PULSE_NVD_MAX_FETCHES", collect)
+        self.assertIn("PULSE_NVD_OK_TTL_HOURS", collect)
         self.assertIn("needs.record-publication-intent.result == 'success'", publish)
         self.assertIn("observe-pages-manifest", publish)
         self.assertIn("mark-deploy-failed:", publish)
