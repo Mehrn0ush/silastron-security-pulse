@@ -1,0 +1,56 @@
+{
+  "candidate_digest": "3739f036ac7d94f2fd809202bdd0cc3149ff3f5d7554046a6bfea38fd18ba913",
+  "candidate_snapshot_id": "20261102T175627Z_c3499a45d7d4",
+  "collect_event": "schedule",
+  "collect_run_id": "41493683214",
+  "collection_completed_at": "2026-11-02T17:56:27Z",
+  "collection_outcome": "degraded",
+  "collection_started_at": "2026-11-02T17:42:36Z",
+  "content_sha256": "b834bc6c737f792fad58bc74c34f0ddb7ed8a9dbc3482855f4003be9c80daf60",
+  "cve": {
+    "content_sha256": "1570db38baf6c0630ffe055cdbf6dd98fdf3108c966736c049cc44e419f5a02f",
+    "retrieved_at": "2026-11-02T17:42:40Z",
+    "source_updated_at": "2026-11-01T17:36:32.366Z",
+    "status": "degraded",
+    "validated": false
+  },
+  "kev": {
+    "content_sha256": "3aa9cf3c01f116362a29d111702979175453c425e3733bde80fc4f6f8e2294e5",
+    "retrieved_at": "2026-11-02T17:42:37Z",
+    "source_updated_at": "2026-10-30T17:02:45.3665Z",
+    "status": "ok",
+    "validated": true
+  },
+  "kind": "verification_status",
+  "note": "Sources were independently validated and a new snapshot was published.",
+  "nvd": {
+    "content_sha256": "7c3c6e94510593ddbcbb069333c0d4c4578d9c6d6eb9ad2d33176c6cbfb35a58",
+    "retrieved_at": "2026-11-02T17:42:41Z",
+    "source_updated_at": null,
+    "status": "degraded",
+    "validated": false
+  },
+  "nvd_metrics": {
+    "cache_hits": 0,
+    "failed_requests": 1,
+    "fetched": 120,
+    "ok": 119,
+    "pending_backfill": 1646,
+    "processing_ms": 825545,
+    "rate_limited": 0,
+    "records_refreshed": 120,
+    "requests_attempted": 120,
+    "reused": 0,
+    "unavailable": 1647
+  },
+  "publication_decision": "publish",
+  "publication_reason": "eligible",
+  "publication_state": null,
+  "published_generated_at": "2026-10-30T14:48:25Z",
+  "published_snapshot_id": "20261030T144825Z_de81c7ade146",
+  "schema_version": "1.0.0",
+  "status_only": false,
+  "verification_state": "verified",
+  "verified": true,
+  "verified_at": "2026-11-02T17:56:27Z"
+}
