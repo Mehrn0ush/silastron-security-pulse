@@ -1,10 +1,10 @@
 {
-  "delta_fetch_time": "2026-10-31T13:18:21.006Z",
-  "delta_log_bytes": 35361540,
-  "delta_log_etag": "W/\"69aef17ae6cc813110299bc6ad58b3c88f7c5c5ca4bc8da0210e7b328464f8bb\"",
-  "delta_log_sha256": "259aaff9503eaf7887b496aaa523d2cfd389d98340e17b9cbd98fab2474b073e",
+  "delta_fetch_time": "2026-11-02T17:38:23.256Z",
+  "delta_log_bytes": 35892021,
+  "delta_log_etag": "W/\"b5b6e5c77397b7de584b47e380de5d51ff5f35cdcb85cb53c718d22148cbaaa3\"",
+  "delta_log_sha256": "e9201495f494a784f3ef4d7dcef7d1677aa6f38a40236cb471dc9ca9c54319bb",
   "delta_log_skipped": false,
-  "delta_sha256": "7737906fb8c2811ea9c51b8abbe078572b57bba50594af5136db7a9222033332",
+  "delta_sha256": "f17accd5529c8e0f5b1ecee3ac64b6ec2550321e692dd5a6dbb549f0eb0bcc18",
   "records": {
     "CVE-2002-0367": {
       "date_updated": "2025-10-22T00:05:57.464Z",
@@ -11830,10 +11830,10 @@
       "status": "ok"
     },
     "CVE-2026-50522": {
-      "date_updated": "2026-10-28T20:02:08.378Z",
-      "etag": "W/\"04801ba8ecf30f6925211e7d02c7feb6f49d1c9c170410ccee71b85c7e70f090\"",
-      "retrieved_at": "2026-10-31T14:16:14Z",
-      "sha256": "056cc1ba8bfb9a967032ceeabee2471f08c0654527e2deebcd9e96cf8ba50e62",
+      "date_updated": "2026-11-01T17:33:04.731Z",
+      "etag": "W/\"93b60e4c278170013903a4a90a1794dccb5d50d39d0543de18df26039c1d0e46\"",
+      "retrieved_at": "2026-11-02T17:42:40Z",
+      "sha256": "d211313394dee25d8ad1109962eefc32a8a08977eaafbba7c758b85cdc6edbc8",
       "status": "ok"
     },
     "CVE-2026-50751": {
@@ -11879,10 +11879,10 @@
       "status": "ok"
     },
     "CVE-2026-55040": {
-      "date_updated": "2026-10-28T20:05:40.043Z",
-      "etag": "W/\"9e92aa64fb2fdff4db9107dfe823d2771512e69ac12f6fbfb2cdb2880e701cd3\"",
-      "retrieved_at": "2026-10-31T14:16:15Z",
-      "sha256": "a88ad2c3cc1a37982aa4a39198618b754dd64692a2949942863a5e0c91fe0106",
+      "date_updated": "2026-11-01T17:36:32.366Z",
+      "etag": "W/\"2a7ee4b038323119baa1e9ca9ff94342618e1b7647504bfd28b431f96e020876\"",
+      "retrieved_at": "2026-11-02T17:42:40Z",
+      "sha256": "91375146c9b643c636eeb0fecf0fa8b4cfc5a807a19eb3a3934d076994197f40",
       "status": "ok"
     },
     "CVE-2026-55255": {
@@ -11893,17 +11893,17 @@
       "status": "ok"
     },
     "CVE-2026-56155": {
-      "date_updated": "2026-10-28T20:01:51.477Z",
-      "etag": "W/\"7ac12c66692e6df19c7e816defca740a43659b64e2e57d7d2978b1e9d94c385d\"",
-      "retrieved_at": "2026-10-31T14:16:15Z",
-      "sha256": "913b709a01f43c79ffba940ea7b014b3312a8482b4205e001ffcb1e795ec736d",
+      "date_updated": "2026-11-01T17:32:48.789Z",
+      "etag": "W/\"e4bb18512010905d83467c56ffe9b4c78694fa88f906510bb3288f966841aeea\"",
+      "retrieved_at": "2026-11-02T17:42:40Z",
+      "sha256": "c3f80b637c2cf5a4f7aeaf972950d61c39dfd26be7d143e9761e92cdac309515",
       "status": "ok"
     },
     "CVE-2026-56164": {
-      "date_updated": "2026-10-28T20:01:52.059Z",
-      "etag": "W/\"53d0e63d8727ea272ce7855a5e09d8158fe9b04d9add82b68d59e2a4e1845696\"",
-      "retrieved_at": "2026-10-31T14:16:15Z",
-      "sha256": "315815e76631728ed85573b1c7db8e9fa4aa2e9c2bcc67c3e30f863bd2e81d8a",
+      "date_updated": "2026-11-01T17:32:49.364Z",
+      "etag": "W/\"8cc097e4af38db69d71714301a2ac99eb3fbc54472f3c2dcec9035ef2fb2da8f\"",
+      "retrieved_at": "2026-11-02T17:42:40Z",
+      "sha256": "524cfb1c1eece48d76c925c6fe9874c8fc98099b6f6fb65bbca889e200aa93e8",
       "status": "ok"
     },
     "CVE-2026-56290": {
@@ -11921,10 +11921,10 @@
       "status": "ok"
     },
     "CVE-2026-58644": {
-      "date_updated": "2026-10-28T20:02:17.077Z",
-      "etag": "W/\"e3b66caf7370133cfd0db8cca1d4e9da43cea4a52f01bcfd531fba2025b6ea92\"",
-      "retrieved_at": "2026-10-31T14:16:15Z",
-      "sha256": "9289260f1975bcbf90e9989ec9bde769fa9f74af7d8b82b22877c49895de95c3",
+      "date_updated": "2026-11-01T17:33:12.922Z",
+      "etag": "W/\"05911e76caebc9198983c7f349d0dfded06b4743ab9dbbdc5714cb56b433aaa4\"",
+      "retrieved_at": "2026-11-02T17:42:40Z",
+      "sha256": "86f3772f4c093df524acb5cee688a94ba6aaf646d9607687f1b3593bb4c56cab",
       "status": "ok"
     },
     "CVE-2026-58704": {
@@ -12138,10 +12138,10 @@
       "status": "ok"
     },
     "CVE-2026-81963": {
-      "date_updated": "2026-10-30T21:57:27.169Z",
-      "etag": "W/\"767b74820363b7b984c694751111d2dca4d292d3c824553b6a446326609018b1\"",
-      "retrieved_at": "2026-10-31T14:16:17Z",
-      "sha256": "5ada54eb2930f2cb124bdc08756cd68e0bf7650f8e6e5e19cc3289026127c7f4",
+      "date_updated": "2026-10-31T16:17:44.501Z",
+      "etag": "W/\"887a0f6beeb5f264d94b922934c62634d8c1977ec519ce083b03eec303e9d060\"",
+      "retrieved_at": "2026-11-02T17:42:40Z",
+      "sha256": "745fff097259a904b754de3447183edc608e9c4216430a5c1a5406798056ce7a",
       "status": "ok"
     },
     "CVE-2026-82078": {
@@ -12215,10 +12215,10 @@
       "status": "ok"
     },
     "CVE-2026-85880": {
-      "date_updated": "2026-10-30T21:52:47.990Z",
-      "etag": "W/\"6fa4dc97bab830bc1f0577e2d6401d932ad5caa2ab5efe5d2ee62394b47aa598\"",
-      "retrieved_at": "2026-10-31T14:16:18Z",
-      "sha256": "3c50a864eb64d0deb1272d6320e209c53f7d67861d55e0afaf34bfdea41a6908",
+      "date_updated": "2026-10-31T16:13:02.178Z",
+      "etag": "W/\"6727d63fd0a4fc2514fd229d2402e2a0fc1c09cf675db398b9bfab65a575a7c1\"",
+      "retrieved_at": "2026-11-02T17:42:40Z",
+      "sha256": "1f23416c894965932d804bd2c5c4f17bd3b2ae843c34e2f4687bca310bbb91b5",
       "status": "ok"
     },
     "CVE-2026-86060": {
@@ -12355,10 +12355,10 @@
       "status": "ok"
     },
     "CVE-2026-96951": {
-      "date_updated": "2026-10-30T19:13:10.464Z",
-      "etag": "W/\"8e928f7a20cf891e1f695044d8ab73a8eee0d614e059e19dff18b27e89b84ac9\"",
-      "retrieved_at": "2026-10-31T14:16:20Z",
-      "sha256": "3590fb29c9e6ce5d17fefa6e341a62f930c7265d144902ed31c2629d4aee4850",
+      "date_updated": "2026-10-31T18:11:44.034Z",
+      "etag": "W/\"bfb872de7d06a2b9facebc29933eb1574b4a73b9fd05835a4e858212d98fbe56\"",
+      "retrieved_at": "2026-11-02T17:42:40Z",
+      "sha256": "8b4e8dbe77bfa623fccfdfc43ad976b0a93e115b14977a4ded11aa1d9d8b107a",
       "status": "ok"
     },
     "CVE-2026-97229": {
@@ -12375,6 +12375,6 @@
     "max_products": 200,
     "max_versions_per_product": 200
   },
-  "strategy": "resync",
-  "updated_at": "2026-10-31T14:16:20Z"
+  "strategy": "delta",
+  "updated_at": "2026-11-02T17:56:27Z"
 }

@@ -1,0 +1,26 @@
+{
+  "body_bytes": 1826755,
+  "catalog_version": "2026.10.30",
+  "content_length": 200782,
+  "content_sha256": "3aa9cf3c01f116362a29d111702979175453c425e3733bde80fc4f6f8e2294e5",
+  "content_type": "application/json",
+  "date_released": "2026-10-30T17:02:45.3665Z",
+  "declared_count": 1766,
+  "final_url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+  "identical_duplicate_records": 0,
+  "parsed_unique_records": 1766,
+  "raw_record_count": 1766,
+  "requested_url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
+  "retrieved_at": "2026-11-02T17:42:37Z",
+  "schema_version": "1.0.0",
+  "source": "cisa-kev",
+  "status_code": 200,
+  "verification": {
+    "independent_checksum": "none_published_by_cisa",
+    "note": "HTTPS transport integrity is not cryptographic authentication of CISA content. CISA does not publish an independent checksum of this feed. The cisagov/kev-data git mirror is not used as independent verification.",
+    "parsed_matches_raw": true,
+    "publisher_authentication": "not_available",
+    "structural_consistency": true,
+    "transport": "https"
+  }
+}
