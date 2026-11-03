@@ -11,7 +11,7 @@
   "parsed_unique_records": 1766,
   "raw_record_count": 1766,
   "requested_url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json",
-  "retrieved_at": "2026-11-02T17:42:37Z",
+  "retrieved_at": "2026-11-03T15:45:07Z",
   "schema_version": "1.0.0",
   "source": "cisa-kev",
   "status_code": 200,
