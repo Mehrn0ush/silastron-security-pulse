@@ -25,7 +25,7 @@ from silastron_pulse.enrichment_policy import AVAILABLE, PARTIAL, classify_fetch
 from silastron_pulse.errors import CorrelationError, FetchError, ValidationError
 from silastron_pulse.http import Fetcher
 from silastron_pulse.ids import cvelist_v5_raw_url, parse_cve_id, same_cve_id
-from silastron_pulse.intelligence import extract_cna_assertions
+from silastron_pulse.intelligence import extract_cisa_adp_assertions, extract_cna_assertions
 from silastron_pulse.jsonutil import load_bounded_json, sha256_bytes
 from silastron_pulse.models import (
     CveProduct,
@@ -155,10 +155,12 @@ def enrich_cves(
         )
     if strategy in {"unchanged", "delta"} and any(
         "remediation_items" not in (cached_records.get(cve_id) or {})
+        or "adp_assertions" not in (cached_records.get(cve_id) or {})
         for cve_id in unique_ids
     ):
-        # One-time bounded refetch so CNA solutions/workarounds are copied
-        # from CVE List V5 instead of remaining absent in pre-remediation cache.
+        # One-time bounded refetch so CNA solutions/workarounds and CISA ADP
+        # assertions are copied from CVE List V5 instead of remaining absent
+        # in an older cache.
         strategy = "resync"
         changed_ids = frozenset()
 
@@ -457,6 +459,7 @@ def parse_cve_record(
         cached=False,
         remediation_items=tuple(remediation_items),
         cna_assertions=extract_cna_assertions(cna, config),
+        adp_assertions=extract_cisa_adp_assertions(containers),
     )
 
 
@@ -512,6 +515,11 @@ def cve_record_from_dict(payload: dict[str, Any], *, cached: bool = False) -> Cv
         cna_assertions=(
             payload.get("cna_assertions")
             if isinstance(payload.get("cna_assertions"), dict)
+            else None
+        ),
+        adp_assertions=(
+            payload.get("adp_assertions")
+            if isinstance(payload.get("adp_assertions"), dict)
             else None
         ),
     )
