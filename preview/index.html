@@ -359,11 +359,18 @@
               probability of zero.
             </li>
             <li>
-              <strong>Severity</strong> is source-attributed CVSS. CNA and NVD
-              assessments are shown separately when both exist. Display order
-              prefers a newer CVSS version, then CNA before NVD; that is a UI
-              preference, not a correctness ranking. Missing scores stay
+              <strong>Severity</strong> is source-attributed CVSS. CNA, NVD, and
+              CISA ADP assessments are shown separately when they exist. Display
+              order prefers a newer CVSS version, then CNA, NVD, CISA ADP; that is
+              a UI preference, not a correctness ranking. Missing scores stay
               unavailable.
+            </li>
+            <li>
+              <strong>CISA SSVC decision points</strong> (Exploitation,
+              Automatable, Technical impact) are copied from the CISA ADP
+              (Vulnrichment) container of the CVE record, with CISA's assessment
+              date. They are shown as separate facts, never combined into a score
+              or priority. Missing SSVC means CISA has not added it, not low impact.
             </li>
             <li>
               <strong>Collection outcome</strong> (<code>ok</code>,

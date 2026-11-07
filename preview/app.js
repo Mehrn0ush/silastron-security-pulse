@@ -2172,6 +2172,35 @@
         )
       );
     });
+    appendDetailSection(cveDetailBody, "CISA SSVC decision points", function (section) {
+      var adp = intel.cisa_adp || {};
+      var ssvc = adp.ssvc;
+      var note = document.createElement("p");
+      note.textContent = asText(
+        adp.note || "CISA ADP (Vulnrichment) assertions copied from the CVE List V5 record. Not a risk score."
+      );
+      section.appendChild(note);
+      if (!ssvc) {
+        var empty = document.createElement("p");
+        empty.textContent =
+          adp.status === "available" || adp.status === "unavailable"
+            ? "CISA has not published SSVC decision points for this CVE. That is not evidence of low impact."
+            : "CISA ADP data is unavailable because the CVE List V5 record was not collected.";
+        section.appendChild(empty);
+        return;
+      }
+      var list = document.createElement("dl");
+      list.className = "meta-list";
+      appendNamedMeta(list, "Exploitation", ssvc.exploitation);
+      appendNamedMeta(list, "Automatable", ssvc.automatable);
+      appendNamedMeta(list, "Technical impact", ssvc.technical_impact);
+      appendNamedMeta(list, "Assessed at", ssvc.assessed_at);
+      appendNamedMeta(list, "Role", ssvc.role);
+      appendNamedMeta(list, "SSVC version", ssvc.ssvc_version);
+      appendNamedMeta(list, "ADP updated", adp.source_updated_at);
+      appendNamedMeta(list, "Source", "cisa_adp");
+      section.appendChild(list);
+    });
     appendDetailSection(cveDetailBody, "CWE classifications", function (section) {
       var assertions = intel.cwes && Array.isArray(intel.cwes.assertions) ? intel.cwes.assertions : [];
       if (!assertions.length) {

@@ -256,6 +256,12 @@ test.describe("Pulse explorer", () => {
     await expect(page.locator("#cve-detail")).toContainText("No explicit fixed-version evidence");
   });
 
+  test("shows CISA SSVC absence honestly", async ({ page }) => {
+    await page.goto("/#cve/CVE-2099-1001");
+    await expect(page.locator("#cve-detail")).toContainText("CISA SSVC decision points");
+    await expect(page.locator("#cve-detail")).toContainText("not evidence of low impact");
+  });
+
   test("filters by CVSS version, attack vector, and NVD coverage", async ({ page }) => {
     await loadCatalog(page);
     await page.locator("#catalog-cvss-version").selectOption("3.1");
