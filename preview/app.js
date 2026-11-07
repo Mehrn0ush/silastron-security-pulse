@@ -268,9 +268,95 @@
     appendNamedMeta(dataStatusDetails, term, value);
   }
 
+  var FAILED_ATTEMPT_CONCLUSIONS = ["failure", "timed_out", "cancelled", "startup_failure"];
+
+  function attemptIsValid(attempt) {
+    if (attempt === null || attempt === undefined) {
+      return true;
+    }
+    return Boolean(
+      typeof attempt === "object" &&
+        FAILED_ATTEMPT_CONCLUSIONS.indexOf(attempt.conclusion) !== -1 &&
+        /^[0-9]+$/.test(String(attempt.collect_run_id || "")) &&
+        isFinite(Date.parse(attempt.attempted_at))
+    );
+  }
+
+  function attemptOutcome(attempt) {
+    return attempt.conclusion === "failure" ? "failed" : String(attempt.conclusion).replace(/_/g, " ");
+  }
+
+  function hoursSince(value, nowMs) {
+    var parsed = Date.parse(value);
+    return isFinite(parsed) ? (nowMs - parsed) / 3600000 : null;
+  }
+
+  function formatInstantWithAge(value, nowMs) {
+    var hours = hoursSince(value, nowMs);
+    if (hours === null || hours < 0) {
+      return formatInstant(value);
+    }
+    return formatInstant(value) + " (" + formatAge(hours) + " ago)";
+  }
+
+  function formatCount(value) {
+    var number = value === null || value === undefined || value === "" ? NaN : Number(value);
+    return isFinite(number) ? number.toLocaleString("en-US") : asText(value);
+  }
+
+  function sourceValidationSummary(verification) {
+    var names = [
+      ["kev", "KEV"],
+      ["cve", "CVE List V5"],
+      ["nvd", "NVD"],
+    ];
+    var validated = [];
+    var notValidated = [];
+    names.forEach(function (pair) {
+      var view = verification[pair[0]] || {};
+      if (view.validated === true) {
+        validated.push(pair[1]);
+      } else {
+        notValidated.push(pair[1] + " (" + asText(view.status) + ")");
+      }
+    });
+    var text = "Independently validated: " + (validated.length ? validated.join(", ") : "none") + ".";
+    if (notValidated.length) {
+      text += " Not independently validated: " + notValidated.join(", ") + ".";
+    }
+    return text;
+  }
+
+  function knownGaps(preview, manifest, verification) {
+    var sources = (preview && preview.sources) || (manifest && manifest.sources) || {};
+    var gaps = [];
+    ["kev", "cve"].forEach(function (key) {
+      var source = sources[key] || {};
+      if (source.status === "degraded" && source.error) {
+        gaps.push(String(source.error));
+      }
+    });
+    var metrics = verification && verification.nvd_metrics;
+    var total = manifest && manifest.record_count;
+    if (
+      metrics &&
+      formatCount(metrics.ok) !== "Unavailable" &&
+      formatCount(total) !== "Unavailable" &&
+      Number(metrics.ok) < Number(total)
+    ) {
+      var gap = "NVD enrichment covers " + formatCount(metrics.ok) + " of " + formatCount(total) + " records";
+      if (Number(metrics.pending_backfill) > 0) {
+        gap += " (" + formatCount(metrics.pending_backfill) + " pending backfill)";
+      }
+      gaps.push(gap);
+    }
+    return gaps;
+  }
+
   function verificationIsValid(doc) {
     return Boolean(
       doc &&
+        attemptIsValid(doc.last_attempt) &&
         doc.kind === "verification_status" &&
         doc.schema_version === "1.0.0" &&
         (doc.verified === true
@@ -286,7 +372,8 @@
     );
   }
 
-  function evaluateDataStatus(manifest, preview, publicationStatus, verification) {
+  function evaluateDataStatus(manifest, preview, publicationStatus, verification, nowMs) {
+    var expectedHours = Number((manifest && manifest.stale_after_hours) || 36);
     var pubState = publicationStatus && publicationStatus.state;
     var integrity = Boolean(pubState && pubState !== "consistent");
     var validVerification = verificationIsValid(verification) ? verification : null;
@@ -296,6 +383,14 @@
     var message =
       "Timestamps below come from the last published snapshot only. A later successful Collect that skipped publication is not visible here.";
     var tone = "neutral";
+    var label = null;
+    var verifiedAgeHours =
+      verified && validVerification ? hoursSince(validVerification.verified_at, nowMs) : null;
+    var attempt = validVerification && validVerification.last_attempt;
+    var failedAttempt =
+      attempt && Date.parse(attempt.attempted_at) > Date.parse(validVerification.verified_at || 0)
+        ? attempt
+        : null;
     if (integrity) {
       headline = "Publication consistency problem";
       message =
@@ -315,14 +410,47 @@
       headline = "Publication rejected";
       message = asText(validVerification.note) || "The latest Collect artifact was not published.";
       tone = "unavailable";
-    } else if (verified && validVerification.status_only) {
-      headline = "Unchanged catalog, independently verified";
-      message = asText(validVerification.note);
-      tone = collectionOutcome === "degraded" ? "warn" : "ok";
+    } else if (verified && failedAttempt) {
+      headline = "Latest scheduled collection failed";
+      label = "Collection failed";
+      message =
+        "Collect run " +
+        asText(failedAttempt.collect_run_id) +
+        " " +
+        attemptOutcome(failedAttempt) +
+        " at " +
+        formatInstant(failedAttempt.attempted_at) +
+        ". The data below was last independently verified " +
+        formatInstantWithAge(validVerification.verified_at, nowMs) +
+        " and has not been re-checked since.";
+      tone = "stale";
+    } else if (verified && verifiedAgeHours !== null && verifiedAgeHours > expectedHours) {
+      headline = "Verification overdue";
+      label = "Verification overdue";
+      message =
+        "No successful verification for " +
+        formatAge(verifiedAgeHours) +
+        " (last " +
+        formatInstant(validVerification.verified_at) +
+        "). Collection is scheduled daily, so upstream changes since then may be missing.";
+      tone = "stale";
     } else if (verified) {
-      headline = "Published snapshot, independently verified";
-      message = asText(validVerification.note);
+      headline = validVerification.status_only
+        ? "Unchanged catalog, independently verified"
+        : "Published snapshot, independently verified";
+      message =
+        (validVerification.status_only
+          ? "Published snapshot content is unchanged. This is not a new vulnerability snapshot. "
+          : validVerification.publication_decision === "publish"
+            ? "A new snapshot was published. "
+            : "") + sourceValidationSummary(validVerification);
       tone = collectionOutcome === "degraded" ? "warn" : "ok";
+      if (tone === "warn") {
+        var gaps = knownGaps(preview, manifest, validVerification);
+        if (gaps.length) {
+          message += " Known gaps: " + gaps.join("; ") + ".";
+        }
+      }
     } else if (!validVerification && collectionOutcome === "degraded") {
       headline = "Published snapshot";
       message =
@@ -343,6 +471,8 @@
       headline: headline,
       message: message,
       tone: tone,
+      label: label,
+      failedAttempt: failedAttempt,
       verified: verified,
       verification: validVerification,
       lastSuccessfulVerificationAt: verified && validVerification ? validVerification.verified_at : null,
@@ -350,12 +480,12 @@
     };
   }
 
-  function setBanner(kind, message) {
+  function setBanner(kind, message, labelText) {
     statusBanner.className = "banner " + kind;
     statusBanner.textContent = "";
     var label = document.createElement("strong");
     label.className = "banner-label";
-    label.textContent = bannerLabel(kind);
+    label.textContent = labelText || bannerLabel(kind);
     statusBanner.appendChild(label);
     statusBanner.appendChild(document.createTextNode(" " + message));
   }
@@ -2451,7 +2581,8 @@
         Date.now()
       );
       var collectionOutcome = manifest.status;
-      var dataStatus = evaluateDataStatus(manifest, preview, publicationStatus, verificationStatus);
+      var nowMs = Date.now();
+      var dataStatus = evaluateDataStatus(manifest, preview, publicationStatus, verificationStatus, nowMs);
       if (freshness.invalid) {
         setBanner(
           "unavailable",
@@ -2460,7 +2591,7 @@
       } else if (collectionOutcome === "failed") {
         setBanner("unavailable", "Collection failed. No successful snapshot is shown.");
       } else {
-        setBanner(dataStatus.tone, dataStatus.message);
+        setBanner(dataStatus.tone, dataStatus.message, dataStatus.label);
       }
       if (dataStatusSummary) {
         dataStatusSummary.textContent = dataStatus.headline + ". " + dataStatus.message;
@@ -2517,50 +2648,58 @@
 
       appendDataStatus(
         "Last successful verification",
-        dataStatus.verified ? formatInstant(dataStatus.lastSuccessfulVerificationAt) : "Unavailable"
+        dataStatus.verified ? formatInstantWithAge(dataStatus.lastSuccessfulVerificationAt, nowMs) : "Unavailable"
       );
+      if (dataStatus.failedAttempt) {
+        appendDataStatus(
+          "Latest collection attempt",
+          "Collection " +
+            attemptOutcome(dataStatus.failedAttempt) +
+            " " +
+            formatInstantWithAge(dataStatus.failedAttempt.attempted_at, nowMs) +
+            ", run " +
+            asText(dataStatus.failedAttempt.collect_run_id)
+        );
+      }
       appendDataStatus(
         "Last successful collection",
         dataStatus.lastSuccessfulCollectionAt
-          ? formatInstant(dataStatus.lastSuccessfulCollectionAt)
+          ? formatInstantWithAge(dataStatus.lastSuccessfulCollectionAt, nowMs)
           : "Unavailable"
       );
-      appendDataStatus("Last published snapshot", formatInstant(manifest.snapshot_generated_at));
+      appendDataStatus("Last published snapshot", formatInstantWithAge(manifest.snapshot_generated_at, nowMs));
       appendDataStatus("Publication consistency", (publicationStatus && publicationStatus.state) || "Unavailable");
       appendDataStatus("Publication decision", dataStatus.verification ? asText(dataStatus.verification.publication_decision) : "Unavailable");
       appendMeta("Collection outcome", collectionOutcome);
+      appendMeta("Published snapshot age", formatAge(freshness.ageHours));
       appendMeta(
-        "Published snapshot age hours",
-        freshness.ageHours === null ? "Unavailable" : String(Math.round(freshness.ageHours * 1000) / 1000)
+        "Snapshot age is not verification",
+        "Age shows when snapshot content last changed, not when sources were last checked."
       );
-      appendMeta("Snapshot age is not verification", "yes");
-      appendMeta("Snapshot generated at", manifest.snapshot_generated_at);
-      appendMeta("Manifest generated at", manifest.generated_at);
-      appendMeta("Collection started at", preview && preview.collection_started_at);
-      appendMeta("Collection completed at", preview && preview.collection_completed_at);
-      appendMeta("Publication timestamp", manifest.generated_at);
-      appendMeta("Record count", manifest.record_count);
-      appendMeta("Complete extracted inventories", summary.complete_records);
-      appendMeta("Partial extracted inventories", summary.partial_records);
-      appendMeta("Unavailable enrichments", summary.unavailable_records);
+      appendMeta("Snapshot generated at", formatInstant(manifest.snapshot_generated_at));
+      appendMeta("Published at", formatInstant(manifest.generated_at));
+      appendMeta("Collection started at", formatInstant(preview && preview.collection_started_at));
+      appendMeta("Collection completed at", formatInstant(preview && preview.collection_completed_at));
+      appendMeta("Record count", formatCount(manifest.record_count));
+      appendMeta("Complete extracted inventories", formatCount(summary.complete_records));
+      appendMeta("Partial extracted inventories", formatCount(summary.partial_records));
+      appendMeta("Unavailable enrichments", formatCount(summary.unavailable_records));
       var sources = (preview && preview.sources) || manifest.sources || {};
       var kev = sources.kev || {};
       var cve = sources.cve || {};
       var epss = sources.epss || {};
-      appendMeta("KEV source published at", kev.source_published_at);
-      appendMeta("KEV retrieved at", kev.retrieved_at);
-      appendMeta("CVE source updated at", cve.source_updated_at);
-      appendMeta("CVE retrieved at", cve.retrieved_at);
+      appendMeta("KEV source published at", formatInstant(kev.source_published_at));
+      appendMeta("CVE source updated at", formatInstant(cve.source_updated_at));
       var kevStatus = (dataStatus.verification && dataStatus.verification.kev) || kev;
       var cveStatus = (dataStatus.verification && dataStatus.verification.cve) || cve;
       var nvdStatus = (dataStatus.verification && dataStatus.verification.nvd) || sources.nvd || {};
       appendDataStatus("KEV source status", kevStatus.status);
-      appendDataStatus("KEV retrieved at", kevStatus.retrieved_at);
-      appendDataStatus("KEV upstream update", kevStatus.source_updated_at || kev.source_published_at);
+      appendDataStatus("KEV retrieved at", formatInstant(kevStatus.retrieved_at));
+      appendDataStatus("KEV upstream update", formatInstant(kevStatus.source_updated_at || kev.source_published_at));
       appendDataStatus("CVE List V5 status", cveStatus.status);
-      appendDataStatus("CVE retrieved at", cveStatus.retrieved_at);
+      appendDataStatus("CVE retrieved at", formatInstant(cveStatus.retrieved_at));
       appendDataStatus("NVD status", nvdStatus.status || "unavailable");
-      appendDataStatus("NVD retrieved at", nvdStatus.retrieved_at);
+      appendDataStatus("NVD retrieved at", formatInstant(nvdStatus.retrieved_at));
       appendMeta("EPSS source status", epss.status);
       appendMeta("EPSS source note", presentEpssNote(epss.error || epss.notes));
       appendMeta("EPSS redistribution", epssDisabled ? "Disabled is not a zero probability." : asText(epss.status));
@@ -2568,7 +2707,7 @@
         appendMeta("Consumer note", preview.note);
       }
       appendNamedMeta(technicalDetails, "Snapshot ID", manifest.snapshot_id);
-      appendNamedMeta(technicalDetails, "Schema version", preview && preview.schema_version);
+      appendNamedMeta(technicalDetails, "Schema version", manifest.schema_version);
       appendNamedMeta(technicalDetails, "Preview schema version", preview && preview.schema_version);
       appendNamedMeta(technicalDetails, "KEV content digest", kev.content_sha256);
       appendNamedMeta(technicalDetails, "KEV source revision", kev.source_revision);
@@ -2578,7 +2717,7 @@
       appendNamedMeta(technicalDetails, "Compared to published snapshot", comparison && comparison.compared_to_snapshot_id);
       appendNamedMeta(
         technicalDetails,
-        "Collect-time changes_available",
+        "Changes recorded at collection",
         preview && preview.changes_available ? "yes" : "no"
       );
       if (!preview) {

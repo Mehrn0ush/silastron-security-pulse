@@ -26,6 +26,51 @@ test.describe("Pulse explorer", () => {
     await expect(page.locator("#data-status-summary")).toContainText("independently verified");
   });
 
+  async function withJson(page, name, mutate) {
+    await page.route("**/data/" + name, async (route) => {
+      const response = await route.fetch();
+      await route.fulfill({ response, json: mutate(await response.json()) });
+    });
+  }
+
+  async function withVerification(page, mutate) {
+    // The fixture is dated 2099; move it into the past so age checks apply.
+    await withJson(page, "manifest.json", (doc) => ({ ...doc, snapshot_generated_at: "2025-12-31T23:00:00Z" }));
+    await withJson(page, "verification-status.json", mutate);
+  }
+
+  test("flags a failed scheduled collection after the last verification", async ({ page }) => {
+    await withVerification(page, (doc) => ({
+      ...doc,
+      verified_at: "2026-01-01T00:00:00Z",
+      last_attempt: {
+        collect_run_id: "4242",
+        conclusion: "failure",
+        attempted_at: "2026-01-03T00:00:00Z",
+        note: "fixture",
+      },
+    }));
+    await page.goto("/");
+    const banner = page.locator("#status-banner");
+    await expect(banner).toContainText("Collection failed");
+    await expect(banner).toContainText("Collect run 4242 failed");
+    await expect(page.locator("#data-status")).toContainText("Latest collection attempt");
+    await expect(page.locator("#data-status-summary")).toContainText("Latest scheduled collection failed");
+  });
+
+  test("flags verification overdue without a recorded failure", async ({ page }) => {
+    await withVerification(page, (doc) => ({ ...doc, verified_at: "2026-01-01T00:00:00Z" }));
+    await page.goto("/");
+    await expect(page.locator("#status-banner")).toContainText("Verification overdue");
+    await expect(page.locator("#status-banner")).toContainText("No successful verification for");
+  });
+
+  test("rejects a malformed failed-attempt record", async ({ page }) => {
+    await withVerification(page, (doc) => ({ ...doc, last_attempt: { conclusion: "success" } }));
+    await page.goto("/");
+    await expect(page.locator("#data-status-summary")).toContainText("Verification evidence is invalid");
+  });
+
   test("data status remains readable on mobile and in each theme", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/");
