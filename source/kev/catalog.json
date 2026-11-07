@@ -1,17 +1,17 @@
 {
   "meta": {
-    "content_sha256": "3aa9cf3c01f116362a29d111702979175453c425e3733bde80fc4f6f8e2294e5",
+    "content_sha256": "47e0406b2be5a40420eff66f3d90e83eb8883dae6ff4d08e1b2a942c366f6cc2",
     "error": null,
     "id": "cisa-kev",
     "license": "CC0-1.0",
     "name": "CISA Known Exploited Vulnerabilities Catalog",
     "notes": "The CISA Known Exploited Vulnerabilities catalog is dedicated to the public domain under CC0 1.0. Use does not authorize use of the CISA logo or DHS seal and is not an endorsement by CISA or DHS. See https://www.cisa.gov/sites/default/files/licenses/kev/license.txt",
     "parser_version": "1.0.0",
-    "retrieved_at": "2026-11-03T15:45:07Z",
+    "retrieved_at": "2026-11-07T20:25:00Z",
     "schema_version": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities_schema.json",
-    "source_published_at": "2026-10-30T17:02:45.3665Z",
-    "source_revision": "2026.10.30",
-    "source_updated_at": "2026-10-30T17:02:45.3665Z",
+    "source_published_at": "2026-11-06T19:44:45.1797Z",
+    "source_revision": "2026.11.06",
+    "source_updated_at": "2026-11-06T19:44:45.1797Z",
     "status": "ok",
     "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
   },
@@ -26332,6 +26332,27 @@
       "vulnerability_name": "Synacor Zimbra Collaboration Suite (ZCS) Cross-Site Scripting (XSS) Vulnerability"
     },
     {
+      "cve_id": "CVE-2024-27834",
+      "cwes": [
+        "CWE-287"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-04",
+      "due_date": "2026-11-18",
+      "forensic_triage": "No",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://support.apple.com/en-us/120896 ; https://support.apple.com/en-us/120898 ; https://support.apple.com/en-us/120901 ; https://support.apple.com/en-us/120902 ; https://support.apple.com/en-us/120903 ; https://support.apple.com/en-us/120905 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2024-27834",
+      "product": "Multiple Products",
+      "record_sha256": "068c32c5a9e154a28dabfd816861300f29d2f06029b5f10bec66d439bab3409a",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Apple iOS, iPadOS, macOS, Safari, tvOS and watchOS 10.5 contain an improper authentication vulnerability which could allow an attacker with arbitrary read and write capability to bypass pointer authentication.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Apple",
+      "vulnerability_name": "Apple Multiple Products Improper Authentication Vulnerability"
+    },
+    {
       "cve_id": "CVE-2024-28986",
       "cwes": [
         "CWE-502"
@@ -33238,6 +33259,27 @@
       "vulnerability_name": "Ivanti Connect Secure Generation of Predictable Numbers or Identifiers Vulnerability"
     },
     {
+      "cve_id": "CVE-2026-119977",
+      "cwes": [
+        "CWE-367"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-03",
+      "due_date": "2026-11-06",
+      "forensic_triage": "Yes",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://wordpress.org/news/2026/10/wordpress-7-1-4 ; https://www.wordfence.com/threat-intel/vulnerabilities/wordpress-core/wordpress-core-470-713-unauthenticated-upgrade-window-staged-installer-remote-code-execution ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-119977",
+      "product": "WordPress Core",
+      "record_sha256": "7d5177d8805696bba45501d6ad28de97c859cabbeb980301ac98b958f933b76d",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "WordPress WordPress Core contains a time-of-check time-of-use (TOCTOU) race condition vulnerability that could allow unauthenticated attackers to execute code on the server during the upgrade window. This is due to predictable, web-accessible staging paths used during full-package core upgrades.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "WordPress",
+      "vulnerability_name": "WordPress WordPress Core Time-of-check Time-of-use (TOCTOU) Race Condition Vulnerability"
+    },
+    {
       "cve_id": "CVE-2026-12569",
       "cwes": [
         "CWE-20",
@@ -33489,6 +33531,27 @@
       "truncated_fields": [],
       "vendor_project": "Citrix",
       "vulnerability_name": "Citrix NetScaler Authentication Bypass Using an Alternate Path or Channel Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2026-19868",
+      "cwes": [
+        "CWE-308"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-06",
+      "due_date": "2026-11-20",
+      "forensic_triage": "No",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2026-0014 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-19868",
+      "product": "SonicOS SSLVPN",
+      "record_sha256": "d2db08d86e2e3c4e90bbee0e95502a9f0c7fbca02784149d252d12005dbee228",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "SonicWall SonicOS SSLVPN contains a use of single-factor authentication vulnerability that may allow a user with valid credentials for an alternate authentication method to bypass SAML authentication controls. Successful exploitation may also bypass SAML-enforced multi-factor authentication (MFA).",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "SonicWall",
+      "vulnerability_name": "SonicWall SonicOS SSLVPN Use of Single-factor Authentication Vulnerability"
     },
     {
       "cve_id": "CVE-2026-20045",
