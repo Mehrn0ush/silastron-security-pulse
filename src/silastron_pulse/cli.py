@@ -42,6 +42,7 @@ from silastron_pulse.store import (
     atomic_write_json,
     load_snapshot,
     promote_snapshot,
+    rebuild_catalog_index,
     rollback_snapshot,
     unpublished_status,
     verify_publication_transition,
@@ -95,6 +96,12 @@ def main(argv: list[str] | None = None) -> int:
 
     unpublished = sub.add_parser("write-unpublished", help="Write the unpublished status documents")
     unpublished.add_argument("--published-dir", type=Path, required=True)
+
+    rebuild_index = sub.add_parser(
+        "build-catalog-index",
+        help="Regenerate catalog-index.json and cve/*.json from an existing latest.json",
+    )
+    rebuild_index.add_argument("--published-dir", type=Path, required=True)
 
     static_pages = sub.add_parser(
         "build-static-cve-pages",
@@ -594,6 +601,15 @@ def main(argv: list[str] | None = None) -> int:
             atomic_write_json(args.published_dir / "manifest.json", payload)
             atomic_write_json(args.published_dir / "status.json", payload)
             print("unpublished status written")
+            return 0
+        if args.command == "build-catalog-index":
+            config = PulseConfig.from_env(args.published_dir)
+            count = rebuild_catalog_index(
+                args.published_dir,
+                max_bytes=config.max_snapshot_bytes,
+                max_depth=config.max_json_depth,
+            )
+            print(f"rebuilt catalog index for {count} records")
             return 0
         if args.command == "build-static-cve-pages":
             from silastron_pulse.static_pages import build_static_cve_pages

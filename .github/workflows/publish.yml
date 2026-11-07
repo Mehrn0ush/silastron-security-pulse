@@ -226,6 +226,7 @@ jobs:
           python3 -m silastron_pulse safe-copy \
             --src pulse-state/published \
             --dst _site/data
+          python3 -m silastron_pulse build-catalog-index --published-dir _site/data
           cp dist/verification-status.json _site/data/verification-status.json
           cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/
           python3 -m silastron_pulse build-static-cve-pages --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com
@@ -715,6 +716,7 @@ jobs:
           python3 -m silastron_pulse safe-copy \
             --src pulse-state/published \
             --dst _site/data
+          python3 -m silastron_pulse build-catalog-index --published-dir _site/data
           python3 -m silastron_pulse record-failed-collect \
             --published-dir _site/data \
             --collect-run-id "${RUN_ID}" \
