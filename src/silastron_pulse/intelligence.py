@@ -547,17 +547,16 @@ def _conflicts(
                 "note": (
                     "CNA and NVD product inventories differ. Ranges were not merged."
                 ),
-                "cna_products": sorted(
-                    {"vendor": vendor, "product": product}
-                    for vendor, product in cna_products
-                ),
-                "nvd_products": sorted(
-                    {"vendor": vendor, "product": product}
-                    for vendor, product in nvd_products
-                ),
+                "cna_products": _product_list(cna_products),
+                "nvd_products": _product_list(nvd_products),
             }
         )
     return conflicts
+
+
+def _product_list(pairs: set[tuple[Any, Any]]) -> list[dict[str, Any]]:
+    ordered = sorted(pairs, key=lambda pair: (str(pair[0] or ""), str(pair[1] or "")))
+    return [{"vendor": vendor, "product": product} for vendor, product in ordered]
 
 
 def _cvss_preference(assessments: list[dict[str, Any]]) -> list[dict[str, Any]]:
