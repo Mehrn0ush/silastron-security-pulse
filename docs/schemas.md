@@ -47,6 +47,20 @@ build after downloading the full snapshot; it is now computed once, here,
 instead of once per browser. A CVE dropped from a later snapshot (a KEV
 removal) has its stale `cve/{CVE_ID}.json` deleted at the next promote.
 
+## Static per-CVE pages
+
+`silastron_pulse.static_pages` (CLI: `build-static-cve-pages`) renders one
+minimal, non-interactive static HTML page per published CVE at
+`/cve/{CVE_ID}/index.html`, from the same `cve/{CVE_ID}.json` detail file
+above, plus `/sitemap.xml` and `/robots.txt`. These are for search engines
+and non-JS clients; they are not a copy of the dashboard UI and carry no
+script beyond one CSP-hash-pinned JSON-LD block. All upstream text is
+HTML-escaped on render. It runs after `safe-copy`/`promote` in every
+workflow step that builds `_site` (`publish.yml`, `deploy-frontend.yml`),
+reading `_site/data/catalog-index.json` and `_site/data/cve/*.json`. A CVE
+removed from the published snapshot loses its static page at the next
+build.
+
 ## Preview `publication_comparison`
 
 Optional object written at promote time. It is **not** `snapshot.changes`.

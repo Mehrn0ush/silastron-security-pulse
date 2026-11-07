@@ -96,6 +96,14 @@ def main(argv: list[str] | None = None) -> int:
     unpublished = sub.add_parser("write-unpublished", help="Write the unpublished status documents")
     unpublished.add_argument("--published-dir", type=Path, required=True)
 
+    static_pages = sub.add_parser(
+        "build-static-cve-pages",
+        help="Render one minimal static page per published CVE, plus sitemap.xml",
+    )
+    static_pages.add_argument("--published-dir", type=Path, required=True)
+    static_pages.add_argument("--site-dir", type=Path, required=True)
+    static_pages.add_argument("--base-url", required=True)
+
     verify_pub = sub.add_parser(
         "verify-publication",
         help="Refuse persist when the comparison baseline is stale",
@@ -586,6 +594,16 @@ def main(argv: list[str] | None = None) -> int:
             atomic_write_json(args.published_dir / "manifest.json", payload)
             atomic_write_json(args.published_dir / "status.json", payload)
             print("unpublished status written")
+            return 0
+        if args.command == "build-static-cve-pages":
+            from silastron_pulse.static_pages import build_static_cve_pages
+
+            count = build_static_cve_pages(
+                published_dir=args.published_dir,
+                site_dir=args.site_dir,
+                base_url=args.base_url,
+            )
+            print(f"wrote {count} static CVE pages")
             return 0
     except PulseError as exc:
         print(f"error: {exc}", file=sys.stderr)
