@@ -12,7 +12,7 @@ from silastron_pulse.auto_publish import _intelligence_improved, _upstream_ident
 from silastron_pulse.cve_history import build_cve_history
 from silastron_pulse.errors import FetchError
 from silastron_pulse.ids import cvelist_v5_raw_url, nvd_cve_api_url
-from silastron_pulse.intelligence import assemble_intelligence, comparable_intelligence
+from silastron_pulse.intelligence import _conflicts, assemble_intelligence, comparable_intelligence
 from silastron_pulse.pipeline import collect
 from silastron_pulse.store import atomic_write_json
 from silastron_pulse.validate import validate_snapshot
@@ -86,6 +86,26 @@ class IntelligenceModelTests(unittest.TestCase):
         first = comparable_intelligence(intel)
         intel["sources"]["nvd"]["retrieved_at"] = "2099-01-11T00:00:00Z"
         self.assertEqual(comparable_intelligence(intel), first)
+
+    def test_product_conflict_with_multiple_products_sorts_deterministically(self) -> None:
+        # Regression: sorting dicts raised TypeError once a source listed 2+ products.
+        products = [
+            {"source": "cve_cna", "vendor": "Acme", "product": "Widget"},
+            {"source": "nvd", "vendor": "acme", "product": "widget"},
+            {"source": "nvd", "vendor": "acme", "product": "gadget"},
+            {"source": "nvd", "vendor": None, "product": "orphan"},
+        ]
+        conflicts = _conflicts([], [], products)
+        products_conflict = next(item for item in conflicts if item["kind"] == "affected_products")
+        self.assertEqual(
+            products_conflict["nvd_products"],
+            [
+                {"vendor": None, "product": "orphan"},
+                {"vendor": "acme", "product": "gadget"},
+                {"vendor": "acme", "product": "widget"},
+            ],
+        )
+        self.assertEqual(products_conflict["cna_products"], [{"vendor": "Acme", "product": "Widget"}])
 
     def test_missing_nvd_and_missing_fixed_versions_are_explicit(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
