@@ -408,6 +408,26 @@ def build_manifest(
     }
 
 
+def rebuild_catalog_index(
+    published_dir: Path, *, max_bytes: int, max_depth: int
+) -> int:
+    """Regenerate catalog-index.json and cve/*.json from an existing latest.json.
+
+    This is the exact function promote_snapshot calls, so output is
+    identical to what a promote would have written for the same snapshot.
+    It exists so a site-build step that only copies an already-published
+    directory (no new promote in that run) can still guarantee these
+    derived files are present and current, without re-promoting anything.
+    Returns the record count.
+    """
+    latest_path = published_dir / "latest.json"
+    if not latest_path.is_file():
+        raise PublishGuardError(f"{latest_path} is missing; nothing has been published yet")
+    snapshot = load_snapshot(latest_path, max_bytes=max_bytes, max_depth=max_depth, compatible=True)
+    _write_catalog_index(published_dir, snapshot)
+    return len(snapshot.get("records") or [])
+
+
 def _write_catalog_index(published_dir: Path, snapshot: dict[str, Any]) -> None:
     """Write the browser-facing index and per-CVE detail files.
 
