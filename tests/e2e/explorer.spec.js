@@ -270,6 +270,20 @@ test.describe("Pulse explorer", () => {
     await expect(catalogCves(page)).toContainText(["CVE-2099-1000"]);
   });
 
+  test("filters by SSVC decision points, explicit about missing CISA ADP data", async ({ page }) => {
+    await loadCatalog(page);
+    const total = await catalogCves(page).count();
+    // The fixture catalog has no CISA ADP container, so every record's SSVC
+    // decision points are explicitly unavailable, not silently omitted.
+    await page.locator("#catalog-ssvc-exploitation").selectOption("unavailable");
+    await expect(catalogCves(page)).toHaveCount(total);
+    await page.locator("#catalog-ssvc-exploitation").selectOption("active");
+    await expect(page.locator("#catalog-body")).toContainText("No published records match this search.");
+    await page.locator("#catalog-ssvc-exploitation").selectOption("all");
+    await page.locator("#catalog-ssvc-automatable").selectOption("yes");
+    await expect(page.locator("#catalog-body")).toContainText("No published records match this search.");
+  });
+
   test("filters by fixed-version evidence and vendor advisory", async ({ page }) => {
     await loadCatalog(page);
     await page.locator("#catalog-fixed-version").selectOption("available");

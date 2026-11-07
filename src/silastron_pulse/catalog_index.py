@@ -65,6 +65,23 @@ def _coverage_flag(record: dict[str, Any], key: str) -> bool | None:
     return coverage.get(key) is True
 
 
+def _ssvc(record: dict[str, Any]) -> dict[str, str]:
+    """CISA ADP SSVC decision points, each 'unavailable' when not present.
+
+    These are source-attributed facts copied from the CVE record, never a
+    derived score or priority.
+    """
+    intel = record.get("intelligence")
+    adp = intel.get("cisa_adp") if isinstance(intel, dict) else None
+    ssvc = adp.get("ssvc") if isinstance(adp, dict) else None
+    ssvc = ssvc if isinstance(ssvc, dict) else {}
+    return {
+        "ssvc_exploitation": ssvc.get("exploitation") or "unavailable",
+        "ssvc_automatable": ssvc.get("automatable") or "unavailable",
+        "ssvc_technical_impact": ssvc.get("technical_impact") or "unavailable",
+    }
+
+
 def _nvd_status(record: dict[str, Any]) -> str:
     intel = record.get("intelligence")
     sources = intel.get("sources") if isinstance(intel, dict) else None
@@ -196,6 +213,7 @@ def catalog_entry(record: dict[str, Any]) -> dict[str, Any]:
         "has_affected_versions": _coverage_flag(record, "has_affected_versions"),
         "nvd_status": _nvd_status(record),
         "source_conflicts": _conflict_kinds(record),
+        **_ssvc(record),
     }
 
 

@@ -92,6 +92,9 @@
   var catalogFixedVersion = document.getElementById("catalog-fixed-version");
   var catalogVendorAdvisory = document.getElementById("catalog-vendor-advisory");
   var catalogNvd = document.getElementById("catalog-nvd");
+  var catalogSsvcExploitation = document.getElementById("catalog-ssvc-exploitation");
+  var catalogSsvcAutomatable = document.getElementById("catalog-ssvc-automatable");
+  var catalogSsvcTechnicalImpact = document.getElementById("catalog-ssvc-technical-impact");
   var catalogSort = document.getElementById("catalog-sort");
   var catalogClear = document.getElementById("catalog-clear");
   var catalogExport = document.getElementById("catalog-export");
@@ -834,6 +837,9 @@
     "has_vendor_advisory",
     "has_affected_versions",
     "source_conflicts",
+    "ssvc_exploitation",
+    "ssvc_automatable",
+    "ssvc_technical_impact",
   ];
 
   function sanitizeCsvCell(value) {
@@ -1559,6 +1565,15 @@
     if (!nvdFilterMatches(row.nvd_status, filters.nvd)) {
       return false;
     }
+    if (!ssvcFilterMatches(row.ssvc_exploitation, filters.ssvcExploitation)) {
+      return false;
+    }
+    if (!ssvcFilterMatches(row.ssvc_automatable, filters.ssvcAutomatable)) {
+      return false;
+    }
+    if (!ssvcFilterMatches(row.ssvc_technical_impact, filters.ssvcTechnicalImpact)) {
+      return false;
+    }
     if (!remediationMatches(row, filters.remediation)) {
       return false;
     }
@@ -1656,6 +1671,13 @@
     return status !== "ok";
   }
 
+  function ssvcFilterMatches(value, wanted) {
+    if (!wanted || wanted === "all") {
+      return true;
+    }
+    return (value || "unavailable") === wanted;
+  }
+
   function remediationMatches(row, wanted) {
     if (!wanted || wanted === "all") {
       return true;
@@ -1721,6 +1743,9 @@
       fixedVersion: catalogFixedVersion ? catalogFixedVersion.value : "all",
       vendorAdvisory: catalogVendorAdvisory ? catalogVendorAdvisory.value : "all",
       nvd: catalogNvd ? catalogNvd.value : "all",
+      ssvcExploitation: catalogSsvcExploitation ? catalogSsvcExploitation.value : "all",
+      ssvcAutomatable: catalogSsvcAutomatable ? catalogSsvcAutomatable.value : "all",
+      ssvcTechnicalImpact: catalogSsvcTechnicalImpact ? catalogSsvcTechnicalImpact.value : "all",
       remediation: catalogRemediation ? catalogRemediation.value : "all",
       sort: catalogSort ? catalogSort.value : "kev_date_added",
     };
@@ -1779,6 +1804,9 @@
       catalogFixedVersion,
       catalogVendorAdvisory,
       catalogNvd,
+      catalogSsvcExploitation,
+      catalogSsvcAutomatable,
+      catalogSsvcTechnicalImpact,
       catalogRemediation,
       catalogClear,
       catalogExport,
@@ -2333,6 +2361,9 @@
     catalogFixedVersion,
     catalogVendorAdvisory,
     catalogNvd,
+    catalogSsvcExploitation,
+    catalogSsvcAutomatable,
+    catalogSsvcTechnicalImpact,
     catalogRemediation,
   ].forEach(function (control) {
     if (!control) {
@@ -2363,6 +2394,9 @@
         catalogFixedVersion,
         catalogVendorAdvisory,
         catalogNvd,
+        catalogSsvcExploitation,
+        catalogSsvcAutomatable,
+        catalogSsvcTechnicalImpact,
         catalogTruncated,
         catalogRemediation,
         catalogSort,

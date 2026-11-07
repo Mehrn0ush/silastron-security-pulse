@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -60,6 +61,62 @@ class CatalogEntryTests(unittest.TestCase):
         entry = catalog_entry(record)
         self.assertEqual(entry["remediation"]["status"], "unavailable")
         self.assertEqual(entry["remediation"]["items"], [])
+
+    def test_ssvc_decision_points_are_derived_and_explicit_when_missing(self) -> None:
+        from silastron_pulse.adapters.cve import parse_cve_record
+        from silastron_pulse.ids import cvelist_v5_raw_url
+        from silastron_pulse.intelligence import assemble_intelligence
+        from silastron_pulse.models import KevRecord
+        from tests.support import fixture_bytes
+
+        cve_id = "CVE-2021-44228"
+        kev = KevRecord(
+            cve_id=cve_id,
+            vendor_project="Apache",
+            product="Log4j2",
+            vulnerability_name="Log4Shell",
+            date_added="2021-12-10",
+            short_description="fixture",
+            required_action="Apply updates",
+            due_date="2021-12-24",
+            known_ransomware_campaign_use="Known",
+            forensic_triage=None,
+            notes=None,
+            cwes=[],
+            source_url="https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+            record_sha256="abc",
+        )
+        payload = json.loads(fixture_bytes("upstream/CVE-2021-44228.json"))
+        cve = parse_cve_record(
+            payload,
+            expected_cve_id=cve_id,
+            raw=json.dumps(payload).encode("utf-8"),
+            source_url=cvelist_v5_raw_url(cve_id),
+            config=test_config(Path(".")),
+            retrieved_at="2026-11-07T00:00:00Z",
+        )
+        intel = assemble_intelligence(kev=kev, cve=cve, nvd=None).to_dict()
+        record = {
+            "cve_id": cve_id,
+            "completeness": "complete",
+            "kev": kev.to_dict(),
+            "cve": cve.to_dict(),
+            "epss": {"status": "disabled"},
+            "links": {},
+            "remediation": None,
+            "intelligence": intel,
+        }
+        entry = catalog_entry(record)
+        self.assertEqual(entry["ssvc_exploitation"], "active")
+        self.assertEqual(entry["ssvc_automatable"], "yes")
+        self.assertEqual(entry["ssvc_technical_impact"], "total")
+
+        missing_adp = dict(record)
+        missing_adp["intelligence"] = {**intel, "cisa_adp": {"status": "unavailable", "ssvc": None}}
+        entry2 = catalog_entry(missing_adp)
+        self.assertEqual(entry2["ssvc_exploitation"], "unavailable")
+        self.assertEqual(entry2["ssvc_automatable"], "unavailable")
+        self.assertEqual(entry2["ssvc_technical_impact"], "unavailable")
 
     def test_products_are_bounded_and_formatted(self) -> None:
         record = _snapshot()["records"][0]

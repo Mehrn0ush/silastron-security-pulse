@@ -117,6 +117,40 @@ class ExplorerExportTests(unittest.TestCase):
         self.assertEqual(unique_values(rows, "vendor_project")[0], "V0")
         self.assertIn("CWE-79", unique_cwes(self.rows))
 
+    def test_ssvc_filters_match_and_default_to_unavailable(self) -> None:
+        rows = [
+            _row(ssvc_exploitation="active", ssvc_automatable="yes", ssvc_technical_impact="total"),
+            _row(cve_id="CVE-2099-0002"),  # no ssvc_* keys at all
+        ]
+        active = apply_catalog_filters(rows, {"ssvc_exploitation": "active"})
+        self.assertEqual([r["cve_id"] for r in active], ["CVE-2099-0001"])
+        unavailable = apply_catalog_filters(rows, {"ssvc_exploitation": "unavailable"})
+        self.assertEqual([r["cve_id"] for r in unavailable], ["CVE-2099-0002"])
+        all_rows = apply_catalog_filters(rows, {"ssvc_automatable": "all"})
+        self.assertEqual(len(all_rows), 2)
+
+    def test_ssvc_csv_columns_default_to_unavailable(self) -> None:
+        rows = [_row()]  # no ssvc_* keys
+        csv_text = export_rows(rows, snapshot_id="snap-1", snapshot_generated_at="2099-01-10T12:00:00Z")
+        header = csv_text.splitlines()[0].split(",")
+        self.assertIn("ssvc_exploitation", header)
+        self.assertIn("ssvc_automatable", header)
+        self.assertIn("ssvc_technical_impact", header)
+        data_row = csv_text.splitlines()[1]
+        self.assertEqual(data_row.count("unavailable") >= 3, True)
+
+    def test_ssvc_csv_reads_from_intelligence_when_not_precomputed(self) -> None:
+        row = _row(
+            ssvc_exploitation=None,
+            ssvc_automatable=None,
+            ssvc_technical_impact=None,
+            intelligence={"cisa_adp": {"ssvc": {"exploitation": "poc", "automatable": "no", "technical_impact": "partial"}}},
+        )
+        csv_text = export_rows([row], snapshot_id="snap-1", snapshot_generated_at="2099-01-10T12:00:00Z")
+        data_row = csv_text.splitlines()[1]
+        self.assertIn("poc", data_row)
+        self.assertIn("partial", data_row)
+
     def test_csv_exports_filtered_set_not_page(self) -> None:
         matched = apply_catalog_filters(self.rows, {"vendor": "Fixture Vendor"})
         csv_text = export_rows(
@@ -171,6 +205,9 @@ class ExplorerExportTests(unittest.TestCase):
             "catalog-cvss-version",
             "catalog-attack-vector",
             "catalog-nvd",
+            "catalog-ssvc-exploitation",
+            "catalog-ssvc-automatable",
+            "catalog-ssvc-technical-impact",
             "catalog-fixed-version",
             "catalog-clear",
             "catalog-export",

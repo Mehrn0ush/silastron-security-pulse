@@ -142,6 +142,19 @@ def render_cve_page(entry: dict[str, Any], *, base_url: str) -> str:
     # Not pre-escaped: _row()/_esc() below escapes this exactly once.
     cwe_text = ", ".join(str(c) for c in cwes) if cwes else None
 
+    # CISA SSVC decision points: source-attributed facts, never a derived
+    # score or priority. "unavailable" per point means CISA has not
+    # published that decision point, not that it is low impact.
+    ssvc_points = [
+        (entry.get("ssvc_exploitation"), "Exploitation"),
+        (entry.get("ssvc_automatable"), "Automatable"),
+        (entry.get("ssvc_technical_impact"), "Technical impact"),
+    ]
+    ssvc_text = (
+        "; ".join(f"{label}: {value}" for value, label in ssvc_points if value and value != "unavailable")
+        or None
+    )
+
     return f"""<!doctype html>
 <html lang="en">
 <head>
@@ -169,6 +182,7 @@ no composite risk score, and this is not a statement about Silastron.com or cust
 {_row("CVSS base score", entry.get("cvss_base_score"))}
 {_row("CVSS vector", entry.get("cvss_vector"))}
 {_row("CWE", cwe_text)}
+{_row("CISA SSVC decision points", ssvc_text)}
 {_row("Extraction completeness", entry.get("completeness"))}
 {_row("CNA-reported solution / mitigation", remediation_text)}
 </table>

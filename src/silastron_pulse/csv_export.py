@@ -52,6 +52,9 @@ CSV_COLUMNS = (
     "has_vendor_advisory",
     "has_affected_versions",
     "source_conflicts",
+    "ssvc_exploitation",
+    "ssvc_automatable",
+    "ssvc_technical_impact",
 )
 
 
@@ -200,4 +203,11 @@ def _cell(
         if isinstance(conflicts, list) and conflicts:
             return [item.get("kind") for item in conflicts if isinstance(item, dict)]
         return UNAVAILABLE
+    if column in {"ssvc_exploitation", "ssvc_automatable", "ssvc_technical_impact"}:
+        if row.get(column):
+            return row.get(column)
+        adp = intelligence.get("cisa_adp") if isinstance(intelligence.get("cisa_adp"), dict) else {}
+        ssvc = adp.get("ssvc") if isinstance(adp.get("ssvc"), dict) else {}
+        key = column[len("ssvc_") :]
+        return ssvc.get(key) or UNAVAILABLE
     return row.get(column)
