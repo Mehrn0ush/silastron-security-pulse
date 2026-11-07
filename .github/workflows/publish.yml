@@ -665,3 +665,134 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "verification-status ${{ needs.build.outputs.collect_run_id }}"
           git push origin HEAD:pulse-state
+
+  # A failed scheduled Collect produces no candidate artifact, so nothing is
+  # published. Without this the site keeps presenting the previous run's note
+  # as if it were current. These jobs only annotate verification-status with
+  # the failed attempt; snapshots and prior verification evidence are unchanged.
+  build-failed-collect-status:
+    name: Build failed-collect status
+    runs-on: ubuntu-24.04
+    if: >
+      github.event_name == 'workflow_run' &&
+      (github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'timed_out') &&
+      github.event.workflow_run.event == 'schedule' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.name == 'Collect' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    steps:
+      - name: Checkout publisher
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - name: Checkout pulse-state
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: pulse-state
+          path: pulse-state
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Build site with failed attempt recorded
+        env:
+          PYTHONPATH: src
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          ATTEMPTED_AT: ${{ github.event.workflow_run.updated_at }}
+        run: |
+          set -euo pipefail
+          python3 -m silastron_pulse verify-publication-status \
+            --published-dir pulse-state/published \
+            --require consistent
+          mkdir -p _site/data
+          python3 -m silastron_pulse safe-copy \
+            --src pulse-state/published \
+            --dst _site/data
+          python3 -m silastron_pulse record-failed-collect \
+            --published-dir _site/data \
+            --collect-run-id "${RUN_ID}" \
+            --conclusion "${CONCLUSION}" \
+            --attempted-at "${ATTEMPTED_AT}"
+          cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/
+          python3 -m silastron_pulse validate _site/data/manifest.json
+          python3 -m silastron_pulse validate _site/data/latest.json
+          python3 -m silastron_pulse validate _site/data/verification-status.json
+          {
+            echo "## Collect ${RUN_ID} ${CONCLUSION}"
+            echo
+            echo "Published snapshot is unchanged. verification-status now records the failed attempt."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+
+  deploy-failed-collect-status:
+    name: Deploy failed-collect status
+    needs: build-failed-collect-status
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+      contents: read
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  persist-failed-collect-status:
+    name: Persist failed-collect status
+    needs: deploy-failed-collect-status
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout publisher
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+      - name: Checkout pulse-state
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: pulse-state
+          path: pulse-state
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+      - name: Persist failed attempt without changing snapshots
+        env:
+          PYTHONPATH: src
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          ATTEMPTED_AT: ${{ github.event.workflow_run.updated_at }}
+        run: |
+          set -euo pipefail
+          python3 -m silastron_pulse verify-publication-status \
+            --published-dir pulse-state/published \
+            --require consistent
+          python3 -m silastron_pulse record-failed-collect \
+            --published-dir pulse-state/published \
+            --collect-run-id "${RUN_ID}" \
+            --conclusion "${CONCLUSION}" \
+            --attempted-at "${ATTEMPTED_AT}"
+          python3 -m silastron_pulse validate pulse-state/published/verification-status.json
+          cd pulse-state
+          git add published/verification-status.json
+          if git diff --cached --quiet; then
+            echo "Failed attempt already recorded."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "verification-status failed collect ${RUN_ID}"
+          git push origin HEAD:pulse-state

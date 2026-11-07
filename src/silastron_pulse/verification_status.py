@@ -16,6 +16,7 @@ from silastron_pulse.safe_fs import require_run_id, require_safe_token
 VERIFICATION_STATUS_SCHEMA = "1.0.0"
 VERIFICATION_KIND = "verification_status"
 STATUS_ONLY_REASONS = frozenset({"unchanged_upstream", "already_published"})
+FAILED_ATTEMPT_CONCLUSIONS = frozenset({"failure", "timed_out", "cancelled", "startup_failure"})
 
 
 def build_verification_status(
@@ -89,6 +90,32 @@ def build_verification_status(
     return validate_verification_status(payload)
 
 
+def record_failed_attempt(
+    existing: dict[str, Any],
+    *,
+    collect_run_id: object,
+    conclusion: str,
+    attempted_at: str,
+) -> dict[str, Any]:
+    """Attach a failed Collect attempt without altering prior verification evidence.
+
+    The next successful verification rebuilds the document and drops this block.
+    """
+    base = validate_verification_status(dict(existing))
+    payload = {k: v for k, v in base.items() if k != "content_sha256"}
+    payload["last_attempt"] = {
+        "collect_run_id": str(collect_run_id),
+        "conclusion": conclusion,
+        "attempted_at": attempted_at,
+        "note": (
+            "The latest scheduled Collect did not complete. The published snapshot "
+            "and last successful verification below predate this attempt."
+        ),
+    }
+    payload["content_sha256"] = sha256_bytes(dump_canonical(payload).encode("utf-8"))
+    return validate_verification_status(payload)
+
+
 def validate_verification_status(payload: object) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValidationError("Verification status must be a JSON object")
@@ -110,6 +137,14 @@ def validate_verification_status(payload: object) -> dict[str, Any]:
             raise ValidationError("Unverified status must be failed, rejected, or insufficient")
         if payload.get("verified_at") is not None:
             raise ValidationError("verified_at is only allowed when verification succeeded")
+    attempt = payload.get("last_attempt")
+    if attempt is not None:
+        if not isinstance(attempt, dict):
+            raise ValidationError("Verification status last_attempt must be an object")
+        if attempt.get("conclusion") not in FAILED_ATTEMPT_CONCLUSIONS:
+            raise ValidationError("Verification status last_attempt conclusion is invalid")
+        require_run_id(attempt.get("collect_run_id"))
+        _require_string(attempt, "attempted_at")
     if payload.get("status_only") is True and payload.get("publication_decision") != "skip":
         raise ValidationError("status_only is only valid for skip decisions")
     collect_run_id = payload.get("collect_run_id")
@@ -147,11 +182,11 @@ def _verification_state(*, verified: bool, kev_validated: bool, outcome: str) ->
 def _note(verified: bool, outcome: str, reason: str, kev_validated: bool) -> str:
     if verified and outcome == "skip" and reason in STATUS_ONLY_REASONS:
         return (
-            "Sources were independently re-validated. Published snapshot "
+            "KEV was independently re-validated. Published snapshot "
             "content is unchanged. This is not a new vulnerability snapshot."
         )
     if verified and outcome == "publish":
-        return "Sources were independently validated and a new snapshot was published."
+        return "KEV was independently validated and a new snapshot was published."
     if outcome == "reject":
         return f"Publication was rejected ({reason}). This is not successful verification."
     if not kev_validated:

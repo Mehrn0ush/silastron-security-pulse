@@ -4,7 +4,12 @@ import unittest
 from datetime import datetime, timezone
 
 from silastron_pulse.data_status import evaluate_data_status
-from silastron_pulse.verification_status import build_verification_status
+from silastron_pulse.errors import PulseError, ValidationError
+from silastron_pulse.verification_status import (
+    build_verification_status,
+    record_failed_attempt,
+    validate_verification_status,
+)
 
 
 NOW = datetime(2099, 1, 12, 12, tzinfo=timezone.utc)
@@ -199,6 +204,57 @@ class DataStatusTests(unittest.TestCase):
         self.assertTrue(status["integrity_problem"])
         self.assertEqual(status["tone"], "unavailable")
         self.assertIn("diverged", status["message"])
+
+
+
+class FailedAttemptTests(unittest.TestCase):
+    def _verified(self) -> dict:
+        candidate = _candidate()
+        return build_verification_status(
+            candidate=candidate,
+            decision_outcome="publish",
+            decision_reason="enrichment_update",
+            collect_run_id="22",
+            collect_event="schedule",
+            published=candidate,
+            publication_state="consistent",
+            candidate_digest="d" * 64,
+        )
+
+    def test_failed_attempt_preserves_prior_verification_evidence(self) -> None:
+        verified = self._verified()
+        annotated = record_failed_attempt(
+            verified,
+            collect_run_id="23",
+            conclusion="failure",
+            attempted_at="2099-01-11T12:15:00Z",
+        )
+        self.assertTrue(annotated["verified"])
+        self.assertEqual(annotated["verified_at"], verified["verified_at"])
+        self.assertEqual(annotated["collect_run_id"], "22")
+        self.assertEqual(annotated["last_attempt"]["collect_run_id"], "23")
+        self.assertEqual(annotated["last_attempt"]["conclusion"], "failure")
+        self.assertNotEqual(annotated["content_sha256"], verified["content_sha256"])
+        validate_verification_status(annotated)
+
+    def test_failed_attempt_replaces_previous_attempt(self) -> None:
+        first = record_failed_attempt(
+            self._verified(), collect_run_id="23", conclusion="failure", attempted_at="2099-01-11T12:15:00Z"
+        )
+        second = record_failed_attempt(
+            first, collect_run_id="24", conclusion="timed_out", attempted_at="2099-01-12T12:15:00Z"
+        )
+        self.assertEqual(second["last_attempt"]["collect_run_id"], "24")
+        self.assertEqual(second["verified_at"], first["verified_at"])
+
+    def test_invalid_attempts_are_rejected(self) -> None:
+        verified = self._verified()
+        with self.assertRaises(ValidationError):
+            record_failed_attempt(verified, collect_run_id="23", conclusion="success", attempted_at="2099-01-11T12:15:00Z")
+        with self.assertRaises(PulseError):
+            record_failed_attempt(verified, collect_run_id="../x", conclusion="failure", attempted_at="2099-01-11T12:15:00Z")
+        with self.assertRaises(ValidationError):
+            validate_verification_status({**verified, "last_attempt": "failed"})
 
 
 if __name__ == "__main__":

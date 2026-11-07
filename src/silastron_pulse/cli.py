@@ -9,7 +9,7 @@ from pathlib import Path
 
 from silastron_pulse.clock import SystemClock, format_datetime, parse_generated_at
 from silastron_pulse.config import PulseConfig
-from silastron_pulse.errors import PulseError
+from silastron_pulse.errors import PulseError, ValidationError
 from silastron_pulse.jsonutil import sha256_bytes
 from silastron_pulse.pipeline import collect
 from silastron_pulse.auto_publish import (
@@ -31,7 +31,7 @@ from silastron_pulse.reconciliation import (
     write_publication_status,
 )
 from silastron_pulse.verify_operations import verify_operations
-from silastron_pulse.verification_status import validate_verification_status
+from silastron_pulse.verification_status import record_failed_attempt, validate_verification_status
 from silastron_pulse.safe_fs import (
     assert_artifact_tree,
     copy_tree_without_symlinks,
@@ -217,6 +217,15 @@ def main(argv: list[str] | None = None) -> int:
     write_verification.add_argument("--collect-event", default=None)
     write_verification.add_argument("--candidate-digest", default=None)
     write_verification.add_argument("--output", type=Path, required=True)
+
+    record_failure = sub.add_parser(
+        "record-failed-collect",
+        help="Attach a failed Collect attempt to the persisted verification-status",
+    )
+    record_failure.add_argument("--published-dir", type=Path, required=True)
+    record_failure.add_argument("--collect-run-id", required=True)
+    record_failure.add_argument("--conclusion", required=True)
+    record_failure.add_argument("--attempted-at", required=True)
 
     verify_ops = sub.add_parser(
         "verify-operations",
@@ -549,6 +558,19 @@ def main(argv: list[str] | None = None) -> int:
             atomic_write_json(args.output, payload)
             print("verification status written")
             return 0
+        if args.command == "record-failed-collect":
+            target = args.published_dir / "verification-status.json"
+            if not target.is_file():
+                raise ValidationError("No persisted verification-status to annotate")
+            payload = record_failed_attempt(
+                json.loads(target.read_text(encoding="utf-8")),
+                collect_run_id=args.collect_run_id,
+                conclusion=args.conclusion,
+                attempted_at=_normalized_instant(args.attempted_at),
+            )
+            atomic_write_json(target, payload)
+            print("failed collect attempt recorded")
+            return 0
         if args.command == "verify-operations":
             report = verify_operations(
                 pages_url=args.pages_url,
@@ -573,3 +595,10 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+def _normalized_instant(value: str) -> str:
+    try:
+        return format_datetime(parse_generated_at(value))
+    except ValueError as exc:
+        raise ValidationError(str(exc)) from exc
