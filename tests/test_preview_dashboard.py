@@ -20,7 +20,8 @@ class PreviewDashboardTests(unittest.TestCase):
         self.assertIn("Data provenance and methodology", html)
         self.assertIn("Load published catalog", html)
         self.assertIn('id="recent-change-col" hidden', html)
-        self.assertIn("data/latest.json", js)
+        self.assertIn("data/catalog-index.json", js)
+        self.assertIn("data/cve/", js)
         self.assertIn("changes_available", js)
         self.assertIn("publication_comparison", js)
         self.assertIn("No comparison available", js)
@@ -99,7 +100,8 @@ class PreviewDashboardTests(unittest.TestCase):
         self.assertIn("No verified remediation data", js)
         self.assertIn('verified_fix: "CNA-Reported Solution"', js)
         self.assertNotIn("Verified Fix", js)
-        self.assertIn("fallbackRemediation", js)
+        # Remediation fallback-when-missing is now computed server-side
+        # (silastron_pulse.catalog_index), not duplicated client-side.
         self.assertIn("safePublicHttpsUrl", js)
 
     def test_accessibility_and_responsive_hooks(self) -> None:

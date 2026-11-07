@@ -142,4 +142,6 @@ Manual Publish cannot skip those catalog checks.
 
 Point a future theme at the Pages URLs for `manifest.json` and `latest.json`.
 Use GET only. Do not cache a stale snapshot as fresh. This repository will not
-push into WordPress.
+push into WordPress. A theme that only needs table/filter fields, not full
+intelligence, can fetch the much smaller `catalog-index.json` and
+`cve/{CVE_ID}.json` instead; see [docs/schemas.md](schemas.md).

@@ -13,6 +13,11 @@
 - Product affectedness is source text, not CPE matching or asset inventory.
   `records[].completeness=complete` means the extracted CNA/KEV inventory was
   stored within bounds; it does not prove complete real-world product coverage.
+- If building signals or intelligence for one CVE fails unexpectedly, that
+  CVE's record is kept with real completeness but unavailable signals and no
+  intelligence, and the run continues as `degraded`; it never aborts the
+  whole collection. See `summary.entry_build_error_count` in
+  [docs/schemas.md](schemas.md).
 - `snapshot.status` is collection outcome. A collect that finishes with some
   truncated version lists is `degraded`, not `failed`. Freshness is computed at
   viewing time and is independent of both.

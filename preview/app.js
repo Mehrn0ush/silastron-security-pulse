@@ -92,6 +92,9 @@
   var catalogFixedVersion = document.getElementById("catalog-fixed-version");
   var catalogVendorAdvisory = document.getElementById("catalog-vendor-advisory");
   var catalogNvd = document.getElementById("catalog-nvd");
+  var catalogSsvcExploitation = document.getElementById("catalog-ssvc-exploitation");
+  var catalogSsvcAutomatable = document.getElementById("catalog-ssvc-automatable");
+  var catalogSsvcTechnicalImpact = document.getElementById("catalog-ssvc-technical-impact");
   var catalogSort = document.getElementById("catalog-sort");
   var catalogClear = document.getElementById("catalog-clear");
   var catalogExport = document.getElementById("catalog-export");
@@ -834,6 +837,9 @@
     "has_vendor_advisory",
     "has_affected_versions",
     "source_conflicts",
+    "ssvc_exploitation",
+    "ssvc_automatable",
+    "ssvc_technical_impact",
   ];
 
   function sanitizeCsvCell(value) {
@@ -1480,176 +1486,6 @@
     }
   }
 
-  function fallbackRemediation(kev) {
-    var items = [];
-    if (kev.required_action) {
-      items.push({
-        kind: "required_action",
-        source: "cisa_kev",
-        attribution: "CISA KEV requiredAction",
-        text: kev.required_action,
-      });
-    }
-    if (kev.notes) {
-      items.push({
-        kind: "reference",
-        source: "cisa_kev",
-        attribution: "CISA KEV notes",
-        text: kev.notes,
-      });
-    }
-    return {
-      status: items.length ? "available" : "unavailable",
-      items: items,
-    };
-  }
-
-  function compactRecord(record) {
-    var cve = record.cve || {};
-    var kev = record.kev || {};
-    var epss = record.epss || {};
-    var links = record.links || {};
-    var severity = cve.severity && typeof cve.severity === "object" ? cve.severity : {};
-    var products = Array.isArray(cve.products) ? cve.products.slice(0, PRODUCT_DETAIL_LIMIT) : [];
-    return {
-      cve_id: record.cve_id,
-      vendor_project: kev.vendor_project,
-      product: kev.product,
-      vulnerability_name: kev.vulnerability_name,
-      kev_date_added: kev.date_added,
-      kev_listed: kev.listed !== false,
-      completeness: record.completeness,
-      omitted_product_count: cve.omitted_product_count || 0,
-      omitted_version_count: cve.omitted_version_count || 0,
-      truncated_fields: (cve.truncated_fields || []).concat(kev.truncated_fields || []),
-      partial: Boolean((cve.truncated_fields || []).length) || cve.status !== "ok",
-      cvss_base_score: severity.base_score,
-      severity_status: severity.base_score === null || severity.base_score === undefined ? "unavailable" : "available",
-      cvss_vector: severity.vector,
-      epss_status: epss.status,
-      epss_score: epss.score,
-      short_description: kev.short_description,
-      required_action: kev.required_action,
-      due_date: kev.due_date,
-      known_ransomware_campaign_use: kev.known_ransomware_campaign_use,
-      cwes: Array.isArray(kev.cwes) ? kev.cwes.slice() : [],
-      cve_state: cve.state,
-      cve_description: cve.description,
-      products: products.map(function (item) {
-        var versions = Array.isArray(item.versions) ? item.versions.slice(0, VERSION_DETAIL_LIMIT) : [];
-        return [item.vendor, item.product, item.status].filter(Boolean).join(" / ") +
-          (versions.length ? " (" + versions.join(", ") + ")" : "");
-      }),
-      remediation: record.remediation || fallbackRemediation(kev),
-      remediation_kinds: remediationKinds(record.remediation || fallbackRemediation(kev)),
-      links: {
-        cve_record: links.cve_record,
-        kev_catalog: links.kev_catalog,
-        cvelist_v5: links.cvelist_v5,
-        nvd: links.nvd,
-      },
-      intelligence: record.intelligence && typeof record.intelligence === "object" ? record.intelligence : null,
-      cwe_ids: intelligenceCweIds(record),
-      cvss_versions: intelligenceValues(record, "cvss_version"),
-      cvss_sources: intelligenceValues(record, "source"),
-      attack_vector: intelligenceMetrics(record, "attackVector"),
-      privileges_required: intelligenceMetrics(record, "privilegesRequired"),
-      user_interaction: intelligenceMetrics(record, "userInteraction"),
-      has_fixed_version: coverageFlag(record, "has_fixed_version"),
-      has_vendor_advisory: coverageFlag(record, "has_vendor_advisory"),
-      has_affected_versions: coverageFlag(record, "has_affected_versions"),
-      nvd_status: nvdStatus(record),
-      source_conflicts: conflictKinds(record),
-    };
-  }
-
-  function coverageFlag(record, key) {
-    var intel = record.intelligence;
-    if (!intel || !intel.coverage) {
-      return null;
-    }
-    return intel.coverage[key] === true;
-  }
-
-  function nvdStatus(record) {
-    var intel = record.intelligence;
-    if (!intel || !intel.sources || !intel.sources.nvd) {
-      return "unavailable";
-    }
-    return intel.sources.nvd.status || "unavailable";
-  }
-
-  function conflictKinds(record) {
-    var intel = record.intelligence;
-    if (!intel || !Array.isArray(intel.conflicts)) {
-      return [];
-    }
-    return intel.conflicts
-      .map(function (item) {
-        return item && item.kind ? String(item.kind) : "";
-      })
-      .filter(Boolean);
-  }
-
-  function intelligenceCweIds(record) {
-    var ids = {};
-    (record.kev && Array.isArray(record.kev.cwes) ? record.kev.cwes : []).forEach(function (item) {
-      if (item) {
-        ids[String(item)] = true;
-      }
-    });
-    var assertions =
-      record.intelligence && record.intelligence.cwes && Array.isArray(record.intelligence.cwes.assertions)
-        ? record.intelligence.cwes.assertions
-        : [];
-    assertions.forEach(function (item) {
-      if (item && item.cwe_id) {
-        ids[String(item.cwe_id)] = true;
-      }
-    });
-    return Object.keys(ids).sort();
-  }
-
-  function intelligenceAssessments(record) {
-    var intel = record.intelligence;
-    if (!intel || !intel.cvss || !Array.isArray(intel.cvss.assessments)) {
-      return [];
-    }
-    return intel.cvss.assessments;
-  }
-
-  function intelligenceValues(record, key) {
-    var seen = {};
-    intelligenceAssessments(record).forEach(function (item) {
-      if (item && item[key]) {
-        seen[String(item[key])] = true;
-      }
-    });
-    return Object.keys(seen).sort();
-  }
-
-  function intelligenceMetrics(record, key) {
-    var seen = {};
-    intelligenceAssessments(record).forEach(function (item) {
-      var metrics = item && item.metrics && typeof item.metrics === "object" ? item.metrics : {};
-      var value = metrics[key] || (key === "attackVector" ? metrics.accessVector : "");
-      if (value) {
-        seen[String(value)] = true;
-      }
-    });
-    return Object.keys(seen).sort();
-  }
-
-  function remediationKinds(remediation) {
-    if (!remediation || !Array.isArray(remediation.items)) {
-      return [];
-    }
-    return remediation.items
-      .map(function (item) {
-        return item && item.kind ? String(item.kind) : "";
-      })
-      .filter(Boolean);
-  }
 
   function cvssMatches(row, band) {
     if (band === "all") {
@@ -1727,6 +1563,15 @@
       return false;
     }
     if (!nvdFilterMatches(row.nvd_status, filters.nvd)) {
+      return false;
+    }
+    if (!ssvcFilterMatches(row.ssvc_exploitation, filters.ssvcExploitation)) {
+      return false;
+    }
+    if (!ssvcFilterMatches(row.ssvc_automatable, filters.ssvcAutomatable)) {
+      return false;
+    }
+    if (!ssvcFilterMatches(row.ssvc_technical_impact, filters.ssvcTechnicalImpact)) {
       return false;
     }
     if (!remediationMatches(row, filters.remediation)) {
@@ -1826,6 +1671,13 @@
     return status !== "ok";
   }
 
+  function ssvcFilterMatches(value, wanted) {
+    if (!wanted || wanted === "all") {
+      return true;
+    }
+    return (value || "unavailable") === wanted;
+  }
+
   function remediationMatches(row, wanted) {
     if (!wanted || wanted === "all") {
       return true;
@@ -1891,6 +1743,9 @@
       fixedVersion: catalogFixedVersion ? catalogFixedVersion.value : "all",
       vendorAdvisory: catalogVendorAdvisory ? catalogVendorAdvisory.value : "all",
       nvd: catalogNvd ? catalogNvd.value : "all",
+      ssvcExploitation: catalogSsvcExploitation ? catalogSsvcExploitation.value : "all",
+      ssvcAutomatable: catalogSsvcAutomatable ? catalogSsvcAutomatable.value : "all",
+      ssvcTechnicalImpact: catalogSsvcTechnicalImpact ? catalogSsvcTechnicalImpact.value : "all",
       remediation: catalogRemediation ? catalogRemediation.value : "all",
       sort: catalogSort ? catalogSort.value : "kev_date_added",
     };
@@ -1949,6 +1804,9 @@
       catalogFixedVersion,
       catalogVendorAdvisory,
       catalogNvd,
+      catalogSsvcExploitation,
+      catalogSsvcAutomatable,
+      catalogSsvcTechnicalImpact,
       catalogRemediation,
       catalogClear,
       catalogExport,
@@ -2054,6 +1912,11 @@
     return match ? match[1] : null;
   }
 
+  // Full source-attributed intelligence for one CVE is fetched on demand
+  // from its own small file, not from the (much larger) catalog index. A
+  // deep link to one CVE never requires loading the whole catalog.
+  var cveDetailCache = {};
+
   function applyCveHash() {
     var cveId = parseCveHash();
     if (!cveDetail) {
@@ -2067,28 +1930,35 @@
       return;
     }
     cveDetail.hidden = false;
-    if (!catalogLoaded) {
-      if (cveDetailStatus) {
-        cveDetailStatus.textContent = "Loading published catalog for " + cveId + ".";
-      }
-      loadCatalog();
+    cveDetailHeading.textContent = cveId;
+    cveDetailBody.textContent = "";
+    if (cveDetailStatus) {
+      cveDetailStatus.textContent = "Loading intelligence for " + cveId + ".";
+    }
+    if (Object.prototype.hasOwnProperty.call(cveDetailCache, cveId)) {
+      renderCveDetail(cveId, cveDetailCache[cveId]);
       return;
     }
-    renderCveDetail(cveId);
+    loadJson("data/cve/" + cveId + ".json")
+      .then(function (detail) {
+        cveDetailCache[cveId] = detail;
+        if (parseCveHash() === cveId) {
+          renderCveDetail(cveId, detail);
+        }
+      })
+      .catch(function () {
+        if (parseCveHash() === cveId && cveDetailStatus) {
+          cveDetailStatus.textContent = "This CVE's intelligence could not be loaded.";
+        }
+      });
   }
 
-  function renderCveDetail(cveId) {
+  function renderCveDetail(cveId, row) {
     if (!cveDetailBody || !cveDetailHeading) {
       return;
     }
     cveDetailBody.textContent = "";
     cveDetailHeading.textContent = cveId;
-    var row = null;
-    catalogRows.forEach(function (item) {
-      if (item.cve_id === cveId) {
-        row = item;
-      }
-    });
     if (!row) {
       if (cveDetailStatus) {
         cveDetailStatus.textContent = "This CVE is not in the published snapshot.";
@@ -2423,16 +2293,19 @@
       return;
     }
     catalogLoad.disabled = true;
-    catalogStatus.textContent = "Loading published snapshot from this site. No external API is called.";
-    loadJson("data/latest.json")
-      .then(function (snapshot) {
-        if (!snapshot || !Array.isArray(snapshot.records)) {
-          throw new Error("Published snapshot unavailable");
+    catalogStatus.textContent = "Loading published catalog index from this site. No external API is called.";
+    loadJson("data/catalog-index.json")
+      .then(function (catalogIndex) {
+        if (!catalogIndex || !Array.isArray(catalogIndex.records)) {
+          throw new Error("Published catalog index unavailable");
         }
-        catalogRows = snapshot.records.map(compactRecord);
+        // Each row is already the compact, server-built index entry. Full
+        // source-attributed intelligence for one CVE is fetched separately,
+        // on demand, by applyCveHash / renderCveDetail.
+        catalogRows = catalogIndex.records;
         catalogSnapshotMeta = {
-          snapshot_id: snapshot.snapshot_id,
-          generated_at: snapshot.generated_at,
+          snapshot_id: catalogIndex.snapshot_id,
+          generated_at: catalogIndex.generated_at,
         };
         catalogLoaded = true;
         catalogPageIndex = 0;
@@ -2441,7 +2314,6 @@
         catalogStatus.textContent =
           "Loaded " + String(catalogRows.length) + " published records. Search is local to this snapshot.";
         applyCatalogFilters();
-        applyCveHash();
         loadJson("data/history/index.json").then(function (index) {
           historyIndexIds = {};
           if (index && Array.isArray(index.cves)) {
@@ -2489,6 +2361,9 @@
     catalogFixedVersion,
     catalogVendorAdvisory,
     catalogNvd,
+    catalogSsvcExploitation,
+    catalogSsvcAutomatable,
+    catalogSsvcTechnicalImpact,
     catalogRemediation,
   ].forEach(function (control) {
     if (!control) {
@@ -2519,6 +2394,9 @@
         catalogFixedVersion,
         catalogVendorAdvisory,
         catalogNvd,
+        catalogSsvcExploitation,
+        catalogSsvcAutomatable,
+        catalogSsvcTechnicalImpact,
         catalogTruncated,
         catalogRemediation,
         catalogSort,

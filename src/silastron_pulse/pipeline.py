@@ -38,6 +38,7 @@ from silastron_pulse.sanitize import (
     authoritative_cve_url,
     authoritative_kev_url,
     authoritative_nvd_url,
+    clean_text,
 )
 from silastron_pulse.signals import build_signals
 from silastron_pulse.state import PulseState
@@ -220,7 +221,7 @@ def _collect_locked(
         persist=_nvd_checkpoint(state, config) if state is not None else None,
     )
     epss = collect_epss([record.cve_id for record in kev.records], enabled=False)
-    entries = _build_entries(kev, cve, epss, nvd)
+    entries, entry_build_errors = _build_entries(kev, cve, epss, nvd)
     if previous:
         previous_entries = _entries_from_snapshot(previous)
         changes = detect_changes(
@@ -270,6 +271,7 @@ def _collect_locked(
         nvd=nvd,
         epss_meta=epss.meta,
         entries=entries,
+        entry_build_errors=entry_build_errors,
         changes=changes,
         config=config,
         collector_commit_sha=collector_commit_sha,
@@ -544,37 +546,90 @@ def _persist_state(
     state.write_candidate(snapshot, meta)
 
 
+def _degraded_signals(reason: str) -> Signals:
+    """A safe fallback when per-record signal/intelligence assembly fails.
+
+    Every value is explicitly unavailable. This is never a claim of absence.
+    """
+    unavailable = {
+        "value": None,
+        "basis": None,
+        "status": "unavailable",
+        "note": reason,
+    }
+    return Signals(
+        confirmed_exploitation=dict(unavailable),
+        estimated_exploitation_probability=dict(unavailable),
+        vulnerability_severity=dict(unavailable),
+        product_affectedness=dict(unavailable),
+        deployment_exposure=dict(unavailable),
+    )
+
+
 def _build_entries(
     kev: KevCatalog,
     cve: CveEnrichment,
     epss: Any,
     nvd: NvdEnrichment,
-) -> dict[str, PulseEntry]:
+) -> tuple[dict[str, PulseEntry], list[dict[str, Any]]]:
+    """Build one entry per KEV record.
+
+    A single malformed or unexpected record must never abort the whole
+    collection. Any failure while assembling signals or intelligence for one
+    CVE is caught, that CVE is recorded with explicit unavailable signals and
+    no intelligence, and the failure is reported in the returned error list
+    instead of propagating.
+    """
     entries: dict[str, PulseEntry] = {}
+    errors: list[dict[str, Any]] = []
     for kev_record in kev.records:
-        cve_record = cve.records[kev_record.cve_id]
-        epss_record = epss.records.get(kev_record.cve_id) or unavailable_record(
-            kev_record.cve_id
-        )
-        nvd_record = nvd.records.get(kev_record.cve_id)
-        links = {
-            "kev_catalog": authoritative_kev_url(),
-            "cve_record": authoritative_cve_url(kev_record.cve_id),
-            "cvelist_v5": CVE_LIST_V5_BLOB_BASE + cvelist_v5_relpath(kev_record.cve_id),
-            "nvd": authoritative_nvd_url(kev_record.cve_id),
-        }
-        entries[kev_record.cve_id] = PulseEntry(
-            cve_id=kev_record.cve_id,
-            kev=kev_record,
-            cve=cve_record,
-            epss=epss_record,
-            signals=build_signals(kev_record, cve_record, epss_record),
-            links=links,
-            intelligence=assemble_intelligence(
-                kev=kev_record, cve=cve_record, nvd=nvd_record
-            ),
-        )
-    return entries
+        cve_id = kev_record.cve_id
+        try:
+            cve_record = cve.records[cve_id]
+            epss_record = epss.records.get(cve_id) or unavailable_record(cve_id)
+            nvd_record = nvd.records.get(cve_id)
+            links = {
+                "kev_catalog": authoritative_kev_url(),
+                "cve_record": authoritative_cve_url(cve_id),
+                "cvelist_v5": CVE_LIST_V5_BLOB_BASE + cvelist_v5_relpath(cve_id),
+                "nvd": authoritative_nvd_url(cve_id),
+            }
+            entries[cve_id] = PulseEntry(
+                cve_id=cve_id,
+                kev=kev_record,
+                cve=cve_record,
+                epss=epss_record,
+                signals=build_signals(kev_record, cve_record, epss_record),
+                links=links,
+                intelligence=assemble_intelligence(
+                    kev=kev_record, cve=cve_record, nvd=nvd_record
+                ),
+            )
+        except Exception as exc:  # noqa: BLE001 - must never abort the run
+            message = clean_text(f"{type(exc).__name__}: {exc}", 300) or type(exc).__name__
+            print(f"::warning::_build_entries failed for {cve_id}: {message}")
+            errors.append({"cve_id": cve_id, "error": message})
+            fallback_cve = cve.records.get(cve_id) or cve_record_from_dict(
+                {"cve_id": cve_id, "state": "unavailable", "status": "failed"}
+            )
+            entries[cve_id] = PulseEntry(
+                cve_id=cve_id,
+                kev=kev_record,
+                cve=fallback_cve,
+                epss=unavailable_record(cve_id),
+                signals=_degraded_signals(
+                    "Record build failed during collection. "
+                    "No signals could be assembled for this CVE."
+                ),
+                links={
+                    "kev_catalog": authoritative_kev_url(),
+                    "cve_record": authoritative_cve_url(cve_id),
+                    "cvelist_v5": CVE_LIST_V5_BLOB_BASE + cvelist_v5_relpath(cve_id),
+                    "nvd": authoritative_nvd_url(cve_id),
+                },
+                intelligence=None,
+            )
+    return entries, errors
 
 
 def _build_snapshot(
@@ -587,15 +642,42 @@ def _build_snapshot(
     nvd: NvdEnrichment,
     epss_meta: SourceMeta,
     entries: dict[str, PulseEntry],
+    entry_build_errors: list[dict[str, Any]] | None = None,
     changes: Any,
     config: PulseConfig,
     collector_commit_sha: str | None,
     source_state_revision: str,
     metrics: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    records = [entries[key].to_dict() for key in sorted(entries)]
+    entry_build_errors = list(entry_build_errors or [])
+    records = []
+    for key in sorted(entries):
+        try:
+            records.append(entries[key].to_dict())
+        except Exception as exc:  # noqa: BLE001 - serialization must never abort the run
+            message = clean_text(f"{type(exc).__name__}: {exc}", 300) or type(exc).__name__
+            print(f"::warning::record serialization failed for {key}: {message}")
+            entry_build_errors.append({"cve_id": key, "error": message})
+            records.append(
+                {
+                    "cve_id": key,
+                    "completeness": "unavailable",
+                    "kev": entries[key].kev.to_dict(),
+                    "cve": {"cve_id": key, "status": "failed", "error": "serialization failed"},
+                    "epss": unavailable_record(key).to_dict(),
+                    "signals": _degraded_signals(
+                        "Record serialization failed during collection."
+                    ).to_dict(),
+                    "links": dict(entries[key].links),
+                    "remediation": {
+                        "items": [],
+                        "status": "unavailable",
+                        "note": "Record serialization failed; no remediation evidence is shown.",
+                    },
+                }
+            )
     status = "ok"
-    if cve.meta.status == "degraded":
+    if cve.meta.status == "degraded" or entry_build_errors:
         status = "degraded"
     material = f"{kev.meta.content_sha256}:{generated_at}:{SNAPSHOT_SCHEMA_VERSION}:{source_state_revision}"
     snapshot_id = f"{generated_at.replace('-', '').replace(':', '')}_{sha256_bytes(material.encode('utf-8'))[:12]}"
@@ -619,6 +701,8 @@ def _build_snapshot(
             1 for item in records if item.get("completeness") == "unavailable"
         ),
         "epss_enabled": False,
+        "entry_build_error_count": len(entry_build_errors),
+        "entry_build_errors": entry_build_errors[:20],
         "new_kev_entries": len(changes.new_kev_entries),
         "updated_kev_entries": len(changes.updated_kev_entries),
         "removed_kev_entries": len(changes.removed_kev_entries),

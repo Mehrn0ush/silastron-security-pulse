@@ -195,6 +195,7 @@ jobs:
             cp dist/verification-status.json _site/data/verification-status.json
           fi
           cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/
+          python -m silastron_pulse build-static-cve-pages --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com
           python -m silastron_pulse validate _site/data/manifest.json
           python -m silastron_pulse validate _site/data/latest.json
           python - <<'PY'
@@ -227,6 +228,7 @@ jobs:
             --dst _site/data
           cp dist/verification-status.json _site/data/verification-status.json
           cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/
+          python3 -m silastron_pulse build-static-cve-pages --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com
           python3 -m silastron_pulse validate _site/data/manifest.json
           python3 -m silastron_pulse validate _site/data/latest.json
           python3 -m silastron_pulse validate _site/data/verification-status.json
@@ -719,6 +721,7 @@ jobs:
             --conclusion "${CONCLUSION}" \
             --attempted-at "${ATTEMPTED_AT}"
           cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/
+          python3 -m silastron_pulse build-static-cve-pages --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com
           python3 -m silastron_pulse validate _site/data/manifest.json
           python3 -m silastron_pulse validate _site/data/latest.json
           python3 -m silastron_pulse validate _site/data/verification-status.json

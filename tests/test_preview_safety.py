@@ -53,7 +53,6 @@ class PreviewSafetyTests(unittest.TestCase):
         self.assertIn("No verified remediation data", source)
         self.assertIn('anchor.setAttribute("href", url)', source)
         self.assertIn("textContent = asText(item.text)", source)
-        self.assertIn('kind: "reference"', source)
         self.assertNotIn("verified_fix: kev.required_action", source)
         self.assertIn("CVELIST_BLOB", source)
         self.assertIn("completeness", source)

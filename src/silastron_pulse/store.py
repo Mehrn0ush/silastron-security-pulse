@@ -7,10 +7,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from silastron_pulse.catalog_index import build_catalog_index, build_cve_detail
 from silastron_pulse.clock import format_datetime, parse_generated_at as parse_clock
 from silastron_pulse.constants import MANIFEST_SCHEMA_VERSION, PREVIEW_SCHEMA_VERSION
 from silastron_pulse.diff import publication_comparison
 from silastron_pulse.errors import PublishGuardError, ValidationError
+from silastron_pulse.ids import CVE_ID_RE
 from silastron_pulse.jsonutil import dump_bytes, load_bounded_json, sha256_bytes
 from silastron_pulse.lock import ExclusiveLock
 from silastron_pulse.validate import validate_manifest, validate_snapshot
@@ -131,6 +133,7 @@ def _promote_snapshot_locked(
     atomic_write_json(latest_path, candidate)
     preview = build_preview_document(candidate, previous_published=current)
     atomic_write_json(published_dir / "preview.json", preview)
+    _write_catalog_index(published_dir, candidate)
     manifest = build_manifest(
         candidate,
         snapshot_relpath=f"snapshots/{snapshot_name}",
@@ -403,6 +406,32 @@ def build_manifest(
             "estimated signals as confirmed exploitation."
         ),
     }
+
+
+def _write_catalog_index(published_dir: Path, snapshot: dict[str, Any]) -> None:
+    """Write the browser-facing index and per-CVE detail files.
+
+    latest.json (the full snapshot) remains the source of truth for
+    integrity checks, rollback, and history; it is not changed here. These
+    are additional, smaller, derived files the browser fetches instead.
+    """
+    atomic_write_json(published_dir / "catalog-index.json", build_catalog_index(snapshot))
+    cve_dir = published_dir / "cve"
+    cve_dir.mkdir(parents=True, exist_ok=True)
+    current_ids: set[str] = set()
+    for record in snapshot.get("records") or []:
+        cve_id = record.get("cve_id")
+        if not isinstance(cve_id, str) or not CVE_ID_RE.fullmatch(cve_id):
+            raise PublishGuardError(f"Refusing to write a CVE detail file for an unsafe id {cve_id!r}")
+        current_ids.add(cve_id)
+        atomic_write_json(cve_dir / f"{cve_id}.json", build_cve_detail(record))
+    # Drop detail files for CVEs no longer in the published snapshot (e.g.
+    # a KEV removal) so stale per-CVE data is never served.
+    for path in cve_dir.glob("CVE-*.json"):
+        if path.is_symlink():
+            raise PublishGuardError(f"Refusing to touch a symlinked CVE detail file {path.name}")
+        if path.stem not in current_ids:
+            path.unlink()
 
 
 def build_preview_document(

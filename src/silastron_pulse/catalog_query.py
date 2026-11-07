@@ -65,6 +65,12 @@ def row_matches(row: dict[str, Any], filters: dict[str, Any]) -> bool:
         return False
     if nvd == "unavailable" and row.get("nvd_status") == "ok":
         return False
+    if not _ssvc_filter(row.get("ssvc_exploitation"), filters.get("ssvc_exploitation")):
+        return False
+    if not _ssvc_filter(row.get("ssvc_automatable"), filters.get("ssvc_automatable")):
+        return False
+    if not _ssvc_filter(row.get("ssvc_technical_impact"), filters.get("ssvc_technical_impact")):
+        return False
     return True
 
 
@@ -213,3 +219,9 @@ def _flag_filter(value: object, wanted: object) -> bool:
     if wanted == "available":
         return value is True
     return value is not True
+
+
+def _ssvc_filter(value: object, wanted: object) -> bool:
+    if not wanted or wanted == "all":
+        return True
+    return (value or UNAVAILABLE) == wanted
