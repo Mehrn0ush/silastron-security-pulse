@@ -26,10 +26,17 @@ INTELLIGENCE_SCHEMA_VERSION = "1.0.0"
 SOURCE_CNA = "cve_cna"
 SOURCE_NVD = "nvd"
 SOURCE_KEV = "cisa_kev"
+SOURCE_CISA_ADP = "cisa_adp"
+CISA_ADP_SHORT_NAME = "CISA-ADP"
+SSVC_DECISION_POINTS = {
+    "Exploitation": "exploitation",
+    "Automatable": "automatable",
+    "Technical Impact": "technical_impact",
+}
 
 # Deterministic display order. This is a UI preference, not objective truth.
 CVSS_VERSION_RANK = {"4.0": 0, "3.1": 1, "3.0": 2, "2.0": 3}
-CVSS_SOURCE_RANK = {SOURCE_CNA: 0, SOURCE_NVD: 1}
+CVSS_SOURCE_RANK = {SOURCE_CNA: 0, SOURCE_NVD: 1, SOURCE_CISA_ADP: 2}
 
 CNA_METRIC_KEYS = (
     ("cvssV4_0", "4.0"),
@@ -95,6 +102,7 @@ def comparable_intelligence(payload: dict[str, Any] | None) -> dict[str, Any]:
         "vendor_advisories": _sorted_dicts((payload.get("remediation") or {}).get("vendor_advisories")),
         "references": _sorted_dicts(payload.get("references")),
         "conflicts": _sorted_dicts(payload.get("conflicts")),
+        "cisa_adp_ssvc": (payload.get("cisa_adp") or {}).get("ssvc"),
         "coverage": payload.get("coverage"),
         "source_status": {
             name: {
@@ -120,6 +128,8 @@ def assemble_intelligence(
     assessments = list(cna.get("assessments") or [])
     if nvd and nvd.status == "ok":
         assessments.extend(nvd.assessments)
+    adp = _cisa_adp_view(cve)
+    assessments.extend(adp.pop("assessments"))
     cwes = _cwes(kev, cna, nvd)
     products = list(cna.get("products") or [])
     if nvd and nvd.status == "ok":
@@ -138,6 +148,7 @@ def assemble_intelligence(
         "has_fixed_version": bool(fixed_versions),
         "has_vendor_advisory": bool(advisories),
         "nvd_available": nvd_status == "ok",
+        "has_ssvc": adp["ssvc"] is not None,
         "cve_list_available": cve.status == "ok",
     }
     payload = {
@@ -217,10 +228,91 @@ def assemble_intelligence(
                 "error": nvd.error if nvd else "NVD enrichment was not collected",
             },
         },
+        "cisa_adp": adp,
         "conflicts": conflicts,
         "coverage": coverage,
     }
     return VulnerabilityIntelligence(payload=payload)
+
+
+def extract_cisa_adp_assertions(containers: dict[str, Any]) -> dict[str, Any]:
+    """Copy CISA ADP (Vulnrichment) CVSS and SSVC from the CVE record as asserted.
+
+    SSVC decision points are kept separate. They are never combined into a score
+    or a priority.
+    """
+    adp = containers.get("adp")
+    block = None
+    if isinstance(adp, list):
+        block = next(
+            (
+                item
+                for item in adp
+                if isinstance(item, dict)
+                and isinstance(item.get("providerMetadata"), dict)
+                and item["providerMetadata"].get("shortName") == CISA_ADP_SHORT_NAME
+            ),
+            None,
+        )
+    if block is None:
+        return {"status": "unavailable", "source_updated_at": None, "assessments": [], "ssvc": None}
+    updated_at = clean_text_report(block["providerMetadata"].get("dateUpdated"), 64)[0]
+    assessments = _cna_assessments(block.get("metrics"), source=SOURCE_CISA_ADP)
+    for item in assessments:
+        item["source_updated_at"] = updated_at
+    return {
+        "status": "available",
+        "source_updated_at": updated_at,
+        "assessments": assessments,
+        "ssvc": _ssvc(block.get("metrics")),
+    }
+
+
+def _ssvc(metrics: object) -> dict[str, Any] | None:
+    if not isinstance(metrics, list):
+        return None
+    for item in metrics:
+        other = item.get("other") if isinstance(item, dict) else None
+        if not isinstance(other, dict) or other.get("type") != "ssvc":
+            continue
+        content = other.get("content")
+        if not isinstance(content, dict) or not isinstance(content.get("options"), list):
+            continue
+        decisions: dict[str, Any] = {key: None for key in SSVC_DECISION_POINTS.values()}
+        for option in content["options"]:
+            if not isinstance(option, dict):
+                continue
+            for label, value in option.items():
+                key = SSVC_DECISION_POINTS.get(label)
+                if key:
+                    decisions[key] = clean_text_report(value, 32)[0]
+        if not any(decisions.values()):
+            continue
+        return {
+            **decisions,
+            "role": clean_text_report(content.get("role"), 64)[0],
+            "ssvc_version": clean_text_report(content.get("version"), 16)[0],
+            "assessed_at": clean_text_report(content.get("timestamp"), 64)[0],
+        }
+    return None
+
+
+def _cisa_adp_view(cve: CveRecord) -> dict[str, Any]:
+    raw = cve.adp_assertions if cve.status == "ok" and isinstance(cve.adp_assertions, dict) else None
+    if raw is None:
+        status = "unavailable" if cve.status == "ok" else cve.status
+        raw = {"status": status, "source_updated_at": None, "assessments": [], "ssvc": None}
+    return {
+        "status": raw.get("status"),
+        "source_updated_at": raw.get("source_updated_at"),
+        "assessments": list(raw.get("assessments") or []),
+        "ssvc": raw.get("ssvc"),
+        "note": (
+            "CISA ADP (Vulnrichment) assertions copied from the CVE List V5 record. "
+            "SSVC decision points are shown separately and are not a risk score. "
+            "Absence means CISA has not added ADP data, not that the CVE is low impact."
+        ),
+    }
 
 
 def extract_cna_assertions(cna: dict[str, Any], config: PulseConfig) -> dict[str, Any]:
@@ -319,7 +411,7 @@ def _cwes(kev: KevRecord, cna: dict[str, Any], nvd: NvdRecord | None) -> list[di
     return assertions
 
 
-def _cna_assessments(value: object) -> list[dict[str, Any]]:
+def _cna_assessments(value: object, *, source: str = SOURCE_CNA) -> list[dict[str, Any]]:
     if not isinstance(value, list):
         return []
     assessments: list[dict[str, Any]] = []
@@ -341,7 +433,7 @@ def _cna_assessments(value: object) -> list[dict[str, Any]]:
                     metrics[field] = text
             assessments.append(
                 {
-                    "source": SOURCE_CNA,
+                    "source": source,
                     "cvss_version": clean_text_report(block.get("version"), 16)[0] or version,
                     "base_score": float(score),
                     "severity": clean_text_report(block.get("baseSeverity"), 32)[0],

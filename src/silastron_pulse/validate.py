@@ -226,7 +226,7 @@ def _validate_intelligence(cve_id: str, value: object) -> None:
         for index, item in enumerate(assessments):
             if not isinstance(item, dict):
                 raise ValidationError(f"{cve_id} cvss.assessments[{index}] must be an object")
-            if item.get("source") not in {"cve_cna", "nvd"}:
+            if item.get("source") not in {"cve_cna", "nvd", "cisa_adp"}:
                 raise ValidationError(f"{cve_id} cvss.assessments[{index}] has an invalid source")
             if item.get("cvss_version") not in {"2.0", "3.0", "3.1", "4.0"}:
                 raise ValidationError(f"{cve_id} cvss.assessments[{index}] has an invalid version")
@@ -234,6 +234,16 @@ def _validate_intelligence(cve_id: str, value: object) -> None:
                 raise ValidationError(f"{cve_id} cvss.assessments[{index}] needs a numeric base_score")
             if "metrics" in item and item["metrics"] is not None and not isinstance(item["metrics"], dict):
                 raise ValidationError(f"{cve_id} cvss.assessments[{index}].metrics must be an object")
+    adp = value.get("cisa_adp")
+    if adp is not None:
+        if not isinstance(adp, dict) or adp.get("status") not in {"available", "unavailable", "failed", "degraded", "disabled"}:
+            raise ValidationError(f"{cve_id} intelligence.cisa_adp is invalid")
+        ssvc = adp.get("ssvc")
+        if ssvc is not None:
+            if not isinstance(ssvc, dict) or adp.get("status") != "available":
+                raise ValidationError(f"{cve_id} intelligence.cisa_adp.ssvc requires available ADP data")
+            if any(key in ssvc for key in ("score", "priority", "decision")):
+                raise ValidationError(f"{cve_id} intelligence.cisa_adp.ssvc must not derive a score or priority")
     remediation = value.get("remediation")
     if isinstance(remediation, dict):
         for index, item in enumerate(remediation.get("fixed_versions") or []):

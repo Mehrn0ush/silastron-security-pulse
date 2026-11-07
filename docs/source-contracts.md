@@ -70,7 +70,11 @@ embed that attribution. The CC0 pull request on cvelistV5 is **not merged**.
   drop that incompleteness.
 - The fetched `cveMetadata.cveId` must equal the requested ID exactly. No
   zero-padding or fuzzy match.
-- CVSS is taken only from the CNA container. ADP scores are not substituted.
+- CVSS is taken only from the CNA container for `records[].cve.severity`. ADP
+  scores are not substituted. CISA ADP (`providerMetadata.shortName=CISA-ADP`)
+  CVSS and SSVC are copied, attributed as `cisa_adp`, into `intelligence`.
+  They arrive in the same CVE record (CVE Program Terms of Use); no extra
+  host, request, or key is needed.
 - GitHub raw rate limits for 1,700+ sequential fetches are **UNVERIFIED** in
   production. Collection retries 429/5xx with exponential backoff and
   Retry-After, then fails closed on excess failures.

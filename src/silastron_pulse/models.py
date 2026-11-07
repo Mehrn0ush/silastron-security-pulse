@@ -190,6 +190,7 @@ class CveRecord:
     remediation_items: tuple[RemediationItem, ...] = ()
     enrichment_availability: dict[str, Any] | None = None
     cna_assertions: dict[str, Any] | None = None
+    adp_assertions: dict[str, Any] | None = None
 
     def comparable(self) -> dict[str, Any]:
         return {
@@ -242,6 +243,7 @@ class CveRecord:
             "remediation_items": [item.to_dict() for item in self.remediation_items],
             "enrichment_availability": self.enrichment_availability,
             "cna_assertions": self.cna_assertions,
+            "adp_assertions": self.adp_assertions,
         }
 
 

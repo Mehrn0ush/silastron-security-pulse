@@ -6,8 +6,10 @@
   the run. Incremental runs do not repeat that poll.
 - KEV `dateReleased` may include non-millisecond fractional seconds. The raw
   string is preserved; it is not rewritten.
-- CVSS is CNA-only. Missing CNA metrics yield `severity.status=unavailable`
-  even if a CISA ADP container has a score.
+- `records[].cve.severity` is CNA-only. Missing CNA metrics yield
+  `severity.status=unavailable`. CISA ADP CVSS appears separately in
+  `intelligence.cvss.assessments` with `source=cisa_adp`; it is never
+  substituted into the CNA field.
 - Product affectedness is source text, not CPE matching or asset inventory.
   `records[].completeness=complete` means the extracted CNA/KEV inventory was
   stored within bounds; it does not prove complete real-world product coverage.
