@@ -9,12 +9,43 @@ read-only consumers.
 | File | Purpose |
 | --- | --- |
 | `data/manifest.json` | Latest pointer, stale/fresh flags, publication state |
-| `data/latest.json` | Full snapshot |
+| `data/latest.json` | Full snapshot, including full `records[].intelligence`. The source of truth for integrity checks, rollback, and history. The browser does not fetch this file. |
+| `data/catalog-index.json` | What the browser fetches for the explorer table, its filters, and CSV export: one compact entry per record, no `intelligence` object. See "Catalog index and per-CVE detail" below. |
+| `data/cve/{CVE_ID}.json` | What the browser fetches, on demand, for one CVE's detail view: the same compact entry plus its full `intelligence` object. |
 | `data/preview.json` | Bounded table for the HTML preview |
 | `data/snapshots/{id}.json` | Immutable historical snapshot after promote |
 
 Until publication is approved, `preview/data/manifest.json` and
 `public/data/manifest.json` are `status: unpublished` placeholders.
+
+## Catalog index and per-CVE detail
+
+`data/latest.json` holds every record's full `intelligence` object (CVSS
+assessments, CWE assertions, affected ranges, references, conflicts,
+sources) and is unbounded in size as the catalog grows. The browser never
+fetches it. Instead, at promote time (`silastron_pulse.catalog_index`,
+called from `store.promote_snapshot`) two smaller derived documents are
+written from the same snapshot:
+
+- `catalog-index.json` (`schema_version: "1.0.0"`): `{schema_version,
+  snapshot_id, generated_at, record_count, records: [...]}`. Each entry has
+  exactly the fields the explorer table, its filters, and CSV export use
+  (KEV/CVE identity, CVSS base score, remediation, up to 8 extracted
+  products with up to 3 versions each, and summary fields derived from
+  intelligence: `cvss_versions`, `cvss_sources`, `attack_vector`,
+  `privileges_required`, `user_interaction`, `cwe_ids`, `has_fixed_version`,
+  `has_vendor_advisory`, `has_affected_versions`, `nvd_status`,
+  `source_conflicts`). It never includes the full `intelligence` object.
+- `cve/{CVE_ID}.json` (`schema_version: "1.0.0"`): the same entry plus the
+  record's full `intelligence` object, one file per published CVE. Fetched
+  lazily by the CVE detail view and by a `#cve/CVE-ID` deep link; neither
+  requires loading the catalog index first.
+
+A record missing `remediation` falls back to evidence built from
+`kev.required_action` / `kev.notes`, the same fallback the client used to
+build after downloading the full snapshot; it is now computed once, here,
+instead of once per browser. A CVE dropped from a later snapshot (a KEV
+removal) has its stale `cve/{CVE_ID}.json` deleted at the next promote.
 
 ## Preview `publication_comparison`
 
