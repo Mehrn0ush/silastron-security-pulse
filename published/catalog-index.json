@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-07T20:40:35Z",
+  "generated_at": "2026-11-08T14:55:56Z",
   "note": "Compact index for the explorer table, its filters, and CSV export. Full source-attributed intelligence (CVSS detail, CWE names, affected ranges, references, conflicts) is not included here; fetch cve/<CVE_ID>.json for one record's full detail.",
   "record_count": 1769,
   "records": [
@@ -36475,13 +36475,16 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
+        "CWE-20",
         "CWE-399"
       ],
       "cwes": [
@@ -36492,7 +36495,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -36502,7 +36505,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-0156"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -36546,7 +36549,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A vulnerability in the Smart Install feature of Cisco IOS Software and Cisco IOS XE Software could allow an unauthenticated, remote attacker to trigger a reload of an affected device, resulting in a denial-of-service (DoS) condition.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cwe",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -36567,14 +36573,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
-        "CWE-20"
+        "CWE-20",
+        "CWE-401"
       ],
       "cwes": [
         "CWE-20"
@@ -36584,7 +36593,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -36594,7 +36603,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-0158"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -36638,7 +36647,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A vulnerability in the implementation of Internet Key Exchange Version 1 (IKEv1) functionality in Cisco IOS Software and Cisco IOS XE Software could allow an unauthenticated, remote attacker to cause an affected device to reload, resulting in a denial-of-service (DoS) condition.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cwe",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -36659,10 +36671,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -36676,7 +36690,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -36686,7 +36700,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-0159"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -36730,7 +36744,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A vulnerability in the implementation of Internet Key Exchange Version 1 (IKEv1) functionality in Cisco IOS Software and Cisco IOS XE Software could allow an unauthenticated, remote attacker to cause an affected device to reload, resulting in a denial-of-service (DoS) condition.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -36751,10 +36767,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -36768,7 +36786,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -36778,7 +36796,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-0161"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -36822,7 +36840,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A vulnerability in the Simple Network Management Protocol (SNMP) subsystem of Cisco IOS Software running on certain models of Cisco Catalyst Switches could allow an authenticated, remote attacker to cause a denial-of-service (DoS) condition.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -36843,10 +36863,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -36860,7 +36882,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -36870,7 +36892,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-0167"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -36914,7 +36936,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "There is a buffer overflow vulnerability in the Link Layer Discovery Protocol (LLDP) subsystem of Cisco IOS Software, Cisco IOS XE Software, and Cisco IOS XR Software which could allow an unauthenticated, adjacent attacker to cause a denial of service (DoS) condition or execute arbitrary code.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -36935,14 +36959,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
-        "CWE-20"
+        "CWE-20",
+        "CWE-787"
       ],
       "cwes": [
         "CWE-20"
@@ -36952,7 +36979,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -36962,7 +36989,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-0171"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -37006,7 +37033,11 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Cisco IOS and IOS XE Software improperly validates packet data, allowing an unauthenticated, remote attacker to trigger a reload of an affected device, cause a denial-of-service (DoS) condition, or perform code execution on the affected device.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "cwe",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -37027,14 +37058,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
-        "CWE-20"
+        "CWE-20",
+        "CWE-787"
       ],
       "cwes": [
         "CWE-20"
@@ -37044,7 +37078,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -37054,7 +37088,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-0172"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -37098,7 +37132,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A vulnerability in the DHCP option 82 encapsulation functionality of Cisco IOS Software and Cisco IOS XE Software could allow for denial-of-service (DoS).",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cwe",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -37119,10 +37156,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -37136,7 +37175,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -37146,7 +37185,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-0173"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -37190,7 +37229,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A vulnerability in the Cisco IOS Software and Cisco IOS XE Software function that restores encapsulated option 82 information in DHCP Version 4 (DHCPv4) packets can allow for denial-of-service (DoS).",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -37211,10 +37252,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -37228,7 +37271,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -37238,7 +37281,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-0174"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -37282,7 +37325,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A vulnerability in the DHCP option 82 encapsulation functionality of Cisco IOS Software and Cisco IOS XE Software could allow for denial-of-service (DoS).",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -37303,14 +37348,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
-        "CWE-119"
+        "CWE-119",
+        "CWE-134"
       ],
       "cwes": [
         "CWE-119"
@@ -37320,7 +37368,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -37330,7 +37378,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-0175"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -37374,7 +37422,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Format string vulnerability in the Link Layer Discovery Protocol (LLDP) subsystem of Cisco IOS Software, Cisco IOS XE Software, and Cisco IOS XR Software could allow an unauthenticated, adjacent attacker to cause a denial of service (DoS) condition or execute arbitrary code with elevated privileges on an affected device.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cwe",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -37395,10 +37446,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -37412,7 +37465,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -37422,7 +37475,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-0179"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -37466,7 +37519,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A vulnerability in the Login Enhancements (Login Block) feature of Cisco IOS Software could allow an unauthenticated, remote attacker to trigger a reload of an affected system, resulting in a denial of service (DoS) condition.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -37487,10 +37543,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -37504,7 +37562,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -37514,7 +37572,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-0180"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -37558,7 +37616,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A vulnerability in the Login Enhancements (Login Block) feature of Cisco IOS Software could allow an unauthenticated, remote attacker to trigger a reload of an affected system, resulting in a denial of service (DoS) condition.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -37579,14 +37640,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
-        "CWE-20"
+        "CWE-20",
+        "CWE-22"
       ],
       "cwes": [
         "CWE-20"
@@ -37596,7 +37660,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -37606,7 +37670,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-0296"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -37650,7 +37714,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Cisco Adaptive Security Appliance (ASA) contains an improper input validation vulnerability with HTTP URLs. Exploitation could allow an attacker to cause a denial-of-service (DoS) condition or information disclosure.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cwe",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -37671,10 +37738,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -37688,7 +37757,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -37698,7 +37767,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-0798"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -37742,7 +37811,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Microsoft Office contains a memory corruption vulnerability due to the way objects are handled in memory. Successful exploitation allows for remote code execution in the context of the current user. This vulnerability is known to be chained with CVE-2018-0802.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -37755,7 +37826,8 @@
     },
     {
       "attack_vector": [
-        "LOCAL"
+        "LOCAL",
+        "NETWORK"
       ],
       "completeness": "complete",
       "cve_description": "Equation Editor in Microsoft Office 2007, Microsoft Office 2010, Microsoft Office 2013, and Microsoft Office 2016 allow a remote code execution vulnerability due to the way objects are handled in memory, aka \"Microsoft Office Memory Corruption Vulnerability\". This CVE is unique from CVE-2018-0797 and CVE-2018-0812.",
@@ -37763,10 +37835,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -37780,7 +37854,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -37790,7 +37864,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-0802"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -37834,7 +37908,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Microsoft Office contains a memory corruption vulnerability due to the way objects are handled in memory. Successful exploitation allows for remote code execution in the context of the current user. This vulnerability is known to be chained with CVE-2018-0798.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -37855,10 +37931,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -37872,7 +37950,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2024-08-05",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -37882,7 +37960,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-0824"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -37933,7 +38011,10 @@
       "required_action": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "unavailable",
       "short_description": "Microsoft COM for Windows contains a deserialization of untrusted data vulnerability that allows for privilege escalation and remote code execution via a specially crafted file or script.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -37954,10 +38035,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -37981,7 +38064,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-1000861"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -38033,7 +38116,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A code execution vulnerability exists in the Stapler web framework used by Jenkins",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -38054,10 +38139,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -38081,7 +38168,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-10561"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -38125,7 +38212,9 @@
       "required_action": "The impacted product is end-of-life and should be disconnected if still in use.",
       "severity_status": "unavailable",
       "short_description": "Dasan GPON Routers contain an authentication bypass vulnerability. When combined with CVE-2018-10562, exploitation can allow an attacker to perform remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -38146,10 +38235,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -38173,7 +38264,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-10562"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -38217,7 +38308,9 @@
       "required_action": "The impacted product is end-of-life and should be disconnected if still in use.",
       "severity_status": "unavailable",
       "short_description": "Dasan GPON Routers contain an authentication bypass vulnerability. When combined with CVE-2018-10561, exploitation can allow an attacker to perform remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -38238,10 +38331,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -38265,7 +38360,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-11138"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -38309,7 +38404,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "The '/common/download_agent_installer.php' script in the Quest KACE System Management Appliance is accessible by anonymous users and can be abused to perform remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -38330,10 +38427,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -38357,7 +38456,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-11776"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -38401,7 +38500,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apache Struts contains a vulnerability that allows for remote code execution under two circumstances. One, where the alwaysSelectFullNamespace option is true and the value isn't set for a result defined in underlying configurations and in same time, its upper package configuration have no or wildcard namespace.  Or, using URL tag which doesn't have value and action set and in same time, its upper package configuration have no or wildcard namespace.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -38422,10 +38523,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -38439,7 +38542,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-25",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -38449,7 +38552,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-1273"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -38493,7 +38596,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Spring Data Commons contains a property binder vulnerability which can allow an attacker to perform remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -38514,10 +38619,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 4.3,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -38531,7 +38638,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-09-08",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -38541,7 +38648,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-13374"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -38592,7 +38699,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Fortinet FortiOS and FortiADC contain an improper access control vulnerability that allows attackers to obtain the LDAP server login credentials configured in FortiGate by pointing a LDAP server connectivity test request to a rogue LDAP server.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -38613,10 +38722,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 9.1,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:H",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -38630,7 +38741,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -38640,7 +38751,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-13379"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -38684,7 +38795,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Fortinet FortiOS SSL VPN web portal contains a path traversal vulnerability that may allow an unauthenticated attacker to download FortiOS system files through specially crafted HTTP resource requests.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -38705,14 +38819,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 9.1,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
-        "CWE-285"
+        "CWE-285",
+        "CWE-863"
       ],
       "cwes": [
         "CWE-285"
@@ -38722,7 +38839,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-01-10",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -38732,7 +38849,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-13382"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -38776,7 +38893,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "An Improper Authorization vulnerability in Fortinet FortiOS and FortiProxy under SSL VPN web portal allows an unauthenticated attacker to modify the password.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -38797,10 +38917,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 4.3,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:L",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -38814,7 +38936,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-01-10",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -38824,12 +38946,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-13383"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
       "privileges_required": [
-        "LOW"
+        "LOW",
+        "NONE"
       ],
       "product": "FortiOS and FortiProxy",
       "products": [
@@ -38868,13 +38991,17 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "A heap buffer overflow in Fortinet FortiOS and FortiProxy may cause the SSL VPN web service termination for logged in users.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
       "truncated_fields": [],
       "user_interaction": [
-        "NONE"
+        "NONE",
+        "REQUIRED"
       ],
       "vendor_project": "Fortinet",
       "vulnerability_name": "Fortinet FortiOS and FortiProxy Out-of-bounds Write"
@@ -38889,10 +39016,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -38916,7 +39045,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-14558"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -38960,7 +39089,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Tenda AC7, AC9, and AC10 devices contain a command injection vulnerability due to  the \"formsetUsbUnload\" function executes a dosystemCmd function with untrusted input. Successful exploitation allows an attacker to execute OS commands via a crafted goform/setUsbUnload request.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -38981,10 +39112,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.0/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
       "cvss_versions": [
+        "2.0",
         "3.0"
       ],
       "cwe_ids": [
@@ -39008,7 +39141,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-14634"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -39192,7 +39325,9 @@
       "required_action": "Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "available",
       "short_description": "Linux Kernel contains an integer overflow vulnerability in the create_elf_tables() function which could allow an unprivileged local user with access to SUID (or otherwise privileged) binary to escalate their privileges on the system.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -39213,11 +39348,14 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 9.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
       "cvss_versions": [
-        "3.0"
+        "2.0",
+        "3.0",
+        "3.1"
       ],
       "cwe_ids": [
         "CWE-94"
@@ -39240,7 +39378,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-14667"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -39323,7 +39461,9 @@
       "required_action": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "available",
       "short_description": "Red Hat JBoss RichFaces Framework contains an expression language injection vulnerability via the UserResource resource. A remote, unauthenticated attacker could exploit this vulnerability to execute malicious code using a chain of Java serialized objects via org.ajax4jsf.resource.UserResource$UriData.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -39344,10 +39484,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -39371,7 +39513,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-14839"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -39415,7 +39557,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "LG N1A1 NAS 3718.510 is affected by a remote code execution vulnerability.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -39436,10 +39580,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -39453,7 +39599,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-12-01",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -39463,7 +39609,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-14847"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -39507,7 +39653,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "MikroTik RouterOS through 6.42 allows unauthenticated remote attackers to read arbitrary files and remote authenticated attackers to write arbitrary files due to a directory traversal vulnerability in the WinBox interface.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -39528,10 +39676,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -39555,7 +39705,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-14933"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -39606,7 +39756,9 @@
       "required_action": "The impacted product is end-of-life (EoL) and/or end-of-service (EoS). Users should discontinue utilization of the product.",
       "severity_status": "unavailable",
       "short_description": "NUUO NVRmini devices contain an OS command injection vulnerability. This vulnerability allows remote command execution via shell metacharacters in the uploaddir parameter for a writeuploaddir command.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -39627,10 +39779,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -39654,7 +39808,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-15133"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -39698,7 +39852,9 @@
       "required_action": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "unavailable",
       "short_description": "Laravel Framework contains a deserialization of untrusted data vulnerability, allowing for remote command execution. This vulnerability may only be exploited if a malicious user has accessed the application encryption key (APP_KEY environment variable).",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -39719,10 +39875,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -39736,7 +39894,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -39746,7 +39904,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-15811"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -39790,7 +39948,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "DotNetNuke (DNN) contains an inadequate encryption strength vulnerability resulting from the use of a weak encryption algorithm to protect input parameters.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -39811,10 +39971,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -39828,7 +39990,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -39838,7 +40000,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-15961"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -39882,7 +40044,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Adobe ColdFusion contains an unrestricted file upload vulnerability that could allow for code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -39895,7 +40059,8 @@
     },
     {
       "attack_vector": [
-        "LOCAL"
+        "LOCAL",
+        "NETWORK"
       ],
       "completeness": "complete",
       "cve_description": "Flash Player versions 31.0.0.153 and earlier, and 31.0.0.108 and earlier have a use after free vulnerability. Successful exploitation could lead to arbitrary code execution.",
@@ -39903,10 +40068,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -39930,7 +40097,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-15982"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -39982,7 +40149,9 @@
       "required_action": "The impacted product is end-of-life and should be disconnected if still in use.",
       "severity_status": "unavailable",
       "short_description": "Adobe Flash Player com.adobe.tvsdk.mediacore.metadata Use After Free Vulnerability",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -40003,10 +40172,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -40026,7 +40197,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-17463"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -40094,7 +40265,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Google Chromium V8 Engine contains an unspecified vulnerability that allows a remote attacker to execute code inside a sandbox via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -40115,10 +40288,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -40142,7 +40317,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-17480"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -40210,7 +40385,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Google Chromium V8 Engine contains out-of-bounds write vulnerability that allows a remote attacker to execute code inside a sandbox via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -40231,10 +40408,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -40248,7 +40427,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -40258,7 +40437,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-18325"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -40302,7 +40481,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "DotNetNuke (DNN) contains an inadequate encryption strength vulnerability resulting from the use of a weak encryption algorithm to protect input parameters. This CVE ID resolves an incomplete patch for CVE-2018-15811.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -40323,11 +40504,14 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 9.9,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
       "cvss_versions": [
-        "3.0"
+        "2.0",
+        "3.0",
+        "3.1"
       ],
       "cwe_ids": [
         "CWE-22"
@@ -40340,7 +40524,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-12-29",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -40350,7 +40534,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-18809"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -40415,7 +40599,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "TIBCO JasperReports Library contains a directory-traversal vulnerability that may allow web server users to access contents of the host system.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -40436,10 +40622,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -40449,7 +40637,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-10-24",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -40459,7 +40647,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-19320"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -40510,7 +40698,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "The GDrv low-level driver in GIGABYTE App Center, AORUS Graphics Engine, XTREME Gaming Engine, and OC GURU II exposes ring0 memcpy-like functionality that could allow a local attacker to take complete control of the affected system.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -40531,10 +40721,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -40544,7 +40736,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-10-24",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -40554,7 +40746,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-19321"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -40605,7 +40797,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "The GPCIDrv and GDrv low-level drivers in GIGABYTE App Center, AORUS Graphics Engine, XTREME Gaming Engine, and OC GURU II expose functionality to read and write arbitrary physical memory. This could be leveraged by a local attacker to elevate privileges.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -40626,10 +40820,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -40643,7 +40839,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-10-24",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -40653,7 +40849,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-19322"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -40704,7 +40900,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "The GPCIDrv and GDrv low-level drivers in GIGABYTE App Center, AORUS Graphics Engine, XTREME Gaming Engine, and OC GURU II expose functionality to read/write data from/to IO ports. This could be leveraged in a number of ways to ultimately run code with elevated privileges.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -40725,10 +40923,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -40738,7 +40938,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-10-24",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -40748,7 +40948,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-19323"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -40799,7 +40999,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "The GPCIDrv and GDrv low-level drivers in GIGABYTE App Center, AORUS Graphics Engine, XTREME Gaming Engine, and OC GURU expose functionality to read and write arbitrary physical memory. This could be leveraged by a local attacker to elevate privileges.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -40820,10 +41022,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -40843,7 +41047,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-19410"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -40887,7 +41091,9 @@
       "required_action": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "unavailable",
       "short_description": "Paessler PRTG Network Monitor contains a local file inclusion vulnerability that allows a remote, unauthenticated attacker to create users with read-write privileges (including administrator).",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -40908,10 +41114,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 8.0,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:H/PR:L/UI:R/S:C/C:H/I:H/A:H",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -40927,7 +41135,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-05-24",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -40937,7 +41145,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-19943"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -40985,7 +41193,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "A cross-site scripting vulnerability affecting QNAP NAS File Station could allow remote attackers to inject malicious code.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -41006,10 +41217,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -41027,7 +41240,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-05-24",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -41037,7 +41250,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-19949"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -41085,7 +41298,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A command injection vulnerability affecting QNAP NAS File Station could allow remote attackers to run commands.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -41106,10 +41321,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -41125,7 +41342,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-05-24",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -41135,7 +41352,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-19953"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -41183,7 +41400,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A cross-site scripting vulnerability affecting QNAP NAS File Station could allow remote attackers to inject malicious code.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -41204,10 +41423,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -41231,7 +41452,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-20062"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -41275,7 +41496,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "ThinkPHP \"noneCms\" contains an unspecified vulnerability that allows for remote code execution through crafted use of the filter parameter.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -41288,7 +41511,8 @@
     },
     {
       "attack_vector": [
-        "LOCAL"
+        "LOCAL",
+        "NETWORK"
       ],
       "completeness": "complete",
       "cve_description": "In WinRAR versions prior to and including 5.61, There is path traversal vulnerability when crafting the filename field of the ACE format (in UNACEV2.dll). When the filename field is manipulated with specific patterns, the destination (extraction) folder is ignored, thus treating the filename as an absolute path.",
@@ -41296,13 +41520,16 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
+        "CWE-22",
         "CWE-36"
       ],
       "cwes": [
@@ -41323,7 +41550,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-20250"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -41367,7 +41594,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "WinRAR Absolute Path Traversal vulnerability leads to Remote Code Execution",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cwe",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -41388,10 +41618,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -41401,7 +41633,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-04-13",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -41411,7 +41643,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-20753"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -41455,7 +41687,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Kaseya VSA RMM allows unprivileged remote attackers to execute PowerShell payloads on all managed devices.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -41476,10 +41710,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -41493,7 +41729,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -41503,7 +41739,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-2380"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -41547,7 +41783,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "SAP Customer Relationship Management (CRM) contains a path traversal vulnerability that allows an attacker to exploit insufficient validation of path information provided by users.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -41568,10 +41806,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -41595,7 +41835,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-2628"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -41646,7 +41886,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Oracle WebLogic Server contains an unspecified vulnerability which can allow an unauthenticated attacker with T3 network access to compromise the server.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -41667,10 +41909,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -41694,7 +41938,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-4063"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -41759,7 +42003,9 @@
       "required_action": "Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "unavailable",
       "short_description": "Sierra Wireless AirLink ALEOS contains an unrestricted upload of file with dangerous type vulnerability. A specially crafted HTTP request can upload a file, resulting in executable code being uploaded, and routable, to the webserver. An attacker can make an authenticated HTTP request to trigger this vulnerability. The impacted product could be end-of-life (EoL) and/or end-of-service (EoS). Users should discontinue product utilization.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -41772,7 +42018,8 @@
     },
     {
       "attack_vector": [
-        "LOCAL"
+        "LOCAL",
+        "NETWORK"
       ],
       "completeness": "complete",
       "cve_description": "A memory corruption issue was addressed with improved memory handling. This issue affected versions prior to iOS 12, macOS Mojave 10.14, tvOS 12, watchOS 5.",
@@ -41780,10 +42027,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -41797,7 +42046,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-06-27",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -41807,7 +42056,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-4344"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -41851,7 +42100,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apple iOS, macOS, tvOS, and watchOS contain a memory corruption vulnerability which can allow for code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -41864,7 +42115,8 @@
     },
     {
       "attack_vector": [
-        "LOCAL"
+        "LOCAL",
+        "NETWORK"
       ],
       "completeness": "complete",
       "cve_description": "A use-after-free vulnerability was discovered in Adobe Flash Player before 28.0.0.161. This vulnerability occurs due to a dangling pointer in the Primetime SDK related to media player handling of listener objects. A successful attack can lead to arbitrary code execution. This was exploited in the wild in January and February 2018.",
@@ -41872,10 +42124,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -41899,7 +42153,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-4878"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -41951,7 +42205,9 @@
       "required_action": "The impacted product is end-of-life and should be disconnected if still in use.",
       "severity_status": "unavailable",
       "short_description": "Adobe Flash Player contains a use-after-free vulnerability that could allow for code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -41972,10 +42228,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -41989,7 +42247,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -41999,7 +42257,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-4939"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -42043,7 +42301,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Adobe ColdFusion contains a deserialization of untrusted data vulnerability that could allow for code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -42064,10 +42324,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -42081,7 +42343,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-06-08",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -42091,7 +42353,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-4990"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -42135,7 +42397,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Adobe Acrobat and Reader have a double free vulnerability that could lead to remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -42148,7 +42412,8 @@
     },
     {
       "attack_vector": [
-        "LOCAL"
+        "LOCAL",
+        "NETWORK"
       ],
       "completeness": "complete",
       "cve_description": "Adobe Flash Player versions 29.0.0.171 and earlier have a Stack-based buffer overflow vulnerability. Successful exploitation could lead to arbitrary code execution in the context of the current user.",
@@ -42156,13 +42421,16 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
+        "CWE-121",
         "CWE-787"
       ],
       "cwes": [
@@ -42183,7 +42451,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-5002"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -42243,7 +42511,9 @@
       "required_action": "The impacted product is end-of-life and should be disconnected if still in use.",
       "severity_status": "unavailable",
       "short_description": "Adobe Flash Player have a stack-based buffer overflow vulnerability that could lead to remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -42264,13 +42534,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.7,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:N/A:N",
       "cvss_versions": [
-        "3.0"
+        "2.0",
+        "3.0",
+        "3.1"
       ],
       "cwe_ids": [
+        "CWE-200",
         "CWE-22"
       ],
       "cwes": [
@@ -42281,7 +42555,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-12-29",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -42291,7 +42565,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-5430"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -42346,7 +42620,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "TIBCO JasperReports Server contain a vulnerability which may allow any authenticated user read-only access to the contents of the web application, including key configuration files.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -42367,10 +42643,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -42396,7 +42674,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-6065"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -42456,7 +42734,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Google Chromium V8 Engine contains an integer overflow vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -42477,10 +42757,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -42504,7 +42786,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-6530"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -42555,7 +42837,9 @@
       "required_action": "The vendor D-Link published an advisory stating the fix under CVE-2018-20114 properly patches KEV entry CVE-2018-6530. If the device is still supported, apply updates per vendor instructions. If the affected device has since entered its end-of-life, it should be disconnected if still in use.",
       "severity_status": "unavailable",
       "short_description": "Multiple D-Link routers contain an unspecified vulnerability that allows for execution of OS commands.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -42576,14 +42860,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
-        "CWE-119"
+        "CWE-119",
+        "CWE-120"
       ],
       "cwes": [
         "CWE-119"
@@ -42603,7 +42890,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-6789"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -42663,7 +42950,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Exim contains a buffer overflow vulnerability in the base64d function part of the SMTP listener that may allow for remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -42684,10 +42973,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -42701,7 +42992,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-04-19",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -42711,7 +43002,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-6882"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -42755,7 +43046,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Synacor Zimbra Collaboration Suite (ZCS) contains a cross-site scripting vulnerability that might allow remote attackers to inject arbitrary web script or HTML.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -42776,10 +43069,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -42803,7 +43098,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-6961"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -42847,7 +43142,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "VMware SD-WAN Edge by VeloCloud contains a command injection vulnerability in the local web UI component. Successful exploitation of this issue could result in remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -42868,10 +43165,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -42895,7 +43194,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-7445"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -42946,7 +43245,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "In MikroTik RouterOS, a stack-based buffer overflow occurs when processing NetBIOS session request messages. Remote attackers with access to the service can exploit this vulnerability and gain code execution on the system.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -42967,10 +43268,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -42994,7 +43297,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-7600"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -43046,7 +43349,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Drupal Core contains a remote code execution vulnerability that could allow an attacker to exploit multiple attack vectors on a Drupal site, resulting in complete site compromise.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -43067,13 +43372,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
-      "cwe_ids": [],
+      "cwe_ids": [
+        "CWE-94"
+      ],
       "cwes": [],
       "due_date": "2022-05-04",
       "epss_score": null,
@@ -43090,7 +43399,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-7602"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -43149,7 +43458,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A remote code execution vulnerability exists within multiple subsystems of Drupal that can allow attackers to exploit multiple attack vectors on a Drupal site.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -43170,10 +43482,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -43187,7 +43501,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-04-15",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -43197,7 +43511,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-7841"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -43241,7 +43555,9 @@
       "required_action": "The impacted product is end-of-life and should be disconnected if still in use.",
       "severity_status": "unavailable",
       "short_description": "A SQL Injection vulnerability exists in U.motion Builder software which could cause unwanted code execution when an improper set of characters is entered.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -43262,10 +43578,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -43279,7 +43597,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-15",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -43289,7 +43607,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-8120"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -43335,7 +43653,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A privilege escalation vulnerability exists in Windows when the Win32k component fails to properly handle objects in memory.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -43356,10 +43676,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -43373,7 +43695,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-02-15",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -43383,7 +43705,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-8174"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -43434,7 +43756,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A remote code execution vulnerability exists in the way that the VBScript engine handles objects in memory, aka \"Windows VBScript Engine Remote Code Execution\"",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -43455,10 +43779,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -43472,7 +43798,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -43482,7 +43808,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-8298"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -43526,7 +43852,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "The ChakraCore scripting engine contains a type confusion vulnerability which can allow for remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -43547,10 +43875,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -43564,7 +43894,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-25",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -43574,7 +43904,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-8373"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -43620,7 +43950,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A remote code execution vulnerability exists in the way that the scripting engine handles objects in memory in Internet Explorer.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -43641,10 +43973,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -43658,7 +43992,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-28",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -43668,7 +44002,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-8405"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -43717,7 +44051,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "An elevation of privilege vulnerability exists when the DirectX Graphics Kernel (DXGKRNL) driver improperly handles objects in memory.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -43738,10 +44074,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -43755,7 +44093,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-28",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -43765,7 +44103,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-8406"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -43811,7 +44149,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "An elevation of privilege vulnerability exists when the DirectX Graphics Kernel (DXGKRNL) driver improperly handles objects in memory.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -43832,10 +44172,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -43849,7 +44191,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-25",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -43859,7 +44201,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-8414"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -43904,7 +44246,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A remote code execution vulnerability exists when the Windows Shell does not properly validate file paths.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -43925,10 +44269,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -43938,7 +44284,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-28",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -43948,7 +44294,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-8440"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -43999,7 +44345,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "An elevation of privilege vulnerability exists when Windows improperly handles calls to Advanced Local Procedure Call (ALPC).",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -44020,10 +44368,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -44037,7 +44387,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-01-21",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -44047,7 +44397,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-8453"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -44098,7 +44448,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Microsoft Windows Win32k contains a vulnerability that allows an attacker to escalate privileges.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -44119,10 +44471,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -44132,7 +44486,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -44142,7 +44496,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-8581"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -44186,7 +44540,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A privilege escalation vulnerability exists in Microsoft Exchange Server. An attacker who successfully exploited this vulnerability could attempt to impersonate any other user of the Exchange server.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -44207,10 +44563,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -44220,7 +44578,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-05-23",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -44230,7 +44588,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-8589"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -44276,7 +44634,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A privilege escalation vulnerability exists when Windows improperly handles calls to Win32k.sys. An attacker who successfully exploited this vulnerability could run remote code in the security context of the local system.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -44297,10 +44657,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -44314,7 +44676,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-05-24",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -44324,7 +44686,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-8611"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -44375,7 +44737,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A privilege escalation vulnerability exists when the Windows kernel fails to properly handle objects in memory.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -44396,10 +44760,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -44413,7 +44779,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2025-03-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -44423,11 +44789,12 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-8639"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
       "privileges_required": [
+        "LOW",
         "NONE"
       ],
       "product": "Windows",
@@ -44481,7 +44848,10 @@
       "required_action": "Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "unavailable",
       "short_description": "Microsoft Windows Win32k contains an improper resource shutdown or release vulnerability that allows for local, authenticated privilege escalation. An attacker who successfully exploited this vulnerability could run arbitrary code in kernel mode.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -44502,10 +44872,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -44519,7 +44891,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -44529,7 +44901,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-8653"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -44575,7 +44947,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Microsoft Internet Explorer contains a memory corruption vulnerability due to how the Scripting Engine handles objects in memory, leading to remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -44596,10 +44970,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -44623,7 +44999,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2018-9276"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -44667,7 +45043,9 @@
       "required_action": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "unavailable",
       "short_description": "Paessler PRTG Network Monitor contains an OS command injection vulnerability that allows an attacker with administrative privileges to execute commands via the PRTG System Administrator web console.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -44688,10 +45066,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -44705,7 +45085,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-12-10",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -44715,7 +45095,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0193"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -44759,7 +45139,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "The optional Apache Solr module DataImportHandler contains a code injection vulnerability.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -44780,10 +45162,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -44807,7 +45191,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0211"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -44947,7 +45331,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apache HTTP Server, with MPM event, worker or prefork, code executing in less-privileged child processes or threads (including scripts executed by an in-process scripting interpreter) could execute code with the privileges of the parent process (usually root) by manipulating the scoreboard.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -44968,10 +45354,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -44995,7 +45383,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0344"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -45046,7 +45434,9 @@
       "required_action": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "unavailable",
       "short_description": "SAP Commerce Cloud (formerly known as Hybris) contains a deserialization of untrusted data vulnerability within the mediaconversion and virtualjdbc extension that allows for code injection.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -45067,10 +45457,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -45084,7 +45476,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -45094,7 +45486,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0541"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -45144,7 +45536,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Microsoft MSHTML engine contains an improper input validation vulnerability that allows for remote code execution vulnerability.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -45165,10 +45559,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -45182,7 +45578,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-15",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -45192,7 +45588,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0543"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -45236,7 +45632,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A privilege escalation vulnerability exists when Windows improperly handles authentication requests. An attacker who successfully exploited this vulnerability could run processes in an elevated context.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -45257,10 +45655,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -45274,7 +45674,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -45284,7 +45684,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0604"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -45330,7 +45730,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Microsoft SharePoint fails to check the source markup of an application package. An attacker who successfully exploits the vulnerability could run remote code in the context of the SharePoint application pool and the SharePoint server farm account.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -45351,10 +45753,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -45364,7 +45768,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-05-23",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -45374,7 +45778,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0676"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -45419,7 +45823,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "An information disclosure vulnerability exists when Internet Explorer improperly handles objects in memory. An attacker who successfully exploited this vulnerability could test for the presence of files on disk.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -45440,10 +45846,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -45453,7 +45861,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-05-23",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -45463,7 +45871,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0703"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -45508,7 +45916,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "An information disclosure vulnerability exists in the way that the Windows SMB Server handles certain requests, which could lead to information disclosure from the server.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -45529,10 +45939,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -45546,7 +45958,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -45556,7 +45968,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0708"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -45601,7 +46013,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Microsoft Remote Desktop Services, formerly known as Terminal Service, contains an unspecified vulnerability that allows an unauthenticated attacker to connect to the target system using RDP and send specially crafted requests. Successful exploitation allows for remote code execution. The vulnerability is also known under the moniker of BlueKeep.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -45622,10 +46036,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -45639,7 +46055,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-02-15",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -45649,7 +46065,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0752"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -45694,7 +46110,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A remote code execution vulnerability exists in the way that the scripting engine handles objects in memory in Internet Explorer",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -45715,10 +46133,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -45728,7 +46148,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -45738,7 +46158,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0797"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -45783,7 +46203,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Microsoft Win32k contains a privilege escalation vulnerability when the Win32k component fails to properly handle objects in memory. Successful exploitation allows an attacker to execute code in kernel mode.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -45804,10 +46226,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -45817,7 +46241,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -45827,7 +46251,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0803"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -45872,7 +46296,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Microsoft Win32k contains an unspecified vulnerability due to it failing to properly handle objects in memory causing privilege escalation. Successful exploitation allows an attacker to run code in kernel mode.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -45893,10 +46319,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -45906,7 +46334,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -45916,7 +46344,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0808"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -45961,7 +46389,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Microsoft Win32k contains a privilege escalation vulnerability due to the component failing to properly handle objects in memory. Successful exploitation allows an attacker to run code in kernel mode.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -45982,10 +46412,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -45999,7 +46431,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-15",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -46009,7 +46441,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0841"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -46054,7 +46486,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A privilege escalation vulnerability exists when Windows AppXSVC improperly handles hard links. An attacker who successfully exploited this vulnerability could run processes in an elevated context.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -46075,10 +46509,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -46088,7 +46524,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -46098,7 +46534,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0859"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -46143,7 +46579,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Microsoft Win32k fails to properly handle objects in memory causing privilege escalation. Successful exploitation allows an attacker to run code in kernel mode.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -46164,10 +46602,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -46177,7 +46617,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -46187,7 +46627,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0863"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -46236,7 +46676,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Microsoft Windows Error Reporting (WER) contains a privilege escalation vulnerability due to the way it handles files, allowing for code execution in kernel mode.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -46257,10 +46699,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -46270,7 +46714,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-05-23",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -46280,7 +46724,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0880"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -46329,7 +46773,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A local elevation of privilege vulnerability exists in how splwow64.exe handles certain calls. An attacker who successfully exploited the vulnerability could elevate privileges on an affected system from low-integrity to medium-integrity.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -46350,10 +46796,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -46363,7 +46811,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-25",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -46373,7 +46821,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-0903"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -46422,7 +46870,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A remote code execution vulnerability exists in the way that the Windows Graphics Device Interface (GDI) handles objects in the memory. An attacker who successfully exploited this vulnerability could take control of the affected system.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -46443,10 +46893,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -46466,7 +46918,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-1003029"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -46518,7 +46970,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Jenkins Script Security Plugin contains a protection mechanism failure, allowing an attacker to bypass the sandbox.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -46539,13 +46993,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
-      "cwe_ids": [],
+      "cwe_ids": [
+        "CWE-693"
+      ],
       "cwes": [],
       "due_date": "2022-04-15",
       "epss_score": null,
@@ -46562,7 +47020,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-1003030"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -46614,7 +47072,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Jenkins Matrix Project plugin contains a vulnerability which can allow users to escape the sandbox, opening opportunity to perform remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -46635,10 +47095,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -46662,7 +47124,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-10068"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -46706,7 +47168,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Kentico contains a failure to validate security headers. This deserialization can led to unauthenticated remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -46727,11 +47191,14 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 9.0,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.0/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H",
       "cvss_versions": [
-        "3.0"
+        "2.0",
+        "3.0",
+        "3.1"
       ],
       "cwe_ids": [
         "CWE-78"
@@ -46754,7 +47221,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-10149"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -46822,7 +47289,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Improper validation of recipient address in deliver_message() function in /src/deliver.c may lead to remote command execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -46834,17 +47303,21 @@
       "vulnerability_name": "Exim Mail Transfer Agent (MTA) Improper Input Validation"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL"
+      ],
       "completeness": "complete",
       "cve_description": "An elevation of privilege vulnerability exists when Windows AppX Deployment Service (AppXSVC) improperly handles hard links. An attacker who successfully exploited this vulnerability could run processes in an elevated context. An attacker could then install programs; view, change or delete data. To exploit this vulnerability, an attacker would first have to log on to the system. An attacker could then run a specially crafted application that could exploit the vulnerability and take control of an affected system. The security update addresses the vulnerability by correcting how Windows AppX Deployment Service handles hard links.",
       "cve_id": "CVE-2019-1064",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H/E:P/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -46868,11 +47341,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-1064"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Windows",
       "products": [
         "Microsoft / Windows 10 Version 1703 (affected 10.0.0 publication)",
@@ -46925,12 +47400,17 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "A privilege escalation vulnerability exists when Windows AppXSVC improperly handles hard links. An attacker who successfully exploited this vulnerability could run processes in an elevated context.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Windows AppX Deployment Service (AppXSVC) Privilege Escalation Vulnerability"
     },
@@ -46944,20 +47424,24 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
-      "cwe_ids": [],
+      "cwe_ids": [
+        "CWE-20"
+      ],
       "cwes": [],
       "due_date": "2026-08-29",
       "epss_score": null,
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2026-08-26",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -46967,7 +47451,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-1068"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -47039,7 +47523,9 @@
       "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
       "severity_status": "unavailable",
       "short_description": "Microsoft SQL Server contains a remote code execution vulnerability that could allow an attacker to execute code in the context of the SQL Server Database Engine service account.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -47051,17 +47537,21 @@
       "vulnerability_name": "Microsoft SQL Server Remote Code Execution Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL"
+      ],
       "completeness": "complete",
       "cve_description": "An elevation of privilege vulnerability exists in the way the Task Scheduler Service validates certain file operations. An attacker who successfully exploited the vulnerability could gain elevated privileges on a victim system. To exploit the vulnerability, an attacker would require unprivileged code execution on a victim system. The security update addresses the vulnerability by correctly validating file operations.",
       "cve_id": "CVE-2019-1069",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H/E:P/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -47085,11 +47575,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-1069"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Task Scheduler",
       "products": [
         "Microsoft / Windows 10 Version 1703 (affected 10.0.0 publication)",
@@ -47142,12 +47634,17 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "A privilege escalation vulnerability exists in the way the Task Scheduler Service validates certain file operations.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Task Scheduler Privilege Escalation Vulnerability"
     },
@@ -47161,13 +47658,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
-      "cwe_ids": [],
+      "cwe_ids": [
+        "CWE-94"
+      ],
       "cwes": [],
       "due_date": "2022-06-10",
       "epss_score": null,
@@ -47184,7 +47685,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-10758"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -47228,7 +47729,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "mongo-express before 0.54.0 is vulnerable to Remote Code Execution via endpoints that uses the `toBSON` method.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -47249,10 +47752,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -47276,7 +47781,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-11001"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -47334,7 +47839,9 @@
       "required_action": "The impacted product could be end-of-life (EoL) and/or end-of-service (EoS). Users should discontinue product utilization if a current mitigation is unavailable.",
       "severity_status": "unavailable",
       "short_description": "Reolink RLC-410W, C1 Pro, C2 Pro, RLC-422W, and RLC-511W IP cameras contain an authenticated OS command injection vulnerability. This vulnerability allows an authenticated admin to use the \"TestEmail\" functionality to inject and run OS commands as root.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -47355,14 +47862,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 8.7,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:N",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
-        "CWE-120"
+        "CWE-120",
+        "CWE-787"
       ],
       "cwes": [
         "CWE-120"
@@ -47382,7 +47892,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-11043"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -47553,7 +48063,11 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "In some versions of PHP in certain configurations of FPM setup, it is possible to cause FPM module to write past allocated buffers allowing the possibility of remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "cwe",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -47574,10 +48088,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -47591,7 +48107,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-15",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -47601,7 +48117,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-1129"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -47650,7 +48166,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A privilege escalation vulnerability exists when Windows AppXSVC improperly handles hard links. An attacker who successfully exploited this vulnerability could run processes in an elevated context.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -47671,10 +48189,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -47688,7 +48208,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-05-23",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -47698,7 +48218,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-1130"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -47747,7 +48267,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A privilege escalation vulnerability exists when Windows AppX Deployment Service (AppXSVC) improperly handles hard links.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -47768,10 +48290,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -47781,7 +48305,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-15",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -47791,7 +48315,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-1132"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -47836,7 +48360,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A privilege escalation vulnerability exists in Windows when the Win32k component fails to properly handle objects in memory.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -47857,11 +48383,14 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 9.9,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.0/AC:L/AV:N/A:H/C:H/I:H/PR:L/S:C/UI:N",
       "cvss_versions": [
-        "3.0"
+        "2.0",
+        "3.0",
+        "3.1"
       ],
       "cwe_ids": [
         "CWE-22"
@@ -47874,7 +48403,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -47884,12 +48413,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-11510"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
       "privileges_required": [
-        "LOW"
+        "LOW",
+        "NONE"
       ],
       "product": "Pulse Connect Secure",
       "products": [
@@ -47935,7 +48465,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Ivanti Pulse Connect Secure contains an arbitrary file read vulnerability that allows an unauthenticated remote attacker with network access via HTTPS to send a specially crafted URI.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -47956,11 +48489,14 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 8.0,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.0/AC:H/AV:N/A:H/C:H/I:H/PR:H/S:C/UI:N",
       "cvss_versions": [
-        "3.0"
+        "2.0",
+        "3.0",
+        "3.1"
       ],
       "cwe_ids": [
         "CWE-78"
@@ -47973,7 +48509,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -47983,7 +48519,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-11539"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -48027,7 +48563,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Ivanti Pulse Connect Secure and Policy Secure allows an authenticated attacker from the admin web interface to inject and execute commands.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -48048,10 +48587,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -48061,7 +48602,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -48071,7 +48612,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-11580"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -48115,7 +48656,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Atlassian Crowd and Crowd Data Center contain a remote code execution vulnerability resulting from a pdkinstall development plugin being incorrectly enabled in release builds.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -48136,10 +48679,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -48153,7 +48698,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-07",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -48163,7 +48708,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-11581"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -48207,7 +48752,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Atlassian Jira Server and Data Center contain a server-side template injection vulnerability which can allow for remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -48228,20 +48775,24 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
-      "cwe_ids": [],
+      "cwe_ids": [
+        "CWE-284"
+      ],
       "cwes": [],
       "due_date": "2022-05-03",
       "epss_score": null,
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -48251,7 +48802,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2019-11634"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -48295,7 +48846,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Citrix Workspace Application and Receiver for Windows contains remote code execution vulnerability resulting from local drive access preferences not being enforced into the clients' local drives.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -184487,5 +185040,5 @@
     }
   ],
   "schema_version": "1.0.0",
-  "snapshot_id": "20261107T204035Z_d2f0eba262f1"
+  "snapshot_id": "20261108T145556Z_8ecd0e6e8495"
 }

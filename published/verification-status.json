@@ -1,22 +1,22 @@
 {
-  "candidate_digest": "2624beae0f641f08d42d158de4e6979c3bc55df1a2072efe14cd727768b3731e",
-  "candidate_snapshot_id": "20261107T204035Z_d2f0eba262f1",
-  "collect_event": "workflow_dispatch",
-  "collect_run_id": "42410932544",
-  "collection_completed_at": "2026-11-07T20:40:35Z",
+  "candidate_digest": "dd281ae50b048ab0cf3f7cb0912b90c5a413bd0e523ce6b000d7d38fcdb7d17a",
+  "candidate_snapshot_id": "20261108T145556Z_8ecd0e6e8495",
+  "collect_event": "schedule",
+  "collect_run_id": "42491117518",
+  "collection_completed_at": "2026-11-08T14:55:56Z",
   "collection_outcome": "degraded",
-  "collection_started_at": "2026-11-07T20:25:00Z",
-  "content_sha256": "f9feda10d400b09d3a6d84c190714bf4f38a910ae8b82f62c97ca1aacbdffc9b",
+  "collection_started_at": "2026-11-08T14:42:35Z",
+  "content_sha256": "bcf9126a0b517451f8f769b253a3f0488f1fdb3e3fc1222ca04e26e3c8f80e3a",
   "cve": {
-    "content_sha256": "2a951ddf0eebcfe9a4a2f3af6876c755d7c2d3edf645f32375c0210aa04142a0",
-    "retrieved_at": "2026-11-07T20:27:26Z",
-    "source_updated_at": "2026-11-07T11:32:46.439Z",
+    "content_sha256": "2ca3818ab36787170d761628c62817d7f0796cdcbec864db4367cc3357814539",
+    "retrieved_at": "2026-11-08T14:42:37Z",
+    "source_updated_at": "2026-11-08T14:00:13.850Z",
     "status": "degraded",
     "validated": false
   },
   "kev": {
     "content_sha256": "47e0406b2be5a40420eff66f3d90e83eb8883dae6ff4d08e1b2a942c366f6cc2",
-    "retrieved_at": "2026-11-07T20:25:00Z",
+    "retrieved_at": "2026-11-08T14:42:36Z",
     "source_updated_at": "2026-11-06T19:44:45.1797Z",
     "status": "ok",
     "validated": true
@@ -24,33 +24,33 @@
   "kind": "verification_status",
   "note": "KEV was independently validated and a new snapshot was published.",
   "nvd": {
-    "content_sha256": "3328ac190a4bba3384ec87cefcbfca86cd5c75716596cc35b998887edef0c5af",
+    "content_sha256": "65c7d91db73b38e24b637fdc708c657334811b075ffad6a8512f184192d8ce81",
     "retrieved_at": "2026-11-02T17:42:54Z",
     "source_updated_at": null,
     "status": "degraded",
     "validated": false
   },
   "nvd_metrics": {
-    "cache_hits": 239,
+    "cache_hits": 359,
     "failed_requests": 0,
     "fetched": 120,
-    "ok": 359,
-    "pending_backfill": 1410,
-    "processing_ms": 787946,
+    "ok": 479,
+    "pending_backfill": 1290,
+    "processing_ms": 797845,
     "rate_limited": 0,
     "records_refreshed": 120,
     "requests_attempted": 120,
-    "reused": 239,
-    "unavailable": 1410
+    "reused": 359,
+    "unavailable": 1290
   },
   "publication_decision": "publish",
-  "publication_reason": "eligible",
+  "publication_reason": "enrichment_update",
   "publication_state": "consistent",
-  "published_generated_at": "2026-11-03T15:58:18Z",
-  "published_snapshot_id": "20261103T155818Z_019d51d7b726",
+  "published_generated_at": "2026-11-07T20:40:35Z",
+  "published_snapshot_id": "20261107T204035Z_d2f0eba262f1",
   "schema_version": "1.0.0",
   "status_only": false,
   "verification_state": "verified",
   "verified": true,
-  "verified_at": "2026-11-07T20:40:35Z"
+  "verified_at": "2026-11-08T14:55:56Z"
 }
