@@ -1,16 +1,16 @@
 {
-  "classification": "persistence_succeeded_and_consistent",
-  "collect_run_id": "41667082278",
-  "deployment_run_id": "41669372227",
+  "classification": "intent_recorded_pending_deploy",
+  "collect_run_id": "42410932544",
+  "deployment_run_id": "42455168571",
   "legacy_missing_status": false,
-  "manifest_digest": "ccee21722cba07148ae040badddfe148b5bdda7f5fcf8ba38f17e52461319db0",
-  "note": "Persistence succeeded and matches the deployed snapshot. GitHub Pages deploy and pulse-state persist are still not atomic.",
+  "manifest_digest": "2624beae0f641f08d42d158de4e6979c3bc55df1a2072efe14cd727768b3731e",
+  "note": "Intent recorded before Pages deploy. A successful deploy-pages job is not proof the CDN serves this snapshot.",
   "page_url": null,
-  "persisted_manifest_digest": "ccee21722cba07148ae040badddfe148b5bdda7f5fcf8ba38f17e52461319db0",
-  "persisted_snapshot_id": "20261103T155818Z_019d51d7b726",
+  "persisted_manifest_digest": null,
+  "persisted_snapshot_id": null,
   "recovery": null,
   "schema_version": "1.0.0",
-  "snapshot_id": "20261103T155818Z_019d51d7b726",
-  "state": "consistent",
-  "updated_at": "2026-11-03T16:00:19Z"
+  "snapshot_id": "20261107T204035Z_d2f0eba262f1",
+  "state": "pending_deploy",
+  "updated_at": "2026-11-08T06:33:23Z"
 }
