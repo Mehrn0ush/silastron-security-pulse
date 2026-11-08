@@ -1,16 +1,16 @@
 {
-  "classification": "intent_recorded_pending_deploy",
+  "classification": "deployment_succeeded_persist_failed",
   "collect_run_id": "42410932544",
   "deployment_run_id": "42455168571",
   "legacy_missing_status": false,
   "manifest_digest": "2624beae0f641f08d42d158de4e6979c3bc55df1a2072efe14cd727768b3731e",
-  "note": "Intent recorded before Pages deploy. A successful deploy-pages job is not proof the CDN serves this snapshot.",
+  "note": "GitHub Pages deploy succeeded. pulse-state published/ has not yet been persisted. GitHub Pages cannot update atomically with the state branch.",
   "page_url": null,
   "persisted_manifest_digest": null,
   "persisted_snapshot_id": null,
   "recovery": null,
   "schema_version": "1.0.0",
   "snapshot_id": "20261107T204035Z_d2f0eba262f1",
-  "state": "pending_deploy",
-  "updated_at": "2026-11-08T06:33:23Z"
+  "state": "deployed_unpersisted",
+  "updated_at": "2026-11-08T06:33:58Z"
 }
