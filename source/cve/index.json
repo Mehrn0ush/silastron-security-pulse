@@ -1,10 +1,10 @@
 {
-  "delta_fetch_time": "2026-11-07T20:19:25.213Z",
-  "delta_log_bytes": 36969402,
-  "delta_log_etag": "W/\"d226ded7fb01cbb9a7d64c7c6a8332e91f6ac95a8ef139bbbbb96a98d83a6740\"",
-  "delta_log_sha256": "b7c603543f21694c9d55b50a505620271933e34e2818225fbe39886fb595b949",
+  "delta_fetch_time": "2026-11-08T14:17:52.682Z",
+  "delta_log_bytes": 37007582,
+  "delta_log_etag": "W/\"bdd664d7fa3712f271456a87f1d0ba7a39a035fcb8d61642f4abecd58a9d5e23\"",
+  "delta_log_sha256": "071041b531f1ade26c33d70896ddb3bcbda98a0641d57e60a854061bbc3e76ba",
   "delta_log_skipped": false,
-  "delta_sha256": "b079be4ef5967f1f974582aee3ad5c6fd39b3b5359c654e969382244e5589e33",
+  "delta_sha256": "869a129b34546012acbae5fec1805df29d7e73399e10bf517ea9c64529f2ccbd",
   "records": {
     "CVE-2002-0367": {
       "date_updated": "2025-10-22T00:05:57.464Z",
@@ -8799,10 +8799,10 @@
       "status": "ok"
     },
     "CVE-2024-23692": {
-      "date_updated": "2026-08-11T03:55:27.853Z",
-      "etag": "W/\"f0b13a54fdcdda4567a72a950d4caf64903f46e8e57110962218c89ca77ee882\"",
-      "retrieved_at": "2026-11-07T20:26:43Z",
-      "sha256": "ab35d877ce0b553b7d0378296d06aeba52261cead7f524ea45751ba6a78ae3a4",
+      "date_updated": "2026-11-08T14:00:04.906Z",
+      "etag": "W/\"a220df779e2f617a228eaa6ede885e37d4e38b1ecccf28ed39d2975d178c7998\"",
+      "retrieved_at": "2026-11-08T14:42:37Z",
+      "sha256": "630d63a22c15f9a266f15d506de525516985305c71bcd76958a750f9f9d98281",
       "status": "ok"
     },
     "CVE-2024-23897": {
@@ -10290,10 +10290,10 @@
       "status": "ok"
     },
     "CVE-2025-3248": {
-      "date_updated": "2026-10-08T15:21:16.208Z",
-      "etag": "W/\"363ab828405546481c734ef85e01941cac3cb7312c40e39d01e866894ae7f852\"",
-      "retrieved_at": "2026-11-07T20:26:59Z",
-      "sha256": "bcf9d7d866255e37157316cc67f3032d8e26b46145892835e4fd5eecbb92f2a1",
+      "date_updated": "2026-11-08T14:00:13.850Z",
+      "etag": "W/\"360405a4970042b6ab5439a688f2c4b138f6a3b91a0ea868e3585bc57c4024b6\"",
+      "retrieved_at": "2026-11-08T14:42:37Z",
+      "sha256": "c4253df14e31052aa73bd475009161af216610d17681c160ef8533859899bb13",
       "status": "ok"
     },
     "CVE-2025-32701": {
@@ -12396,6 +12396,6 @@
     "max_products": 200,
     "max_versions_per_product": 200
   },
-  "strategy": "resync",
-  "updated_at": "2026-11-07T20:40:35Z"
+  "strategy": "delta",
+  "updated_at": "2026-11-08T14:55:56Z"
 }
