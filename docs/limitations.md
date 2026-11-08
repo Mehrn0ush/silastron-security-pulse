@@ -18,6 +18,11 @@
   intelligence, and the run continues as `degraded`; it never aborts the
   whole collection. See `summary.entry_build_error_count` in
   [docs/schemas.md](schemas.md).
+- The published snapshot (`latest.json` / `candidate.json`) is capped by
+  `max_snapshot_bytes`, default 100 MB (`PULSE_MAX_SNAPSHOT_BYTES`, max 200 MB).
+  It was raised from 40 MB after Publish 42439286715 rejected a 58.8 MB
+  candidate; `records[].intelligence` drives the growth. Splitting intelligence
+  out of `latest.json` is the longer-term option.
 - `snapshot.status` is collection outcome. A collect that finishes with some
   truncated version lists is `degraded`, not `failed`. Freshness is computed at
   viewing time and is independent of both.
