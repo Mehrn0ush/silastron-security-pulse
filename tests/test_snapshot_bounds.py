@@ -10,6 +10,9 @@ from tests.support import test_config
 
 # Collect 40099136792 candidate.json was rejected by Publish at the KEV cap.
 LIVE_CANDIDATE_BYTES = 17_277_697
+# Publish 42439286715 (Collect 42410932544) rejected candidate.json at the
+# 40 MB snapshot cap: 58,829,338 bytes, with full records[].intelligence.
+OBSERVED_CANDIDATE_BYTES = 58_829_338
 
 
 class SnapshotBoundTests(unittest.TestCase):
@@ -18,6 +21,7 @@ class SnapshotBoundTests(unittest.TestCase):
             config = test_config(Path(tmp))
         self.assertGreater(config.max_snapshot_bytes, config.max_kev_bytes)
         self.assertGreaterEqual(config.max_snapshot_bytes, LIVE_CANDIDATE_BYTES)
+        self.assertGreaterEqual(config.max_snapshot_bytes, OBSERVED_CANDIDATE_BYTES)
         self.assertEqual(config.max_kev_bytes, 15_000_000)
 
     def test_payload_between_kev_and_snapshot_caps_is_loadable(self) -> None:
