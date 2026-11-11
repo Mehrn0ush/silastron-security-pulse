@@ -6,7 +6,7 @@
   "collection_completed_at": "2026-11-10T16:17:21Z",
   "collection_outcome": "degraded",
   "collection_started_at": "2026-11-10T16:00:42Z",
-  "content_sha256": "c75f77f8ae3b19ebead23a5e307be9bf34da604a170f6de92218571b0b58c229",
+  "content_sha256": "49303ed5c2a0f8b094057c484b4e002c5cc7397c4bcda74457592b19496cb100",
   "cve": {
     "content_sha256": "01a2752b737bef40941550044899ba85e8fe2d90590af5c9889a96f68f79e859",
     "retrieved_at": "2026-11-10T16:04:45Z",
@@ -22,6 +22,12 @@
     "validated": true
   },
   "kind": "verification_status",
+  "last_attempt": {
+    "attempted_at": "2026-11-11T15:47:51Z",
+    "collect_run_id": "43051869091",
+    "conclusion": "failure",
+    "note": "The latest scheduled Collect did not complete. The published snapshot and last successful verification below predate this attempt."
+  },
   "note": "KEV was independently validated and a new snapshot was published.",
   "nvd": {
     "content_sha256": "8628faeddafe7c0646b97cdef1b9ae86a1bc00c5aa1d89d7675a169892365cf0",
