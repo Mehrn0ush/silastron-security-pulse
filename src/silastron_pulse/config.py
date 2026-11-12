@@ -97,7 +97,7 @@ class PulseConfig:
                 "PULSE_MAX_DELTA_BYTES",
                 defaults["max_delta_bytes"],
                 minimum=1024,
-                maximum=80_000_000,
+                maximum=200_000_000,
             ),
             max_cve_bytes=_int_env(
                 "PULSE_MAX_CVE_BYTES",
