@@ -41,7 +41,7 @@
 - GitHub Pages CSP is a meta tag; GitHub may not emit equivalent HTTP headers.
   **UNVERIFIED** on a live Pages hostname because Pages is not deployed.
 - First live collect still performs ~1,754 CVE GETs for the KEV subset.
-- If `deltaLog.json` exceeds 40 MB uncompressed (`HEAD` without gzip),
+- If `deltaLog.json` exceeds 100 MB uncompressed (`HEAD` without gzip),
   collection fails closed instead of downloading it or polling every KEV CVE.
   GET uses `Accept-Encoding: gzip`; the live uncompressed transfer was
   ~228s / 29.88 MB, while gzip was ~4.2s / 1.73 MB on the wire. Incremental

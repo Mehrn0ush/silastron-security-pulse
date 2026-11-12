@@ -100,7 +100,7 @@ DEFAULT_LIMITS = {
     "max_redirects": 3,
     "max_kev_bytes": 15_000_000,
     "max_snapshot_bytes": 100_000_000,
-    "max_delta_bytes": 40_000_000,
+    "max_delta_bytes": 100_000_000,
     "max_cve_bytes": 3_000_000,
     "max_epss_bytes": 2_000_000,
     "max_json_depth": 32,
