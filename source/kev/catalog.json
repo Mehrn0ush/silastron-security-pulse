@@ -1,17 +1,17 @@
 {
   "meta": {
-    "content_sha256": "4372c54ba169d113742974d9e0c68b3523d8e4374c9b2bdcf28712b68565d5cf",
+    "content_sha256": "41c8091ad62d508d6f8906ad5cd26b20efe551f7d51b95ecc8a6981fa640b4ea",
     "error": null,
     "id": "cisa-kev",
     "license": "CC0-1.0",
     "name": "CISA Known Exploited Vulnerabilities Catalog",
     "notes": "The CISA Known Exploited Vulnerabilities catalog is dedicated to the public domain under CC0 1.0. Use does not authorize use of the CISA logo or DHS seal and is not an endorsement by CISA or DHS. See https://www.cisa.gov/sites/default/files/licenses/kev/license.txt",
     "parser_version": "1.0.0",
-    "retrieved_at": "2026-11-10T16:00:43Z",
+    "retrieved_at": "2026-11-12T18:24:49Z",
     "schema_version": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities_schema.json",
-    "source_published_at": "2026-11-09T19:54:37.4945Z",
-    "source_revision": "2026.11.09",
-    "source_updated_at": "2026-11-09T19:54:37.4945Z",
+    "source_published_at": "2026-11-10T19:03:29.8375Z",
+    "source_revision": "2026.11.10",
+    "source_updated_at": "2026-11-10T19:03:29.8375Z",
     "status": "ok",
     "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
   },
@@ -33218,6 +33218,48 @@
       "vulnerability_name": "Google Brotli Unchecked Return Value Vulnerability"
     },
     {
+      "cve_id": "CVE-2026-111560",
+      "cwes": [
+        "CWE-78"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-10",
+      "due_date": "2026-11-13",
+      "forensic_triage": "Yes",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://trust.barracuda.com/security/pre-authentication-authorization-bypass-command-injection ; https://github.com/mandiant/Vulnerability-Disclosures/blob/master/2026/MNDT-2026-0041.md ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-111560",
+      "product": "Multiple Products",
+      "record_sha256": "4ce9f91e4b335698015e7092b873870152492404be0eb767e674123d3f187735",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Barracuda Networks Email Security Gateway (ESG), Load Balancer, Application Delivery Controller (ADC), Message Archiver (BMA), WAF Control Center (WCC), Web Application Firewall (WAF), and Web Security Gateway (WSG) contain an OS command injection vulnerability. This vulnerability could allow an authenticated administrator to inject OS commands that execute with root privileges when the crafted timezone value is subsequently processed. This vulnerability can be chained with CVE-2026-116606",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Barracuda Networks",
+      "vulnerability_name": "Barracuda Networks Multiple Products OS Command Injection Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2026-111793",
+      "cwes": [
+        "CWE-669"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-10",
+      "due_date": "2026-11-24",
+      "forensic_triage": "No",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://github.com/GISOpenwave/security-advisories-public/blob/main/CAN-2026-2032674.md ; https://jvn.jp/en/vu/JVNVU93403064/ ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-111793",
+      "product": "Webtop Media Transcoder",
+      "record_sha256": "125119c74e6e7b6029cb3495b4aa1eda4526e036d06f41f8d163fcc54458e16f",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Openwave Messaging Limited Webtop Media Transcoder contains an incorrect resource transfer between spheres vulnerability that may allow an authenticated user to process and convert unintended document types if bypassing the Webmail experience.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Openwave Messaging Limited",
+      "vulnerability_name": "Openwave Messaging Limited Webtop Media Transcoder Incorrect Resource Transfer Between Spheres Vulnerability"
+    },
+    {
       "cve_id": "CVE-2026-114625",
       "cwes": [
         "CWE-89"
@@ -33259,6 +33301,27 @@
       "truncated_fields": [],
       "vendor_project": "Google",
       "vulnerability_name": "Google Chromium V8 Out-of-Bounds Read and Write Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2026-116606",
+      "cwes": [
+        "CWE-288"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-10",
+      "due_date": "2026-11-13",
+      "forensic_triage": "Yes",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://trust.barracuda.com/security/pre-authentication-authorization-bypass-command-injection ; https://github.com/mandiant/Vulnerability-Disclosures/blob/master/2026/MNDT-2026-0042.md ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-116606",
+      "product": "Barracuda Email Security Gateway (ESG)",
+      "record_sha256": "83af4dfe8fe0907cedeb2adf61374f709e93c98b40d54072121efe5300334486",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Barracuda Networks Email Security Gateway (ESG) contains an authentication bypass using an alternate path or channel that could allow an unauthenticated remote attacker to invoke a configuration-import function and restore a crafted, compatible backup archive, resulting in unauthorized modification of the appliance’s global configuration. This vulnerability can be chained with CVE-2026-111560.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Barracuda Networks",
+      "vulnerability_name": "Barracuda Networks Email Security Gateway (ESG) Authentication Bypass Using an Alternate Path or Channel Vulnerability"
     },
     {
       "cve_id": "CVE-2026-116779",
@@ -33366,6 +33429,48 @@
       "truncated_fields": [],
       "vendor_project": "IBM",
       "vulnerability_name": "IBM Aspera Faspex Incorrect Authorization Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2026-124194",
+      "cwes": [
+        "CWE-356"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-10",
+      "due_date": "2026-11-24",
+      "forensic_triage": "No",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://msrc.microsoft.com/update-guide/en-US/vulnerability/CVE-2026-124194 ; https://nvd.nist.gov/vuln/detail/CVE-2026-124194",
+      "product": "Office",
+      "record_sha256": "0e47201e3fdd6df779f27d4c41fd566234327b7888f58b24c1364637b4bc4df9",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Microsoft Office Outlook contains a missing user interaction for potentially unsafe action vulnerability that allows an unauthorized attacker to perform spoofing over a network.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Microsoft",
+      "vulnerability_name": "Microsoft Office Outlook Missing User Interaction for Potentially Unsafe Action Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2026-125350",
+      "cwes": [
+        "CWE-416"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-10",
+      "due_date": "2026-11-24",
+      "forensic_triage": "No",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_018223192.html ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-125350",
+      "product": "Chromium",
+      "record_sha256": "a133332bf322f515ac58f9fcea083c640390a2383ba6ed52ecca26e0d451b323",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Google Chromium contains a use-after-free vulnerability in the XML component that could allow a remote attacker to execute arbitrary code inside the sandbox via a specially crafted webpage. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Google",
+      "vulnerability_name": "Google Chromium Use-After-Free Vulnerability"
     },
     {
       "cve_id": "CVE-2026-12569",
@@ -33913,6 +34018,27 @@
       "truncated_fields": [],
       "vendor_project": "Cisco",
       "vulnerability_name": "Cisco Secure Firewall Management Center Use of Hard-coded Password Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2026-20320",
+      "cwes": [
+        "CWE-611"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-10",
+      "due_date": "2026-11-24",
+      "forensic_triage": "No",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-bworks-xxe-uwUd7CEt ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-20320",
+      "product": "BroadWorks",
+      "record_sha256": "0eddecb7c0d3201e7931c7e274389b071d2a03e0600680e5bd71ff9adf22f562",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Cisco BroadWorks contains an improper restriction of XML external entity reference vulnerability that could allow an unauthenticated, remote attacker to read sensitive configuration information on an affected system.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Cisco",
+      "vulnerability_name": "Cisco BroadWorks Improper Restriction of XML External Entity Reference Vulnerability"
     },
     {
       "cve_id": "CVE-2026-20349",
