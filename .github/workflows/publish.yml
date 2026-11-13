@@ -1,6 +1,6 @@
 name: Publish GitHub Pages
 
-run-name: ${{ github.event_name == 'workflow_run' && format('Auto-publish Collect {0}', github.event.workflow_run.id) || format('Publish Collect {0}', github.event.inputs.collect_run_id) }}
+run-name: ${{ github.event_name == 'workflow_run' && format('Auto-publish {0} {1}', github.event.workflow_run.name, github.event.workflow_run.id) || format('Publish Collect {0}', github.event.inputs.collect_run_id) }}
 
 # Manual dispatch remains the explicit fallback. Automated publication is
 # event-driven from a successful scheduled Collect run and is bound to that
@@ -8,7 +8,7 @@ run-name: ${{ github.event_name == 'workflow_run' && format('Auto-publish Collec
 
 on:
   workflow_run:
-    workflows: ["Collect"]
+    workflows: ["Collect", "Collect malware"]
     types: [completed]
     branches: [main]
   workflow_dispatch:
@@ -36,6 +36,7 @@ jobs:
     runs-on: ubuntu-24.04
     if: >
       github.event_name == 'workflow_run' &&
+      github.event.workflow_run.name == 'Collect' &&
       (
         github.event.workflow_run.conclusion != 'success' ||
         github.event.workflow_run.event != 'schedule' ||
@@ -172,6 +173,10 @@ jobs:
             --github-output "${GITHUB_OUTPUT}" \
             --summary-path "${GITHUB_STEP_SUMMARY}"
 
+      - name: Add malware data
+        id: malware
+        uses: ./.github/actions/malware-site
+
       - name: Promote snapshot into site data
         if: steps.decide.outputs.decision == 'publish'
         env:
@@ -198,7 +203,7 @@ jobs:
           python -m silastron_pulse build-home-page --published-dir _site/data --template preview/index.html --site-dir _site
           python -m silastron_pulse build-static-cve-pages --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com
           python -m silastron_pulse prune-deployed-snapshots --data-dir _site/data
-          python -m silastron_pulse build-site-files --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com --commit "${{ github.sha }}"
+          python -m silastron_pulse build-site-files --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com --commit "${{ github.sha }}" --malware-state-commit "${{ steps.malware.outputs.commit }}"
           python -m silastron_pulse check-site-budget --site-dir _site
           python -m silastron_pulse validate _site/data/manifest.json
           python -m silastron_pulse validate _site/data/latest.json
@@ -236,7 +241,7 @@ jobs:
           python3 -m silastron_pulse build-home-page --published-dir _site/data --template preview/index.html --site-dir _site
           python3 -m silastron_pulse build-static-cve-pages --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com
           python3 -m silastron_pulse prune-deployed-snapshots --data-dir _site/data
-          python3 -m silastron_pulse build-site-files --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com --commit "${{ github.sha }}"
+          python3 -m silastron_pulse build-site-files --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com --commit "${{ github.sha }}" --malware-state-commit "${{ steps.malware.outputs.commit }}"
           python3 -m silastron_pulse check-site-budget --site-dir _site
           python3 -m silastron_pulse validate _site/data/manifest.json
           python3 -m silastron_pulse validate _site/data/latest.json
@@ -751,6 +756,10 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Add malware data
+        id: malware
+        uses: ./.github/actions/malware-site
+
       - name: Build site with failed attempt recorded
         env:
           PYTHONPATH: src
@@ -776,7 +785,7 @@ jobs:
           python3 -m silastron_pulse build-home-page --published-dir _site/data --template preview/index.html --site-dir _site
           python3 -m silastron_pulse build-static-cve-pages --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com
           python3 -m silastron_pulse prune-deployed-snapshots --data-dir _site/data
-          python3 -m silastron_pulse build-site-files --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com --commit "${{ github.sha }}"
+          python3 -m silastron_pulse build-site-files --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com --commit "${{ github.sha }}" --malware-state-commit "${{ steps.malware.outputs.commit }}"
           python3 -m silastron_pulse check-site-budget --site-dir _site
           python3 -m silastron_pulse validate _site/data/manifest.json
           python3 -m silastron_pulse validate _site/data/latest.json
@@ -855,3 +864,88 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "verification-status failed collect ${RUN_ID}"
           git push origin HEAD:pulse-state
+
+  # Malware collect finished: rebuild the whole site from each source's last-good snapshot. The KEV
+  # snapshot is not promoted here (that needs its own bound Collect run); this is the frontend-only path.
+  build-malware-site:
+    name: Build site after a malware collect
+    runs-on: ubuntu-24.04
+    if: >
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.name == 'Collect malware' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    steps:
+      - name: Checkout publisher
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - name: Checkout pulse-state
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          ref: pulse-state
+          path: pulse-state
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Add malware data
+        id: malware
+        uses: ./.github/actions/malware-site
+
+      - name: Copy published data without promote
+        env:
+          PYTHONPATH: src
+        run: |
+          set -euo pipefail
+          if [ ! -f pulse-state/published/latest.json ]; then
+            echo "Published snapshot is missing"
+            exit 1
+          fi
+          python3 -m silastron_pulse verify-publication-status \
+            --published-dir pulse-state/published \
+            --require consistent
+          python3 -m silastron_pulse verify-published-site \
+            --published-dir pulse-state/published
+          mkdir -p _site/data
+          python3 -m silastron_pulse safe-copy \
+            --src pulse-state/published \
+            --dst _site/data
+          python3 -m silastron_pulse build-catalog-index --published-dir _site/data
+          cp preview/styles.css preview/app.js preview/theme.js _site/
+          python3 -m silastron_pulse build-home-page --published-dir _site/data --template preview/index.html --site-dir _site
+          python3 -m silastron_pulse build-static-cve-pages --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com
+          python3 -m silastron_pulse prune-deployed-snapshots --data-dir _site/data
+          python3 -m silastron_pulse build-site-files --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com --commit "${{ github.sha }}" --malware-state-commit "${{ steps.malware.outputs.commit }}"
+          python3 -m silastron_pulse check-site-budget --site-dir _site
+          python3 -m silastron_pulse verify-published-site \
+            --published-dir pulse-state/published \
+            --site-data _site/data
+          python3 -m silastron_pulse validate _site/data/manifest.json
+          python3 -m silastron_pulse validate _site/data/latest.json
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: _site
+
+  deploy-malware-site:
+    name: Deploy Pages after a malware collect
+    needs: build-malware-site
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+      contents: read
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
