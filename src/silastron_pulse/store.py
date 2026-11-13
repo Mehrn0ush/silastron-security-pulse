@@ -220,6 +220,7 @@ def verify_publication_transition(
     max_depth: int,
 ) -> dict[str, Any]:
     """Refuse persist when the comparison baseline is not the live published latest."""
+    assert_snapshots_immutable(incoming_dir, current_dir)
     incoming_latest = load_snapshot(
         incoming_dir / "latest.json", max_bytes=max_bytes, max_depth=max_depth
     )
@@ -321,8 +322,59 @@ def verify_published_site(
     }
 
 
+DEPLOYED_SNAPSHOT_COUNT = 2
+
+
+def deployed_snapshot_names(data_dir: Path) -> list[str]:
+    """File names under snapshots/ that the deployed site carries.
+
+    The current snapshot (named by manifest.latest_snapshot) plus the newest
+    other one, so at most two. Everything else stays in pulse-state only.
+    Selection reads the directory it is given; callers pass pulse-state or a
+    pre-prune copy of it, never the live site.
+    """
+    snap_dir = data_dir / "snapshots"
+    names = sorted(p.name for p in snap_dir.glob("*.json") if p.is_file()) if snap_dir.is_dir() else []
+    current: str | None = None
+    manifest_path = data_dir / "manifest.json"
+    if manifest_path.is_file():
+        try:
+            manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            raise PublishGuardError(f"Cannot read manifest.json to pick deployed snapshots: {exc}") from exc
+        latest = manifest.get("latest_snapshot") if isinstance(manifest, dict) else None
+        if isinstance(latest, str) and latest:
+            current = Path(latest).name
+            if current not in names:
+                raise PublishGuardError(f"manifest.latest_snapshot {latest} is not in snapshots/")
+    if current is None:
+        return names[-DEPLOYED_SNAPSHOT_COUNT:]
+    others = [name for name in names if name != current]
+    return sorted([current, *others[-(DEPLOYED_SNAPSHOT_COUNT - 1):]])
+
+
+def prune_deployed_snapshots(data_dir: Path) -> list[str]:
+    """Remove all but the deployed snapshots from a site data copy. Returns removed names."""
+    keep = set(deployed_snapshot_names(data_dir))
+    removed: list[str] = []
+    snap_dir = data_dir / "snapshots"
+    if not snap_dir.is_dir():
+        return removed
+    for path in sorted(snap_dir.iterdir()):
+        if path.is_symlink():
+            raise PublishGuardError(f"Refusing symlink in snapshots/: {path.name}")
+        if path.is_file() and path.name not in keep:
+            path.unlink()
+            removed.append(path.name)
+    return removed
+
+
 def assert_site_data_matches_published(site_data: Path, published_dir: Path) -> None:
-    """Frontend deploy must copy published JSON bytes without rewriting them."""
+    """Frontend deploy must copy published JSON bytes without rewriting them.
+
+    snapshots/ is the one exception to "every published file": the site must
+    carry exactly the deployed snapshots, byte for byte, and no others.
+    """
     published_files = sorted(
         path.relative_to(published_dir) for path in published_dir.rglob("*") if path.is_file()
     )
@@ -331,13 +383,35 @@ def assert_site_data_matches_published(site_data: Path, published_dir: Path) -> 
     for name in PUBLISHED_SITE_FILES:
         if Path(name) not in published_files:
             raise PublishGuardError(f"Published {name} is missing")
+    expected_snapshots = {Path("snapshots") / name for name in deployed_snapshot_names(published_dir)}
+    site_snap_dir = site_data / "snapshots"
+    site_snapshots = (
+        {Path("snapshots") / p.name for p in site_snap_dir.iterdir() if p.is_file()} if site_snap_dir.is_dir() else set()
+    )
+    extra = sorted(str(p) for p in site_snapshots - expected_snapshots)
+    if extra:
+        raise PublishGuardError(f"Frontend deploy carries snapshots that must not be deployed: {', '.join(extra)}")
     for rel in published_files:
+        if rel.parts[0] == "snapshots" and rel not in expected_snapshots:
+            continue
         left = site_data / rel
         right = published_dir / rel
         if not left.exists():
             raise PublishGuardError(f"Frontend deploy is missing {rel}")
         if sha256_bytes(left.read_bytes()) != sha256_bytes(right.read_bytes()):
             raise PublishGuardError(f"Frontend deploy mutated published {rel}")
+
+
+def assert_snapshots_immutable(incoming_dir: Path, current_dir: Path) -> None:
+    """A snapshot present on both sides must be byte-identical."""
+    incoming = incoming_dir / "snapshots"
+    current = current_dir / "snapshots"
+    if not incoming.is_dir() or not current.is_dir():
+        return
+    for path in sorted(incoming.glob("*.json")):
+        other = current / path.name
+        if other.is_file() and sha256_bytes(path.read_bytes()) != sha256_bytes(other.read_bytes()):
+            raise PublishGuardError(f"Refusing to change immutable snapshot {path.name}")
 
 
 def _history_path(published_dir: Path) -> Path:
