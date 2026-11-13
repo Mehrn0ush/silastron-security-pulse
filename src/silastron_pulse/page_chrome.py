@@ -162,7 +162,7 @@ _SHELL_PRE = """<!DOCTYPE html>
 """
 
 
-def shell_page(*, head: str, h1: Node | str, nav_current: str, body: str, footer: Node) -> str:
+def shell_page(*, head: str, h1: Node | str, nav_current: str, body: str, footer: Node, scripts: tuple[str, ...] = ()) -> str:
     """A whole page: shared header/nav/footer around an already-built, already-escaped body."""
     links = (("/", "Home"), ("/malware/", "Malicious packages"), ("/methodology/", "Methodology"))
     nav = fragment(
@@ -173,5 +173,6 @@ def shell_page(*, head: str, h1: Node | str, nav_current: str, body: str, footer
         + body
         + "\n    </main>\n    "
         + footer.html()
+        + "".join(f'\n    <script src="{src}"></script>' for src in scripts)
         + "\n  </body>\n</html>\n"
     )

@@ -1,0 +1,17 @@
+[
+  ["PyPI", "Foo_Bar.baz--Q", "foo-bar-baz-q"],
+  ["PyPI", "Django", "django"],
+  ["PyPI", "a.b_c-d", "a-b-c-d"],
+  ["PyPI", "ZOPE.interface", "zope-interface"],
+  ["npm", "@Scope/Pkg", "@scope/pkg"],
+  ["npm", "Left_Pad", "left_pad"],
+  ["NuGet", "Newtonsoft.Json", "newtonsoft.json"],
+  ["crates.io", "Serde_JSON", "serde_json"],
+  ["Packagist", "Vendor/Pkg", "vendor/pkg"],
+  ["RubyGems", "Rails_Admin", "Rails_Admin"],
+  ["Go", "github.com/Foo/Bar", "github.com/Foo/Bar"],
+  ["Maven", "Org.Foo:Bar", "Org.Foo:Bar"],
+  ["VSCode", "Pub.Ext", "Pub.Ext"],
+  ["npm", "pаckage", "pаckage"],
+  ["npm", "İstanbul", "i̇stanbul"]
+]

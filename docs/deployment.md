@@ -199,3 +199,11 @@ outbound link per report is the upstream advisory record. `/malware/feed.xml` ha
 `/feed.xml` combines it with the KEV entries. All malware pages are in the sitemap, with `lastmod` taken from the digest
 (`updated`, else week end) or the collection date. Hand-written notes go in `data/commentary/<ISO-week>.md`
 (see its README); the methodology text carries a revision date guarded by a hash test.
+
+## Check a package
+
+`preview/malware-check.js` (copied to `/malware-check.js` by every site build) powers the "Check a package" form on
+`/malware/`. Exact lookup only: it fetches `/malware/data/index/manifest.json` and `status.json`, normalises the typed
+name with the registry rule, picks the shard by longest name prefix, and compares normalised names. Pasted
+`package.json`, `requirements.txt` and `Cargo.toml` are parsed in the page. The only requests are GETs under
+`/malware/data/`. Normalisation is shared with the Python side through `tests/fixtures/normalize_vectors.json`.

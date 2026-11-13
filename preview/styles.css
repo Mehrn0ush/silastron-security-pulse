@@ -777,3 +777,18 @@ footer {
 main code {
   overflow-wrap: anywhere;
 }
+
+.check-form label {
+  font-weight: 600;
+}
+
+.check-form textarea {
+  width: 100%;
+  max-width: 40rem;
+  font: inherit;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+#check-results {
+  margin-top: 1rem;
+}
