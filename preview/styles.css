@@ -718,3 +718,62 @@ footer {
     transition: none !important;
   }
 }
+
+/* Malicious package pulse */
+.chart {
+  display: block;
+  width: 100%;
+  max-width: 34rem;
+  height: auto;
+  margin: 0.4rem 0;
+}
+
+.chart .bar {
+  fill: var(--accent);
+}
+
+.chart .bar.spike {
+  fill: var(--warn);
+  stroke: var(--fg);
+  stroke-width: 1;
+}
+
+.chart .spike-mark {
+  fill: var(--warn);
+  font-size: 11px;
+}
+
+.chart .axis {
+  stroke: var(--muted);
+  stroke-width: 1;
+}
+
+.caveat {
+  border-left: 3px solid var(--warn);
+  padding-left: 0.8rem;
+}
+
+.note-inline {
+  color: var(--muted);
+  font-size: 0.85em;
+}
+
+.digest-list {
+  columns: 14rem;
+  padding-left: 1.2rem;
+}
+
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+}
+
+.chart-table {
+  min-width: 0;
+  max-width: 28rem;
+}
+
+main code {
+  overflow-wrap: anywhere;
+}

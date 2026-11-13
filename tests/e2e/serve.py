@@ -20,7 +20,7 @@ FIXTURE_COLLECTED = "2026-11-01T12:00:00+00:00"
 FIXTURE_PUBLISHED = "2026-11-01T14:00:00+00:00"
 FIXTURE_NOW = "2026-11-01T15:00:00+00:00"
 SRC = ROOT / "src"
-for path in (ROOT, SRC):
+for path in (ROOT, SRC, ROOT / "tests"):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
@@ -89,6 +89,21 @@ def build_site(out: Path) -> None:
     )
     _write_history(data)
 
+    import tempfile
+
+    from silastron_pulse.malware.collect import collect_malware
+    from silastron_pulse.malware.site_data import build_malware_site_data
+    from support_malware import write_fixture_clone  # noqa: E402
+
+    with tempfile.TemporaryDirectory() as malware_tmp:
+        clone = write_fixture_clone(Path(malware_tmp) / "clone")
+        state = Path(malware_tmp) / "state"
+        state.mkdir()
+        outcome = collect_malware(clone_dir=clone, state_dir=state, upstream_sha="f" * 40, now=datetime.fromisoformat(FIXTURE_COLLECTED))
+        if not outcome.ok:
+            raise SystemExit(f"fixture malware collection failed: {outcome.problems}")
+        build_malware_site_data(state_dir=state, site_dir=out, licence_file=ROOT / "vendor" / "openssf-malicious-packages" / "LICENSE")
+
     from silastron_pulse.home_page import build_home_page  # noqa: E402
     from silastron_pulse.methodology_page import build_methodology_page  # noqa: E402
 
@@ -108,6 +123,15 @@ def build_site(out: Path) -> None:
         out,
         base_url=BASE_URL,
         footer=page_chrome.footer(last_collected=collected, last_published=published_at),
+    )
+    from silastron_pulse.malware.pages import build_malware_pages
+
+    build_malware_pages(
+        data_dir=out / "malware" / "data",
+        site_dir=out,
+        base_url=BASE_URL,
+        footer=page_chrome.footer(last_collected=collected, last_published=published_at),
+        now=datetime.fromisoformat(FIXTURE_NOW),
     )
     build_static_cve_pages(published_dir=data, site_dir=out, base_url=BASE_URL)
     build_site_files(

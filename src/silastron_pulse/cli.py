@@ -145,6 +145,13 @@ def main(argv: list[str] | None = None) -> int:
     mal_collect.add_argument("--now", help="ISO 8601 instant (default: current time)")
     mal_collect.add_argument("--summary-file", type=Path)
 
+    mal_pages = sub.add_parser("build-malware-pages", help="Pre-render the /malware/ pages from _site/malware/data")
+    mal_pages.add_argument("--site-dir", type=Path, required=True)
+    mal_pages.add_argument("--base-url", required=True)
+    mal_pages.add_argument("--published-dir", type=Path, required=True, help="KEV data dir (for footer times)")
+    mal_pages.add_argument("--commentary-dir", type=Path, default=Path("data/commentary"))
+    mal_pages.add_argument("--now", help="ISO 8601 instant for the stale check (default: current time)")
+
     mal_site = sub.add_parser("build-malware-data", help="Write /malware/data from the malware-state tree")
     mal_site.add_argument("--state-dir", type=Path, required=True)
     mal_site.add_argument("--site-dir", type=Path, required=True)
@@ -716,6 +723,26 @@ def main(argv: list[str] | None = None) -> int:
             if args.summary_file:
                 args.summary_file.write_text(outcome.summary_markdown, encoding="utf-8")
             return 0 if outcome.ok else 1
+        if args.command == "build-malware-pages":
+            from silastron_pulse import page_chrome
+            from silastron_pulse.home_page import footer_times, parse_instant
+            from silastron_pulse.malware.pages import build_malware_pages
+
+            data_dir = args.site_dir / "malware" / "data"
+            if not (data_dir / "status.json").is_file():
+                print("no malware data in the site; skipping /malware/ pages")
+                return 0
+            collected, published = footer_times(args.published_dir)
+            count = build_malware_pages(
+                data_dir=data_dir,
+                site_dir=args.site_dir,
+                base_url=args.base_url,
+                footer=page_chrome.footer(last_collected=collected, last_published=published),
+                commentary_dir=args.commentary_dir if args.commentary_dir.is_dir() else None,
+                now=parse_instant(args.now) if args.now else None,
+            )
+            print(f"wrote {count} /malware/ pages")
+            return 0
         if args.command == "build-malware-data":
             from silastron_pulse.malware.site_data import build_malware_site_data
 

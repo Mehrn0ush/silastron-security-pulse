@@ -21,8 +21,13 @@ FOOTER_LINKS = (
 FEEDS = (
     ("Silastron Security Pulse: all updates", "/feed.xml"),
     ("Silastron Security Pulse: CISA KEV additions", "/kev/feed.xml"),
+    ("Silastron Security Pulse: malicious package digests", "/malware/feed.xml"),
 )
-SUBSCRIBE = (("All updates", "/feed.xml"), ("CISA KEV additions", "/kev/feed.xml"))
+SUBSCRIBE = (
+    ("All updates", "/feed.xml"),
+    ("CISA KEV additions", "/kev/feed.xml"),
+    ("Malicious package digests", "/malware/feed.xml"),
+)
 
 
 def csp(*, script_hash: str | None, self_scripts: bool, connect_self: bool, images: bool) -> str:
@@ -125,3 +130,48 @@ def footer(*, last_collected: str, last_published: str) -> Node:
 
 def website_ld(base_url: str) -> dict[str, Any]:
     return {"@type": "WebSite", "@id": f"{base_url}/#website", "name": SITE_NAME, "url": f"{base_url}/"}
+
+
+_SHELL_PRE = """<!DOCTYPE html>
+<html lang="en" data-theme="system">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {head}
+    <script src="/theme.js"></script>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="brand-lockup">
+        <p class="brand-name"><a class="brand-link" href="https://silastron.com" rel="noopener noreferrer">Silastron</a></p>
+        <p class="product-name">Security Pulse</p>
+      </div>
+      <div class="header-tools">
+        <div class="theme-switch" role="group" aria-label="Color theme">
+          <button type="button" data-theme-choice="system" aria-pressed="true">System</button>
+          <button type="button" data-theme-choice="light" aria-pressed="false">Light</button>
+          <button type="button" data-theme-choice="dark" aria-pressed="false">Dark</button>
+        </div>
+      </div>
+      <div class="header-copy"><h1>{h1}</h1></div>
+      <nav class="page-nav" aria-label="Page">{nav}</nav>
+    </header>
+    <main id="main">
+"""
+
+
+def shell_page(*, head: str, h1: Node | str, nav_current: str, body: str, footer: Node) -> str:
+    """A whole page: shared header/nav/footer around an already-built, already-escaped body."""
+    links = (("/", "Home"), ("/malware/", "Malicious packages"), ("/methodology/", "Methodology"))
+    nav = fragment(
+        *[el("a", {"href": href, "aria-current": "page" if href == nav_current else None}, label) for href, label in links]
+    )
+    return (
+        _SHELL_PRE.replace("{head}", head).replace("{h1}", fragment(h1)).replace("{nav}", nav)
+        + body
+        + "\n    </main>\n    "
+        + footer.html()
+        + "\n  </body>\n</html>\n"
+    )

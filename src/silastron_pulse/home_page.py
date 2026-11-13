@@ -972,6 +972,8 @@ def build_home_page(
         csp_value=page_chrome.csp(script_hash=ld_hash, self_scripts=True, connect_self=True, images=True),
         ld_block=ld_block,
     )
+    has_malware = (site_dir / "malware" / "data" / "status.json").is_file()
+    slots["malware-nav"] = '<a href="/malware/">Malicious packages</a>' if has_malware else ""
     collected, published = footer_times(published_dir)
     slots["footer"] = page_chrome.footer(last_collected=collected, last_published=published).html()
     page = fill_template(template_path.read_text(encoding="utf-8"), slots)

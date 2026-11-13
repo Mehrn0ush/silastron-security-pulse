@@ -171,7 +171,7 @@ class SiteFileTests(unittest.TestCase):
             for prop in ("og:title", "og:description", "og:type", "og:url", "og:site_name"):
                 self.assertTrue(head.named("property", prop), f"{path} {prop}")
             alternates = {l["href"] for l in head.links if l.get("rel") == "alternate"}
-            self.assertEqual(alternates, {BASE + "/feed.xml", BASE + "/kev/feed.xml"})
+            self.assertEqual(alternates, {BASE + "/feed.xml", BASE + "/kev/feed.xml", BASE + "/malware/feed.xml"})
         self.assertEqual(len(titles), 3)
 
     def test_json_ld_dataset_on_home_and_website_once(self) -> None:
@@ -204,7 +204,7 @@ class SiteFileTests(unittest.TestCase):
 
     def test_every_page_footer_has_the_required_links_and_times(self) -> None:
         needed = {"https://silastron.com/newsletter/", "https://pqc.silastron.com", "https://silastron.com",
-                  page_chrome.REPO_URL, page_chrome.REPO_URL + "/issues", "/feed.xml", "/kev/feed.xml"}
+                  page_chrome.REPO_URL, page_chrome.REPO_URL + "/issues", "/feed.xml", "/kev/feed.xml", "/malware/feed.xml"}
         for file in [self.site / "index.html", self.site / "methodology" / "index.html",
                      *sorted((self.site / "cve").glob("CVE-*/index.html"))[:3]]:
             head = parse(file)
