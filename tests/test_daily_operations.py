@@ -93,7 +93,7 @@ class PublishIsolationTests(unittest.TestCase):
         text = _workflow("publish.yml")
         self.assertIn("workflow_dispatch:", text)
         self.assertIn("workflow_run:", text)
-        self.assertIn('workflows: ["Collect"]', text)
+        self.assertIn('workflows: ["Collect", "Collect malware"]', text)
         self.assertIn("branches: [main]", text)
         self.assertNotIn("schedule:", text)
         self.assertNotIn("pull_request:", text)

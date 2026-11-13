@@ -587,7 +587,7 @@ class AutoPublishWorkflowTests(unittest.TestCase):
         frontend = _workflow("deploy-frontend.yml")
         self.assertIn("workflow_run:", publish)
         self.assertIn("branches: [main]", publish)
-        self.assertIn("Auto-publish Collect", publish)
+        self.assertIn("format('Auto-publish {0} {1}', github.event.workflow_run.name", publish)
         self.assertIn("PUBLISH_MODE", publish)
         self.assertIn("head_repository.full_name == github.repository", publish)
         self.assertIn("persist-credentials: false", publish)

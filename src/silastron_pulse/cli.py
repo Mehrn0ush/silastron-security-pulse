@@ -136,6 +136,20 @@ def main(argv: list[str] | None = None) -> int:
     )
     prune.add_argument("--data-dir", type=Path, required=True)
 
+    mal_collect = sub.add_parser(
+        "malware-collect", help="Ingest a clone of ossf/malicious-packages into the malware-state tree"
+    )
+    mal_collect.add_argument("--clone-dir", type=Path, required=True)
+    mal_collect.add_argument("--state-dir", type=Path, required=True)
+    mal_collect.add_argument("--upstream-sha", required=True)
+    mal_collect.add_argument("--now", help="ISO 8601 instant (default: current time)")
+    mal_collect.add_argument("--summary-file", type=Path)
+
+    mal_site = sub.add_parser("build-malware-data", help="Write /malware/data from the malware-state tree")
+    mal_site.add_argument("--state-dir", type=Path, required=True)
+    mal_site.add_argument("--site-dir", type=Path, required=True)
+    mal_site.add_argument("--licence", type=Path, default=Path("vendor/openssf-malicious-packages/LICENSE"))
+
     home = sub.add_parser(
         "build-home-page",
         help="Pre-render the home page sections and the methodology page",
@@ -661,7 +675,7 @@ def main(argv: list[str] | None = None) -> int:
                 base_url=args.base_url,
                 commit=args.commit,
                 built_at=built_at,
-                malware_state_commit=args.malware_state_commit,
+                malware_state_commit=args.malware_state_commit or None,
             )
             print(f"wrote sitemap ({stats['sitemap_urls']} URLs), feeds ({stats['feed_entries']} entries), build.json")
             return 0
@@ -685,6 +699,30 @@ def main(argv: list[str] | None = None) -> int:
 
             removed = prune_deployed_snapshots(args.data_dir)
             print(f"pruned {len(removed)} snapshot(s) from the deployed copy")
+            return 0
+        if args.command == "malware-collect":
+            from datetime import datetime, timezone
+
+            from silastron_pulse.home_page import parse_instant
+            from silastron_pulse.malware.collect import collect_malware
+
+            now = parse_instant(args.now) if args.now else datetime.now(timezone.utc)
+            if now is None:
+                raise PulseError(f"invalid --now: {args.now}")
+            outcome = collect_malware(
+                clone_dir=args.clone_dir, state_dir=args.state_dir, upstream_sha=args.upstream_sha, now=now
+            )
+            print(outcome.summary_markdown)
+            if args.summary_file:
+                args.summary_file.write_text(outcome.summary_markdown, encoding="utf-8")
+            return 0 if outcome.ok else 1
+        if args.command == "build-malware-data":
+            from silastron_pulse.malware.site_data import build_malware_site_data
+
+            status = build_malware_site_data(
+                state_dir=args.state_dir, site_dir=args.site_dir, licence_file=args.licence
+            )
+            print(f"wrote /malware/data: {status['active']} active reports, collected {status['collected_at']}")
             return 0
         if args.command == "build-home-page":
             from datetime import datetime, timezone
