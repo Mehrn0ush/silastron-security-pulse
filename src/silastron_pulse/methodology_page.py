@@ -98,6 +98,6 @@ def build_methodology_page(site_dir: Path, *, base_url: str, footer: Node) -> No
         + _BODY
         + "</section>\n    </main>\n    "
         + footer.html()
-        + "\n  </body>\n</html>\n"
+        + '\n    <script src="/stale.js"></script>\n  </body>\n</html>\n'
     )
     (target / "index.html").write_text(page, encoding="utf-8")

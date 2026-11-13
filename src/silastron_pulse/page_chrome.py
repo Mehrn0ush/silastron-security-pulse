@@ -105,7 +105,8 @@ def subscribe_nav() -> Node:
     )
 
 
-def footer(*, last_collected: str, last_published: str) -> Node:
+def footer(*, last_collected: str, last_published: str, collected_iso: str | None = None,
+           published_iso: str | None = None) -> Node:
     link_nodes: list[Any] = []
     for index, (label, href) in enumerate(FOOTER_LINKS):
         if index:
@@ -113,7 +114,8 @@ def footer(*, last_collected: str, last_published: str) -> Node:
         link_nodes.append(el("a", {"href": href, "rel": "noopener noreferrer"}, label))
     return el(
         "footer",
-        None,
+        # Same-origin stale.js reads these two stamps and warns when the page outlives its data.
+        {"data-collected": collected_iso, "data-built": published_iso},
         el("p", None, "A Silastron research dashboard."),
         el("p", {"class": "footer-links"}, *link_nodes),
         subscribe_nav(),
@@ -173,6 +175,6 @@ def shell_page(*, head: str, h1: Node | str, nav_current: str, body: str, footer
         + body
         + "\n    </main>\n    "
         + footer.html()
-        + "".join(f'\n    <script src="{src}"></script>' for src in scripts)
+        + "".join(f'\n    <script src="{src}"></script>' for src in (*scripts, "/stale.js"))
         + "\n  </body>\n</html>\n"
     )

@@ -1,0 +1,49 @@
+name: Watchdog
+
+# Opens one issue labelled site-stale when the live site's data is stale or the site is unreachable, and
+# closes it on recovery. Runs every 6 hours and after Collect, Collect malware and Publish finish.
+# Read-only except for issues. Scheduled workflows in a public repository are disabled by GitHub after
+# 60 days without repository activity; see docs/operations.md.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_run:
+    workflows: ["Collect", "Collect malware", "Publish GitHub Pages"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  issues: write
+  contents: read
+
+concurrency:
+  group: watchdog
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check the live site
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Check freshness and sync the issue
+        env:
+          PYTHONPATH: src
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m silastron_pulse watchdog \
+            --url https://pulse.silastron.com \
+            --repo "${{ github.repository }}" \
+            --owner "${{ github.repository_owner }}"

@@ -104,7 +104,7 @@ def render_cve_page(entry: dict[str, Any], *, base_url: str, footer_html: str | 
         title=title,
         description=str(description)[:300],
         og_type="article",
-        csp_value=build_csp(script_hash=ld_hash, self_scripts=False, connect_self=False, images=False),
+        csp_value=build_csp(script_hash=ld_hash, self_scripts=True, connect_self=False, images=False),
         ld_block=None,
     )
     sources = entry.get("intelligence", {}).get("sources", {}) if isinstance(entry.get("intelligence"), dict) else {}
@@ -202,6 +202,7 @@ no composite risk score, and this is not a statement about Silastron.com or cust
 <p><a href="/#cve/{html.escape(cve_id, quote=True)}">View full source-attributed intelligence in the interactive explorer</a></p>
 <script type="application/ld+json">{json_ld}</script>
 {footer_html or ""}
+<script src="/stale.js"></script>
 </body>
 </html>
 """
@@ -219,11 +220,9 @@ def build_static_cve_pages(*, published_dir: Path, site_dir: Path, base_url: str
     if not index_path.is_file():
         raise FileNotFoundError(f"{index_path} is missing; run promote before building static pages")
     index = json.loads(index_path.read_text(encoding="utf-8"))
-    from silastron_pulse.home_page import footer_times
-    from silastron_pulse.page_chrome import footer
+    from silastron_pulse.home_page import footer_for
 
-    collected, published = footer_times(published_dir)
-    footer_html = footer(last_collected=collected, last_published=published).html()
+    footer_html = footer_for(published_dir).html()
     cve_root = site_dir / "cve"
     cve_root.mkdir(parents=True, exist_ok=True)
     current_ids: set[str] = set()
