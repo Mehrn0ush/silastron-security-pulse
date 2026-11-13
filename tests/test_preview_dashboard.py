@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import unittest
+
+from tests.support import rendered_home_html
 import re
 from pathlib import Path
 
@@ -49,7 +51,7 @@ class PreviewDashboardTests(unittest.TestCase):
         self.assertIn("cvssMatches", js)
         self.assertIn("buildRecordDetails", js)
         self.assertIn("textContent", js)
-        html = (ROOT / "preview" / "index.html").read_text(encoding="utf-8")
+        html = (ROOT / "preview" / "index.html").read_text(encoding="utf-8") + rendered_home_html()
         self.assertIn('id="catalog-cvss"', html)
         self.assertIn('id="technical-details"', html)
         self.assertIn("No composite risk score", html)
@@ -121,7 +123,7 @@ class PreviewDashboardTests(unittest.TestCase):
         self.assertNotIn('style="', html)
 
     def test_csp_still_forbids_third_party_and_form_actions(self) -> None:
-        html = (ROOT / "preview" / "index.html").read_text(encoding="utf-8")
+        html = rendered_home_html()
         self.assertIn("form-action 'none'", html)
         self.assertIn("connect-src 'self'", html)
         self.assertIn("frame-ancestors 'none'", html)

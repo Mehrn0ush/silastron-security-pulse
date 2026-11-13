@@ -209,7 +209,10 @@ class BuildTests(unittest.TestCase):
                               ("publication-status", {"state": "consistent"}), ("verification-status", verification())):
                 (pub / f"{name}.json").write_text(json.dumps(doc), encoding="utf-8")
             build_home_page(published_dir=pub, template_path=ROOT / "preview" / "index.html", site_dir=site, now=NOW)
-            build_methodology_page(site)
+            from silastron_pulse import page_chrome
+
+            build_methodology_page(site, base_url="https://pulse.silastron.com",
+                                   footer=page_chrome.footer(last_collected="x", last_published="y"))
             page = (site / "index.html").read_text(encoding="utf-8")
             self.assertNotIn("prerender:", page)
             self.assertIn("2026-11-13 10:00:00 UTC", page)

@@ -102,7 +102,7 @@ class BuildStaticCvePagesTests(unittest.TestCase):
         )
         return published, snapshot
 
-    def test_writes_one_page_per_cve_plus_css_and_sitemap(self) -> None:
+    def test_writes_one_page_per_cve_plus_css(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             tmp = Path(tmp)
             published, snapshot = self._published(tmp)
@@ -113,12 +113,7 @@ class BuildStaticCvePagesTests(unittest.TestCase):
             for cve_id in ids:
                 self.assertTrue((site / "cve" / cve_id / "index.html").is_file())
             self.assertTrue((site / "cve-page.css").is_file())
-            sitemap = (site / "sitemap.xml").read_text()
-            self.assertEqual(sitemap.count("<loc>"), len(ids) + 1)
-            self.assertIn(f"<loc>{BASE}/</loc>", sitemap)
-            robots = (site / "robots.txt").read_text()
-            self.assertIn(f"Sitemap: {BASE}/sitemap.xml", robots)
-            self.assertNotIn("Disallow: /", robots)
+            self.assertFalse((site / "sitemap.xml").exists(), "sitemap.xml is written by site_files")
 
     def test_a_removed_cve_loses_its_static_page(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -147,15 +142,16 @@ class BuildStaticCvePagesTests(unittest.TestCase):
             build_static_cve_pages(published_dir=published, site_dir=site, base_url=BASE)
             self.assertFalse((site / "cve" / removed_id).exists())
 
-    def test_rerun_is_idempotent_and_does_not_duplicate_sitemap_entries(self) -> None:
+    def test_rerun_is_idempotent(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             tmp = Path(tmp)
             published, snapshot = self._published(tmp)
             site = tmp / "site"
             build_static_cve_pages(published_dir=published, site_dir=site, base_url=BASE)
+            first = {p.name: p.read_bytes() for p in (site / "cve").glob("CVE-*/index.html")}
             build_static_cve_pages(published_dir=published, site_dir=site, base_url=BASE)
-            sitemap = (site / "sitemap.xml").read_text()
-            self.assertEqual(sitemap.count("<loc>"), len(snapshot["records"]) + 1)
+            second = {p.name: p.read_bytes() for p in (site / "cve").glob("CVE-*/index.html")}
+            self.assertEqual(first, second)
 
     def test_missing_catalog_index_raises_instead_of_silently_building_nothing(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

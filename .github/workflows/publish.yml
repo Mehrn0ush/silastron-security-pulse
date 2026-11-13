@@ -197,6 +197,8 @@ jobs:
           cp preview/styles.css preview/app.js preview/theme.js _site/
           python -m silastron_pulse build-home-page --published-dir _site/data --template preview/index.html --site-dir _site
           python -m silastron_pulse build-static-cve-pages --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com
+          python -m silastron_pulse build-site-files --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com --commit "${{ github.sha }}"
+          python -m silastron_pulse check-site-budget --site-dir _site
           python -m silastron_pulse validate _site/data/manifest.json
           python -m silastron_pulse validate _site/data/latest.json
           python - <<'PY'
@@ -232,6 +234,8 @@ jobs:
           cp preview/styles.css preview/app.js preview/theme.js _site/
           python3 -m silastron_pulse build-home-page --published-dir _site/data --template preview/index.html --site-dir _site
           python3 -m silastron_pulse build-static-cve-pages --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com
+          python3 -m silastron_pulse build-site-files --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com --commit "${{ github.sha }}"
+          python3 -m silastron_pulse check-site-budget --site-dir _site
           python3 -m silastron_pulse validate _site/data/manifest.json
           python3 -m silastron_pulse validate _site/data/latest.json
           python3 -m silastron_pulse validate _site/data/verification-status.json
@@ -255,6 +259,23 @@ jobs:
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: _site
+
+      - name: Stage build info for the smoke test
+        if: steps.decide.outputs.decision == 'publish'
+        run: |
+          set -euo pipefail
+          mkdir -p build-info/data
+          cp _site/build.json build-info/build.json
+          cp _site/data/manifest.json build-info/data/manifest.json
+
+      - name: Upload build info
+        if: steps.decide.outputs.decision == 'publish'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: build-info
+          path: build-info
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Upload published state snapshot
         if: steps.decide.outputs.decision == 'publish'
@@ -342,6 +363,31 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+
+  smoke-test:
+    name: Post-deploy smoke test
+    needs: [build, deploy]
+    if: ${{ always() && needs.deploy.result == 'success' }}
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout publisher
+        uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5.1.0
+        with:
+          persist-credentials: false
+
+      - name: Download build info
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: build-info
+          path: build-info
+
+      - name: Check the live site is this build
+        env:
+          PYTHONPATH: src
+        run: |
+          python3 -m silastron_pulse smoke-test --site-dir build-info --url https://pulse.silastron.com --timeout 300 --interval 15
 
   record-deploy-receipt:
     name: Record deploy receipt
@@ -727,6 +773,8 @@ jobs:
           cp preview/styles.css preview/app.js preview/theme.js _site/
           python3 -m silastron_pulse build-home-page --published-dir _site/data --template preview/index.html --site-dir _site
           python3 -m silastron_pulse build-static-cve-pages --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com
+          python3 -m silastron_pulse build-site-files --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com --commit "${{ github.sha }}"
+          python3 -m silastron_pulse check-site-budget --site-dir _site
           python3 -m silastron_pulse validate _site/data/manifest.json
           python3 -m silastron_pulse validate _site/data/latest.json
           python3 -m silastron_pulse validate _site/data/verification-status.json

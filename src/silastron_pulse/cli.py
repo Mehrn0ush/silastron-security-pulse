@@ -111,6 +111,26 @@ def main(argv: list[str] | None = None) -> int:
     static_pages.add_argument("--site-dir", type=Path, required=True)
     static_pages.add_argument("--base-url", required=True)
 
+    site_files = sub.add_parser(
+        "build-site-files", help="Write sitemap.xml, robots.txt, Atom feeds and build.json"
+    )
+    site_files.add_argument("--published-dir", type=Path, required=True)
+    site_files.add_argument("--site-dir", type=Path, required=True)
+    site_files.add_argument("--base-url", required=True)
+    site_files.add_argument("--commit", required=True)
+    site_files.add_argument("--malware-state-commit")
+    site_files.add_argument("--now", help="ISO 8601 build instant (default: current time)")
+
+    budget = sub.add_parser("check-site-budget", help="Fail if the site tree exceeds the size budget")
+    budget.add_argument("--site-dir", type=Path, required=True)
+    budget.add_argument("--budget", type=Path, default=Path("ops/site-budget.json"))
+
+    smoke = sub.add_parser("smoke-test", help="Poll the live site until it matches the build")
+    smoke.add_argument("--site-dir", type=Path, required=True)
+    smoke.add_argument("--url", required=True)
+    smoke.add_argument("--timeout", type=float, default=300)
+    smoke.add_argument("--interval", type=float, default=15)
+
     home = sub.add_parser(
         "build-home-page",
         help="Pre-render the home page sections and the methodology page",
@@ -621,6 +641,40 @@ def main(argv: list[str] | None = None) -> int:
             )
             print(f"rebuilt catalog index for {count} records")
             return 0
+        if args.command == "build-site-files":
+            from datetime import datetime, timezone
+
+            from silastron_pulse.home_page import parse_instant
+            from silastron_pulse.site_files import build_site_files
+
+            built_at = parse_instant(args.now) if args.now else datetime.now(timezone.utc)
+            if built_at is None:
+                raise PulseError(f"invalid --now: {args.now}")
+            stats = build_site_files(
+                published_dir=args.published_dir,
+                site_dir=args.site_dir,
+                base_url=args.base_url,
+                commit=args.commit,
+                built_at=built_at,
+                malware_state_commit=args.malware_state_commit,
+            )
+            print(f"wrote sitemap ({stats['sitemap_urls']} URLs), feeds ({stats['feed_entries']} entries), build.json")
+            return 0
+        if args.command == "check-site-budget":
+            from silastron_pulse.site_budget import check_site_budget, load_budget
+
+            problems, stats = check_site_budget(args.site_dir, load_budget(args.budget))
+            print(f"site: {stats['total_bytes']} bytes in {stats['files']} files; malware/: {stats['malware_bytes']} bytes")
+            for problem in problems:
+                print(f"BUDGET: {problem}", file=sys.stderr)
+            return 1 if problems else 0
+        if args.command == "smoke-test":
+            from silastron_pulse.smoke import run as smoke_run
+
+            problems = smoke_run(args.site_dir, args.url, timeout=args.timeout, interval=args.interval)
+            for problem in problems:
+                print(f"SMOKE: {problem}", file=sys.stderr)
+            return 1 if problems else 0
         if args.command == "build-home-page":
             from datetime import datetime, timezone
 

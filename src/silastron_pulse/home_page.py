@@ -902,7 +902,7 @@ def fill_template(template: str, slots: dict[str, str]) -> str:
 HOME_TITLE = "Silastron Security Pulse: CISA KEV and CVE intelligence"
 HOME_DESCRIPTION = (
     "Published CISA Known Exploited Vulnerabilities with CVE List V5, CVSS and SSVC context. "
-    "Source-attributed signals, no composite risk score."
+    "Source-attributed signals. No composite risk score."
 )
 
 

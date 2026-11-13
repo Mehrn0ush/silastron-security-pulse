@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import re
 import unittest
+
+from tests.support import rendered_home_html
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -84,7 +86,7 @@ class ThemeAccessibilityTests(unittest.TestCase):
         self.assertNotIn("onclick=", html)
 
     def test_csp_still_blocks_inline_and_third_party_theme_assets(self) -> None:
-        html = _preview("index.html")
+        html = rendered_home_html()
         match = re.search(
             r'http-equiv="Content-Security-Policy"\s+content="([^"]+)"',
             html,
