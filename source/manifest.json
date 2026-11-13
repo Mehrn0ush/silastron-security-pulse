@@ -1,10 +1,10 @@
 {
-  "collector_commit_sha": "b04f24348e5c4148d845bf899a6831fa836d7153",
-  "cve_revision": "2026-11-12T18:01:53.999Z",
+  "collector_commit_sha": "19b5e5b14ea92ddcfcedb8be7684906fe8b0cb82",
+  "cve_revision": "2026-11-13T15:43:32.273Z",
   "kev_revision": "2026.11.10",
-  "nvd_revision": "6475d7ca3042f8d48b2899b4fce873040a375c960f449b63671957b11b4022b8",
+  "nvd_revision": "ed9862dcefb26bc14e59907226ef5bf07d5800d0a130e895dfd48e27d4f6c719",
   "record_count": 1779,
   "schema_version": "1.0.0",
-  "source_state_revision": "2026.11.10:2026-11-12T18:01:53.999Z:6475d7ca3042f8d48b2899b4fce873040a375c960f449b63671957b11b4022b8",
-  "updated_at": "2026-11-12T18:40:01Z"
+  "source_state_revision": "2026.11.10:2026-11-13T15:43:32.273Z:ed9862dcefb26bc14e59907226ef5bf07d5800d0a130e895dfd48e27d4f6c719",
+  "updated_at": "2026-11-13T16:17:38Z"
 }
