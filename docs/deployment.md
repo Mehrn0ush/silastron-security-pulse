@@ -188,3 +188,14 @@ snapshot.
   older ones are not served.
 - Deployed `data/` shrank from 562 MB to 314 MB the first time this ran (measured on the
   2026-11-10 state; 13 snapshots down to 2).
+
+## Malicious package pages
+
+After `build-malware-data` (composite action `.github/actions/malware-site`) every site build runs
+`build-malware-pages`: `/malware/`, `/malware/weeks/<ISO-week>/` (with `page/<n>/` when a week has more than 500
+reports), `/malware/ecosystems/<name>/` for ecosystems with at least 50 reports plus `/other/`, and
+`/malware/methodology/`. Pages are plain HTML (no script needed), built with the escaping HTML builder; the only
+outbound link per report is the upstream advisory record. `/malware/feed.xml` has one entry per weekly digest and
+`/feed.xml` combines it with the KEV entries. All malware pages are in the sitemap, with `lastmod` taken from the digest
+(`updated`, else week end) or the collection date. Hand-written notes go in `data/commentary/<ISO-week>.md`
+(see its README); the methodology text carries a revision date guarded by a hash test.

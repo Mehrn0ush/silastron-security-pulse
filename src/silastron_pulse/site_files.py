@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from silastron_pulse.feeds import build_feed, kev_entries
+from silastron_pulse.feeds import build_feed, kev_entries, malware_entries
 from silastron_pulse.home_page import parse_instant
 from silastron_pulse.ids import CVE_ID_RE
 from silastron_pulse.methodology_page import METHODOLOGY_REVISED
@@ -80,6 +80,20 @@ def sitemap_xml(urls: list[tuple[str, str | None]]) -> bytes:
     return data
 
 
+def _malware_digests(site_dir: Path) -> list[dict[str, Any]]:
+    weeks = site_dir / "malware" / "data" / "weeks"
+    if not weeks.is_dir():
+        return []
+    out = []
+    for path in sorted(weeks.glob("*.json")):
+        if path.name == "index.json":
+            continue
+        doc = _load(path)
+        if isinstance(doc, dict) and doc.get("week"):
+            out.append(doc)
+    return out
+
+
 def build_site_files(
     *,
     published_dir: Path,
@@ -106,11 +120,18 @@ def build_site_files(
             continue
         detail = _obj(_load(published_dir / "cve" / f"{cve_id}.json"))
         urls.append((f"{base_url}/cve/{cve_id}/", cve_lastmod(row, detail)))
+    malware_data = site_dir / "malware" / "data"
+    if (malware_data / "status.json").is_file():
+        from silastron_pulse.malware.pages import page_manifest
+
+        urls += [(f"{base_url}{path}", lastmod) for path, lastmod in page_manifest(malware_data)]
     (site_dir / "sitemap.xml").write_bytes(sitemap_xml(urls))
     (site_dir / "robots.txt").write_text(f"User-agent: *\nAllow: /\nSitemap: {base_url}/sitemap.xml\n", encoding="utf-8")
 
     entries = kev_entries(rows, base_url)
     empty = (home_lastmod(published_dir) or "1970-01-01") + "T00:00:00Z"
+    digests = _malware_digests(site_dir)
+    mal_entries = malware_entries(digests, base_url)
     (site_dir / "kev").mkdir(parents=True, exist_ok=True)
     (site_dir / "kev" / "feed.xml").write_bytes(
         build_feed(
@@ -129,9 +150,21 @@ def build_site_files(
             feed_id="tag:pulse.silastron.com,2026:feed:all",
             self_href=f"{base_url}/feed.xml",
             alternate_href=f"{base_url}/",
-            entries=entries,
+            entries=sorted([*entries, *mal_entries], key=lambda e: (e["updated"], e["id"]), reverse=True),
             empty_updated=empty,
             rights=KEV_RIGHTS,
+        )
+    )
+    (site_dir / "malware").mkdir(parents=True, exist_ok=True)
+    (site_dir / "malware" / "feed.xml").write_bytes(
+        build_feed(
+            title="Silastron Security Pulse: malicious package digests",
+            feed_id="tag:pulse.silastron.com,2026:feed:malware",
+            self_href=f"{base_url}/malware/feed.xml",
+            alternate_href=f"{base_url}/malware/",
+            entries=mal_entries,
+            empty_updated=empty,
+            rights="Counts derived from OpenSSF Malicious Packages (Apache-2.0).",
         )
     )
     manifest_bytes = (published_dir / "manifest.json").read_bytes() if (published_dir / "manifest.json").is_file() else b""

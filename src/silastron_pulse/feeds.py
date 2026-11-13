@@ -86,3 +86,20 @@ def build_feed(*, title: str, feed_id: str, self_href: str, alternate_href: str,
         _text(node, "summary", entry["summary"], type="text")
     ET.indent(feed)
     return ET.tostring(feed, encoding="utf-8", xml_declaration=True) + b"\n"
+
+
+def malware_entries(digests: list[dict[str, Any]], base_url: str) -> list[dict[str, str]]:
+    """One entry per weekly digest, newest first. The id is the week, so it never changes."""
+    entries = []
+    for digest in sorted(digests, key=lambda d: d["week"], reverse=True):
+        counts = ", ".join(f"{eco} {n}" for eco, n in digest["by_ecosystem"].items()) or "no reports"
+        entries.append(
+            {
+                "id": f"{ID_AUTHORITY}:malware:{digest['week']}",
+                "title": _clip(f"Malicious package digest {digest['week']}: {digest['total']} new reports", 200),
+                "updated": (digest.get("updated") or digest["end"]) + "T00:00:00Z",
+                "link": f"{base_url}/malware/weeks/{digest['week']}/",
+                "summary": _clip(f"{counts}. Withdrawn this week: {digest['withdrawn_total']}.", 300),
+            }
+        )
+    return entries
