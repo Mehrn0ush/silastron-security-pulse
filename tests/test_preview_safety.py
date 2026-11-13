@@ -75,3 +75,15 @@ class PreviewSafetyTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class MalwareCheckScriptSafetyTests(unittest.TestCase):
+    def test_check_script_has_no_unsafe_sinks_and_no_other_network_paths(self) -> None:
+        source = (ROOT / "preview" / "malware-check.js").read_text(encoding="utf-8")
+        for needle in ("innerHTML", "outerHTML", "insertAdjacentHTML", "document.write", "eval(", "Function(",
+                       "XMLHttpRequest", "sendBeacon", "WebSocket", "localStorage", "sessionStorage", "document.cookie"):
+            self.assertNotIn(needle, source)
+        self.assertEqual(source.count("fetch("), 1)  # one helper, used for index files and status.json
+        self.assertIn('INDEX_BASE = "/malware/data/index/"', source)
+        hosts = set(re.findall(r"https?://([a-z0-9.-]+)", source))
+        self.assertEqual(hosts, {"github.com"})  # only the upstream record link base

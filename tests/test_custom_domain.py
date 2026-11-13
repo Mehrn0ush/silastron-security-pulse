@@ -94,7 +94,7 @@ class CustomDomainWorkflowTests(unittest.TestCase):
             self.assertIn("name: github-pages", text)
             self.assertIn("group: pages", text)
             self.assertIn("cancel-in-progress: false", text)
-            self.assertIn("cp preview/styles.css preview/app.js preview/theme.js _site/", text)
+            self.assertIn("cp preview/styles.css preview/app.js preview/theme.js preview/malware-check.js _site/", text)
             self.assertIn(
                 "build-home-page --published-dir _site/data --template preview/index.html --site-dir _site", text
             )

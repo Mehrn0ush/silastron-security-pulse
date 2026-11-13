@@ -34,7 +34,7 @@ def build_site(out: Path) -> None:
     if out.exists():
         shutil.rmtree(out)
     out.mkdir(parents=True)
-    for name in ("app.js", "styles.css", "theme.js"):
+    for name in ("app.js", "styles.css", "theme.js", "malware-check.js"):
         shutil.copy2(ROOT / "preview" / name, out / name)
     data = out / "data"
     collect_dir = out / "_collect"
