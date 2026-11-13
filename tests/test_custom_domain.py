@@ -55,7 +55,7 @@ class CustomDomainFrontendTests(unittest.TestCase):
             if href.startswith("http"):
                 self.assertEqual(href, "https://silastron.com")
                 continue
-            self.assertTrue(href.startswith("#"), href)
+            self.assertTrue(href.startswith("#") or href == "/methodology/", href)
 
     def test_csp_allows_same_origin_json_on_a_custom_host(self) -> None:
         html = _preview("index.html")
@@ -92,9 +92,9 @@ class CustomDomainWorkflowTests(unittest.TestCase):
             self.assertIn("name: github-pages", text)
             self.assertIn("group: pages", text)
             self.assertIn("cancel-in-progress: false", text)
+            self.assertIn("cp preview/styles.css preview/app.js preview/theme.js _site/", text)
             self.assertIn(
-                "cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/",
-                text,
+                "build-home-page --published-dir _site/data --template preview/index.html --site-dir _site", text
             )
 
     def test_collect_stays_off_the_pages_domain_path(self) -> None:

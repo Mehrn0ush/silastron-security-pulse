@@ -145,3 +145,15 @@ Use GET only. Do not cache a stale snapshot as fresh. This repository will not
 push into WordPress. A theme that only needs table/filter fields, not full
 intelligence, can fetch the much smaller `catalog-index.json` and
 `cve/{CVE_ID}.json` instead; see [docs/schemas.md](schemas.md).
+
+## Pre-rendered home page and methodology
+
+`index.html` is a template (`preview/index.html`) with `<!--prerender:NAME-->` slots. Every
+site build runs `silastron_pulse build-home-page` after the data is in `_site/data`; it fills
+the data status, overview, "What's changed", "Recently added to CISA KEV" and provenance
+sections from `manifest.json`, `preview.json`, `publication-status.json` and
+`verification-status.json`, and writes `/methodology/`. All values are escaped by
+`htmlbuild`; a missing or unknown slot fails the build. Ages are computed at build time and
+labelled as such; `app.js` recomputes them on load. Only the explorer needs JavaScript.
+`tests/e2e/prerender-parity.spec.js` checks that the script and the pre-render agree at the
+same instant.

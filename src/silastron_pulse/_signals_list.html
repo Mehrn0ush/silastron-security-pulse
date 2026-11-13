@@ -1,0 +1,69 @@
+<ul>
+            <li>
+              <strong>Confirmed exploitation</strong> means CISA listed the CVE in
+              the Known Exploited Vulnerabilities catalog. KEV indicates confirmed
+              historical exploitation, not current exposure.
+            </li>
+            <li>
+              <strong>EPSS</strong> is an estimated probability of exploitation,
+              not confirmation. <strong>EPSS is currently not published here.</strong>
+              FIRST grants public use of its scores with requested attribution
+              but has not published an explicit licence to redistribute them in
+              a derived public dataset, and this site would republish them as
+              JSON consumed by third parties. Until that is clarified the EPSS
+              column shows "Disabled", which is not a probability of zero. This
+              is a licensing decision, not a data fault.
+            </li>
+            <li>
+              <strong>Severity</strong> is source-attributed CVSS. CNA, NVD, and
+              CISA ADP assessments are shown separately when they exist. Display
+              order prefers a newer CVSS version, then CNA, NVD, CISA ADP; that is
+              a UI preference, not a correctness ranking. Missing scores stay
+              unavailable.
+            </li>
+            <li>
+              <strong>CISA SSVC decision points</strong> (Exploitation,
+              Automatable, Technical impact) are copied from the CISA ADP
+              (Vulnrichment) container of the CVE record, with CISA's assessment
+              date. They are shown as separate facts, never combined into a score
+              or priority. Missing SSVC means CISA has not added it, not low impact.
+            </li>
+            <li>
+              <strong>Collection outcome</strong> (<code>ok</code>,
+              <code>degraded</code>, or <code>failed</code>) is whether the
+              collector finished. A <code>degraded</code> snapshot succeeded;
+              it is not a failed collection.
+            </li>
+            <li>
+              <strong>Record completeness</strong> is per CVE:
+              <code>complete</code> extracted inventory,
+              <code>partial</code> truncated product/version text, or
+              <code>unavailable</code> enrichment. Completeness refers to
+              extracted data, not proof of complete real-world affectedness.
+              These are not the collection outcome and are not freshness.
+            </li>
+            <li>
+              <strong>Product affectedness</strong> is vendor/product text from
+              KEV and CVE records. A complete extracted inventory does not prove
+              complete real-world product coverage or deployment exposure.
+            </li>
+            <li>
+              <strong>Data status</strong> separates last successful source
+              verification, last successful collection, last published snapshot,
+              and last upstream update. An unchanged but re-validated KEV
+              catalog is not labeled stale. Snapshot age is not verification.
+            </li>
+            <li>
+              <strong>What's Changed</strong> compares the current published
+              snapshot to the immediately preceding published snapshot. It is
+              not a collect-time candidate diff and is not CISA's KEV
+              <code>dateAdded</code> list.
+            </li>
+            <li>
+              <strong>No composite risk score</strong> is calculated. Signals
+              stay independent.
+            </li>
+            <li>
+              <strong>Deployment exposure</strong> is not assessed here.
+            </li>
+          </ul>

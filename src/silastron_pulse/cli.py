@@ -111,6 +111,15 @@ def main(argv: list[str] | None = None) -> int:
     static_pages.add_argument("--site-dir", type=Path, required=True)
     static_pages.add_argument("--base-url", required=True)
 
+    home = sub.add_parser(
+        "build-home-page",
+        help="Pre-render the home page sections and the methodology page",
+    )
+    home.add_argument("--published-dir", type=Path, required=True)
+    home.add_argument("--template", type=Path, required=True)
+    home.add_argument("--site-dir", type=Path, required=True)
+    home.add_argument("--now", help="ISO 8601 instant used for ages (default: current time)")
+
     verify_pub = sub.add_parser(
         "verify-publication",
         help="Refuse persist when the comparison baseline is stale",
@@ -610,6 +619,24 @@ def main(argv: list[str] | None = None) -> int:
                 max_depth=config.max_json_depth,
             )
             print(f"rebuilt catalog index for {count} records")
+            return 0
+        if args.command == "build-home-page":
+            from datetime import datetime, timezone
+
+            from silastron_pulse.home_page import build_home_page, parse_instant
+            from silastron_pulse.methodology_page import build_methodology_page
+
+            now = parse_instant(args.now) if args.now else datetime.now(timezone.utc)
+            if now is None:
+                raise PulseError(f"invalid --now: {args.now}")
+            build_home_page(
+                published_dir=args.published_dir,
+                template_path=args.template,
+                site_dir=args.site_dir,
+                now=now,
+            )
+            build_methodology_page(args.site_dir)
+            print("wrote index.html and methodology/index.html")
             return 0
         if args.command == "build-static-cve-pages":
             from silastron_pulse.static_pages import build_static_cve_pages

@@ -56,41 +56,38 @@
         <a href="#recent">Recently added</a>
         <a href="#catalog">Vulnerability explorer</a>
         <a href="#cve-detail">CVE details</a>
-        <a href="#signals">How to read</a>
+        <a href="/methodology/">Methodology</a>
         <a href="#provenance">Data quality</a>
       </nav>
     </header>
     <main id="main">
-      <p id="status-banner" class="banner" role="status" aria-live="polite">
-        Loading publication status.
-      </p>
-      <noscript>
-        <p class="banner unavailable">
-          JavaScript is required to render the published snapshot. No
-          intelligence is shown without it.
-        </p>
-      </noscript>
+      <!--prerender:status-banner-->
 
       <section id="data-status" aria-labelledby="data-status-heading">
         <h2 id="data-status-heading" tabindex="-1">Data status</h2>
-        <p id="data-status-summary">Waiting for published data status.</p>
-        <dl id="data-status-details" class="status-details"></dl>
+        <p id="data-status-summary"><!--prerender:data-status-summary--></p>
+        <p class="note" id="data-status-built">
+          Ages on this page were calculated when it was built
+          (<span id="data-status-built-at"><!--prerender:built-at--></span>).
+          With JavaScript they are refreshed on load.
+        </p>
+        <dl id="data-status-details" class="status-details"><!--prerender:data-status-details--></dl>
       </section>
 
       <section id="overview" aria-labelledby="overview-heading">
         <h2 id="overview-heading">Security Pulse Overview</h2>
-        <div id="overview-cards" class="cards"></div>
+        <div id="overview-cards" class="cards"><!--prerender:overview-cards--></div>
       </section>
 
       <section id="changes" aria-labelledby="changes-heading">
         <h2 id="changes-heading">What's Changed</h2>
-        <p id="changes-note">Waiting for published comparison data.</p>
-        <div id="changes-body"></div>
+        <p id="changes-note"><!--prerender:changes-note--></p>
+        <div id="changes-body"><!--prerender:changes-body--></div>
       </section>
 
       <section id="recent" aria-labelledby="recent-heading">
         <h2 id="recent-heading">Recently Added to CISA KEV</h2>
-        <p id="recent-note">Waiting for snapshot data.</p>
+        <p id="recent-note"><!--prerender:recent-note--></p>
         <div class="table-wrap">
           <table>
             <caption id="recent-caption" class="visually-hidden">
@@ -99,7 +96,6 @@
             <thead>
               <tr>
                 <th scope="col">CVE</th>
-                <th scope="col" id="recent-change-col" hidden>Change</th>
                 <th scope="col">Vendor / product</th>
                 <th scope="col">KEV added</th>
                 <th scope="col">Completeness</th>
@@ -108,7 +104,7 @@
                 <th scope="col">Sources</th>
               </tr>
             </thead>
-            <tbody id="recent-body"></tbody>
+            <tbody id="recent-body"><!--prerender:recent-body--></tbody>
           </table>
         </div>
       </section>
@@ -121,6 +117,12 @@
           <code>data/latest.json</code> from this site. It does not call
           external APIs.
         </p>
+        <noscript>
+          <p class="banner neutral">
+            The explorer needs JavaScript. The status, overview, changes and
+            recently added sections above do not.
+          </p>
+        </noscript>
         <div class="catalog-controls">
           <p>
             <button type="button" id="catalog-load">
@@ -373,73 +375,12 @@
 
       <section id="signals" aria-labelledby="signals-heading">
         <h2 id="signals-heading">How to read these signals</h2>
-        <details>
-          <summary>Signal definitions and methodology</summary>
-          <ul>
-            <li>
-              <strong>Confirmed exploitation</strong> means CISA listed the CVE in
-              the Known Exploited Vulnerabilities catalog. KEV indicates confirmed
-              historical exploitation, not current exposure.
-            </li>
-            <li>
-              <strong>EPSS</strong>, when present, is an estimated probability of
-              exploitation, not confirmation. When EPSS is disabled it is not a
-              probability of zero.
-            </li>
-            <li>
-              <strong>Severity</strong> is source-attributed CVSS. CNA, NVD, and
-              CISA ADP assessments are shown separately when they exist. Display
-              order prefers a newer CVSS version, then CNA, NVD, CISA ADP; that is
-              a UI preference, not a correctness ranking. Missing scores stay
-              unavailable.
-            </li>
-            <li>
-              <strong>CISA SSVC decision points</strong> (Exploitation,
-              Automatable, Technical impact) are copied from the CISA ADP
-              (Vulnrichment) container of the CVE record, with CISA's assessment
-              date. They are shown as separate facts, never combined into a score
-              or priority. Missing SSVC means CISA has not added it, not low impact.
-            </li>
-            <li>
-              <strong>Collection outcome</strong> (<code>ok</code>,
-              <code>degraded</code>, or <code>failed</code>) is whether the
-              collector finished. A <code>degraded</code> snapshot succeeded;
-              it is not a failed collection.
-            </li>
-            <li>
-              <strong>Record completeness</strong> is per CVE:
-              <code>complete</code> extracted inventory,
-              <code>partial</code> truncated product/version text, or
-              <code>unavailable</code> enrichment. Completeness refers to
-              extracted data, not proof of complete real-world affectedness.
-              These are not the collection outcome and are not freshness.
-            </li>
-            <li>
-              <strong>Product affectedness</strong> is vendor/product text from
-              KEV and CVE records. A complete extracted inventory does not prove
-              complete real-world product coverage or deployment exposure.
-            </li>
-            <li>
-              <strong>Data status</strong> separates last successful source
-              verification, last successful collection, last published snapshot,
-              and last upstream update. An unchanged but re-validated KEV
-              catalog is not labeled stale. Snapshot age is not verification.
-            </li>
-            <li>
-              <strong>What's Changed</strong> compares the current published
-              snapshot to the immediately preceding published snapshot. It is
-              not a collect-time candidate diff and is not CISA's KEV
-              <code>dateAdded</code> list.
-            </li>
-            <li>
-              <strong>No composite risk score</strong> is calculated. Signals
-              stay independent.
-            </li>
-            <li>
-              <strong>Deployment exposure</strong> is not assessed here.
-            </li>
-          </ul>
-        </details>
+        <p>
+          Signals stay separate and no composite risk score is calculated. KEV
+          means CISA lists confirmed historical exploitation, not current
+          exposure. Definitions, sources and limits are on the
+          <a href="/methodology/">methodology page</a>.
+        </p>
       </section>
 
       <section id="provenance" aria-labelledby="provenance-heading">
@@ -449,10 +390,10 @@
           is not the date a CVE was added to KEV. KEV added dates are shown in
           the tables. Collection time and publication time are distinct.
         </p>
-        <dl id="status-details" class="meta-list"></dl>
+        <dl id="status-details" class="meta-list"><!--prerender:status-details--></dl>
         <details id="technical-details">
           <summary>Technical details</summary>
-          <dl id="technical-details-list" class="meta-list"></dl>
+          <dl id="technical-details-list" class="meta-list"><!--prerender:technical-details--></dl>
         </details>
       </section>
     </main>

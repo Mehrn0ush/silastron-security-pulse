@@ -2,9 +2,14 @@ from __future__ import annotations
 
 import json
 import unittest
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+SIGNALS = (ROOT / "src" / "silastron_pulse" / "_signals_list.html").read_text(encoding="utf-8")
+PY = re.sub(
+    r'"\s*\n\s*"', "", (ROOT / "src" / "silastron_pulse" / "home_page.py").read_text(encoding="utf-8")
+)
 
 
 class PreviewSafetyTests(unittest.TestCase):
@@ -60,9 +65,9 @@ class PreviewSafetyTests(unittest.TestCase):
         self.assertIn("Collection started at", source)
         self.assertIn("Collection completed at", source)
         html = (ROOT / "preview" / "index.html").read_text(encoding="utf-8")
-        self.assertIn("Collection outcome", html)
-        self.assertIn("Record completeness", html)
-        self.assertIn("does not prove", html)
+        self.assertIn("Collection outcome", html + PY)
+        self.assertIn("Record completeness", SIGNALS)
+        self.assertIn("does not prove", SIGNALS)
         self.assertIn("Data status", html)
 
 

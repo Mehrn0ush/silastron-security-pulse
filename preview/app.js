@@ -7,68 +7,13 @@
   var CVELIST_BLOB =
     /^\/CVEProject\/cvelistV5\/blob\/main\/cves\/[0-9]{4}\/[0-9]+xxx\/CVE-[0-9]{4}-[0-9]{4,}\.json$/;
   var PAGE_SIZE = 25;
-  var RECENT_LIMIT = 10;
   var PRODUCT_DETAIL_LIMIT = 8;
   var VERSION_DETAIL_LIMIT = 3;
-  var FIELD_LABELS = {
-    vendor_project: "Vendor",
-    product: "Product",
-    vulnerability_name: "Vulnerability name",
-    kev_date_added: "KEV added",
-    required_action: "Required action",
-    due_date: "Due date",
-    cve_state: "CVE state",
-    cve_title: "CVE title",
-    cve_description: "CVE description",
-    cve_date_updated: "CVE date updated",
-    cve_assigner: "CVE assigner",
-    cve_status: "CVE extraction status",
-    affected_products: "Affected products",
-    cvss_base_score: "CVSS base score",
-    cvss_base_severity: "CVSS severity",
-    completeness: "Extraction completeness",
-    remediation_item_count: "Extracted remediation items",
-  };
-  var CATEGORY_LABELS = {
-    added_kev: "Newly added KEV entries",
-    removed_kev: "Removed KEV entries",
-    kev_update: "KEV record updates",
-    cve_update: "CVE information updates",
-    cvss_change: "CVSS changes",
-    completeness_change: "Extraction completeness changes",
-    enrichment_update: "Extracted remediation evidence",
-  };
-  var CATEGORY_ORDER = [
-    "added_kev",
-    "removed_kev",
-    "cvss_change",
-    "cve_update",
-    "completeness_change",
-    "kev_update",
-  ];
-  var CORE_CHANGE_CATEGORIES = {
-    kev_update: true,
-    cvss_change: true,
-    completeness_change: true,
-  };
-  var ENRICHMENT_CHANGE_CATEGORIES = {
-    enrichment_update: true,
-    remediation_update: true,
-  };
 
   var statusBanner = document.getElementById("status-banner");
   var statusDetails = document.getElementById("status-details");
   var dataStatusSummary = document.getElementById("data-status-summary");
   var dataStatusDetails = document.getElementById("data-status-details");
-  var technicalDetails = document.getElementById("technical-details-list");
-  var overviewCards = document.getElementById("overview-cards");
-  var changesNote = document.getElementById("changes-note");
-  var changesBody = document.getElementById("changes-body");
-  var recentHeading = document.getElementById("recent-heading");
-  var recentNote = document.getElementById("recent-note");
-  var recentCaption = document.getElementById("recent-caption");
-  var recentBody = document.getElementById("recent-body");
-  var recentChangeCol = document.getElementById("recent-change-col");
   var catalogNote = document.getElementById("catalog-note");
   var catalogStatus = document.getElementById("catalog-status");
   var catalogBody = document.getElementById("catalog-body");
@@ -591,13 +536,6 @@
     return cell;
   }
 
-  function comparisonCount(value) {
-    if (value === null || value === undefined || value === "") {
-      return "No comparison available";
-    }
-    return String(value);
-  }
-
   function presentEpssNote(value) {
     if (typeof value !== "string" || !value) {
       return value;
@@ -611,25 +549,6 @@
       "redistribution license for this public JSON feed. The published snapshot still " +
       "contains a historic Usage Agreement URL that FIRST removed."
     );
-  }
-
-  function appendCard(term, value, hint, tone) {
-    var article = document.createElement("article");
-    article.className = tone ? "card card-" + tone : "card";
-    var heading = document.createElement("h3");
-    heading.textContent = term;
-    var valueEl = document.createElement("p");
-    valueEl.className = "value";
-    valueEl.textContent = asText(value);
-    article.appendChild(heading);
-    article.appendChild(valueEl);
-    if (hint) {
-      var hintEl = document.createElement("p");
-      hintEl.className = "hint";
-      hintEl.textContent = hint;
-      article.appendChild(hintEl);
-    }
-    overviewCards.appendChild(article);
   }
 
   function appendTextRow(parent, label, value) {
@@ -1101,389 +1020,6 @@
       }
       tbody.appendChild(tr);
     });
-  }
-
-  function sideObject(value) {
-    return value && typeof value === "object" && !Array.isArray(value) ? value : null;
-  }
-
-  function objectHasKey(value, key) {
-    return !!(sideObject(value) && Object.prototype.hasOwnProperty.call(value, key));
-  }
-
-  function fieldPair(before, after, key) {
-    var hasBefore = objectHasKey(before, key);
-    var hasAfter = objectHasKey(after, key);
-    if (!hasBefore && !hasAfter) {
-      return null;
-    }
-    var previousValue = hasBefore ? before[key] : undefined;
-    var currentValue = hasAfter ? after[key] : undefined;
-    if (hasBefore && hasAfter && previousValue === currentValue) {
-      return null;
-    }
-    return {
-      field: FIELD_LABELS[key] || key,
-      previous: hasBefore ? previousValue : "Not in previous published snapshot",
-      current: hasAfter ? currentValue : "Removed from current published snapshot",
-    };
-  }
-
-  function displayableChangedFields(row) {
-    var before = sideObject(row && row.before);
-    var after = sideObject(row && row.after);
-    var declared = row && Array.isArray(row.changed_fields) ? row.changed_fields.slice() : [];
-    var keys = declared;
-    if (!keys.length) {
-      keys = [];
-      [before, after].forEach(function (side) {
-        if (!side) {
-          return;
-        }
-        Object.keys(side).forEach(function (key) {
-          if (keys.indexOf(key) === -1) {
-            keys.push(key);
-          }
-        });
-      });
-    }
-    return keys.filter(function (key) {
-      return fieldPair(before, after, key) != null;
-    });
-  }
-
-  function classifyPublishedComparison(comparison) {
-    var empty = {
-      available: false,
-      added_count: null,
-      removed_count: null,
-      updated_count: null,
-      enrichment_count: null,
-      unresolved_count: null,
-      field_evidence: null,
-      added_rows: [],
-      removed_rows: [],
-      core_rows: [],
-      enrichment_rows: [],
-      unresolved_rows: [],
-      enrichment_sample: [],
-    };
-    if (!comparison || comparison.available !== true) {
-      return empty;
-    }
-    var addedRows = [];
-    var removedRows = [];
-    var coreRows = [];
-    var enrichmentRows = [];
-    var unresolvedRows = [];
-    (comparison.rows || []).forEach(function (row) {
-      var cats = row.categories || [];
-      if (cats.indexOf("added_kev") !== -1) {
-        addedRows.push(row);
-        return;
-      }
-      if (cats.indexOf("removed_kev") !== -1) {
-        removedRows.push(row);
-        return;
-      }
-      var fields = displayableChangedFields(row);
-      var hasCoreCat = cats.some(function (item) {
-        return CORE_CHANGE_CATEGORIES[item];
-      });
-      var enrichmentOnly = cats.some(function (item) {
-        return ENRICHMENT_CHANGE_CATEGORIES[item];
-      }) && !hasCoreCat && cats.indexOf("cve_update") === -1;
-      if (enrichmentOnly) {
-        enrichmentRows.push(row);
-      } else if (hasCoreCat || fields.length) {
-        coreRows.push(row);
-      } else {
-        unresolvedRows.push(row);
-      }
-    });
-    var publishedUpdated = comparison.updated_count;
-    var publishedEnrichment = comparison.enrichment_count;
-    var updated;
-    var enrichment;
-    var unresolvedCount;
-    var fieldEvidence;
-    if (typeof publishedEnrichment === "number") {
-      updated = typeof publishedUpdated === "number" ? publishedUpdated : coreRows.length;
-      enrichment = publishedEnrichment;
-      unresolvedCount = 0;
-      fieldEvidence = "stored";
-    } else if (typeof publishedUpdated === "number" && publishedUpdated === 0 && !unresolvedRows.length) {
-      updated = 0;
-      enrichment = 0;
-      unresolvedCount = 0;
-      fieldEvidence = "stored";
-    } else {
-      updated = null;
-      enrichment = null;
-      unresolvedCount = typeof publishedUpdated === "number" ? publishedUpdated : unresolvedRows.length;
-      fieldEvidence = "unavailable";
-    }
-    var sample = Array.isArray(comparison.enrichment_sample)
-      ? comparison.enrichment_sample.filter(function (item) {
-          return typeof item === "string";
-        })
-      : enrichmentRows.map(function (row) {
-          return row.cve_id;
-        });
-    return {
-      available: true,
-      added_count: comparison.added_count,
-      removed_count: comparison.removed_count,
-      updated_count: updated,
-      enrichment_count: enrichment,
-      unresolved_count: unresolvedCount,
-      field_evidence: fieldEvidence,
-      added_rows: addedRows,
-      removed_rows: removedRows,
-      core_rows: coreRows,
-      enrichment_rows: enrichmentRows,
-      unresolved_rows: unresolvedRows,
-      enrichment_sample: sample.slice(0, 8),
-    };
-  }
-
-  function changedFieldsLabel(row) {
-    var cats = row.categories || [];
-    if (cats.indexOf("added_kev") !== -1) {
-      return "New in current published snapshot";
-    }
-    if (cats.indexOf("removed_kev") !== -1) {
-      return "Removed from current published snapshot";
-    }
-    var fields = displayableChangedFields(row);
-    if (!fields.length) {
-      return "Stored values are unchanged";
-    }
-    return fields
-      .map(function (item) {
-        return FIELD_LABELS[item] || item;
-      })
-      .join(", ");
-  }
-
-  function buildBeforeAfter(row) {
-    var pairs = [];
-    var keys = row.changed_fields && row.changed_fields.length
-      ? row.changed_fields
-      : displayableChangedFields(row);
-    keys.forEach(function (key) {
-      var pair = fieldPair(row.before, row.after, key);
-      if (pair) {
-        pairs.push(pair);
-      }
-    });
-    if (!pairs.length) {
-      return null;
-    }
-    var details = document.createElement("details");
-    var summary = document.createElement("summary");
-    summary.textContent = "Before and after";
-    details.appendChild(summary);
-    var table = document.createElement("table");
-    table.className = "diff-table";
-    var caption = document.createElement("caption");
-    caption.className = "visually-hidden";
-    caption.textContent = "Published values before and after for " + asText(row.cve_id);
-    table.appendChild(caption);
-    var thead = document.createElement("thead");
-    var headRow = document.createElement("tr");
-    ["Field", "Previous published", "Current published"].forEach(function (label) {
-      var th = document.createElement("th");
-      th.scope = "col";
-      th.textContent = label;
-      headRow.appendChild(th);
-    });
-    thead.appendChild(headRow);
-    table.appendChild(thead);
-    var tbody = document.createElement("tbody");
-    pairs.forEach(function (pair) {
-      var tr = document.createElement("tr");
-      var field = document.createElement("th");
-      field.scope = "row";
-      field.textContent = pair.field;
-      var previous = document.createElement("td");
-      previous.textContent = asText(pair.previous);
-      var current = document.createElement("td");
-      current.textContent = asText(pair.current);
-      tr.appendChild(field);
-      tr.appendChild(previous);
-      tr.appendChild(current);
-      tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-    details.appendChild(table);
-    return details;
-  }
-
-  function appendCount(list, label, value) {
-    var item = document.createElement("li");
-    var strong = document.createElement("strong");
-    strong.textContent = value === null || value === undefined ? "Unavailable" : String(value);
-    item.appendChild(strong);
-    item.appendChild(document.createTextNode(" " + label));
-    list.appendChild(item);
-  }
-
-  function renderChangeGroup(title, rows) {
-    if (!rows.length) {
-      return;
-    }
-    var details = document.createElement("details");
-    var summary = document.createElement("summary");
-    summary.textContent = title + " (" + String(rows.length) + ")";
-    details.appendChild(summary);
-    var wrap = document.createElement("div");
-    wrap.className = "table-wrap";
-    var table = document.createElement("table");
-    var caption = document.createElement("caption");
-    caption.className = "visually-hidden";
-    caption.textContent = title;
-    table.appendChild(caption);
-    var thead = document.createElement("thead");
-    var headRow = document.createElement("tr");
-    ["CVE", "Categories", "Changed fields", "Sources", "Details"].forEach(function (label) {
-      var th = document.createElement("th");
-      th.scope = "col";
-      th.textContent = label;
-      headRow.appendChild(th);
-    });
-    thead.appendChild(headRow);
-    table.appendChild(thead);
-    var tbody = document.createElement("tbody");
-    rows.forEach(function (row) {
-      var tr = document.createElement("tr");
-      var cve = labeledCell("CVE");
-      appendCvePulseLink(cve, row.cve_id);
-      tr.appendChild(cve);
-      var cats = labeledCell("Categories");
-      cats.textContent = (row.categories || [])
-        .map(function (item) {
-          return CATEGORY_LABELS[item] || item;
-        })
-        .join("; ");
-      tr.appendChild(cats);
-      var fields = labeledCell("Changed fields");
-      fields.textContent = changedFieldsLabel(row);
-      tr.appendChild(fields);
-      var links = labeledCell("Sources");
-      addLink(links, row.links && row.links.cve_record, "CVE record");
-      addLink(links, row.links && row.links.kev_catalog, "KEV catalog");
-      addLink(links, row.links && row.links.cvelist_v5, "CVE List V5");
-      addLink(links, row.links && row.links.nvd, "NVD");
-      tr.appendChild(links);
-      var detailsCell = labeledCell("Details");
-      var beforeAfter = buildBeforeAfter(row);
-      if (beforeAfter) {
-        detailsCell.appendChild(beforeAfter);
-      } else {
-        detailsCell.textContent = changedFieldsLabel(row);
-      }
-      tr.appendChild(detailsCell);
-      tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-    wrap.appendChild(table);
-    details.appendChild(wrap);
-    changesBody.appendChild(details);
-  }
-
-  function renderPublicationComparison(comparison) {
-    changesBody.textContent = "";
-    var classified = classifyPublishedComparison(comparison);
-    if (!classified.available) {
-      changesNote.textContent =
-        "No comparison available. Baseline unavailable because no immediately preceding published snapshot was retained or the previous published snapshot is incompatible.";
-      var unavailable = document.createElement("p");
-      unavailable.className = "empty-state";
-      unavailable.textContent = "No comparison available";
-      changesBody.appendChild(unavailable);
-      return;
-    }
-    var note =
-      "Published-to-published comparison against snapshot " +
-      asText(comparison.compared_to_snapshot_id) +
-      " generated " +
-      formatInstant(comparison.compared_to_generated_at) +
-      ". Retrieval timestamps are not treated as vulnerability updates. Collect-time candidate diffs are not shown here. Newly extracted remediation is not counted as a KEV, CVE, CVSS, or completeness update.";
-    if (comparison.truncated) {
-      note += " Record-level rows are a bounded subset. Truncation is not proof that omitted updates are enrichment or that core field changes are absent.";
-    }
-    changesNote.textContent = note;
-    var summary = document.createElement("ul");
-    summary.className = "change-summary";
-    appendCount(summary, "newly added to KEV", classified.added_count);
-    appendCount(summary, "removed from KEV", classified.removed_count);
-    if (classified.field_evidence === "unavailable") {
-      appendCount(
-        summary,
-        "confirmed KEV, CVE, CVSS, or completeness field changes. This published comparison listed updates without stored field-level before/after values, so that count is unavailable rather than zero.",
-        classified.updated_count
-      );
-      appendCount(
-        summary,
-        "confirmed newly extracted remediation changes. Missing field-level diffs are not treated as enrichment.",
-        classified.enrichment_count
-      );
-    } else {
-      appendCount(
-        summary,
-        "records with KEV, CVE, CVSS, or completeness field changes",
-        classified.updated_count
-      );
-      appendCount(
-        summary,
-        "existing records that now include extracted remediation evidence. That is not a change to those CVEs' upstream vulnerability facts.",
-        classified.enrichment_count
-      );
-    }
-    changesBody.appendChild(summary);
-    renderChangeGroup("Newly added KEV entries", classified.added_rows);
-    renderChangeGroup("Removed KEV entries", classified.removed_rows);
-    renderChangeGroup("Records with field-level updates", classified.core_rows);
-    if (classified.unresolved_count) {
-      var unresolved = document.createElement("p");
-      unresolved.className = "empty-state";
-      unresolved.textContent =
-        String(classified.unresolved_count) +
-        " listed updates have no stored field-level before/after values. They are not shown as individual rows, and missing values are not treated as remediation enrichment or as confirmed core vulnerability changes.";
-      changesBody.appendChild(unresolved);
-    }
-    if (classified.enrichment_count) {
-      var enrichment = document.createElement("details");
-      var enrichmentSummary = document.createElement("summary");
-      enrichmentSummary.textContent =
-        "Extracted remediation evidence newly present (" +
-        String(classified.enrichment_count) +
-        ")";
-      enrichment.appendChild(enrichmentSummary);
-      var explain = document.createElement("p");
-      explain.textContent =
-        "These IDs were already in the previous published snapshot. The collector now extracts CNA solutions, workarounds, vendor advisories, or KEV required actions. That enrichment is not a newly changed upstream KEV/CVE/CVSS fact.";
-      enrichment.appendChild(explain);
-      if (classified.enrichment_sample.length) {
-        var sample = document.createElement("p");
-        sample.textContent = "Examples: " + classified.enrichment_sample.join(", ");
-        enrichment.appendChild(sample);
-      }
-      changesBody.appendChild(enrichment);
-    }
-    if (
-      !classified.added_rows.length &&
-      !classified.removed_rows.length &&
-      !classified.core_rows.length &&
-      !classified.unresolved_count &&
-      !classified.enrichment_count
-    ) {
-      var empty = document.createElement("p");
-      empty.className = "empty-state";
-      empty.textContent = "No published-to-published record changes.";
-      changesBody.appendChild(empty);
-    }
   }
 
 
@@ -2445,6 +1981,9 @@
     }
   });
 
+  // The status, overview, changes and recent sections are pre-rendered at build
+  // time. This only refreshes what depends on the current time: the banner, the
+  // data-status summary and the age-bearing detail lists.
   Promise.all([
     loadJson("data/manifest.json"),
     loadJson("data/preview.json"),
@@ -2457,28 +1996,10 @@
       var publicationStatus = results[2];
       var verificationStatus = results[3];
       if (!manifest) {
-        setBanner(
-          "unavailable",
-          "No published snapshot is available. This preview is not a live intelligence feed."
-        );
-        recentNote.textContent = "Snapshot unavailable.";
-        renderRows(recentBody, [], { showChange: false });
-        renderPublicationComparison(null);
         return;
       }
       var publication = manifest.publication_state || manifest.status;
       if (publication === "not_published" || manifest.status === "unpublished") {
-        setBanner(
-          "unavailable",
-          asText(manifest.message) ||
-            "Publication is disabled until source contracts and security review are approved."
-        );
-        appendMeta("Status", "Not published");
-        appendMeta("Generated at", manifest.generated_at);
-        appendMeta("Information state", "unavailable");
-        recentNote.textContent = "No approved snapshot has been published.";
-        renderRows(recentBody, [], { showChange: false });
-        renderPublicationComparison(null);
         catalogLoad.disabled = true;
         return;
       }
@@ -2490,6 +2011,12 @@
       var collectionOutcome = manifest.status;
       var nowMs = Date.now();
       var dataStatus = evaluateDataStatus(manifest, preview, publicationStatus, verificationStatus, nowMs);
+      if (statusDetails) {
+        statusDetails.textContent = "";
+      }
+      if (dataStatusDetails) {
+        dataStatusDetails.textContent = "";
+      }
       if (freshness.invalid) {
         setBanner(
           "unavailable",
@@ -2502,6 +2029,10 @@
       }
       if (dataStatusSummary) {
         dataStatusSummary.textContent = dataStatus.headline + ". " + dataStatus.message;
+      }
+      var builtNote = document.getElementById("data-status-built");
+      if (builtNote) {
+        builtNote.hidden = true;
       }
       if (
         publicationStatus &&
@@ -2519,40 +2050,6 @@
         summary.epss_enabled === false ||
           ((preview && preview.sources && preview.sources.epss && preview.sources.epss.status) === "disabled")
       );
-      var comparison = preview && preview.publication_comparison;
-      var classified = classifyPublishedComparison(comparison);
-      var comparisonAvailable = classified.available;
-      appendCard(
-        "Known Exploited CVEs",
-        manifest.record_count,
-        "CISA KEV entries in this published snapshot. Not a count of exposed systems."
-      );
-      appendCard(
-        "New in KEV",
-        comparisonAvailable ? comparisonCount(classified.added_count) : "No comparison available",
-        comparisonAvailable
-          ? "Added since the previous published snapshot. Not CISA dateAdded recency."
-          : "Baseline unavailable. This is not zero new entries."
-      );
-      appendCard(
-        "Vulnerability Updates",
-        comparisonAvailable
-          ? classified.field_evidence === "unavailable"
-            ? "Field-level evidence not stored"
-            : comparisonCount(classified.updated_count)
-          : "No comparison available",
-        comparisonAvailable
-          ? classified.field_evidence === "unavailable"
-            ? "This published comparison lists updates but did not store displayable before/after field diffs. That is not zero updates and is not confirmed enrichment."
-            : "KEV, CVE, CVSS, or completeness field changes versus the previous published snapshot. Newly extracted remediation is counted separately."
-          : "Baseline unavailable. This is not zero updates."
-      );
-      appendCard(
-        "Published snapshot",
-        formatInstant(manifest.snapshot_generated_at),
-        "This is the last published snapshot time, not last verification. Snapshot age is not proof that collection stopped or succeeded."
-      );
-
       appendDataStatus(
         "Last successful verification",
         dataStatus.verified ? formatInstantWithAge(dataStatus.lastSuccessfulVerificationAt, nowMs) : "Unavailable"
@@ -2613,46 +2110,13 @@
       if (preview && preview.note) {
         appendMeta("Consumer note", preview.note);
       }
-      appendNamedMeta(technicalDetails, "Snapshot ID", manifest.snapshot_id);
-      appendNamedMeta(technicalDetails, "Schema version", manifest.schema_version);
-      appendNamedMeta(technicalDetails, "Preview schema version", preview && preview.schema_version);
-      appendNamedMeta(technicalDetails, "KEV content digest", kev.content_sha256);
-      appendNamedMeta(technicalDetails, "KEV source revision", kev.source_revision);
-      appendNamedMeta(technicalDetails, "CVE content digest", cve.content_sha256);
-      appendNamedMeta(technicalDetails, "CVE source revision", cve.source_revision);
-      appendNamedMeta(technicalDetails, "CVE strategy", summary.cve_strategy);
-      appendNamedMeta(technicalDetails, "Compared to published snapshot", comparison && comparison.compared_to_snapshot_id);
-      appendNamedMeta(
-        technicalDetails,
-        "Changes recorded at collection",
-        preview && preview.changes_available ? "yes" : "no"
-      );
-      if (!preview) {
-        recentNote.textContent = "Preview document unavailable.";
-        renderRows(recentBody, [], { showChange: false });
-        renderPublicationComparison(null);
-        return;
-      }
-      renderPublicationComparison(comparison);
-      recentHeading.textContent = "Recently Added to CISA KEV";
-      recentCaption.textContent = "Recently Added to CISA KEV";
-      recentChangeCol.hidden = true;
-      recentNote.textContent =
-        "CISA dateAdded recency for this published snapshot, not a published-to-published diff. KEV added is the CISA date_added, not collection or publication time. EPSS: " +
-        (epssDisabled ? "disabled" : asText(epss.status));
-      renderRows(recentBody, (preview.recent_kev_additions || []).slice(0, RECENT_LIMIT), {
-        showChange: false,
-        emptyText: "No recently added KEV entries are available in this snapshot.",
-      });
     })
     .catch(function () {
+      // Leave the pre-rendered sections as built; only say the refresh failed.
       setBanner(
-        "failed",
-        "The preview failed to load local JSON. No intelligence is shown."
+        "unavailable",
+        "Status could not be refreshed in the browser. The page below shows the status as built."
       );
-      recentNote.textContent = "Preview failed.";
-      renderRows(recentBody, [], { showChange: false });
-      renderPublicationComparison(null);
     });
   window.addEventListener("hashchange", applyCveHash);
   applyCveHash();
