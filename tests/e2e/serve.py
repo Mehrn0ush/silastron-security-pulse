@@ -27,7 +27,7 @@ def build_site(out: Path) -> None:
     if out.exists():
         shutil.rmtree(out)
     out.mkdir(parents=True)
-    for name in ("index.html", "app.js", "styles.css", "theme.js"):
+    for name in ("app.js", "styles.css", "theme.js"):
         shutil.copy2(ROOT / "preview" / name, out / name)
     data = out / "data"
     collect_dir = out / "_collect"
@@ -82,6 +82,18 @@ def build_site(out: Path) -> None:
         encoding="utf-8",
     )
     _write_history(data)
+    from datetime import datetime, timezone
+
+    from silastron_pulse.home_page import build_home_page  # noqa: E402
+    from silastron_pulse.methodology_page import build_methodology_page  # noqa: E402
+
+    build_home_page(
+        published_dir=data,
+        template_path=ROOT / "preview" / "index.html",
+        site_dir=out,
+        now=datetime.now(timezone.utc),
+    )
+    build_methodology_page(out)
     (out / "robots.txt").write_text("User-agent: *\nDisallow: /\n", encoding="utf-8")
 
 

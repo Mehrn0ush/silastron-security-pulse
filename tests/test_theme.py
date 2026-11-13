@@ -77,7 +77,7 @@ class ThemeAccessibilityTests(unittest.TestCase):
         self.assertIn(":focus-visible", css)
         self.assertIn('href="#main"', html)
         self.assertIn('aria-pressed="true"', html)
-        self.assertIn("Signal definitions and methodology", html)
+        self.assertIn("/methodology/", html)
         self.assertIn("<summary>Technical details</summary>", html)
         self.assertIn("status-banner", html)
         self.assertNotIn('style="', html)

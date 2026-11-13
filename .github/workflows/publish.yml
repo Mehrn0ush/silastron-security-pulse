@@ -194,7 +194,8 @@ jobs:
             python -m silastron_pulse validate dist/verification-status.json
             cp dist/verification-status.json _site/data/verification-status.json
           fi
-          cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/
+          cp preview/styles.css preview/app.js preview/theme.js _site/
+          python -m silastron_pulse build-home-page --published-dir _site/data --template preview/index.html --site-dir _site
           python -m silastron_pulse build-static-cve-pages --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com
           python -m silastron_pulse validate _site/data/manifest.json
           python -m silastron_pulse validate _site/data/latest.json
@@ -228,7 +229,8 @@ jobs:
             --dst _site/data
           python3 -m silastron_pulse build-catalog-index --published-dir _site/data
           cp dist/verification-status.json _site/data/verification-status.json
-          cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/
+          cp preview/styles.css preview/app.js preview/theme.js _site/
+          python3 -m silastron_pulse build-home-page --published-dir _site/data --template preview/index.html --site-dir _site
           python3 -m silastron_pulse build-static-cve-pages --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com
           python3 -m silastron_pulse validate _site/data/manifest.json
           python3 -m silastron_pulse validate _site/data/latest.json
@@ -722,7 +724,8 @@ jobs:
             --collect-run-id "${RUN_ID}" \
             --conclusion "${CONCLUSION}" \
             --attempted-at "${ATTEMPTED_AT}"
-          cp preview/index.html preview/styles.css preview/app.js preview/theme.js _site/
+          cp preview/styles.css preview/app.js preview/theme.js _site/
+          python3 -m silastron_pulse build-home-page --published-dir _site/data --template preview/index.html --site-dir _site
           python3 -m silastron_pulse build-static-cve-pages --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com
           python3 -m silastron_pulse validate _site/data/manifest.json
           python3 -m silastron_pulse validate _site/data/latest.json

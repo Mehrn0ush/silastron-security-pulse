@@ -22,4 +22,4 @@ silastron-pulse = "silastron_pulse.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-silastron_pulse = ["py.typed"]
+silastron_pulse = ["py.typed", "_signals_list.html"]

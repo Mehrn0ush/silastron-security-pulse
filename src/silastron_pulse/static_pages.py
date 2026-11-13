@@ -251,6 +251,8 @@ def build_static_cve_pages(*, published_dir: Path, site_dir: Path, base_url: str
 
     (site_dir / "cve-page.css").write_text(CVE_PAGE_CSS, encoding="utf-8")
     sitemap_lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    if (site_dir / "methodology" / "index.html").is_file():
+        urls = [*urls, f"{base_url}/methodology/"]
     for url in urls:
         sitemap_lines.append(f"  <url><loc>{html.escape(url, quote=True)}</loc></url>")
     sitemap_lines.append("</urlset>")

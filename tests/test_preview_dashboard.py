@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import unittest
+import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+PY = re.sub(
+    r'"\s*\n\s*"', "", (ROOT / "src" / "silastron_pulse" / "home_page.py").read_text(encoding="utf-8")
+)
 
 
 class PreviewDashboardTests(unittest.TestCase):
@@ -19,15 +23,15 @@ class PreviewDashboardTests(unittest.TestCase):
         self.assertIn("Vulnerability explorer", html)
         self.assertIn("Data provenance and methodology", html)
         self.assertIn("Load published catalog", html)
-        self.assertIn('id="recent-change-col" hidden', html)
+        self.assertNotIn("recent-change-col", html)
         self.assertIn("data/catalog-index.json", js)
         self.assertIn("data/cve/", js)
-        self.assertIn("changes_available", js)
-        self.assertIn("publication_comparison", js)
-        self.assertIn("No comparison available", js)
-        self.assertIn("Baseline unavailable", js)
+        self.assertIn("changes_available", js + PY)
+        self.assertIn("publication_comparison", js + PY)
+        self.assertIn("No comparison available", js + PY)
+        self.assertIn("Baseline unavailable", js + PY)
         self.assertIn("Disabled is not a zero probability", js)
-        self.assertIn("KEV added is the CISA date_added", js)
+        self.assertIn("KEV added is the CISA date_added", js + PY)
         self.assertIn("credentials: \"same-origin\"", js)
         self.assertNotIn("innerHTML", js)
         self.assertNotIn("composite_risk_score", js)
@@ -37,11 +41,10 @@ class PreviewDashboardTests(unittest.TestCase):
 
     def test_dashboard_keeps_recent_kev_separate_from_published_diff(self) -> None:
         js = (ROOT / "preview" / "app.js").read_text(encoding="utf-8")
-        self.assertIn("recent_kev_additions", js)
-        self.assertIn("slice(0, RECENT_LIMIT)", js)
-        self.assertIn("Published-to-published comparison", js)
-        self.assertIn("Collect-time candidate diffs are not shown here", js)
-        self.assertIn("Newly extracted remediation is not counted", js)
+        self.assertIn("recent_kev_additions", js + PY)
+        self.assertIn("Published-to-published comparison", js + PY)
+        self.assertIn("Collect-time candidate diffs are not shown here", js + PY)
+        self.assertIn("Newly extracted remediation is not counted", js + PY)
         self.assertIn("catalog-cvss", js)
         self.assertIn("cvssMatches", js)
         self.assertIn("buildRecordDetails", js)
@@ -53,17 +56,16 @@ class PreviewDashboardTests(unittest.TestCase):
 
     def test_dashboard_overview_uses_published_counts_only(self) -> None:
         js = (ROOT / "preview" / "app.js").read_text(encoding="utf-8")
-        self.assertIn("Known Exploited CVEs", js)
-        self.assertIn("New in KEV", js)
-        self.assertIn("Vulnerability Updates", js)
+        self.assertIn("Known Exploited CVEs", js + PY)
+        self.assertIn("New in KEV", js + PY)
+        self.assertIn("Vulnerability Updates", js + PY)
         self.assertNotIn("Updated Records", js)
-        self.assertIn("Published snapshot", js)
-        self.assertIn("comparisonCount", js)
-        self.assertIn("classifyPublishedComparison", js)
-        self.assertIn("This is not zero new entries", js)
-        self.assertIn("Publication ", js)
-        self.assertIn("Newly extracted remediation is counted separately", js)
-        self.assertIn("Field-level evidence not stored", js)
+        self.assertIn("Published snapshot", js + PY)
+        self.assertIn("classify_comparison", js + PY)
+        self.assertIn("This is not zero new entries", js + PY)
+        self.assertIn("Publication ", js + PY)
+        self.assertIn("Newly extracted remediation is counted separately", js + PY)
+        self.assertIn("Field-level evidence not stored", js + PY)
         self.assertNotIn("Not applicable", js)
 
     def test_explorer_stays_lazy_and_filterable(self) -> None:
@@ -80,29 +82,29 @@ class PreviewDashboardTests(unittest.TestCase):
         self.assertIn('id="catalog-cvss"', html)
         self.assertIn('id="catalog-sort"', html)
         self.assertIn('id="data-status"', html)
-        self.assertIn("evaluateDataStatus", js)
-        self.assertIn("Last successful verification", js)
-        self.assertIn("Verification evidence unavailable", js)
-        self.assertIn("Unchanged catalog, independently verified", js)
+        self.assertIn("evaluateDataStatus", js + PY)
+        self.assertIn("Last successful verification", js + PY)
+        self.assertIn("Verification evidence unavailable", js + PY)
+        self.assertIn("Unchanged catalog, independently verified", js + PY)
         self.assertNotIn("Stale snapshot", html)
         self.assertNotIn("Stale snapshot", js)
         self.assertIn('tabindex="-1"', html)
         self.assertIn("Critical (9.0–10.0)", html)
         self.assertIn('addEventListener("click", loadCatalog)', js)
-        self.assertIn("parseCveHash", js)
+        self.assertIn("parseCveHash", js + PY)
         self.assertIn('addEventListener("hashchange", applyCveHash)', js)
-        self.assertIn("rowMatches", js)
+        self.assertIn("rowMatches", js + PY)
         self.assertIn("cvssMatches", js)
         self.assertIn("buildRecordDetails", js)
-        self.assertIn("short_description", js)
-        self.assertIn("Record details", js)
-        self.assertIn("buildRemediation", js)
-        self.assertIn("No verified remediation data", js)
+        self.assertIn("short_description", js + PY)
+        self.assertIn("Record details", js + PY)
+        self.assertIn("buildRemediation", js + PY)
+        self.assertIn("No verified remediation data", js + PY)
         self.assertIn('verified_fix: "CNA-Reported Solution"', js)
         self.assertNotIn("Verified Fix", js)
         # Remediation fallback-when-missing is now computed server-side
         # (silastron_pulse.catalog_index), not duplicated client-side.
-        self.assertIn("safePublicHttpsUrl", js)
+        self.assertIn("safePublicHttpsUrl", js + PY)
 
     def test_accessibility_and_responsive_hooks(self) -> None:
         html = (ROOT / "preview" / "index.html").read_text(encoding="utf-8")

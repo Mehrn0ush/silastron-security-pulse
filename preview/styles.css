@@ -591,6 +591,16 @@ footer {
 }
 
 @media (max-width: 40rem) {
+  .meta-list {
+    grid-template-columns: 1fr;
+    gap: 0.1rem 0;
+  }
+
+  .meta-list dd {
+    margin-bottom: 0.5rem;
+    overflow-wrap: anywhere;
+  }
+
   body {
     padding: 1rem 0.9rem 2.5rem;
   }

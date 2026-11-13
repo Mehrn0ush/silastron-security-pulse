@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import unittest
+import re
 from pathlib import Path
 
 from silastron_pulse.diff import (
@@ -13,6 +14,9 @@ from silastron_pulse.store import build_preview_document
 from tests.support import load_fixture_json
 
 ROOT = Path(__file__).resolve().parents[1]
+PY = re.sub(
+    r'"\s*\n\s*"', "", (ROOT / "src" / "silastron_pulse" / "home_page.py").read_text(encoding="utf-8")
+)
 LIVE = load_fixture_json("publication_live_20261024.json")
 
 
@@ -208,31 +212,30 @@ class PreviewChangePresentationContractTests(unittest.TestCase):
     def test_dashboard_summarizes_and_does_not_invent_empty_diffs(self) -> None:
         js = (ROOT / "preview" / "app.js").read_text(encoding="utf-8")
         css = (ROOT / "preview" / "styles.css").read_text(encoding="utf-8")
-        self.assertIn("classifyPublishedComparison", js)
-        self.assertIn("displayableChangedFields", js)
-        self.assertIn("changedFieldsLabel", js)
-        self.assertIn("change-summary", js)
+        self.assertIn("classify_comparison", js + PY)
+        self.assertIn("displayable_fields", js + PY)
+        self.assertIn("changed_fields_label", js + PY)
+        self.assertIn("change-summary", js + PY)
         self.assertIn("change-summary", css)
-        self.assertIn("Extracted remediation evidence newly present", js)
-        self.assertIn("New in current published snapshot", js)
-        self.assertIn("Records with field-level updates", js)
-        self.assertIn("if (classified.unresolved_count)", js)
-        self.assertIn("listed updates have no stored field-level before/after values", js)
-        self.assertIn("unresolved_count", js)
+        self.assertIn("Extracted remediation evidence newly present", js + PY)
+        self.assertIn("New in current published snapshot", js + PY)
+        self.assertIn("Records with field-level updates", js + PY)
+        self.assertIn('classified["unresolved_count"]', js + PY)
+        self.assertIn("listed updates have no stored field-level before/after values", js + PY)
+        self.assertIn("unresolved_count", js + PY)
         self.assertNotIn("Published updates without stored field-level diffs", js)
         self.assertNotIn("No stored field-level diff", js)
-        self.assertIn("Field-level evidence not stored", js)
-        self.assertIn("Vulnerability Updates", js)
-        self.assertIn("objectHasKey", js)
+        self.assertIn("Field-level evidence not stored", js + PY)
+        self.assertIn("Vulnerability Updates", js + PY)
         self.assertIn("textContent", js)
         self.assertNotIn("innerHTML", js)
-        self.assertIn("presentEpssNote", js)
-        self.assertIn("https://www.first.org/epss/faq", js)
-        self.assertIn("Missing field-level diffs are not treated as enrichment", js)
+        self.assertIn("presentEpssNote", js + PY)
+        self.assertIn("https://www.first.org/epss/faq", js + PY)
+        self.assertIn("Missing field-level diffs are not treated as enrichment", js + PY)
         self.assertNotIn("Not applicable", js)
         self.assertNotIn("No displayable field differences.", js)
         self.assertNotIn("Verified Fix", js)
-        self.assertIn("CNA-Reported Solution", js)
+        self.assertIn("CNA-Reported Solution", js + PY)
         self.assertNotIn("See https://www.first.org/epss/#Usage-Agreement", js)
 
     def test_epss_docs_do_not_claim_a_current_usage_agreement_license(self) -> None:
