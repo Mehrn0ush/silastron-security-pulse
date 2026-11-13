@@ -158,6 +158,19 @@ labelled as such; `app.js` recomputes them on load. Only the explorer needs Java
 `tests/e2e/prerender-parity.spec.js` checks that the script and the pre-render agree at the
 same instant.
 
+## Sitemap, feeds, build.json, budget
+
+Every site build runs `build-site-files` after the pages: `sitemap.xml` (home lastmod = newest of snapshot time and
+last verification; CVE pages = newest of KEV date added and upstream modified dates; methodology = `METHODOLOGY_REVISED`,
+bumped with its text, enforced by a hash test), `robots.txt`, `/kev/feed.xml` and `/feed.xml` (Atom, newest 200 KEV
+additions, ids `tag:pulse.silastron.com,2026:kev:<CVE>`, byte-identical on rebuild), and `build.json`
+(commit, built_at, snapshot_id, manifest_sha256, malware_state_commit). The generator fails above 45,000 URLs or 40 MB.
+CI (`site-files` job) validates feeds against the vendored RFC 4287 schema and the sitemap against the vendored
+sitemaps.org XSD with lxml; Publish only builds with the standard library. After each Pages deploy the
+`smoke-test` job polls the live `build.json` and `manifest.json` until they match the build.
+`check-site-budget` (`ops/site-budget.json`) enforces: site <= 600 MB, `malware/` <= 150 MB, any file <= 5 MB except
+`data/latest.json` and `data/catalog-index.json` (recorded sizes, <= +25%), and deployed `data/snapshots/*.json`
+(held to the `latest.json` bound).
 ## Deployed snapshots
 
 `pulse-state/published/snapshots/` keeps every snapshot (immutable: `verify-publication` refuses

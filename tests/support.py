@@ -65,3 +65,24 @@ def stepping_clock(*, step_seconds: float = 1.0) -> SteppingClock:
 
 def load_fixture_json(name: str) -> object:
     return json.loads(fixture_bytes(name))
+
+
+def rendered_home_html() -> str:
+    """The home page as built (head, CSP, footer included), from an empty published dir."""
+    import tempfile
+
+    from silastron_pulse.home_page import build_home_page
+
+    root = Path(__file__).resolve().parents[1]
+    with tempfile.TemporaryDirectory() as tmp:
+        pub, site = Path(tmp) / "pub", Path(tmp) / "site"
+        pub.mkdir()
+        site.mkdir()
+        build_home_page(
+            published_dir=pub,
+            template_path=root / "preview" / "index.html",
+            site_dir=site,
+            now=datetime(2026, 11, 13, tzinfo=timezone.utc),
+            base_url="https://pulse.silastron.com",
+        )
+        return (site / "index.html").read_text(encoding="utf-8")

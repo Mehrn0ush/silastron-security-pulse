@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import unittest
+
+from tests.support import rendered_home_html
 import re
 from pathlib import Path
 
@@ -19,7 +21,7 @@ class PreviewSafetyTests(unittest.TestCase):
             self.assertNotIn(needle, source)
 
     def test_preview_html_has_csp(self) -> None:
-        html = (ROOT / "preview" / "index.html").read_text(encoding="utf-8")
+        html = rendered_home_html()
         self.assertIn("Content-Security-Policy", html)
         self.assertNotIn("cdn.", html)
         self.assertNotIn("http://", html)

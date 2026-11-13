@@ -61,6 +61,8 @@ jobs:
           python3 -m silastron_pulse build-home-page --published-dir _site/data --template preview/index.html --site-dir _site
           python3 -m silastron_pulse build-static-cve-pages --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com
           python3 -m silastron_pulse prune-deployed-snapshots --data-dir _site/data
+          python3 -m silastron_pulse build-site-files --published-dir _site/data --site-dir _site --base-url https://pulse.silastron.com --commit "${{ github.sha }}"
+          python3 -m silastron_pulse check-site-budget --site-dir _site
           python3 -m silastron_pulse verify-published-site \
             --published-dir pulse-state/published \
             --site-data _site/data

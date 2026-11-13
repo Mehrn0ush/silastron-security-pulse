@@ -899,7 +899,57 @@ def fill_template(template: str, slots: dict[str, str]) -> str:
     return out
 
 
-def build_home_page(*, published_dir: Path, template_path: Path, site_dir: Path, now: datetime) -> None:
+HOME_TITLE = "Silastron Security Pulse: CISA KEV and CVE intelligence"
+HOME_DESCRIPTION = (
+    "Published CISA Known Exploited Vulnerabilities with CVE List V5, CVSS and SSVC context. "
+    "Source-attributed signals. No composite risk score."
+)
+
+
+def footer_times(published_dir: Path) -> tuple[str, str]:
+    manifest = _obj(_load(published_dir / "manifest.json"))
+    preview = _obj(_load(published_dir / "preview.json"))
+    verification = _obj(_load(published_dir / "verification-status.json"))
+    collected = verification.get("collection_completed_at") or preview.get("collection_completed_at")
+    return format_instant(collected), format_instant(manifest.get("generated_at"))
+
+
+def dataset_ld(base_url: str, modified: str | None) -> dict[str, Any]:
+    graph: dict[str, Any] = {
+        "@type": "Dataset",
+        "@id": f"{base_url}/#dataset",
+        "name": "CISA Known Exploited Vulnerabilities with CVE List V5 context",
+        "description": (
+            "Published snapshot of the CISA KEV catalog joined with CVE List V5 records and NVD enrichment: "
+            "CVSS by source, CWE, SSVC decision points from the CISA ADP container, and extracted remediation "
+            "evidence. Signals stay separate; no composite risk score."
+        ),
+        "url": f"{base_url}/",
+        "isAccessibleForFree": True,
+        "creator": {"@type": "Organization", "name": "Silastron", "url": "https://silastron.com"},
+        "isBasedOn": [
+            "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+            "https://github.com/CVEProject/cvelistV5",
+            "https://nvd.nist.gov/",
+        ],
+        "distribution": [
+            {
+                "@type": "DataDownload",
+                "encodingFormat": "application/json",
+                "contentUrl": f"{base_url}/data/catalog-index.json",
+            }
+        ],
+        "isPartOf": {"@id": f"{base_url}/#website"},
+    }
+    if modified:
+        graph["dateModified"] = modified
+    return graph
+
+
+def build_home_page(
+    *, published_dir: Path, template_path: Path, site_dir: Path, now: datetime, base_url: str = "https://pulse.silastron.com"
+) -> None:
+    base_url = base_url.rstrip("/")
     slots = render_sections(
         manifest=_load(published_dir / "manifest.json"),
         preview=_load(published_dir / "preview.json"),
@@ -908,5 +958,21 @@ def build_home_page(*, published_dir: Path, template_path: Path, site_dir: Path,
         now=now,
     )
     slots["built-at"] = fragment(Text(now.strftime("%Y-%m-%d %H:%M:%S UTC")))
+    from silastron_pulse import page_chrome
+    from silastron_pulse.site_files import home_lastmod
+
+    ld_block, ld_hash = page_chrome.json_ld(
+        {"@context": "https://schema.org", "@graph": [page_chrome.website_ld(base_url), dataset_ld(base_url, home_lastmod(published_dir))]}
+    )
+    slots["head"] = page_chrome.head_tags(
+        base_url=base_url,
+        path="/",
+        title=HOME_TITLE,
+        description=HOME_DESCRIPTION,
+        csp_value=page_chrome.csp(script_hash=ld_hash, self_scripts=True, connect_self=True, images=True),
+        ld_block=ld_block,
+    )
+    collected, published = footer_times(published_dir)
+    slots["footer"] = page_chrome.footer(last_collected=collected, last_published=published).html()
     page = fill_template(template_path.read_text(encoding="utf-8"), slots)
     (site_dir / "index.html").write_text(page, encoding="utf-8")

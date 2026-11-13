@@ -5,6 +5,8 @@ from __future__ import annotations
 import re
 import tempfile
 import unittest
+
+from tests.support import rendered_home_html
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -58,7 +60,7 @@ class CustomDomainFrontendTests(unittest.TestCase):
             self.assertTrue(href.startswith("#") or href == "/methodology/", href)
 
     def test_csp_allows_same_origin_json_on_a_custom_host(self) -> None:
-        html = _preview("index.html")
+        html = rendered_home_html()
         match = re.search(
             r'http-equiv="Content-Security-Policy"\s+content="([^"]+)"',
             html,
@@ -120,7 +122,6 @@ class CustomDomainWorkflowTests(unittest.TestCase):
             self.assertIn('href="styles.css"', html)
             self.assertIn('src="app.js"', html)
             self.assertIn('src="theme.js"', html)
-            self.assertIn("connect-src 'self'", html)
 
 
 class CustomDomainOperatorDocsTests(unittest.TestCase):

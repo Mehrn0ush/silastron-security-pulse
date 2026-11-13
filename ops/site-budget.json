@@ -1,0 +1,14 @@
+{
+  "max_site_bytes": 600000000,
+  "max_file_bytes": 5000000,
+  "malware_prefix": "malware/",
+  "max_malware_bytes": 150000000,
+  "max_growth_fraction": 0.25,
+  "allowlist": {
+    "data/latest.json": 63019924,
+    "data/catalog-index.json": 7819207
+  },
+  "snapshot_glob": "data/snapshots/",
+  "snapshot_baseline": "data/latest.json",
+  "note": "Sizes are the measured values on 2026-11-10. A file may exceed 5 MB only if listed here, and may not grow more than max_growth_fraction over the recorded size; raise a recorded size in the same PR that legitimately grows it. data/snapshots/*.json are the deployed copies of latest.json and are held to the same bound as data/latest.json."
+}
