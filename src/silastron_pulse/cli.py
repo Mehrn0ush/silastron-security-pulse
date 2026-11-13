@@ -130,6 +130,11 @@ def main(argv: list[str] | None = None) -> int:
     smoke.add_argument("--url", required=True)
     smoke.add_argument("--timeout", type=float, default=300)
     smoke.add_argument("--interval", type=float, default=15)
+    prune = sub.add_parser(
+        "prune-deployed-snapshots",
+        help="Drop all but the current and newest other snapshot from a site data copy",
+    )
+    prune.add_argument("--data-dir", type=Path, required=True)
 
     home = sub.add_parser(
         "build-home-page",
@@ -675,6 +680,12 @@ def main(argv: list[str] | None = None) -> int:
             for problem in problems:
                 print(f"SMOKE: {problem}", file=sys.stderr)
             return 1 if problems else 0
+        if args.command == "prune-deployed-snapshots":
+            from silastron_pulse.store import prune_deployed_snapshots
+
+            removed = prune_deployed_snapshots(args.data_dir)
+            print(f"pruned {len(removed)} snapshot(s) from the deployed copy")
+            return 0
         if args.command == "build-home-page":
             from datetime import datetime, timezone
 

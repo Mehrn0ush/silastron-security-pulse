@@ -13,8 +13,8 @@ from silastron_pulse.page_chrome import csp, head_tags, subscribe_nav
 
 # Bump METHODOLOGY_REVISED when the text below changes (the sitemap lastmod comes from it);
 # tests fail until the hash and the date are both updated.
-METHODOLOGY_REVISED = "2026-11-13"
-METHODOLOGY_BODY_SHA256 = "349917ef86699583846480381a237bd8c17211feb14c33c3d6a082f5e1cd08a3"
+METHODOLOGY_REVISED = "2026-11-14"
+METHODOLOGY_BODY_SHA256 = "11722d7fe937428bf89281c407f5dafe02f5e7ab2951a7831ceac25837717255"
 _SIGNALS = (Path(__file__).with_name("_signals_list.html")).read_text(encoding="utf-8")
 
 _BODY = f"""
@@ -42,6 +42,7 @@ _BODY = f"""
   <li>Extracted product and version inventories can be partial; the page says so per record.</li>
   <li>Enrichment can be missing; missing is shown as unavailable, never as zero.</li>
 </ul>
+<p>Only the latest two published snapshots are served on this site (<code>data/snapshots/</code>); older ones are kept in the repository, on the <code>pulse-state</code> branch.</p>
 <p>Full documentation is in the
 <a href="https://github.com/Mehrn0ush/silastron-security-pulse/tree/main/docs" rel="noopener noreferrer">docs folder</a>.</p>
 """

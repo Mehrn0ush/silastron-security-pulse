@@ -6,7 +6,8 @@ test.describe("Pre-rendered home sections", () => {
 
   test("status, overview, changes and recent sections are readable without JavaScript", async ({ page }) => {
     await page.goto("/");
-    await expect(page.locator("#status-banner")).not.toBeEmpty();
+    await expect(page.locator("#status-banner")).not.toContainText("timestamps are invalid");
+    await expect(page.locator("#status-banner")).toContainText(/Data status|Degraded collection/);
     await expect(page.locator("#data-status-built")).toBeVisible();
     await expect(page.locator("#data-status-summary")).toContainText("independently verified");
     await expect(page.locator("#data-status-details")).toContainText("Last successful verification");
