@@ -119,6 +119,7 @@ def main(argv: list[str] | None = None) -> int:
     home.add_argument("--template", type=Path, required=True)
     home.add_argument("--site-dir", type=Path, required=True)
     home.add_argument("--now", help="ISO 8601 instant used for ages (default: current time)")
+    home.add_argument("--base-url", default="https://pulse.silastron.com")
 
     verify_pub = sub.add_parser(
         "verify-publication",
@@ -634,8 +635,17 @@ def main(argv: list[str] | None = None) -> int:
                 template_path=args.template,
                 site_dir=args.site_dir,
                 now=now,
+                base_url=args.base_url,
             )
-            build_methodology_page(args.site_dir)
+            from silastron_pulse import page_chrome
+            from silastron_pulse.home_page import footer_times
+
+            collected, published = footer_times(args.published_dir)
+            build_methodology_page(
+                args.site_dir,
+                base_url=args.base_url,
+                footer=page_chrome.footer(last_collected=collected, last_published=published),
+            )
             print("wrote index.html and methodology/index.html")
             return 0
         if args.command == "build-static-cve-pages":

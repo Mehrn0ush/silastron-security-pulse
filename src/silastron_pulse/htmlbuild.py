@@ -30,7 +30,9 @@ class Node:
             if value is True:
                 parts.append(f" {key}")
             else:
-                parts.append(f' {key}="{html.escape(str(value), quote=True)}"')
+                # Attributes are always double-quoted, so a single quote needs no escape.
+                escaped = html.escape(str(value), quote=True).replace("&#x27;", "'")
+                parts.append(f' {key}="{escaped}"')
         parts.append(">")
         if self.tag in VOID:
             return "".join(parts)
@@ -57,7 +59,7 @@ Child = Union[Node, Text, str, None, Iterable]
 def render(child: Child) -> str:
     if child is None:
         return ""
-    if isinstance(child, (Node, Text)):
+    if hasattr(child, "html"):
         return child.html()
     if isinstance(child, str):
         return html.escape(child, quote=False)

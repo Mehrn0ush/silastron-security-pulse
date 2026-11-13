@@ -1,0 +1,5 @@
+-r requirements.lock
+# Only for the Atom feed check in CI (.github/scripts/validate_atom.py); not needed to build the site.
+lxml==6.1.3
+rnc2rng==2.7.0
+rply==0.7.8

@@ -12,6 +12,7 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+BASE_URL = "https://pulse.silastron.com"
 SRC = ROOT / "src"
 for path in (ROOT, SRC):
     if str(path) not in sys.path:
@@ -93,8 +94,25 @@ def build_site(out: Path) -> None:
         site_dir=out,
         now=datetime.now(timezone.utc),
     )
-    build_methodology_page(out)
-    (out / "robots.txt").write_text("User-agent: *\nDisallow: /\n", encoding="utf-8")
+    from silastron_pulse import page_chrome
+    from silastron_pulse.home_page import footer_times
+    from silastron_pulse.site_files import build_site_files
+    from silastron_pulse.static_pages import build_static_cve_pages
+
+    collected, published_at = footer_times(data)
+    build_methodology_page(
+        out,
+        base_url=BASE_URL,
+        footer=page_chrome.footer(last_collected=collected, last_published=published_at),
+    )
+    build_static_cve_pages(published_dir=data, site_dir=out, base_url=BASE_URL)
+    build_site_files(
+        published_dir=data,
+        site_dir=out,
+        base_url=BASE_URL,
+        commit="0" * 40,
+        built_at=datetime.now(timezone.utc),
+    )
 
 
 def _expand_snapshot(snapshot: dict) -> dict:

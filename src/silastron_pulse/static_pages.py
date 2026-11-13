@@ -67,7 +67,7 @@ def _json_ld_block(entry: dict[str, Any], *, base_url: str) -> tuple[str, str]:
         "@id": f"{base_url}/cve/{cve_id}/",
         "url": f"{base_url}/cve/{cve_id}/",
         "name": f"{cve_id} — Silastron Security Pulse",
-        "isPartOf": {"@type": "WebSite", "name": "Silastron Security Pulse", "url": base_url + "/"},
+        "isPartOf": {"@id": base_url + "/#website"},
         "mainEntity": {
             "@type": "Thing",
             "identifier": cve_id,
@@ -84,7 +84,7 @@ def _json_ld_block(entry: dict[str, Any], *, base_url: str) -> tuple[str, str]:
     return safe_payload, digest
 
 
-def render_cve_page(entry: dict[str, Any], *, base_url: str) -> str:
+def render_cve_page(entry: dict[str, Any], *, base_url: str, footer_html: str | None = None) -> str:
     """Render one minimal static page from a cve/{CVE_ID}.json detail entry."""
     cve_id = entry["cve_id"]
     if not CVE_ID_RE.fullmatch(cve_id):
@@ -95,11 +95,17 @@ def render_cve_page(entry: dict[str, Any], *, base_url: str) -> str:
         "CISA Known Exploited Vulnerabilities and CVE List V5 intelligence. No composite risk score."
     )
     json_ld, ld_hash = _json_ld_block(entry, base_url=base_url)
-    csp = (
-        "default-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; "
-        "img-src 'none'; style-src 'self'; "
-        f"script-src 'sha256-{ld_hash}'; connect-src 'none'; font-src 'none'; object-src 'none'; "
-        "upgrade-insecure-requests"
+    from silastron_pulse.page_chrome import csp as build_csp
+    from silastron_pulse.page_chrome import head_tags
+
+    head = head_tags(
+        base_url=base_url,
+        path=f"/cve/{cve_id}/",
+        title=title,
+        description=str(description)[:300],
+        og_type="article",
+        csp_value=build_csp(script_hash=ld_hash, self_scripts=False, connect_self=False, images=False),
+        ld_block=None,
     )
     sources = entry.get("intelligence", {}).get("sources", {}) if isinstance(entry.get("intelligence"), dict) else {}
     links = entry.get("links") or {}
@@ -160,12 +166,8 @@ def render_cve_page(entry: dict[str, Any], *, base_url: str) -> str:
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="{csp}">
-<meta name="referrer" content="no-referrer">
-<meta name="description" content="{_esc(description)}">
-<link rel="canonical" href="{html.escape(canonical, quote=True)}">
+{head}
 <link rel="stylesheet" href="/cve-page.css">
-<title>{html.escape(title)}</title>
 </head>
 <body>
 <p class="notice">Published CISA KEV and CVE List V5 intelligence. Source-attributed only;
@@ -199,18 +201,14 @@ no composite risk score, and this is not a statement about Silastron.com or cust
 </ul>
 <p><a href="/#cve/{html.escape(cve_id, quote=True)}">View full source-attributed intelligence in the interactive explorer</a></p>
 <script type="application/ld+json">{json_ld}</script>
-<footer>
-<p>A Silastron research dashboard. <a href="https://silastron.com" rel="noopener noreferrer">silastron.com</a></p>
-<p>CVE is a registered trademark of The MITRE Corporation. KEV data is dedicated to the public
-domain under CC0 1.0. This product uses the NVD API but is not endorsed or certified by the NVD.</p>
-</footer>
+{footer_html or ""}
 </body>
 </html>
 """
 
 
 def build_static_cve_pages(*, published_dir: Path, site_dir: Path, base_url: str) -> int:
-    """Render one page per published CVE plus sitemap.xml. Returns the page count.
+    """Render one page per published CVE. Returns the page count (sitemap: site_files).
 
     published_dir must already contain catalog-index.json and cve/*.json
     (written by store.promote_snapshot / catalog_index.py). Stale pages for a
@@ -221,10 +219,14 @@ def build_static_cve_pages(*, published_dir: Path, site_dir: Path, base_url: str
     if not index_path.is_file():
         raise FileNotFoundError(f"{index_path} is missing; run promote before building static pages")
     index = json.loads(index_path.read_text(encoding="utf-8"))
+    from silastron_pulse.home_page import footer_times
+    from silastron_pulse.page_chrome import footer
+
+    collected, published = footer_times(published_dir)
+    footer_html = footer(last_collected=collected, last_published=published).html()
     cve_root = site_dir / "cve"
     cve_root.mkdir(parents=True, exist_ok=True)
     current_ids: set[str] = set()
-    urls = [f"{base_url}/"]
     for row in index.get("records") or []:
         cve_id = row.get("cve_id")
         if not isinstance(cve_id, str) or not CVE_ID_RE.fullmatch(cve_id):
@@ -236,10 +238,9 @@ def build_static_cve_pages(*, published_dir: Path, site_dir: Path, base_url: str
         page_dir = cve_root / cve_id
         page_dir.mkdir(parents=True, exist_ok=True)
         (page_dir / "index.html").write_text(
-            render_cve_page(entry, base_url=base_url), encoding="utf-8"
+            render_cve_page(entry, base_url=base_url, footer_html=footer_html), encoding="utf-8"
         )
         current_ids.add(cve_id)
-        urls.append(f"{base_url}/cve/{cve_id}/")
 
     for path in cve_root.glob("CVE-*"):
         if path.is_symlink():
@@ -250,14 +251,4 @@ def build_static_cve_pages(*, published_dir: Path, site_dir: Path, base_url: str
             shutil.rmtree(path)
 
     (site_dir / "cve-page.css").write_text(CVE_PAGE_CSS, encoding="utf-8")
-    sitemap_lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    if (site_dir / "methodology" / "index.html").is_file():
-        urls = [*urls, f"{base_url}/methodology/"]
-    for url in urls:
-        sitemap_lines.append(f"  <url><loc>{html.escape(url, quote=True)}</loc></url>")
-    sitemap_lines.append("</urlset>")
-    (site_dir / "sitemap.xml").write_text("\n".join(sitemap_lines) + "\n", encoding="utf-8")
-    (site_dir / "robots.txt").write_text(
-        f"User-agent: *\nAllow: /\nSitemap: {base_url}/sitemap.xml\n", encoding="utf-8"
-    )
     return len(current_ids)

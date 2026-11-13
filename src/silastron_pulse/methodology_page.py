@@ -5,13 +5,16 @@ The text is authored here (trusted); no upstream value is interpolated.
 
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 
-CSP = (
-    "default-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; "
-    "img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'self'; "
-    "font-src 'none'; object-src 'none'; upgrade-insecure-requests"
-)
+from silastron_pulse.htmlbuild import Node
+from silastron_pulse.page_chrome import csp, head_tags, subscribe_nav
+
+# Bump METHODOLOGY_REVISED when the text below changes (the sitemap lastmod comes from it);
+# tests fail until the hash and the date are both updated.
+METHODOLOGY_REVISED = "2026-11-13"
+METHODOLOGY_BODY_SHA256 = "349917ef86699583846480381a237bd8c17211feb14c33c3d6a082f5e1cd08a3"
 _SIGNALS = (Path(__file__).with_name("_signals_list.html")).read_text(encoding="utf-8")
 
 _BODY = f"""
@@ -43,15 +46,16 @@ _BODY = f"""
 <a href="https://github.com/Mehrn0ush/silastron-security-pulse/tree/main/docs" rel="noopener noreferrer">docs folder</a>.</p>
 """
 
-_HEAD = f"""<!DOCTYPE html>
+def body_sha256() -> str:
+    return hashlib.sha256(_BODY.encode("utf-8")).hexdigest()
+
+
+_PRE = """<!DOCTYPE html>
 <html lang="en" data-theme="system">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="Content-Security-Policy" content="{CSP}" />
-    <meta name="referrer" content="no-referrer" />
-    <meta name="description" content="How Silastron Security Pulse reads CISA KEV, CVE, CVSS and SSVC signals, what it publishes and what it does not." />
-    <title>Methodology - Silastron Security Pulse</title>
+    {head}
     <script src="/theme.js"></script>
     <link rel="stylesheet" href="/styles.css" />
   </head>
@@ -75,18 +79,24 @@ _HEAD = f"""<!DOCTYPE html>
     <main id="main">
 """
 
-_FOOT = """
-    </main>
-    <footer>
-      <p>A Silastron research dashboard. <a href="https://silastron.com" rel="noopener noreferrer">silastron.com</a></p>
-      <p>CVE is a registered trademark of The MITRE Corporation. This preview does not modify or represent Silastron.com WordPress content.</p>
-    </footer>
-  </body>
-</html>
-"""
 
-
-def build_methodology_page(site_dir: Path) -> None:
+def build_methodology_page(site_dir: Path, *, base_url: str, footer: Node) -> None:
+    base_url = base_url.rstrip("/")
+    head = head_tags(
+        base_url=base_url,
+        path="/methodology/",
+        title="Methodology - Silastron Security Pulse",
+        description="How Silastron Security Pulse reads CISA KEV, CVE, CVSS and SSVC signals, what it publishes and what it does not.",
+        csp_value=csp(script_hash=None, self_scripts=True, connect_self=True, images=True),
+    )
     target = site_dir / "methodology"
     target.mkdir(parents=True, exist_ok=True)
-    (target / "index.html").write_text(_HEAD + '<section aria-labelledby="signals-heading">' + _BODY + "</section>" + _FOOT, encoding="utf-8")
+    page = (
+        _PRE.replace("{head}", head)
+        + '<section aria-labelledby="signals-heading">'
+        + _BODY
+        + "</section>\n    </main>\n    "
+        + footer.html()
+        + "\n  </body>\n</html>\n"
+    )
+    (target / "index.html").write_text(page, encoding="utf-8")
