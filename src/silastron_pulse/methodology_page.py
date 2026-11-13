@@ -39,6 +39,7 @@ _BODY = f"""
   <li>Extracted product and version inventories can be partial; the page says so per record.</li>
   <li>Enrichment can be missing; missing is shown as unavailable, never as zero.</li>
 </ul>
+<p>Only the latest two published snapshots are served on this site (<code>data/snapshots/</code>); older ones are kept in the repository, on the <code>pulse-state</code> branch.</p>
 <p>Full documentation is in the
 <a href="https://github.com/Mehrn0ush/silastron-security-pulse/tree/main/docs" rel="noopener noreferrer">docs folder</a>.</p>
 """

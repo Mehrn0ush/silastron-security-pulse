@@ -111,6 +111,12 @@ def main(argv: list[str] | None = None) -> int:
     static_pages.add_argument("--site-dir", type=Path, required=True)
     static_pages.add_argument("--base-url", required=True)
 
+    prune = sub.add_parser(
+        "prune-deployed-snapshots",
+        help="Drop all but the current and newest other snapshot from a site data copy",
+    )
+    prune.add_argument("--data-dir", type=Path, required=True)
+
     home = sub.add_parser(
         "build-home-page",
         help="Pre-render the home page sections and the methodology page",
@@ -619,6 +625,12 @@ def main(argv: list[str] | None = None) -> int:
                 max_depth=config.max_json_depth,
             )
             print(f"rebuilt catalog index for {count} records")
+            return 0
+        if args.command == "prune-deployed-snapshots":
+            from silastron_pulse.store import prune_deployed_snapshots
+
+            removed = prune_deployed_snapshots(args.data_dir)
+            print(f"pruned {len(removed)} snapshot(s) from the deployed copy")
             return 0
         if args.command == "build-home-page":
             from datetime import datetime, timezone

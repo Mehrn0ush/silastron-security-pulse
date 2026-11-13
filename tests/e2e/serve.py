@@ -8,10 +8,16 @@ import copy
 import json
 import shutil
 import sys
+from datetime import datetime
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+# The fixture is a normal, recent, verified publication; browser tests fix their clock to
+# FIXTURE_NOW (tests/e2e/clock.js) so ages never depend on the real time.
+FIXTURE_COLLECTED = "2026-11-01T12:00:00+00:00"
+FIXTURE_PUBLISHED = "2026-11-01T14:00:00+00:00"
+FIXTURE_NOW = "2026-11-01T15:00:00+00:00"
 SRC = ROOT / "src"
 for path in (ROOT, SRC):
     if str(path) not in sys.path:
@@ -20,7 +26,7 @@ for path in (ROOT, SRC):
 from silastron_pulse.pipeline import collect  # noqa: E402
 from silastron_pulse.store import promote_snapshot  # noqa: E402
 from silastron_pulse.validate import validate_snapshot  # noqa: E402
-from tests.support import frozen_clock, test_config, valid_fetcher  # noqa: E402
+from tests.support import FrozenClock, test_config, valid_fetcher  # noqa: E402
 
 
 def build_site(out: Path) -> None:
@@ -35,19 +41,18 @@ def build_site(out: Path) -> None:
     result = collect(
         config=test_config(collect_dir),
         fetcher=valid_fetcher(),
-        clock=frozen_clock(),
+        clock=FrozenClock(datetime.fromisoformat(FIXTURE_COLLECTED)),
         collector_commit_sha="abc",
     )
     if result.status != "ok" or result.snapshot is None:
         raise SystemExit("fixture collection failed")
     snapshot = _expand_snapshot(result.snapshot)
     validate_snapshot(snapshot)
-    from datetime import datetime, timezone
 
     promote_snapshot(
         snapshot,
         published,
-        now=datetime(2099, 1, 10, 14, tzinfo=timezone.utc),
+        now=datetime.fromisoformat(FIXTURE_PUBLISHED),
         stale_after_hours=36,
         max_bytes=8_000_000,
         max_depth=32,
@@ -82,7 +87,6 @@ def build_site(out: Path) -> None:
         encoding="utf-8",
     )
     _write_history(data)
-    from datetime import datetime, timezone
 
     from silastron_pulse.home_page import build_home_page  # noqa: E402
     from silastron_pulse.methodology_page import build_methodology_page  # noqa: E402
@@ -91,7 +95,7 @@ def build_site(out: Path) -> None:
         published_dir=data,
         template_path=ROOT / "preview" / "index.html",
         site_dir=out,
-        now=datetime.now(timezone.utc),
+        now=datetime.fromisoformat(FIXTURE_NOW),
     )
     build_methodology_page(out)
     (out / "robots.txt").write_text("User-agent: *\nDisallow: /\n", encoding="utf-8")

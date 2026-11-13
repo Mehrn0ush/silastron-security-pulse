@@ -1,4 +1,5 @@
 const { test, expect } = require("@playwright/test");
+const { FIXTURE_NOW } = require("./clock");
 
 async function loadCatalog(page) {
   await page.goto("/");
@@ -17,6 +18,10 @@ function catalogCves(page) {
 }
 
 test.describe("Pulse explorer", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.clock.setFixedTime(FIXTURE_NOW);
+  });
+
   test("shows a neutral data status instead of a stale snapshot warning", async ({ page }) => {
     await page.goto("/");
     await expect(page.locator("#status-banner")).not.toHaveText("Loading publication status.");
@@ -24,6 +29,18 @@ test.describe("Pulse explorer", () => {
     await expect(page.locator("#data-status")).toContainText("Last successful verification");
     await expect(page.locator("#data-status")).toContainText("Last published snapshot");
     await expect(page.locator("#data-status-summary")).toContainText("independently verified");
+    await expect(page.locator("#status-banner")).not.toContainText("timestamps are invalid");
+    await expect(page.locator("#status-banner")).toHaveClass(/ok|warn/);
+  });
+
+  test("says timestamps are invalid when the snapshot is dated in the future", async ({ page }) => {
+    await page.route("**/data/manifest.json", async (route) => {
+      const response = await route.fetch();
+      const doc = await response.json();
+      await route.fulfill({ response, json: { ...doc, snapshot_generated_at: "2030-01-01T00:00:00Z" } });
+    });
+    await page.goto("/");
+    await expect(page.locator("#status-banner")).toContainText("Snapshot timestamps are invalid");
   });
 
   async function withJson(page, name, mutate) {
@@ -34,7 +51,7 @@ test.describe("Pulse explorer", () => {
   }
 
   async function withVerification(page, mutate) {
-    // The fixture is dated 2099; move it into the past so age checks apply.
+    // Move the snapshot well into the past so the age checks apply.
     await withJson(page, "manifest.json", (doc) => ({ ...doc, snapshot_generated_at: "2025-12-31T23:00:00Z" }));
     await withJson(page, "verification-status.json", mutate);
   }

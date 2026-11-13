@@ -157,3 +157,21 @@ sections from `manifest.json`, `preview.json`, `publication-status.json` and
 labelled as such; `app.js` recomputes them on load. Only the explorer needs JavaScript.
 `tests/e2e/prerender-parity.spec.js` checks that the script and the pre-render agree at the
 same instant.
+
+## Deployed snapshots
+
+`pulse-state/published/snapshots/` keeps every snapshot (immutable: `verify-publication` refuses
+to change one). The deployed site carries only two: the one named by `manifest.latest_snapshot`
+and the newest other one. Every site build runs `prune-deployed-snapshots --data-dir _site/data`
+after the data steps; `assert_site_data_matches_published` (used by `verify-published-site
+--site-data`) expects exactly that set, byte for byte, and fails on a missing, altered or extra
+snapshot.
+
+- Rollback (`silastron_pulse rollback`) and per-CVE history are built from `pulse-state` or from
+  the full staging copy made before pruning, never from the deployed tree. A pruned copy would
+  report fewer retained snapshots (see `tests/test_deployed_snapshots.py`).
+- `manifest.latest_snapshot` and `latest_ok_snapshot` always resolve on the live site.
+  `history.json` (public) still lists every snapshot id ever published; ids are not URLs, and
+  older ones are not served.
+- Deployed `data/` shrank from 562 MB to 314 MB the first time this ran (measured on the
+  2026-11-10 state; 13 snapshots down to 2).
