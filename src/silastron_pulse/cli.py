@@ -152,6 +152,12 @@ def main(argv: list[str] | None = None) -> int:
     mal_pages.add_argument("--commentary-dir", type=Path, default=Path("data/commentary"))
     mal_pages.add_argument("--now", help="ISO 8601 instant for the stale check (default: current time)")
 
+    watchdog = sub.add_parser("watchdog", help="Check the live site's freshness and open or close the site-stale issue")
+    watchdog.add_argument("--url", default="https://pulse.silastron.com")
+    watchdog.add_argument("--repo", required=True, help="owner/name")
+    watchdog.add_argument("--owner", help="assignee for a newly opened issue")
+    watchdog.add_argument("--dry-run", action="store_true", help="print the findings; do not touch issues")
+
     mal_site = sub.add_parser("build-malware-data", help="Write /malware/data from the malware-state tree")
     mal_site.add_argument("--state-dir", type=Path, required=True)
     mal_site.add_argument("--site-dir", type=Path, required=True)
@@ -723,21 +729,44 @@ def main(argv: list[str] | None = None) -> int:
             if args.summary_file:
                 args.summary_file.write_text(outcome.summary_markdown, encoding="utf-8")
             return 0 if outcome.ok else 1
+        if args.command == "watchdog":
+            import subprocess
+            from datetime import datetime, timezone
+
+            from silastron_pulse.watchdog import evaluate, observe, sync_issue
+
+            now = datetime.now(timezone.utc)
+            observation = observe(site_url=args.url, repo=args.repo)
+            problems = evaluate(observation, now)
+            for problem in problems:
+                print(f"{problem.key}: {problem.detail}")
+            if args.dry_run:
+                print("healthy" if not problems else f"{len(problems)} problem(s); dry run, no issue changed")
+                return 0
+
+            def gh(arguments: list[str], stdin: str | None) -> str:
+                done = subprocess.run(["gh", *arguments, "--repo", args.repo],
+                                      input=stdin, capture_output=True, text=True, check=True)
+                return done.stdout
+
+            print(sync_issue(problems, now, gh, args.owner))
+            return 0
         if args.command == "build-malware-pages":
-            from silastron_pulse import page_chrome
-            from silastron_pulse.home_page import footer_times, parse_instant
+            from silastron_pulse.home_page import footer_for, parse_instant
             from silastron_pulse.malware.pages import build_malware_pages
 
             data_dir = args.site_dir / "malware" / "data"
             if not (data_dir / "status.json").is_file():
                 print("no malware data in the site; skipping /malware/ pages")
                 return 0
-            collected, published = footer_times(args.published_dir)
+            from silastron_pulse.home_page import format_instant
+
+            malware_collected = json.loads((data_dir / "status.json").read_text(encoding="utf-8"))["collected_at"]
             count = build_malware_pages(
                 data_dir=data_dir,
                 site_dir=args.site_dir,
                 base_url=args.base_url,
-                footer=page_chrome.footer(last_collected=collected, last_published=published),
+                footer=footer_for(args.published_dir, (format_instant(malware_collected), malware_collected)),
                 commentary_dir=args.commentary_dir if args.commentary_dir.is_dir() else None,
                 now=parse_instant(args.now) if args.now else None,
             )
@@ -767,14 +796,10 @@ def main(argv: list[str] | None = None) -> int:
                 now=now,
                 base_url=args.base_url,
             )
-            from silastron_pulse import page_chrome
-            from silastron_pulse.home_page import footer_times
+            from silastron_pulse.home_page import footer_for
 
-            collected, published = footer_times(args.published_dir)
             build_methodology_page(
-                args.site_dir,
-                base_url=args.base_url,
-                footer=page_chrome.footer(last_collected=collected, last_published=published),
+                args.site_dir, base_url=args.base_url, footer=footer_for(args.published_dir)
             )
             print("wrote index.html and methodology/index.html")
             return 0

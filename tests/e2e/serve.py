@@ -34,7 +34,7 @@ def build_site(out: Path) -> None:
     if out.exists():
         shutil.rmtree(out)
     out.mkdir(parents=True)
-    for name in ("app.js", "styles.css", "theme.js", "malware-check.js"):
+    for name in ("app.js", "styles.css", "theme.js", "malware-check.js", "stale.js"):
         shutil.copy2(ROOT / "preview" / name, out / name)
     data = out / "data"
     collect_dir = out / "_collect"
@@ -114,15 +114,14 @@ def build_site(out: Path) -> None:
         now=datetime.fromisoformat(FIXTURE_NOW),
     )
     from silastron_pulse import page_chrome
-    from silastron_pulse.home_page import footer_times
+    from silastron_pulse.home_page import footer_for
     from silastron_pulse.site_files import build_site_files
     from silastron_pulse.static_pages import build_static_cve_pages
 
-    collected, published_at = footer_times(data)
     build_methodology_page(
         out,
         base_url=BASE_URL,
-        footer=page_chrome.footer(last_collected=collected, last_published=published_at),
+        footer=footer_for(data),
     )
     from silastron_pulse.malware.pages import build_malware_pages
 
@@ -130,7 +129,7 @@ def build_site(out: Path) -> None:
         data_dir=out / "malware" / "data",
         site_dir=out,
         base_url=BASE_URL,
-        footer=page_chrome.footer(last_collected=collected, last_published=published_at),
+        footer=footer_for(data),
         now=datetime.fromisoformat(FIXTURE_NOW),
     )
     build_static_cve_pages(published_dir=data, site_dir=out, base_url=BASE_URL)

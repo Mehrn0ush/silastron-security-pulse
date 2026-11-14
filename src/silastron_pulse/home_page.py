@@ -914,6 +914,26 @@ def footer_times(published_dir: Path) -> tuple[str, str]:
     return format_instant(collected), format_instant(manifest.get("generated_at"))
 
 
+def footer_for(published_dir: Path, collected_override: tuple[str, str] | None = None) -> Node:
+    """Shared footer. `collected_override` is (display, iso) for pages whose data comes from another source."""
+    from silastron_pulse import page_chrome
+
+    manifest = _obj(_load(published_dir / "manifest.json"))
+    preview = _obj(_load(published_dir / "preview.json"))
+    verification = _obj(_load(published_dir / "verification-status.json"))
+    collected_iso = verification.get("collection_completed_at") or preview.get("collection_completed_at")
+    published_iso = manifest.get("generated_at")
+    collected = format_instant(collected_iso)
+    if collected_override:
+        collected, collected_iso = collected_override
+    return page_chrome.footer(
+        last_collected=collected,
+        last_published=format_instant(published_iso),
+        collected_iso=collected_iso if parse_instant(collected_iso) else None,
+        published_iso=published_iso if parse_instant(published_iso) else None,
+    )
+
+
 def dataset_ld(base_url: str, modified: str | None) -> dict[str, Any]:
     graph: dict[str, Any] = {
         "@type": "Dataset",
@@ -974,7 +994,6 @@ def build_home_page(
     )
     has_malware = (site_dir / "malware" / "data" / "status.json").is_file()
     slots["malware-nav"] = '<a href="/malware/">Malicious packages</a>' if has_malware else ""
-    collected, published = footer_times(published_dir)
-    slots["footer"] = page_chrome.footer(last_collected=collected, last_published=published).html()
+    slots["footer"] = footer_for(published_dir).html()
     page = fill_template(template_path.read_text(encoding="utf-8"), slots)
     (site_dir / "index.html").write_text(page, encoding="utf-8")
