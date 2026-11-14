@@ -1,17 +1,17 @@
 {
   "meta": {
-    "content_sha256": "41c8091ad62d508d6f8906ad5cd26b20efe551f7d51b95ecc8a6981fa640b4ea",
+    "content_sha256": "4028ec035856331a717d3305e87e45be37d400fc500da34a5464f05fc2773764",
     "error": null,
     "id": "cisa-kev",
     "license": "CC0-1.0",
     "name": "CISA Known Exploited Vulnerabilities Catalog",
     "notes": "The CISA Known Exploited Vulnerabilities catalog is dedicated to the public domain under CC0 1.0. Use does not authorize use of the CISA logo or DHS seal and is not an endorsement by CISA or DHS. See https://www.cisa.gov/sites/default/files/licenses/kev/license.txt",
     "parser_version": "1.0.0",
-    "retrieved_at": "2026-11-13T15:52:16Z",
+    "retrieved_at": "2026-11-14T14:43:09Z",
     "schema_version": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities_schema.json",
-    "source_published_at": "2026-11-10T19:03:29.8375Z",
-    "source_revision": "2026.11.10",
-    "source_updated_at": "2026-11-10T19:03:29.8375Z",
+    "source_published_at": "2026-11-13T20:24:18.3008Z",
+    "source_revision": "2026.11.13",
+    "source_updated_at": "2026-11-13T20:24:18.3008Z",
     "status": "ok",
     "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
   },
@@ -33281,6 +33281,27 @@
       "vulnerability_name": "Arista VeloCloud Orchestrator SQL Injection Vulnerability"
     },
     {
+      "cve_id": "CVE-2026-114713",
+      "cwes": [
+        "CWE-140"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-13",
+      "due_date": "2026-11-16",
+      "forensic_triage": "Yes",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://forums.unrealircd.org/viewtopic.php?t=9487 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-114713",
+      "product": "UnrealIRCd",
+      "record_sha256": "f745084fdd4eef79ef168bb4b40596f1ac4400b3f478a50829b754e38b4c02fb",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "UnrealIRCd UnrealIRCd contains an improper neutralization of delimiters vulnerability that allows any user on a network with two or more linked servers to inject server-to-server commands that are executed with server authority.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "UnrealIRCd",
+      "vulnerability_name": "UnrealIRCd Improper Neutralization of Delimiters Vulnerability"
+    },
+    {
       "cve_id": "CVE-2026-11645",
       "cwes": [
         "CWE-125",
@@ -33387,6 +33408,28 @@
       "truncated_fields": [],
       "vendor_project": "WordPress",
       "vulnerability_name": "WordPress WordPress Core Time-of-check Time-of-use (TOCTOU) Race Condition Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2026-123039",
+      "cwes": [
+        "CWE-732",
+        "CWE-862"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-13",
+      "due_date": "2026-11-16",
+      "forensic_triage": "Yes",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://support.checkpoint.com/results/sk/sk1000362 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-123039",
+      "product": "Multiple Products",
+      "record_sha256": "e6f13900391f6c9f0b5d3e9740feb707a579ee4da9ee73661a4b6ca4f7a84534",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Check Point Firewall, Multi-Domain Security Management Server, Scalable Platforms, Security Gateway, and Security Management Server contain an incorrect permissions assignment for critical resources vulnerability when the Gaia OS DynamicCLI daemon runs as root and listens on a world-writable local socket without authenticating connecting processes. An authenticated local user can send a command to the socket and have it executed as root.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Check Point",
+      "vulnerability_name": "Check Point Multiple Products Incorrect Permission Assignment for Critical Resource Vulnerability"
     },
     {
       "cve_id": "CVE-2026-123158",
