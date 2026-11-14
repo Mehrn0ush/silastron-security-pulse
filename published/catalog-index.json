@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-11-13T16:17:38Z",
+  "generated_at": "2026-11-14T15:11:18Z",
   "note": "Compact index for the explorer table, its filters, and CSV export. Full source-attributed intelligence (CVSS detail, CWE names, affected ranges, references, conflicts) is not included here; fetch cve/<CVE_ID>.json for one record's full detail.",
-  "record_count": 1779,
+  "record_count": 1781,
   "records": [
     {
       "attack_vector": [
@@ -75920,10 +75920,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.2,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:L/I:L/A:N",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -75947,7 +75949,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-21311"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -75998,7 +76000,9 @@
       "required_action": "Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "available",
       "short_description": "Adminer contains a server-side request forgery vulnerability that, when exploited, allows a remote attacker to obtain potentially sensitive information.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -76411,10 +76415,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -76428,7 +76434,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-01-18",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -76438,7 +76444,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-21975"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -76482,7 +76488,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Server Side Request Forgery (SSRF) in vRealize Operations Manager API prior to 8.4 may allow a malicious actor with network access to the vRealize Operations Manager API to perform a SSRF attack to steal administrative credentials.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -76700,10 +76709,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -76717,7 +76728,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-01-10",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -76727,7 +76738,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-22017"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -76771,7 +76782,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Rhttproxy as used in vCenter Server contains a vulnerability due to improper implementation of URI normalization.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -77230,10 +77243,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -77249,7 +77264,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -77259,7 +77274,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-22502"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -77303,7 +77318,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Micro Focus Operation Bridge Report (OBR) contains an unspecified vulnerability that allows for remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -82410,17 +82427,21 @@
       "vulnerability_name": "Veritas Backup Exec Agent Command Execution Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL"
+      ],
       "completeness": "complete",
       "cve_description": "Win32k Elevation of Privilege Vulnerability",
       "cve_id": "CVE-2021-28310",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H/E:F/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -82434,7 +82455,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -82444,11 +82465,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-28310"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Win32k",
       "products": [
         "Microsoft / Windows 10 Version 1803 (affected 10.0.0 publication)",
@@ -82493,12 +82516,17 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Windows Win32k contains an unspecified vulnerability that allows for privilege escalation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Win32k Privilege Escalation Vulnerability"
     },
@@ -82512,11 +82540,14 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 9.6,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
       "cvss_versions": [
-        "3.0"
+        "2.0",
+        "3.0",
+        "3.1"
       ],
       "cwe_ids": [
         "CWE-416"
@@ -82529,7 +82560,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -82539,7 +82570,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-28550"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -82583,7 +82614,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Adobe Acrobat and Reader contains a use-after-free vulnerability that could allow an unauthenticated attacker to achieve code execution in the context of the current user.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -82604,10 +82637,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -82621,7 +82656,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -82631,7 +82666,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-28663"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -82675,7 +82710,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Arm Mali Graphics Processing Unit (GPU) kernel driver contains a use-after-free vulnerability that may allow a non-privileged user to make improper operations on GPU memory to gain root privilege, and/or disclose information.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -82696,10 +82733,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -82713,7 +82752,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -82723,7 +82762,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-28664"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -82767,7 +82806,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Arm Mali Graphics Processing Unit (GPU) kernel driver contains an unspecified vulnerability that may allow a non-privileged user to gain write access to read-only memory, gain root privilege, corrupt memory, and modify the memory of other processes.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -82788,10 +82829,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 10.0,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -82805,7 +82848,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-03-31",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -82815,7 +82858,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-28799"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -82873,7 +82916,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "QNAP NAS running HBS 3 contains an improper authorization vulnerability which can allow remote attackers to log in to a device.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -82894,10 +82940,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -82911,7 +82959,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2023-07-07",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -82921,7 +82969,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-29256"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -82972,7 +83020,9 @@
       "required_action": "Apply updates per vendor instructions or discontinue use of the product if updates are unavailable.",
       "severity_status": "unavailable",
       "short_description": "Arm Mali GPU Kernel Driver contains a use-after-free vulnerability that may allow a non-privileged user to gain root privilege and/or disclose information.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -82993,10 +83043,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 10.0,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -83010,7 +83062,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -83020,7 +83072,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30116"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -83071,7 +83123,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Kaseya Virtual System/Server Administrator (VSA) contains an information disclosure vulnerability allowing an attacker to obtain the sessionId that can be used to execute further attacks against the system.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -83208,10 +83263,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -83237,7 +83294,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30551"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -83313,7 +83370,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -83334,10 +83393,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -83361,7 +83422,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30554"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -83429,7 +83490,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Google Chromium WebGL contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -83450,10 +83513,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -83469,7 +83534,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -83479,7 +83544,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30563"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -83523,7 +83588,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Google Chromium V8 Engine contains a type confusion vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -83544,14 +83611,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
-        "CWE-122"
+        "CWE-122",
+        "CWE-787"
       ],
       "cwes": [
         "CWE-122"
@@ -83571,7 +83641,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30632"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -83631,7 +83701,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Google Chromium V8 Engine contains an out-of-bounds write vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -83652,10 +83724,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -83679,7 +83753,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30633"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -83739,7 +83813,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Google Chromium Indexed DB API contains a use-after-free vulnerability that allows a remote attacker, who has compromised the renderer process, to potentially perform a sandbox escape via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -83752,7 +83828,8 @@
     },
     {
       "attack_vector": [
-        "LOCAL"
+        "LOCAL",
+        "NETWORK"
       ],
       "completeness": "complete",
       "cve_description": "A logic issue was addressed with improved state management. This issue is fixed in macOS Big Sur 11.3, Security Update 2021-002 Catalina. A malicious application may bypass Gatekeeper checks. Apple is aware of a report that this issue may have been actively exploited..",
@@ -83760,10 +83837,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -83777,7 +83856,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -83787,7 +83866,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30657"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -83832,7 +83911,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apple macOS contains an unspecified logic issue in System Preferences that may allow a malicious application to bypass Gatekeeper checks.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -83853,10 +83934,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -83870,7 +83953,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -83880,7 +83963,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30661"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -83929,7 +84012,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apple iOS, iPadOS, macOS, tvOS, watchOS, and Safari WebKit Storage contain a use-after-free vulnerability that leads to code execution when processing maliciously crafted web content. This vulnerability could impact HTML parsers that use WebKit, including but not limited to Apple Safari and non-Apple products which rely on WebKit for HTML processing.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -83942,7 +84027,8 @@
     },
     {
       "attack_vector": [
-        "LOCAL"
+        "LOCAL",
+        "NETWORK"
       ],
       "completeness": "complete",
       "cve_description": "An integer overflow was addressed with improved input validation. This issue is fixed in iOS 14.5.1 and iPadOS 14.5.1, tvOS 14.6, iOS 12.5.3, Safari 14.1.1, macOS Big Sur 11.3.1. Processing maliciously crafted web content may lead to arbitrary code execution.",
@@ -83950,10 +84036,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -83969,7 +84057,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -83979,7 +84067,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30663"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -84027,7 +84115,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apple iOS, iPadOS, macOS, tvOS, and Safari WebKit contain an integer overflow vulnerability that leads to code execution when processing maliciously crafted web content. This vulnerability could impact HTML parsers that use WebKit, including but not limited to Apple Safari and non-Apple products which rely on WebKit for HTML processing.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -84048,10 +84139,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -84065,7 +84158,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -84075,7 +84168,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30665"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -84123,7 +84216,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apple iOS, iPadOS, macOS, watchOS, and tvOS WebKit contain a memory corruption vulnerability that leads to code execution when processing maliciously crafted web content. This vulnerability could impact HTML parsers that use WebKit, including but not limited to Apple Safari and non-Apple products which rely on WebKit for HTML processing.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -84144,10 +84239,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -84161,7 +84258,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -84171,7 +84268,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30666"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -84215,7 +84312,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apple iOS WebKit contains a buffer-overflow vulnerability that leads to code execution when processing maliciously crafted web content. This vulnerability could impact HTML parsers that use WebKit, including but not limited to Apple Safari and non-Apple products which rely on WebKit for HTML processing.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -84236,10 +84335,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -84253,7 +84354,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -84263,7 +84364,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30713"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -84307,7 +84408,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apple macOS Transparency, Consent, and Control (TCC) contains an unspecified permissions issue which may allow a malicious application to bypass privacy preferences.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -84328,10 +84431,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -84345,7 +84450,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -84355,7 +84460,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30761"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -84399,7 +84504,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apple iOS WebKit contains a memory corruption vulnerability that leads to code execution when processing maliciously crafted web content. This vulnerability could impact HTML parsers that use WebKit, including but not limited to Apple Safari and non-Apple products which rely on WebKit for HTML processing.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -84420,10 +84527,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -84437,7 +84546,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -84447,7 +84556,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30762"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -84491,7 +84600,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apple iOS WebKit contains a use-after-free vulnerability that leads to code execution when processing maliciously crafted web content. This vulnerability could impact HTML parsers that use WebKit, including but not limited to Apple Safari and non-Apple products which rely on WebKit for HTML processing.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -84504,7 +84615,8 @@
     },
     {
       "attack_vector": [
-        "LOCAL"
+        "LOCAL",
+        "NETWORK"
       ],
       "completeness": "complete",
       "cve_description": "A memory corruption issue was addressed with improved memory handling. This issue is fixed in macOS Big Sur 11.5.1, iOS 14.7.1 and iPadOS 14.7.1, watchOS 7.6.1. An application may be able to execute arbitrary code with kernel privileges. Apple is aware of a report that this issue may have been actively exploited.",
@@ -84512,10 +84624,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -84529,7 +84643,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -84539,7 +84653,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30807"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -84585,7 +84699,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apple iOS, iPadOS, macOS, and watchOS IOMobileFrameBuffer contain a memory corruption vulnerability which may allow an application to execute code with kernel privileges.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -84606,10 +84722,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -84633,7 +84751,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30858"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -84710,7 +84828,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apple iOS, iPadOS, and macOS WebKit contain a use-after-free vulnerability that leads to code execution when processing maliciously crafted web content. This vulnerability could impact HTML parsers that use WebKit, including but not limited to Apple Safari and non-Apple products which rely on WebKit for HTML processing.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -84723,7 +84843,8 @@
     },
     {
       "attack_vector": [
-        "LOCAL"
+        "LOCAL",
+        "NETWORK"
       ],
       "completeness": "complete",
       "cve_description": "An integer overflow was addressed with improved input validation. This issue is fixed in Security Update 2021-005 Catalina, iOS 14.8 and iPadOS 14.8, macOS Big Sur 11.6, watchOS 7.6.2. Processing a maliciously crafted PDF may lead to arbitrary code execution. Apple is aware of a report that this issue may have been actively exploited.",
@@ -84731,10 +84852,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -84760,7 +84883,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30860"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -84815,7 +84938,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apple iOS, iPadOS, macOS, and watchOS CoreGraphics contain an integer overflow vulnerability which may allow code execution when processing a maliciously crafted PDF. The vulnerability is also known under the moniker of FORCEDENTRY.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -84923,7 +85048,8 @@
     },
     {
       "attack_vector": [
-        "LOCAL"
+        "LOCAL",
+        "NETWORK"
       ],
       "completeness": "complete",
       "cve_description": "A memory corruption issue was addressed with improved memory handling. This issue is fixed in iOS 15.0.2 and iPadOS 15.0.2, macOS Monterey 12.0.1, iOS 14.8.1 and iPadOS 14.8.1, tvOS 15.1, watchOS 8.1, macOS Big Sur 11.6.1. An application may be able to execute arbitrary code with kernel privileges. Apple is aware of a report that this issue may have been actively exploited..",
@@ -84931,10 +85057,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -84948,7 +85076,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-05-23",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -84958,7 +85086,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30883"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -85007,7 +85135,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apple iOS, macOS, watchOS, and tvOS contain a memory corruption vulnerability that could allow for remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -85020,7 +85150,8 @@
     },
     {
       "attack_vector": [
-        "LOCAL"
+        "LOCAL",
+        "NETWORK"
       ],
       "completeness": "complete",
       "cve_description": "An out-of-bounds write issue was addressed with improved bounds checking. This issue is fixed in iOS 14.8.1 and iPadOS 14.8.1, iOS 15.1 and iPadOS 15.1. A malicious application may be able to execute arbitrary code with kernel privileges.",
@@ -85028,10 +85159,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -85047,7 +85180,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2023-03-30",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -85057,7 +85190,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30900"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -85123,7 +85256,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apple GPU drivers, included in iOS, iPadOS, and macOS, contain an out-of-bounds write vulnerability that may allow a malicious application to execute code with kernel privileges.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -85136,6 +85271,7 @@
     },
     {
       "attack_vector": [
+        "LOCAL",
         "NETWORK"
       ],
       "completeness": "complete",
@@ -85144,10 +85280,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -85171,7 +85309,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30952"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -85286,7 +85424,10 @@
       "required_action": "Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "unavailable",
       "short_description": "Apple tvOS, macOS, Safari, iPadOS and watchOS contain an integer overflow or wraparound vulnerability due to the processing of maliciously crafted web content that may lead to arbitrary code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -85299,7 +85440,8 @@
     },
     {
       "attack_vector": [
-        "LOCAL"
+        "LOCAL",
+        "NETWORK"
       ],
       "completeness": "complete",
       "cve_description": "A buffer overflow issue was addressed with improved memory handling. This issue is fixed in iOS 15.2 and iPadOS 15.2. An application may be able to execute arbitrary code with kernel privileges.",
@@ -85307,14 +85449,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
-        "CWE-119"
+        "CWE-119",
+        "CWE-120"
       ],
       "cwes": [
         "CWE-119"
@@ -85324,7 +85469,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-06-27",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -85334,7 +85479,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-30983"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -85378,7 +85523,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Apple iOS and iPadOS contain a buffer overflow vulnerability that could allow an application to execute code with kernel privileges.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -85523,17 +85670,21 @@
       "vulnerability_name": "Apple iOS, macOS, watchOS Sandbox Bypass Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "NETWORK"
+      ],
       "completeness": "complete",
       "cve_description": "HTTP Protocol Stack Remote Code Execution Vulnerability",
       "cve_id": "CVE-2021-31166",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 9.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H/E:U/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -85547,7 +85698,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-04-06",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -85557,11 +85708,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-31166"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "NONE"
+      ],
       "product": "HTTP Protocol Stack",
       "products": [
         "Microsoft / Windows 10 Version 2004 (affected 10.0.0 10.0.19041.982)",
@@ -85602,27 +85755,36 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft HTTP Protocol Stack contains a vulnerability in http.sys that allows for remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft HTTP Protocol Stack Remote Code Execution Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "NETWORK"
+      ],
       "completeness": "complete",
       "cve_description": "Microsoft Exchange Server Remote Code Execution Vulnerability",
       "cve_id": "CVE-2021-31196",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.2,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H/E:U/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -85642,11 +85804,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-31196"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "HIGH"
+      ],
       "product": "Exchange Server",
       "products": [
         "Microsoft / Microsoft Exchange Server 2013 Cumulative Update 23 (affected 15.00.0 15.00.1497.023)",
@@ -85703,27 +85867,36 @@
       "required_action": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "available",
       "short_description": "Microsoft Exchange Server contains an information disclosure vulnerability that allows for remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Exchange Server Information Disclosure Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL"
+      ],
       "completeness": "complete",
       "cve_description": "Microsoft Enhanced Cryptographic Provider Elevation of Privilege Vulnerability",
       "cve_id": "CVE-2021-31199",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 5.2,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:L/I:L/A:N/E:F/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -85733,7 +85906,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -85743,11 +85916,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-31199"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Enhanced Cryptographic Provider",
       "products": [
         "Microsoft / Windows 10 Version 1809 (affected 10.0.0 10.0.17763.1999)",
@@ -85792,27 +85967,36 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Enhanced Cryptographic Provider contains an unspecified vulnerability that allows for privilege escalation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Enhanced Cryptographic Provider Privilege Escalation Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL"
+      ],
       "completeness": "complete",
       "cve_description": "Microsoft Enhanced Cryptographic Provider Elevation of Privilege Vulnerability",
       "cve_id": "CVE-2021-31201",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 5.2,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:L/I:L/A:N/E:F/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -85822,7 +86006,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -85832,11 +86016,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-31201"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Enhanced Cryptographic Provider",
       "products": [
         "Microsoft / Windows 10 Version 1809 (affected 10.0.0 10.0.17763.1999)",
@@ -85881,27 +86067,36 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Enhanced Cryptographic Provider contains an unspecified vulnerability that allows for privilege escalation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Enhanced Cryptographic Provider Privilege Escalation Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "NETWORK"
+      ],
       "completeness": "complete",
       "cve_description": "Microsoft Exchange Server Security Feature Bypass Vulnerability",
       "cve_id": "CVE-2021-31207",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 6.6,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:H/PR:H/UI:N/S:U/C:H/I:H/A:H/E:U/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -85917,7 +86112,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -85927,11 +86122,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-31207"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "HIGH"
+      ],
       "product": "Exchange Server",
       "products": [
         "Microsoft / Microsoft Exchange Server 2013 Cumulative Update 23 (affected 15.00.0 15.00.1497.018)",
@@ -85973,12 +86170,17 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Exchange Server contains an unspecified vulnerability that allows for security feature bypass.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Exchange Server Security Feature Bypass Vulnerability"
     },
@@ -86087,10 +86289,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -86116,7 +86320,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-3156"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -86200,7 +86404,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Sudo contains an off-by-one error that can result in a heap-based buffer overflow, which allows for privilege escalation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -86221,10 +86427,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -86248,7 +86456,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-31755"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -86292,7 +86500,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Tenda AC11 devices contain a stack buffer overflow vulnerability in /goform/setmac which allows attackers to execute code via a crafted post request.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -86304,17 +86514,21 @@
       "vulnerability_name": "Tenda AC11 Router Stack Buffer Overflow Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL"
+      ],
       "completeness": "complete",
       "cve_description": "Windows Kernel Information Disclosure Vulnerability",
       "cve_id": "CVE-2021-31955",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 5.5,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N/E:F/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -86328,7 +86542,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -86338,11 +86552,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-31955"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Windows",
       "products": [
         "Microsoft / Windows 10 Version 1809 (affected 10.0.0 10.0.17763.1999)",
@@ -86387,27 +86603,37 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Windows Kernel contains an unspecified vulnerability that allows for information disclosure. Successful exploitation allows attackers to read the contents of kernel memory from a user-mode process.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Windows Kernel Information Disclosure Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL",
+        "NETWORK"
+      ],
       "completeness": "complete",
       "cve_description": "Windows NTFS Elevation of Privilege Vulnerability",
       "cve_id": "CVE-2021-31956",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H/E:F/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -86423,7 +86649,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -86433,11 +86659,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-31956"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Windows",
       "products": [
         "Microsoft / Windows 10 Version 1809 (affected 10.0.0 10.0.17763.1999)",
@@ -86482,27 +86710,36 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Windows New Technology File System (NTFS) contains an unspecified vulnerability that allows attackers to escalate privileges via a specially crafted application.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Windows NTFS Privilege Escalation Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL"
+      ],
       "completeness": "complete",
       "cve_description": "Windows Kernel Elevation of Privilege Vulnerability",
       "cve_id": "CVE-2021-31979",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H/E:F/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -86526,11 +86763,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-31979"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Windows",
       "products": [
         "Microsoft / Windows 10 Version 1507 (affected 10.0.10240.0 10.0.10240.19003)",
@@ -86583,12 +86822,17 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Windows kernel contains an unspecified vulnerability that allows for privilege escalation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Windows Kernel Privilege Escalation Vulnerability"
     },
@@ -86602,10 +86846,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -86629,7 +86875,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-3199"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -86687,7 +86933,9 @@
       "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
       "severity_status": "unavailable",
       "short_description": "ONLYOFFICE Docs contains a path traversal vulnerability that can occur when JWT is used, via a /.. sequence in an image upload parameter and could allow for remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -86708,10 +86956,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -86735,7 +86985,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-32030"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -86793,7 +87043,9 @@
       "required_action": "Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "unavailable",
       "short_description": "ASUS Lyra Mini and ASUS GT-AC2900 devices contain an improper authentication vulnerability that allows an attacker to gain unauthorized access to the administrative interface. The impacted products could be end-of-life (EoL) and/or end-of-service (EoS). Users should discontinue product utilization.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -86814,10 +87066,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 8.2,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -86831,7 +87085,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-01-18",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -86841,7 +87095,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-32648"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -86885,7 +87139,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "In affected versions of the october/system package an attacker can request an account password reset and then gain access to the account using a specially crafted request.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -86906,10 +87162,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -86923,7 +87181,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2024-08-21",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -86933,7 +87191,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-33044"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -86984,7 +87242,9 @@
       "required_action": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "unavailable",
       "short_description": "Dahua IP cameras and related products contain an authentication bypass vulnerability when the NetKeyboard type argument is specified by the client during authentication.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -87005,10 +87265,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -87022,7 +87284,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2024-08-21",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -87032,7 +87294,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-33045"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -87083,7 +87345,9 @@
       "required_action": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "unavailable",
       "short_description": "Dahua IP cameras and related products contain an authentication bypass vulnerability when the loopback device is specified by the client during authentication.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -87095,17 +87359,21 @@
       "vulnerability_name": "Dahua IP Camera Authentication Bypass Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL"
+      ],
       "completeness": "complete",
       "cve_description": "Microsoft DWM Core Library Elevation of Privilege Vulnerability",
       "cve_id": "CVE-2021-33739",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 8.4,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H/E:F/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -87115,7 +87383,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -87125,11 +87393,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-33739"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "NONE"
+      ],
       "product": "Windows",
       "products": [
         "Microsoft / Windows 10 Version 1909 (affected 10.0.0 10.0.18363.1621)",
@@ -87172,27 +87442,37 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Desktop Window Manager (DWM) Core Library contains an unspecified vulnerability that allows for privilege escalation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE",
+        "REQUIRED"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Desktop Window Manager (DWM) Core Library Privilege Escalation Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "NETWORK"
+      ],
       "completeness": "complete",
       "cve_description": "Windows MSHTML Platform Remote Code Execution Vulnerability",
       "cve_id": "CVE-2021-33742",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.5,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H/E:F/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -87208,7 +87488,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -87218,11 +87498,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-33742"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "NONE"
+      ],
       "product": "Windows",
       "products": [
         "Microsoft / Windows 10 Version 1809 (affected 10.0.0 10.0.17763.1999)",
@@ -87267,27 +87549,36 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Windows MSHTML Platform contains an unspecified vulnerability that allows for remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "REQUIRED"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Windows MSHTML Platform Remote Code Execution Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "NETWORK"
+      ],
       "completeness": "complete",
       "cve_description": "Microsoft Exchange Server Information Disclosure Vulnerability",
       "cve_id": "CVE-2021-33766",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.3,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:L/E:U/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -87311,11 +87602,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-33766"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "NONE"
+      ],
       "product": "Exchange Server",
       "products": [
         "Microsoft / Microsoft Exchange Server 2013 Cumulative Update 23 (affected 15.00.0 15.00.1497.015)",
@@ -87365,27 +87658,36 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Exchange Server contains an information disclosure vulnerability which can allow an unauthenticated attacker to steal email traffic from target.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Exchange Server Information Disclosure"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL"
+      ],
       "completeness": "complete",
       "cve_description": "Windows Kernel Elevation of Privilege Vulnerability",
       "cve_id": "CVE-2021-33771",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H/E:F/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -87409,11 +87711,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-33771"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Windows",
       "products": [
         "Microsoft / Windows 10 Version 1507 (affected 10.0.10240.0 10.0.10240.19003)",
@@ -87466,27 +87770,36 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Windows kernel contains an unspecified vulnerability that allows for privilege escalation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Windows Kernel Privilege Escalation Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "NETWORK"
+      ],
       "completeness": "complete",
       "cve_description": "Scripting Engine Memory Corruption Vulnerability",
       "cve_id": "CVE-2021-34448",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 6.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:N/E:F/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -87510,11 +87823,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-34448"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "NONE"
+      ],
       "product": "Windows",
       "products": [
         "Microsoft / Windows 10 Version 1507 (affected 10.0.10240.0 10.0.10240.19003)",
@@ -87567,12 +87882,17 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Windows Scripting Engine contains an unspecified vulnerability that allows for memory corruption.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "REQUIRED"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Windows Scripting Engine Memory Corruption Vulnerability"
     },
@@ -87675,17 +87995,21 @@
       "vulnerability_name": "Microsoft Exchange Server Remote Code Execution Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL"
+      ],
       "completeness": "complete",
       "cve_description": "Windows User Profile Service Elevation of Privilege Vulnerability",
       "cve_id": "CVE-2021-34484",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H/E:U/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -87709,11 +88033,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-34484"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Windows",
       "products": [
         "Microsoft / Windows 10 Version 1507 (affected 10.0.10240.0 10.0.10240.19022)",
@@ -87766,27 +88092,36 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Windows User Profile Service contains an unspecified vulnerability that allows for privilege escalation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Windows User Profile Service Privilege Escalation Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL"
+      ],
       "completeness": "complete",
       "cve_description": "Windows Event Tracing Elevation of Privilege Vulnerability",
       "cve_id": "CVE-2021-34486",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H/E:U/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -87810,11 +88145,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-34486"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Windows",
       "products": [
         "Microsoft / Windows 10 Version 1809 (affected 10.0.17763.0 10.0.17763.2114)",
@@ -87867,12 +88204,17 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Windows Event Tracing contains an unspecified vulnerability which can allow for privilege escalation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Windows Event Tracing Privilege Escalation Vulnerability"
     },
@@ -87975,17 +88317,21 @@
       "vulnerability_name": "Microsoft Exchange Server Privilege Escalation Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "NETWORK"
+      ],
       "completeness": "complete",
       "cve_description": "A remote code execution vulnerability exists when the Windows Print Spooler service improperly performs privileged file operations. An attacker who successfully exploited this vulnerability could run arbitrary code with SYSTEM privileges. An attacker could then install programs; view, change, or delete data; or create new accounts with full user rights. UPDATE July 7, 2021: The security update for Windows Server 2012, Windows Server 2016 and Windows 10, Version 1607 have been released. Please see the Security Updates table for the applicable update for your system. We recommend that you install these updates immediately. If you are unable to install these updates, see the FAQ and Workaround sections in this CVE for information on how to help protect your system from this vulnerability. In addition to installing the updates, in order to secure your system, you must confirm that the following registry settings are set to 0 (zero) or are not defined (Note: These registry keys do not exist by default, and therefore are already at the secure setting.), also that your Group Policy setting are correct (see FAQ):  HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\Windows NT\\Printers\\PointAndPrint NoWarningNoElevationOnInstall = 0 (DWORD) or not defined (default setting) UpdatePromptSettings = 0 (DWORD) or not defined (default setting)  Having NoWarningNoElevationOnInstall set to 1 makes your system vulnerable by design. UPDATE July 6, 2021: Microsoft has completed the investigation and has released security updates to address this vulnerability. Please see the Security Updates table for the applicable update for your system. We recommend that you install these updates immediately. If you are unable to install these updates, see the FAQ and Workaround sections in this CVE for information on how to help protect your system from this vulnerability. See also KB5005010: Restricting installation of new printer drivers after applying the July 6, 2021 updates. Note that the security updates released on and after July 6, 2021 contain protections for CVE-2021-1675 and the additional remote code execution exploit in the Windows Print Spooler service known as “PrintNightmare”, documented in CVE-2021-34527.",
       "cve_id": "CVE-2021-34527",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 8.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H/E:F/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -88009,11 +88355,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-34527"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Windows",
       "products": [
         "Microsoft / Windows 10 Version 1507 (affected 10.0.10240.0 10.0.10240.18969)",
@@ -88073,12 +88421,17 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Windows Print Spooler contains an unspecified vulnerability due to the Windows Print Spooler service improperly performing privileged file operations. Successful exploitation allows an attacker to perform remote code execution with SYSTEM privileges. The vulnerability is also known under the moniker of PrintNightmare.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Windows Print Spooler Remote Code Execution Vulnerability"
     },
@@ -88092,15 +88445,18 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 8.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
         "CWE-270",
-        "CWE-862"
+        "CWE-862",
+        "CWE-863"
       ],
       "cwes": [
         "CWE-862"
@@ -88110,7 +88466,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-10-20",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -88120,7 +88476,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-3493"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -88192,7 +88548,11 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "The overlayfs stacking file system in Linux kernel does not properly validate the application of file capabilities against user namespaces, which could lead to privilege escalation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "cwe",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -88213,10 +88573,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 9.0,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:H/A:H",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -88230,7 +88592,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -88240,7 +88602,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-35211"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -88298,7 +88660,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "SolarWinds Serv-U contains an unspecified memory escape vulnerability which can allow for remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -88319,10 +88684,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 4.3,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:L/A:N",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -88336,7 +88703,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-01-21",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -88346,7 +88713,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-35247"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -88390,12 +88757,16 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "SolarWinds Serv-U versions 15.2.5 and earlier contain an improper input validation vulnerability that allows attackers to build and send queries without sanitization.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
       "truncated_fields": [],
       "user_interaction": [
+        "NONE",
         "REQUIRED"
       ],
       "vendor_project": "SolarWinds",
@@ -88411,10 +88782,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -88430,7 +88803,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-12-10",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -88440,7 +88813,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-35394"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -88484,7 +88857,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "RealTek Jungle SDK contains multiple memory corruption vulnerabilities which can allow an attacker to perform remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -88505,10 +88880,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -88524,7 +88901,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -88534,7 +88911,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-35395"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -88578,7 +88955,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Realtek AP-Router SDK HTTP web server boa contains a buffer overflow vulnerability due to unsafe copies of some overly long parameters submitted in the form that lead to denial-of-service (DoS).",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -88599,10 +88978,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -88616,7 +88997,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -88626,7 +89007,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-35464"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -88670,7 +89051,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "ForgeRock Access Management (AM) Core Server allows an attacker who sends a specially crafted HTTP request to one of three endpoints (/ccversion/Version, /ccversion/Masthead, or /ccversion/ButtonFrame) to execute code in the context of the current user (unless ForgeRock AM is running as root user, which the vendor does not recommend).",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -88691,13 +89074,16 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 9.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
+        "CWE-306",
         "CWE-502",
         "CWE-790"
       ],
@@ -88710,7 +89096,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-11-28",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -88720,7 +89106,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-35587"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -88771,7 +89157,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Oracle Fusion Middleware Access Manager allows an unauthenticated attacker with network access via HTTP to takeover the Access Manager product.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -88792,13 +89180,16 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
+        "CWE-754",
         "CWE-863"
       ],
       "cwes": [
@@ -88809,7 +89200,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2023-05-12",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -88819,7 +89210,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-3560"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -88870,7 +89261,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Red Hat Polkit contains an incorrect authorization vulnerability through the bypassing of credential checks for D-Bus requests, allowing for privilege escalation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cwe",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -88891,10 +89285,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -88908,7 +89304,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-01-10",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -88918,7 +89314,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-36260"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -88962,7 +89358,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A command injection vulnerability in the web server of some Hikvision product. Due to the insufficient input validation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -88983,10 +89381,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -89010,7 +89410,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-36380"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -89061,7 +89461,9 @@
       "required_action": "Apply mitigations per vendor instructions or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "unavailable",
       "short_description": "Sunhillo SureLine contains an OS command injection vulnerability that allows an attacker to cause a denial-of-service or utilize the device for persistence on the network via shell metacharacters in ipAddr or dnsAddr in /cgi/networkDiag.cgi.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -89082,14 +89484,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
-        "CWE-22"
+        "CWE-22",
+        "CWE-434"
       ],
       "cwes": [
         "CWE-22"
@@ -89099,7 +89504,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -89109,7 +89514,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-36741"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -89169,7 +89574,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Trend Micro Apex One, Apex One as a Service, and Worry-Free Business Security contain an improper input validation vulnerability that allows a remote attacker to upload files.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -89190,10 +89597,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -89207,7 +89616,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -89217,7 +89626,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-36742"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -89277,7 +89686,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Trend Micro Apex One, Apex One as a Service, and Worry-Free Business Security contain an improper input validation vulnerability that allows for privilege escalation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -89289,17 +89700,21 @@
       "vulnerability_name": "Trend Micro Multiple Products Improper Input Validation Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL"
+      ],
       "completeness": "complete",
       "cve_description": "An elevation of privilege vulnerability exists because of overly permissive Access Control Lists (ACLs) on multiple system files, including the Security Accounts Manager (SAM) database. An attacker who successfully exploited this vulnerability could run arbitrary code with SYSTEM privileges. An attacker could then install programs; view, change, or delete data; or create new accounts with full user rights. An attacker must have the ability to execute code on a victim system to exploit this vulnerability. After installing this security update, you must manually delete all shadow copies of system files, including the SAM database, to fully mitigate this vulnerabilty. Simply installing this security update will not fully mitigate this vulnerability. See KB5005357- Delete Volume Shadow Copies.",
       "cve_id": "CVE-2021-36934",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H/E:F/RL:T/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -89323,11 +89738,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-36934"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Windows",
       "products": [
         "Microsoft / Windows 10 Version 1809 (affected 10.0.17763.0 10.0.17763.2114)",
@@ -89378,27 +89795,36 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "If a Volume Shadow Copy (VSS) shadow copy of the system drive is available, users can read the SAM file which would allow any user to escalate privileges to SYSTEM level.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Windows SAM Local Privilege Escalation Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "NETWORK"
+      ],
       "completeness": "complete",
       "cve_description": "Windows LSA Spoofing Vulnerability",
       "cve_id": "CVE-2021-36942",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.5,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N/E:F/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -89422,11 +89848,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-36942"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "NONE"
+      ],
       "product": "Windows",
       "products": [
         "Microsoft / Windows Server 2008 R2 Service Pack 1 (affected 6.1.7601.0 6.1.7601.25685)",
@@ -89479,27 +89907,36 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Windows Local Security Authority (LSA) contains a spoofing vulnerability allowing an unauthenticated attacker to call a method on the LSARPC interface and coerce the domain controller to authenticate against another server using NTLM.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Windows Local Security Authority (LSA) Spoofing Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL"
+      ],
       "completeness": "complete",
       "cve_description": "Windows Update Medic Service Elevation of Privilege Vulnerability",
       "cve_id": "CVE-2021-36948",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H/E:F/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -89519,11 +89956,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-36948"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Windows",
       "products": [
         "Microsoft / Windows 10 Version 1809 (affected 10.0.17763.0 10.0.17763.2114)",
@@ -89576,12 +90015,17 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Windows Update Medic Service contains an unspecified vulnerability that allows for privilege escalation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Windows Update Medic Service Privilege Escalation Vulnerability"
     },
@@ -89784,10 +90228,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -89811,7 +90257,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-37973"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -89879,7 +90325,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Google Chromium Portals contains a use-after-free vulnerability that allows a remote attacker, who has compromised the renderer process, to potentially perform a sandbox escape via a crafted HTML page. This vulnerability affects web browsers that utilize Chromium, including Google Chrome and Microsoft Edge.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -89900,10 +90348,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -89927,7 +90377,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-37975"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -90003,7 +90453,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Google Chromium V8 Engine contains a use-after-free vulnerability that allows a remote attacker to potentially exploit heap corruption via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -90024,10 +90476,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -90051,7 +90505,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-37976"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -90127,7 +90581,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Google Chromium contains an information disclosure vulnerability within the core memory component that allows a remote attacker to obtain potentially sensitive information from process memory via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -90148,14 +90604,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
-        "CWE-20"
+        "CWE-20",
+        "CWE-601"
       ],
       "cwes": [
         "CWE-20"
@@ -90175,7 +90634,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-38000"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -90235,7 +90694,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Google Chromium Intents contains an improper input validation vulnerability that allows a remote attacker to arbitrarily browser to a malicious URL via a crafted HTML page. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -90256,10 +90717,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -90285,7 +90748,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-38003"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -90345,7 +90808,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Google Chromium V8 Engine has a bug in JSON.stringify, where the internal TheHole value can leak to script code, causing memory corruption. This vulnerability could affect multiple web browsers that utilize Chromium, including, but not limited to, Google Chrome, Microsoft Edge, and Opera.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -90366,13 +90831,16 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 9.9,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
+        "CWE-22",
         "CWE-23"
       ],
       "cwes": [
@@ -90383,7 +90851,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-06-09",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -90393,7 +90861,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-38163"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -90437,7 +90905,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "SAP NetWeaver contains a vulnerability that allows unrestricted file upload.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -90450,7 +90921,8 @@
     },
     {
       "attack_vector": [
-        "LOCAL"
+        "LOCAL",
+        "NETWORK"
       ],
       "completeness": "complete",
       "cve_description": "Delta Electronic DOPSoft 2 (Version 2.00.07 and prior) lacks proper validation of user-supplied data when parsing specific project files. This could result in multiple out-of-bounds write instances. An attacker could leverage this vulnerability to execute code in the context of the current process.",
@@ -90458,10 +90930,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -90485,7 +90959,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-38406"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -90543,7 +91017,9 @@
       "required_action": "The impacted product is end-of-life and should be disconnected if still in use.",
       "severity_status": "available",
       "short_description": "Delta Electronics DOPSoft 2 lacks proper validation of user-supplied data when parsing specific project files (improper input validation) resulting in an out-of-bounds write that allows for code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -90555,17 +91031,21 @@
       "vulnerability_name": "Delta Electronics DOPSoft 2 Improper Input Validation Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL"
+      ],
       "completeness": "complete",
       "cve_description": "Open Management Infrastructure Elevation of Privilege Vulnerability",
       "cve_id": "CVE-2021-38645",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H/E:U/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -90585,11 +91065,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-38645"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Open Management Infrastructure (OMI)",
       "products": [
         "Microsoft / Azure Automation State Configuration, DSC Extension (affected 2.0.0 DSC Agent versions: 2.71.1.25, 2.70.0.30, 3.0.0.3)",
@@ -90642,27 +91124,37 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Open Management Infrastructure (OMI) within Azure VM Management Extensions contains an unspecified vulnerability that allows for privilege escalation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Open Management Infrastructure (OMI) Privilege Escalation Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL",
+        "NETWORK"
+      ],
       "completeness": "complete",
       "cve_description": "Microsoft Office Access Connectivity Engine Remote Code Execution Vulnerability",
       "cve_id": "CVE-2021-38646",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H/E:U/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -90682,11 +91174,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-38646"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "NONE"
+      ],
       "product": "Office",
       "products": [
         "Microsoft / Microsoft 365 Apps for Enterprise (affected 16.0.1 https://aka.ms/OfficeSecurityReleases)",
@@ -90735,27 +91229,36 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Office Access Connectivity Engine contains an unspecified vulnerability which can allow for remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "REQUIRED"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Office Access Connectivity Engine Remote Code Execution Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "NETWORK"
+      ],
       "completeness": "complete",
       "cve_description": "Open Management Infrastructure (OMI) Remote Code Execution Vulnerability",
       "cve_id": "CVE-2021-38647",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 9.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H/E:U/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -90779,11 +91282,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-38647"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "NONE"
+      ],
       "product": "Open Management Infrastructure (OMI)",
       "products": [
         "Microsoft / Azure Automation State Configuration, DSC Extension (affected 2.0.0 DSC Agent versions: 2.71.1.25, 2.70.0.30, 3.0.0.3)",
@@ -90836,27 +91341,36 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Open Management Infrastructure (OMI) within Azure VM Management Extensions contains an unspecified vulnerability allowing remote code execution.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Open Management Infrastructure (OMI) Remote Code Execution Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL"
+      ],
       "completeness": "complete",
       "cve_description": "Open Management Infrastructure Elevation of Privilege Vulnerability",
       "cve_id": "CVE-2021-38648",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H/E:U/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -90880,11 +91394,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-38648"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Open Management Infrastructure (OMI)",
       "products": [
         "Microsoft / Azure Automation State Configuration, DSC Extension (affected 2.0.0 DSC Agent versions: 2.71.1.25, 2.70.0.30, 3.0.0.3)",
@@ -90937,27 +91453,36 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Open Management Infrastructure (OMI) within Azure VM Management Extensions contains an unspecified vulnerability allowing privilege escalation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Open Management Infrastructure (OMI) Privilege Escalation Vulnerability"
     },
     {
-      "attack_vector": [],
+      "attack_vector": [
+        "LOCAL"
+      ],
       "completeness": "complete",
       "cve_description": "Open Management Infrastructure Elevation of Privilege Vulnerability",
       "cve_id": "CVE-2021-38649",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.0,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:H/I:H/A:H/E:U/RL:O/RC:C",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [],
@@ -90977,11 +91502,13 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-38649"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
-      "privileges_required": [],
+      "privileges_required": [
+        "LOW"
+      ],
       "product": "Open Management Infrastructure (OMI)",
       "products": [
         "Microsoft / Azure Automation State Configuration, DSC Extension (affected 2.0.0 DSC Agent versions: 2.71.1.25, 2.70.0.30, 3.0.0.3)",
@@ -91034,12 +91561,17 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Microsoft Open Management Infrastructure (OMI) within Azure VM Management Extensions contains an unspecified vulnerability allowing privilege escalation.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
       "truncated_fields": [],
-      "user_interaction": [],
+      "user_interaction": [
+        "NONE"
+      ],
       "vendor_project": "Microsoft",
       "vulnerability_name": "Microsoft Open Management Infrastructure (OMI) Privilege Escalation Vulnerability"
     },
@@ -91193,14 +91725,17 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 9.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
-        "CWE-287"
+        "CWE-287",
+        "CWE-862"
       ],
       "cwes": [
         "CWE-287"
@@ -91220,7 +91755,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-39226"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -91287,7 +91822,11 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "available",
       "short_description": "Grafana contains an authentication bypass vulnerability that allows authenticated and unauthenticated users to view and delete all snapshot data, potentially resulting in complete snapshot data loss.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "cwe",
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -91308,10 +91847,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -91325,7 +91866,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-04-11",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -91335,7 +91876,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-39793"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -91379,7 +91920,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "Google Pixel contains a possible out-of-bounds write due to a logic error in the code that could lead to local escalation of privilege.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -91400,10 +91943,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 6.8,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:C/C:H/I:N/A:N",
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -91417,7 +91962,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2026-02-03",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Unknown",
@@ -91427,7 +91972,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-39935"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -91478,7 +92023,10 @@
       "required_action": "Apply mitigations per vendor instructions, follow applicable BOD 22-01 guidance for cloud services, or discontinue use of the product if mitigations are unavailable.",
       "severity_status": "available",
       "short_description": "GitLab Community and Enterprise Editions contain a server-side request forgery vulnerability which could allow unauthorized external users to perform Server Side Requests via the CI Lint API.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cvss",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "partial",
@@ -91499,13 +92047,16 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
+        "CWE-125",
         "CWE-787"
       ],
       "cwes": [
@@ -91516,7 +92067,7 @@
       "epss_status": "unavailable",
       "has_affected_versions": true,
       "has_fixed_version": false,
-      "has_vendor_advisory": false,
+      "has_vendor_advisory": true,
       "kev_date_added": "2022-06-27",
       "kev_listed": true,
       "known_ransomware_campaign_use": "Known",
@@ -91526,7 +92077,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-4034"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -91570,7 +92121,10 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "The Red Hat polkit pkexec utility contains an out-of-bounds read and write vulnerability that allows for privilege escalation with administrative rights.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "cwe",
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -91591,11 +92145,14 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": 9.1,
       "cvss_sources": [
-        "cve_cna"
+        "cve_cna",
+        "nvd"
       ],
       "cvss_vector": "CVSS:3.0/AV:N/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H",
       "cvss_versions": [
-        "3.0"
+        "2.0",
+        "3.0",
+        "3.1"
       ],
       "cwe_ids": [
         "CWE-78"
@@ -91618,7 +92175,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-40407"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -91676,7 +92233,9 @@
       "required_action": "The impacted product could be end-of-life (EoL) and/or end-of-service (EoS). Users should discontinue product utilization if a current mitigation is unavailable.",
       "severity_status": "available",
       "short_description": "Reolink RLC-410W IP cameras contain an authenticated OS command injection vulnerability in the device network settings functionality.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "no",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -91697,10 +92256,12 @@
       "cve_state": "PUBLISHED",
       "cvss_base_score": null,
       "cvss_sources": [
-        "cisa_adp"
+        "cisa_adp",
+        "nvd"
       ],
       "cvss_vector": null,
       "cvss_versions": [
+        "2.0",
         "3.1"
       ],
       "cwe_ids": [
@@ -91724,7 +92285,7 @@
         "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
         "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2021-40438"
       },
-      "nvd_status": "unavailable",
+      "nvd_status": "ok",
       "omitted_product_count": 0,
       "omitted_version_count": 0,
       "partial": false,
@@ -91808,7 +92369,9 @@
       "required_action": "Apply updates per vendor instructions.",
       "severity_status": "unavailable",
       "short_description": "A crafted request uri-path can cause mod_proxy to forward the request to an origin server choosen by the remote user. This issue affects Apache HTTP Server 2.4.48 and earlier.",
-      "source_conflicts": [],
+      "source_conflicts": [
+        "affected_products"
+      ],
       "ssvc_automatable": "yes",
       "ssvc_exploitation": "active",
       "ssvc_technical_impact": "total",
@@ -166521,6 +167084,134 @@
         "NETWORK"
       ],
       "completeness": "complete",
+      "cve_description": "The labeled-response module in UnrealIRCd 6.0.0 before 6.2.7.1 does not escape the IRCv3 \"label\" message tag when echoing it into replies, which allows any user on a network with two or more linked servers to inject server-to-server commands that are executed with server authority.",
+      "cve_id": "CVE-2026-114713",
+      "cve_state": "PUBLISHED",
+      "cvss_base_score": 8.6,
+      "cvss_sources": [
+        "cve_cna",
+        "nvd"
+      ],
+      "cvss_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:H/A:N",
+      "cvss_versions": [
+        "3.1"
+      ],
+      "cwe_ids": [
+        "CWE-140"
+      ],
+      "cwes": [
+        "CWE-140"
+      ],
+      "due_date": "2026-11-16",
+      "epss_score": null,
+      "epss_status": "unavailable",
+      "has_affected_versions": true,
+      "has_fixed_version": false,
+      "has_vendor_advisory": false,
+      "kev_date_added": "2026-11-13",
+      "kev_listed": true,
+      "known_ransomware_campaign_use": "Unknown",
+      "links": {
+        "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-114713",
+        "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/114xxx/CVE-2026-114713.json",
+        "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+        "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-114713"
+      },
+      "nvd_status": "ok",
+      "omitted_product_count": 0,
+      "omitted_version_count": 0,
+      "partial": false,
+      "privileges_required": [
+        "NONE"
+      ],
+      "product": "UnrealIRCd",
+      "products": [
+        "UnrealIRCd / UnrealIRCd / unaffected (affected 0 6.2.7.1)"
+      ],
+      "remediation": {
+        "items": [
+          {
+            "attribution": "CISA KEV requiredAction",
+            "kind": "required_action",
+            "source": "cisa_kev",
+            "text": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+            "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+          },
+          {
+            "attribution": "CISA KEV notes",
+            "kind": "reference",
+            "source": "cisa_kev",
+            "text": "https://forums.unrealircd.org/viewtopic.php?t=9487 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-114713"
+          },
+          {
+            "attribution": "CISA KEV notes",
+            "kind": "reference",
+            "source": "cisa_kev",
+            "url": "https://forums.unrealircd.org/viewtopic.php?t=9487"
+          },
+          {
+            "attribution": "CISA KEV notes",
+            "kind": "reference",
+            "source": "cisa_kev",
+            "url": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk"
+          },
+          {
+            "attribution": "CISA KEV notes",
+            "kind": "reference",
+            "source": "cisa_kev",
+            "url": "https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk"
+          },
+          {
+            "attribution": "CISA KEV notes",
+            "kind": "reference",
+            "source": "cisa_kev",
+            "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-114713"
+          },
+          {
+            "attribution": "CVE List V5 CNA solutions",
+            "kind": "verified_fix",
+            "source": "cve_list_v5",
+            "text": "Upgrade to UnrealIRCd 6.2.7.1 or later. Alternatively, apply the hot-patch to fix the issue without restart: ./unrealircd hot-patch bundle-20261107"
+          },
+          {
+            "attribution": "CVE List V5 CNA workarounds",
+            "kind": "mitigation",
+            "source": "cve_list_v5",
+            "text": "Add the following line to the configuration file of all servers until the patch or upgrade is applied: blacklist-module \"labeled-response\";"
+          }
+        ],
+        "note": "Remediation is copied from CISA KEV and CVE List V5 CNA fields. No verified remediation data does not mean a fix is unavailable.",
+        "status": "available"
+      },
+      "remediation_kinds": [
+        "required_action",
+        "reference",
+        "reference",
+        "reference",
+        "reference",
+        "reference",
+        "verified_fix",
+        "mitigation"
+      ],
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "severity_status": "available",
+      "short_description": "UnrealIRCd UnrealIRCd contains an improper neutralization of delimiters vulnerability that allows any user on a network with two or more linked servers to inject server-to-server commands that are executed with server authority.",
+      "source_conflicts": [],
+      "ssvc_automatable": "yes",
+      "ssvc_exploitation": "active",
+      "ssvc_technical_impact": "total",
+      "truncated_fields": [],
+      "user_interaction": [
+        "NONE"
+      ],
+      "vendor_project": "UnrealIRCd",
+      "vulnerability_name": "UnrealIRCd Improper Neutralization of Delimiters Vulnerability"
+    },
+    {
+      "attack_vector": [
+        "NETWORK"
+      ],
+      "completeness": "complete",
       "cve_description": "Out of bounds read and write in V8 in Google Chrome prior to 149.0.7827.103 allowed a remote attacker to execute arbitrary code inside a sandbox via a crafted HTML page. (Chromium security severity: High)",
       "cve_id": "CVE-2026-11645",
       "cve_state": "PUBLISHED",
@@ -167111,6 +167802,123 @@
       ],
       "vendor_project": "WordPress",
       "vulnerability_name": "WordPress WordPress Core Time-of-check Time-of-use (TOCTOU) Race Condition Vulnerability"
+    },
+    {
+      "attack_vector": [
+        "LOCAL"
+      ],
+      "completeness": "complete",
+      "cve_description": "The Gaia OS DynamicCLI daemon runs as root and listens on a world-writable local socket (/tmp/dynamic_socket) without authenticating connecting processes. An authenticated local user can send a command to the socket and have it executed as root.",
+      "cve_id": "CVE-2026-123039",
+      "cve_state": "PUBLISHED",
+      "cvss_base_score": 7.8,
+      "cvss_sources": [
+        "cve_cna",
+        "nvd"
+      ],
+      "cvss_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+      "cvss_versions": [
+        "3.1"
+      ],
+      "cwe_ids": [
+        "CWE-732",
+        "CWE-862"
+      ],
+      "cwes": [
+        "CWE-732",
+        "CWE-862"
+      ],
+      "due_date": "2026-11-16",
+      "epss_score": null,
+      "epss_status": "unavailable",
+      "has_affected_versions": true,
+      "has_fixed_version": false,
+      "has_vendor_advisory": false,
+      "kev_date_added": "2026-11-13",
+      "kev_listed": true,
+      "known_ransomware_campaign_use": "Unknown",
+      "links": {
+        "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-123039",
+        "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/123xxx/CVE-2026-123039.json",
+        "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+        "nvd": "https://nvd.nist.gov/vuln/detail/CVE-2026-123039"
+      },
+      "nvd_status": "ok",
+      "omitted_product_count": 0,
+      "omitted_version_count": 0,
+      "partial": false,
+      "privileges_required": [
+        "LOW"
+      ],
+      "product": "Multiple Products",
+      "products": [
+        "checkpoint / Quantum Security Gateway (affected R82.10 with Jumbo Hotfix Take 50 or below, affected R82.20 with Jumbo Hotfix Take 10 or below, affected R82 with Jumbo Hotfix Take 130 or below)",
+        "checkpoint / Quantum Security Management (affected R82.10 with Jumbo Hotfix Take 50 or below, affected R82.20 with Jumbo Hotfix Take 10 or below, affected R82 with Jumbo Hotfix Take 130 or below)"
+      ],
+      "remediation": {
+        "items": [
+          {
+            "attribution": "CISA KEV requiredAction",
+            "kind": "required_action",
+            "source": "cisa_kev",
+            "text": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+            "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+          },
+          {
+            "attribution": "CISA KEV notes",
+            "kind": "reference",
+            "source": "cisa_kev",
+            "text": "https://support.checkpoint.com/results/sk/sk1000362 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-123039"
+          },
+          {
+            "attribution": "CISA KEV notes",
+            "kind": "reference",
+            "source": "cisa_kev",
+            "url": "https://support.checkpoint.com/results/sk/sk1000362"
+          },
+          {
+            "attribution": "CISA KEV notes",
+            "kind": "reference",
+            "source": "cisa_kev",
+            "url": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk"
+          },
+          {
+            "attribution": "CISA KEV notes",
+            "kind": "reference",
+            "source": "cisa_kev",
+            "url": "https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk"
+          },
+          {
+            "attribution": "CISA KEV notes",
+            "kind": "reference",
+            "source": "cisa_kev",
+            "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-123039"
+          }
+        ],
+        "note": "Remediation is copied from CISA KEV and CVE List V5 CNA fields. No verified remediation data does not mean a fix is unavailable.",
+        "status": "available"
+      },
+      "remediation_kinds": [
+        "required_action",
+        "reference",
+        "reference",
+        "reference",
+        "reference",
+        "reference"
+      ],
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "severity_status": "available",
+      "short_description": "Check Point Firewall, Multi-Domain Security Management Server, Scalable Platforms, Security Gateway, and Security Management Server contain an incorrect permissions assignment for critical resources vulnerability when the Gaia OS DynamicCLI daemon runs as root and listens on a world-writable local socket without authenticating connecting processes. An authenticated local user can send a command to the socket and have it executed as root.",
+      "source_conflicts": [],
+      "ssvc_automatable": "no",
+      "ssvc_exploitation": "active",
+      "ssvc_technical_impact": "total",
+      "truncated_fields": [],
+      "user_interaction": [
+        "NONE"
+      ],
+      "vendor_project": "Check Point",
+      "vulnerability_name": "Check Point Multiple Products Incorrect Permission Assignment for Critical Resource Vulnerability"
     },
     {
       "attack_vector": [
@@ -170558,7 +171366,7 @@
         "NETWORK"
       ],
       "completeness": "complete",
-      "cve_description": "A vulnerability in the Open Client Interface (OCI) XML Parser of Cisco BroadWorks could allow an unauthenticated, remote attacker to read sensitive configuration information on an affected system.    This vulnerability exists because XML entries are improperly parsed due to external entity resolution being allowed by default. An attacker could exploit this vulnerability by sending a crafted XML message to the Open Client Interface &ndash; Provisioning (OCI-P) service. A successful exploit could allow the attacker to view sensitive files from the filesystem with the privileges of the Cisco BroadWorks user.",
+      "cve_description": "A vulnerability in the Open Client Interface (OCI) XML Parser of Cisco BroadWorks could allow an unauthenticated, remote attacker to read sensitive configuration information on an affected system.     This vulnerability exists because XML entries are improperly parsed due to external entity resolution being allowed by default. An attacker could exploit this vulnerability by sending a crafted XML message to the Open Client Interface &ndash; Provisioning (OCI-P) service. A successful exploit could allow the attacker to view sensitive files from the filesystem with the privileges of the Cisco BroadWorks user.",
       "cve_id": "CVE-2026-20320",
       "cve_state": "PUBLISHED",
       "cvss_base_score": 7.5,
@@ -187852,5 +188660,5 @@
     }
   ],
   "schema_version": "1.0.0",
-  "snapshot_id": "20261113T161738Z_9da8b3bb5385"
+  "snapshot_id": "20261114T151118Z_325d8a34d44a"
 }

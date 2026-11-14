@@ -1,11 +1,11 @@
 {
-  "candidate_digest": "0fa582248c05a50a60557dd66263900b7bb905eb73024297390e8beea019a769",
-  "collect_run_id": "43606296303",
-  "deployment_run_id": "43608859663",
-  "expected_previous_snapshot_id": "20261113T161738Z_9da8b3bb5385",
+  "candidate_digest": "3739f036ac7d94f2fd809202bdd0cc3149ff3f5d7554046a6bfea38fd18ba913",
+  "collect_run_id": "41493683214",
+  "deployment_run_id": "41495894077",
+  "expected_previous_snapshot_id": "20261030T144825Z_de81c7ade146",
   "note": "Intent is recorded before Pages deploy. A successful deploy-pages job is not proof the public CDN serves this snapshot.",
   "schema_version": "1.0.0",
-  "snapshot_id": "20261114T151118Z_325d8a34d44a",
+  "snapshot_id": "20261102T175627Z_c3499a45d7d4",
   "state": "pending_deploy",
-  "updated_at": "2026-11-14T15:13:08Z"
+  "updated_at": "2026-11-02T17:57:41Z"
 }
