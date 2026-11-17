@@ -14,7 +14,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-05-25",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2010-0738",
@@ -46,7 +46,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-05-25",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2010-1428",
@@ -78,7 +78,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-25",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2010-2861",
@@ -110,7 +110,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-06-08",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2011-2462",
@@ -142,7 +142,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-06-08",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2012-0754",
@@ -174,7 +174,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-28",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2013-2729",
@@ -206,7 +206,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2013-3346",
@@ -238,7 +238,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-01-10",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2013-3900",
@@ -270,7 +270,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2024-09-17",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2014-0497",
@@ -302,7 +302,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-05-25",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2014-0546",
@@ -334,7 +334,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2024-11-12",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2014-2120",
@@ -366,7 +366,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-04-13",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2015-0311",
@@ -398,7 +398,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-04-13",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2015-0313",
@@ -430,7 +430,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2015-3043",
@@ -462,7 +462,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-04-13",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2015-3113",
@@ -494,7 +494,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2015-5119",
@@ -526,7 +526,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-04-13",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2015-5122",
@@ -558,7 +558,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-04-13",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2015-5123",
@@ -590,7 +590,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2016-1019",
@@ -622,7 +622,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2016-4117",
@@ -654,7 +654,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-25",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2016-4171",
@@ -686,7 +686,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2017-12240",
@@ -718,7 +718,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2017-6627",
@@ -750,7 +750,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-25",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-0147",
@@ -782,7 +782,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-0155",
@@ -814,7 +814,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-0156",
@@ -846,7 +846,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-0158",
@@ -878,7 +878,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-0171",
@@ -910,7 +910,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-0172",
@@ -942,7 +942,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-0175",
@@ -974,7 +974,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-0179",
@@ -1006,7 +1006,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-0180",
@@ -1038,7 +1038,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-0296",
@@ -1070,7 +1070,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2024-08-05",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-0824",
@@ -1102,7 +1102,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-13379",
@@ -1134,7 +1134,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-01-10",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-13382",
@@ -1166,7 +1166,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-01-10",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-13383",
@@ -1198,7 +1198,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-05-24",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-19943",
@@ -1230,7 +1230,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-02-15",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-20250",
@@ -1262,7 +1262,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-04-13",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-7602",
@@ -1294,7 +1294,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2025-03-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2018-8639",
@@ -1326,7 +1326,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-15",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2019-1064",
@@ -1358,7 +1358,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-15",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2019-1069",
@@ -1390,7 +1390,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-25",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2019-11043",
@@ -1422,7 +1422,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2019-11510",
@@ -1454,7 +1454,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2019-11539",
@@ -1486,7 +1486,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-03-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2019-1652",
@@ -1518,7 +1518,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2021-11-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2019-18187",
@@ -1550,7 +1550,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-04-19",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2019-3568",
@@ -1582,7 +1582,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2022-04-15",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2019-3929",
@@ -1602,17 +1602,17 @@
     }
   ],
   "changes_available": true,
-  "collection_completed_at": "2026-11-16T18:03:36Z",
-  "collection_started_at": "2026-11-16T17:48:42Z",
-  "generated_at": "2026-11-16T18:03:36Z",
+  "collection_completed_at": "2026-11-17T17:31:51Z",
+  "collection_started_at": "2026-11-17T17:18:51Z",
+  "generated_at": "2026-11-17T17:31:51Z",
   "note": "This snapshot is public vulnerability intelligence. status is collection outcome (ok, degraded, or failed), not freshness and not per-record completeness. records[].completeness describes extracted inventory completeness; a complete extraction does not prove complete real-world product affectedness. Freshness must be recomputed at viewing time. Confirmed exploitation, estimated probability, severity, product affectedness, and deployment exposure are separate signals.",
   "publication_comparison": {
     "added_count": 0,
     "available": true,
-    "compared_to_generated_at": "2026-11-15T15:39:43Z",
-    "compared_to_snapshot_id": "20261115T153943Z_6e1fabc4c734",
-    "current_generated_at": "2026-11-16T18:03:36Z",
-    "current_snapshot_id": "20261116T180336Z_903715f7e938",
+    "compared_to_generated_at": "2026-11-16T18:03:36Z",
+    "compared_to_snapshot_id": "20261116T180336Z_903715f7e938",
+    "current_generated_at": "2026-11-17T17:31:51Z",
+    "current_snapshot_id": "20261117T173151Z_e943b6d78fdb",
     "enrichment_count": 0,
     "enrichment_sample": [],
     "reason": null,
@@ -1620,146 +1620,42 @@
     "rows": [
       {
         "after": {
-          "affected_products": "PHP Group/PHP [affected 8.2.* 8.2.35, affected 8.3.* 8.3.36, affected 8.4.* 8.4.27, affected 8.5.* 8.5.12]",
+          "affected_products": "Microsoft/Microsoft 365 Apps for Enterprise [affected 16.0.1 https://aka.ms/OfficeSecurityReleases]; Microsoft/Microsoft Office LTSC 2021 [affected 16.0.1 16.0.14334.21048]; Microsoft/Microsoft Office LTSC 2024 [affected 16.0.0 16.0.17932.21140]",
           "completeness": "complete",
-          "cve_assigner": "php",
-          "cve_date_updated": "2026-11-16T15:18:23.272Z",
-          "cve_description": "PHP uses longjmp() for out-of-memory (OOM) errors to exit the current context and abort handling of the request. Some contexts may not properly account for this scenario and leave request memory in an uninitialized state before performing an allocation. The subsequent request cleanup procedure may read or branch on this memory. Multiple OOM strategies can consistently trigger this condition and lead to remote code execution (RCE).",
+          "cve_assigner": "microsoft",
+          "cve_date_updated": "2026-11-16T19:27:29.924Z",
+          "cve_description": "Product ui does not warn user of unsafe actions in Microsoft Office Outlook allows an unauthorized attacker to perform spoofing over a network.",
           "cve_state": "PUBLISHED",
           "cve_status": "ok",
-          "cve_title": "RCE via OOM corruption",
-          "cvss_base_score": 9.2,
-          "cvss_base_severity": "CRITICAL",
-          "due_date": "2026-10-29",
-          "kev_date_added": "2026-10-26",
-          "product": "PHP",
-          "remediation_item_count": 2,
-          "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
-          "vendor_project": "PHP Group",
-          "vulnerability_name": "PHP Memory Corruption Vulnerability"
-        },
-        "before": {
-          "affected_products": "PHP Group/PHP [affected 8.2.* 8.2.35, affected 8.3.* 8.3.36, affected 8.4.* 8.4.27, affected 8.5.* 8.5.12]",
-          "completeness": "complete",
-          "cve_assigner": "php",
-          "cve_date_updated": "2026-11-15T00:15:58.835Z",
-          "cve_description": "PHP uses longjmp() for out-of-memory (OOM) errors to exit the current context and abort handling of the request. Some contexts may not properly account for this scenario and leave request memory in an uninitialized state before performing an allocation. The subsequent request cleanup procedure may read or branch on this memory. Multiple OOM strategies can consistently trigger this condition and lead to remote code execution (RCE).",
-          "cve_state": "PUBLISHED",
-          "cve_status": "ok",
-          "cve_title": "RCE via OOM corruption",
-          "cvss_base_score": 9.2,
-          "cvss_base_severity": "CRITICAL",
-          "due_date": "2026-10-29",
-          "kev_date_added": "2026-10-26",
-          "product": "PHP",
-          "remediation_item_count": 2,
-          "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
-          "vendor_project": "PHP Group",
-          "vulnerability_name": "PHP Memory Corruption Vulnerability"
-        },
-        "categories": [
-          "cve_update"
-        ],
-        "changed_fields": [
-          "cve_date_updated"
-        ],
-        "cve_id": "CVE-2026-109618",
-        "links": {
-          "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-109618",
-          "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/109xxx/CVE-2026-109618.json",
-          "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
-        }
-      },
-      {
-        "after": {
-          "affected_products": "PHP Group/PHP [affected 8.2.* 8.2.35, affected 8.3.* 8.3.36, affected 8.4.* 8.4.27, affected 8.5.* 8.5.12]",
-          "completeness": "complete",
-          "cve_assigner": "php",
-          "cve_date_updated": "2026-11-16T15:18:24.606Z",
-          "cve_description": "PHP has various global state that temporarily points into request memory. In some scenarios, global state may not be correctly reset, or may be repopulated after being reset. The global state may then refer to request memory even after it has been freed. Subsequent requests may read or branch on this stale state before it is fully initialized. Multiple strategies can trigger this condition and produce remote code execution (RCE).",
-          "cve_state": "PUBLISHED",
-          "cve_status": "ok",
-          "cve_title": "RCE via stale global state",
-          "cvss_base_score": 9.2,
-          "cvss_base_severity": "CRITICAL",
-          "due_date": "2026-10-29",
-          "kev_date_added": "2026-10-26",
-          "product": "PHP",
-          "remediation_item_count": 2,
-          "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
-          "vendor_project": "PHP Group",
-          "vulnerability_name": "PHP Stale Internal Request-State Vulnerability"
-        },
-        "before": {
-          "affected_products": "PHP Group/PHP [affected 8.2.* 8.2.35, affected 8.3.* 8.3.36, affected 8.4.* 8.4.27, affected 8.5.* 8.5.12]",
-          "completeness": "complete",
-          "cve_assigner": "php",
-          "cve_date_updated": "2026-11-05T18:17:39.997Z",
-          "cve_description": "PHP has various global state that temporarily points into request memory. In some scenarios, global state may not be correctly reset, or may be repopulated after being reset. The global state may then refer to request memory even after it has been freed. Subsequent requests may read or branch on this stale state before it is fully initialized. Multiple strategies can trigger this condition and produce remote code execution (RCE).",
-          "cve_state": "PUBLISHED",
-          "cve_status": "ok",
-          "cve_title": "RCE via stale global state",
-          "cvss_base_score": 9.2,
-          "cvss_base_severity": "CRITICAL",
-          "due_date": "2026-10-29",
-          "kev_date_added": "2026-10-26",
-          "product": "PHP",
-          "remediation_item_count": 2,
-          "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
-          "vendor_project": "PHP Group",
-          "vulnerability_name": "PHP Stale Internal Request-State Vulnerability"
-        },
-        "categories": [
-          "cve_update"
-        ],
-        "changed_fields": [
-          "cve_date_updated"
-        ],
-        "cve_id": "CVE-2026-109619",
-        "links": {
-          "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-109619",
-          "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/109xxx/CVE-2026-109619.json",
-          "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
-        }
-      },
-      {
-        "after": {
-          "affected_products": "Barracuda Networks/Barracuda Email Security Gateway (ESG) [affected 0 9.4.0.030]",
-          "completeness": "complete",
-          "cve_assigner": "Mandiant",
-          "cve_date_updated": "2026-11-16T17:19:56.177Z",
-          "cve_description": "An authentication bypass in Barracuda Email Security Gateway versions earlier than 9.4.0.030 allows an unauthenticated remote attacker to invoke a configuration-import function and restore a crafted, compatible backup archive, resulting in unauthorized modification of the appliance’s global configuration.",
-          "cve_state": "PUBLISHED",
-          "cve_status": "ok",
-          "cve_title": "Authentication Bypass Allows Global Configuration Restore in Barracuda Email Security Gateway",
-          "cvss_base_score": 9.3,
-          "cvss_base_severity": "CRITICAL",
-          "due_date": "2026-11-13",
+          "cve_title": "Microsoft Outlook Spoofing Vulnerability",
+          "cvss_base_score": 6.5,
+          "cvss_base_severity": "MEDIUM",
+          "due_date": "2026-11-24",
           "kev_date_added": "2026-11-10",
-          "product": "Barracuda Email Security Gateway (ESG)",
+          "product": "Office",
           "remediation_item_count": 1,
           "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
-          "vendor_project": "Barracuda Networks",
-          "vulnerability_name": "Barracuda Networks Email Security Gateway (ESG) Authentication Bypass Using an Alternate Path or Channel Vulnerability"
+          "vendor_project": "Microsoft",
+          "vulnerability_name": "Microsoft Office Outlook Missing User Interaction for Potentially Unsafe Action Vulnerability"
         },
         "before": {
-          "affected_products": "Barracuda Networks/Barracuda Email Security Gateway (ESG) [affected 0 9.4.0.030]",
+          "affected_products": "Microsoft/Microsoft 365 Apps for Enterprise [affected 16.0.1 https://aka.ms/OfficeSecurityReleases]; Microsoft/Microsoft Office LTSC 2021 [affected 16.0.1 16.0.14334.21048]; Microsoft/Microsoft Office LTSC 2024 [affected 16.0.0 16.0.17932.21140]",
           "completeness": "complete",
-          "cve_assigner": "Mandiant",
-          "cve_date_updated": "2026-11-11T04:55:23.905Z",
-          "cve_description": "An authentication bypass in Barracuda Email Security Gateway versions earlier than 9.4.0.030 allows an unauthenticated remote attacker to invoke a configuration-import function and restore a crafted, compatible backup archive, resulting in unauthorized modification of the appliance’s global configuration.",
+          "cve_assigner": "microsoft",
+          "cve_date_updated": "2026-11-13T18:11:07.384Z",
+          "cve_description": "Product ui does not warn user of unsafe actions in Microsoft Office Outlook allows an unauthorized attacker to perform spoofing over a network.",
           "cve_state": "PUBLISHED",
           "cve_status": "ok",
-          "cve_title": "Authentication Bypass Allows Global Configuration Restore in Barracuda Email Security Gateway",
-          "cvss_base_score": 9.3,
-          "cvss_base_severity": "CRITICAL",
-          "due_date": "2026-11-13",
+          "cve_title": "Microsoft Outlook Spoofing Vulnerability",
+          "cvss_base_score": 6.5,
+          "cvss_base_severity": "MEDIUM",
+          "due_date": "2026-11-24",
           "kev_date_added": "2026-11-10",
-          "product": "Barracuda Email Security Gateway (ESG)",
+          "product": "Office",
           "remediation_item_count": 1,
           "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
-          "vendor_project": "Barracuda Networks",
-          "vulnerability_name": "Barracuda Networks Email Security Gateway (ESG) Authentication Bypass Using an Alternate Path or Channel Vulnerability"
+          "vendor_project": "Microsoft",
+          "vulnerability_name": "Microsoft Office Outlook Missing User Interaction for Potentially Unsafe Action Vulnerability"
         },
         "categories": [
           "cve_update"
@@ -1767,16 +1663,16 @@
         "changed_fields": [
           "cve_date_updated"
         ],
-        "cve_id": "CVE-2026-116606",
+        "cve_id": "CVE-2026-124194",
         "links": {
-          "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-116606",
-          "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/116xxx/CVE-2026-116606.json",
+          "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-124194",
+          "cvelist_v5": "https://github.com/CVEProject/cvelistV5/blob/main/cves/2026/124xxx/CVE-2026-124194.json",
           "kev_catalog": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
         }
       }
     ],
     "truncated": false,
-    "updated_count": 3
+    "updated_count": 1
   },
   "recent_kev_additions": [
     {
@@ -1793,7 +1689,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-11-13",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-123039",
@@ -1825,7 +1721,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-11-13",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-114713",
@@ -1857,7 +1753,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-11-10",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-20320",
@@ -1889,7 +1785,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-11-10",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-125350",
@@ -1910,10 +1806,10 @@
     {
       "change": "recent_kev_addition",
       "completeness": "complete",
-      "cve_date_updated": "2026-11-13T18:11:07.384Z",
+      "cve_date_updated": "2026-11-16T19:27:29.924Z",
       "cve_id": "CVE-2026-124194",
-      "cve_retrieved_at": "2026-11-14T14:45:48Z",
-      "cve_source_updated_at": "2026-11-13T18:11:07.384Z",
+      "cve_retrieved_at": "2026-11-17T17:18:53Z",
+      "cve_source_updated_at": "2026-11-16T19:27:29.924Z",
       "cve_state": "PUBLISHED",
       "cve_status": "ok",
       "cvss_base_score": 6.5,
@@ -1921,7 +1817,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-11-10",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-124194",
@@ -1932,7 +1828,7 @@
       "omitted_version_count": 0,
       "partial": false,
       "product": "Office",
-      "retrieved_at": "2026-11-14T14:45:48Z",
+      "retrieved_at": "2026-11-17T17:18:53Z",
       "severity_status": "available",
       "source_published_at": "2026-11-13T20:24:18.3008Z",
       "truncated_fields": [],
@@ -1953,7 +1849,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-11-10",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-116606",
@@ -1985,7 +1881,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-11-10",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-111793",
@@ -2017,7 +1913,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-11-10",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-111560",
@@ -2049,7 +1945,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-11-09",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-123218",
@@ -2081,7 +1977,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-11-09",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-123158",
@@ -2113,7 +2009,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-11-09",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-116779",
@@ -2145,7 +2041,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-11-09",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-102895",
@@ -2177,7 +2073,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-11-06",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-19868",
@@ -2209,7 +2105,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-11-04",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2024-27834",
@@ -2241,7 +2137,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-11-03",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-119977",
@@ -2273,7 +2169,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-30",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-118527",
@@ -2305,7 +2201,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-30",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-111357",
@@ -2337,7 +2233,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-29",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-97229",
@@ -2369,7 +2265,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-29",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-76418",
@@ -2401,7 +2297,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-28",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-46300",
@@ -2433,7 +2329,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-28",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-41709",
@@ -2465,7 +2361,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-27",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-48356",
@@ -2497,7 +2393,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-27",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-111497",
@@ -2529,7 +2425,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-26",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-109619",
@@ -2561,7 +2457,7 @@
       "epss_status": "unavailable",
       "kev_date_added": "2026-10-26",
       "kev_listed": true,
-      "kev_retrieved_at": "2026-11-16T17:48:43Z",
+      "kev_retrieved_at": "2026-11-17T17:18:52Z",
       "kev_source_published_at": "2026-11-13T20:24:18.3008Z",
       "links": {
         "cve_record": "https://www.cve.org/CVERecord?id=CVE-2026-109618",
@@ -2581,21 +2477,21 @@
     }
   ],
   "schema_version": "1.0.0",
-  "snapshot_id": "20261116T180336Z_903715f7e938",
+  "snapshot_id": "20261117T173151Z_e943b6d78fdb",
   "sources": {
     "cve": {
-      "content_sha256": "3158c25055a38caf379854b77deb616674c6a24e6ff9e7aa3fd13d1ac04648e6",
+      "content_sha256": "c7c1e3181a106f42038481be91156a31f880d136b6439902615939802db18350",
       "error": "18 CVE records have truncated fields",
       "id": "cve-list-v5",
       "license": "CVE Program Terms of Use",
       "name": "CVE List V5",
-      "notes": "CVE is a registered trademark and the CVE List is copyright The MITRE Corporation. Use of CVE and the CVE List is subject to the CVE Program Terms of Use at https://www.cve.org/Legal/TermsOfUse. Any copy of CVE data must reproduce MITRE's copyright designation and that license. Incremental strategy=delta; fetched=3; reused=1778.",
+      "notes": "CVE is a registered trademark and the CVE List is copyright The MITRE Corporation. Use of CVE and the CVE List is subject to the CVE Program Terms of Use at https://www.cve.org/Legal/TermsOfUse. Any copy of CVE data must reproduce MITRE's copyright designation and that license. Incremental strategy=delta; fetched=1; reused=1780.",
       "parser_version": "1.0.0",
-      "retrieved_at": "2026-11-16T17:48:44Z",
+      "retrieved_at": "2026-11-17T17:18:53Z",
       "schema_version": "CVE Record Format 5.x (dataVersion on each record)",
       "source_published_at": "2025-10-21T18:43:58.429Z",
-      "source_revision": "2026-11-16T17:42:04.613Z",
-      "source_updated_at": "2026-11-16T17:19:56.177Z",
+      "source_revision": "2026-11-17T17:13:59.003Z",
+      "source_updated_at": "2026-11-16T19:27:29.924Z",
       "status": "degraded",
       "url": "https://github.com/CVEProject/cvelistV5"
     },
@@ -2623,7 +2519,7 @@
       "name": "CISA Known Exploited Vulnerabilities Catalog",
       "notes": "The CISA Known Exploited Vulnerabilities catalog is dedicated to the public domain under CC0 1.0. Use does not authorize use of the CISA logo or DHS seal and is not an endorsement by CISA or DHS. See https://www.cisa.gov/sites/default/files/licenses/kev/license.txt",
       "parser_version": "1.0.0",
-      "retrieved_at": "2026-11-16T17:48:43Z",
+      "retrieved_at": "2026-11-17T17:18:52Z",
       "schema_version": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities_schema.json",
       "source_published_at": "2026-11-13T20:24:18.3008Z",
       "source_revision": "2026.11.13",
@@ -2632,17 +2528,17 @@
       "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
     },
     "nvd": {
-      "content_sha256": "85cbf704cc93463b3839198f03d0d7662548aceb8b71baa5b16652ae2c45a372",
+      "content_sha256": "42806b7fe64515411e097284edd49102c7b77ca27fe3ff875338c958d76c7e3c",
       "error": null,
       "id": "nvd",
       "license": "NVD-API-2.0",
       "name": "NVD CVE API 2.0",
-      "notes": "NVD enrichment available for 1106 of 1781 KEV records. Missing NVD rows stay unavailable and do not invalidate KEV data. Pending bounded backfill: 1154 identifiers. This product uses the NVD API but is not endorsed or certified by the NVD. NVD data is provided as-is. See https://nvd.nist.gov/ and https://nvd.nist.gov/developers/vulnerabilities.",
+      "notes": "NVD enrichment available for 1226 of 1781 KEV records. Missing NVD rows stay unavailable and do not invalidate KEV data. Pending bounded backfill: 1154 identifiers. This product uses the NVD API but is not endorsed or certified by the NVD. NVD data is provided as-is. See https://nvd.nist.gov/ and https://nvd.nist.gov/developers/vulnerabilities.",
       "parser_version": "1.0.0",
-      "retrieved_at": "2026-11-10T16:05:11Z",
+      "retrieved_at": "2026-11-12T18:27:08Z",
       "schema_version": "2.0",
       "source_published_at": null,
-      "source_revision": "85cbf704cc93463b3839198f03d0d7662548aceb8b71baa5b16652ae2c45a372",
+      "source_revision": "42806b7fe64515411e097284edd49102c7b77ca27fe3ff875338c958d76c7e3c",
       "source_updated_at": null,
       "status": "degraded",
       "url": "https://services.nvd.nist.gov/rest/json/cves/2.0"
@@ -2650,48 +2546,48 @@
   },
   "status": "degraded",
   "summary": {
-    "bytes_transferred": 2321356,
-    "changed_cve_information": 325,
+    "bytes_transferred": 2393977,
+    "changed_cve_information": 369,
     "collector_commit_sha": "4e71d06091edffc6acd37f23861ecb49cfa74f14",
     "complete_records": 1763,
-    "cve_delta_log_sha256": "bde248263a14f9a587dddfb560a0334bcf45e834af1c3f3d4ae0ed7a00012e62",
-    "cve_delta_sha256": "761c3b22b1d728b275bf216cc2f12ed90242d98111948c2a44b0dd1d9d3c1018",
+    "cve_delta_log_sha256": "261005856fb20a9c309fc30ff6d528c2c71100f277802f5fe0b13359942a7927",
+    "cve_delta_sha256": "154bb9a2724115cbb67ebb4d1d0d811a28d108ed998ed706ae99d94ff89f0ae0",
     "cve_enriched_ok": 1781,
-    "cve_fetched": 3,
-    "cve_reused": 1778,
+    "cve_fetched": 1,
+    "cve_reused": 1780,
     "cve_strategy": "delta",
     "cve_unavailable": 0,
-    "duration_ms": 894464,
+    "duration_ms": 780205,
     "entry_build_error_count": 0,
     "entry_build_errors": [],
     "epss_changes": 0,
     "epss_enabled": false,
-    "http_gets": 126,
+    "http_gets": 124,
     "http_heads": 1,
     "intelligence": {
-      "records_missing_nvd": 675,
-      "records_with_affected_versions": 1759,
-      "records_with_conflicts": 1101,
+      "records_missing_nvd": 555,
+      "records_with_affected_versions": 1760,
+      "records_with_conflicts": 1219,
       "records_with_cvss": 1781,
-      "records_with_cwe": 1657,
+      "records_with_cwe": 1662,
       "records_with_fixed_version": 0,
-      "records_with_vendor_advisory": 1112
+      "records_with_vendor_advisory": 1180
     },
     "kev_content_sha256": "4028ec035856331a717d3305e87e45be37d400fc500da34a5464f05fc2773764",
     "kev_records": 1781,
     "new_kev_entries": 0,
     "nvd_api_key_configured": false,
-    "nvd_cache_hits": 986,
+    "nvd_cache_hits": 1106,
     "nvd_failed_requests": 0,
     "nvd_fetched": 120,
-    "nvd_ok": 1106,
+    "nvd_ok": 1226,
     "nvd_pending_backfill": 1154,
-    "nvd_processing_ms": 891291,
+    "nvd_processing_ms": 777050,
     "nvd_rate_limited": 0,
     "nvd_records_refreshed": 120,
     "nvd_requests_attempted": 120,
-    "nvd_reused": 986,
-    "nvd_unavailable": 675,
+    "nvd_reused": 1106,
+    "nvd_unavailable": 555,
     "partial_records": 18,
     "removed_kev_entries": 0,
     "truncated_records": 18,
