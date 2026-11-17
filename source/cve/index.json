@@ -1,10 +1,10 @@
 {
-  "delta_fetch_time": "2026-11-16T17:42:04.613Z",
-  "delta_log_bytes": 30645070,
-  "delta_log_etag": "W/\"1b1d5d77cf89223d5c76927e20d51acce0de1a27730561939001ab88ba936f8b\"",
-  "delta_log_sha256": "bde248263a14f9a587dddfb560a0334bcf45e834af1c3f3d4ae0ed7a00012e62",
+  "delta_fetch_time": "2026-11-17T17:13:59.003Z",
+  "delta_log_bytes": 31191127,
+  "delta_log_etag": "W/\"130ac27ebfec69ef2cd71864b0656deceeb0288d0e02ea5ac24fc8f20bb2b470\"",
+  "delta_log_sha256": "261005856fb20a9c309fc30ff6d528c2c71100f277802f5fe0b13359942a7927",
   "delta_log_skipped": false,
-  "delta_sha256": "761c3b22b1d728b275bf216cc2f12ed90242d98111948c2a44b0dd1d9d3c1018",
+  "delta_sha256": "154bb9a2724115cbb67ebb4d1d0d811a28d108ed998ed706ae99d94ff89f0ae0",
   "records": {
     "CVE-2002-0367": {
       "date_updated": "2025-10-22T00:05:57.464Z",
@@ -11235,10 +11235,10 @@
       "status": "ok"
     },
     "CVE-2026-124194": {
-      "date_updated": "2026-11-13T18:11:07.384Z",
-      "etag": "W/\"65b29f56eb5c1f28e37f931eec71cba69b4095d1cbfb4660fa561a9ef7362c93\"",
-      "retrieved_at": "2026-11-14T14:45:48Z",
-      "sha256": "7897609f71c88d667ec7f85f2faadccb1836a709ad7124a7687b47ee233d0cae",
+      "date_updated": "2026-11-16T19:27:29.924Z",
+      "etag": "W/\"d009d8a03c5b38dfd11451777956c4406bd8cb465f9a37229c15e124d72c2720\"",
+      "retrieved_at": "2026-11-17T17:18:53Z",
+      "sha256": "ac5bc4ad1aa0145e78cb22680927422b9e7f5f920f3c0f1643b5ac544c506129",
       "status": "ok"
     },
     "CVE-2026-125350": {
@@ -12481,5 +12481,5 @@
     "max_versions_per_product": 200
   },
   "strategy": "delta",
-  "updated_at": "2026-11-16T18:03:36Z"
+  "updated_at": "2026-11-17T17:31:51Z"
 }
