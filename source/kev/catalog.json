@@ -1,17 +1,17 @@
 {
   "meta": {
-    "content_sha256": "4028ec035856331a717d3305e87e45be37d400fc500da34a5464f05fc2773764",
+    "content_sha256": "11ee3c54a8c3f112047bb0088763acd8d2d3513259a8d08b89a327e8a2ce7dee",
     "error": null,
     "id": "cisa-kev",
     "license": "CC0-1.0",
     "name": "CISA Known Exploited Vulnerabilities Catalog",
     "notes": "The CISA Known Exploited Vulnerabilities catalog is dedicated to the public domain under CC0 1.0. Use does not authorize use of the CISA logo or DHS seal and is not an endorsement by CISA or DHS. See https://www.cisa.gov/sites/default/files/licenses/kev/license.txt",
     "parser_version": "1.0.0",
-    "retrieved_at": "2026-11-17T17:18:52Z",
+    "retrieved_at": "2026-11-18T16:53:29Z",
     "schema_version": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities_schema.json",
-    "source_published_at": "2026-11-13T20:24:18.3008Z",
-    "source_revision": "2026.11.13",
-    "source_updated_at": "2026-11-13T20:24:18.3008Z",
+    "source_published_at": "2026-11-17T17:53:15.5664Z",
+    "source_revision": "2026.11.17",
+    "source_updated_at": "2026-11-17T17:53:15.5664Z",
     "status": "ok",
     "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
   },
@@ -33300,6 +33300,28 @@
       "truncated_fields": [],
       "vendor_project": "UnrealIRCd",
       "vulnerability_name": "UnrealIRCd Improper Neutralization of Delimiters Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2026-115731",
+      "cwes": [
+        "CWE-502",
+        "CWE-94"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-17",
+      "due_date": "2026-12-01",
+      "forensic_triage": "No",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://portal.perforce.com/s/cve/a91Qi000003IaHpIAK/report-deserialization-code-execution ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-115731",
+      "product": "Puppet Enterprise",
+      "record_sha256": "03859532f801fb9ac1fdfaa97e310f850d83c3e6296a3bf75d913d0794702fc1",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Perforce Puppet Enterprise contains a deserialization of untrusted data vulnerability in Puppet’s report-processing code that allows a client with any CA-signed agent certificate to execute arbitrary code on the Puppet Server as the service user by submitting a report containing a crafted rich-data type through a PUT request. If the certificate authority automatically signs requests without strong verification, an unauthenticated network attacker can obtain a valid certificate and exploit the vulnerability.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Perforce",
+      "vulnerability_name": "Perforce Puppet Enterprise Deserialization of Untrusted Data Vulnerability"
     },
     {
       "cve_id": "CVE-2026-11645",
