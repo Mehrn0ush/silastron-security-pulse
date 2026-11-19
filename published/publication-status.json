@@ -1,16 +1,16 @@
 {
-  "classification": "deployment_succeeded_persist_failed",
+  "classification": "persistence_succeeded_and_consistent",
   "collect_run_id": "44572262095",
   "deployment_run_id": "44575868308",
   "legacy_missing_status": false,
   "manifest_digest": "a982a3629a61378ca3d15ebb33e264276e05322041560d637fd9e0d222f59b20",
-  "note": "GitHub Pages deploy succeeded. pulse-state published/ has not yet been persisted. GitHub Pages cannot update atomically with the state branch.",
+  "note": "Persistence succeeded and matches the deployed snapshot. GitHub Pages deploy and pulse-state persist are still not atomic.",
   "page_url": null,
-  "persisted_manifest_digest": null,
-  "persisted_snapshot_id": null,
+  "persisted_manifest_digest": "a982a3629a61378ca3d15ebb33e264276e05322041560d637fd9e0d222f59b20",
+  "persisted_snapshot_id": "20261119T171836Z_6b10ec3e05ad",
   "recovery": null,
   "schema_version": "1.0.0",
   "snapshot_id": "20261119T171836Z_6b10ec3e05ad",
-  "state": "deployed_unpersisted",
-  "updated_at": "2026-11-19T17:22:03Z"
+  "state": "consistent",
+  "updated_at": "2026-11-19T17:22:30Z"
 }
