@@ -7,51 +7,126 @@
   },
   "binding": {
     "collector_commit_sha": "4e71d06091edffc6acd37f23861ecb49cfa74f14",
-    "source_state_revision": "2026.11.20:2026-11-22T15:12:07.181Z:99fef7f998493c572adbecf511dcaa45724e72dcd84c527594f0d138bb5a46c7"
+    "source_state_revision": "2026.11.23:2026-11-23T19:37:05.431Z:99fef7f998493c572adbecf511dcaa45724e72dcd84c527594f0d138bb5a46c7"
   },
   "changes": {
     "changed_cve_information": [
-      "CVE-2002-0367",
-      "CVE-2004-0210",
-      "CVE-2004-1464",
-      "CVE-2005-2773",
-      "CVE-2006-1547",
-      "CVE-2006-2492",
-      "CVE-2007-0671",
-      "CVE-2007-3010",
-      "CVE-2007-5659",
-      "CVE-2008-0015",
-      "CVE-2008-0655",
-      "CVE-2008-2992",
-      "CVE-2008-3431",
-      "CVE-2008-4128",
-      "CVE-2008-4250",
-      "CVE-2009-0238",
-      "CVE-2009-0556",
-      "CVE-2009-0557",
-      "CVE-2009-0563",
-      "CVE-2009-0927",
-      "CVE-2009-1123",
-      "CVE-2009-1151",
-      "CVE-2009-1537",
-      "CVE-2009-1862",
-      "CVE-2009-2055",
-      "CVE-2009-3129",
-      "CVE-2009-3459",
-      "CVE-2009-3953",
-      "CVE-2009-3960",
-      "CVE-2009-4324",
+      "CVE-2010-0188",
+      "CVE-2010-0232",
+      "CVE-2010-0249",
       "CVE-2010-0738",
+      "CVE-2010-0806",
+      "CVE-2010-0840",
+      "CVE-2010-1297",
       "CVE-2010-1428",
+      "CVE-2010-1871",
+      "CVE-2010-2568",
+      "CVE-2010-2572",
       "CVE-2010-2861",
+      "CVE-2010-2883",
+      "CVE-2010-3035",
+      "CVE-2010-3333",
+      "CVE-2010-3765",
+      "CVE-2010-3904",
+      "CVE-2010-3962",
+      "CVE-2010-4344",
+      "CVE-2010-4345",
+      "CVE-2010-4398",
+      "CVE-2010-5326",
+      "CVE-2010-5330",
+      "CVE-2011-0609",
+      "CVE-2011-0611",
+      "CVE-2011-1823",
+      "CVE-2011-1889",
+      "CVE-2011-2005",
       "CVE-2011-2462",
+      "CVE-2011-3402",
+      "CVE-2011-3544",
+      "CVE-2011-4723",
+      "CVE-2012-0151",
+      "CVE-2012-0158",
+      "CVE-2012-0391",
+      "CVE-2012-0507",
+      "CVE-2012-0518",
       "CVE-2012-0754",
+      "CVE-2012-0767",
+      "CVE-2012-1535",
+      "CVE-2012-1710",
+      "CVE-2012-1723",
+      "CVE-2012-1823",
+      "CVE-2012-1854",
+      "CVE-2012-1856",
+      "CVE-2012-1889",
+      "CVE-2012-2034",
+      "CVE-2012-2539",
+      "CVE-2012-3152",
+      "CVE-2012-4681",
+      "CVE-2012-4792",
+      "CVE-2012-4969",
+      "CVE-2012-5054",
+      "CVE-2012-5076",
+      "CVE-2013-0074",
+      "CVE-2013-0422",
+      "CVE-2013-0431",
+      "CVE-2013-0625",
+      "CVE-2013-0629",
+      "CVE-2013-0631",
+      "CVE-2013-0632",
+      "CVE-2013-0640",
+      "CVE-2013-0641",
+      "CVE-2013-0643",
+      "CVE-2013-0648",
+      "CVE-2013-1331",
+      "CVE-2013-1347",
+      "CVE-2013-1675",
+      "CVE-2013-1690",
+      "CVE-2013-2094",
+      "CVE-2013-2251",
+      "CVE-2013-2423",
+      "CVE-2013-2465",
+      "CVE-2013-2551",
+      "CVE-2013-2596",
+      "CVE-2013-2597",
       "CVE-2013-2729",
+      "CVE-2013-3163",
       "CVE-2013-3346",
+      "CVE-2013-3660",
+      "CVE-2013-3893",
+      "CVE-2013-3896",
+      "CVE-2013-3897",
       "CVE-2013-3900",
+      "CVE-2013-3906",
+      "CVE-2013-3918",
+      "CVE-2013-3993",
+      "CVE-2013-4810",
+      "CVE-2013-5065",
+      "CVE-2013-5223",
+      "CVE-2013-6282",
+      "CVE-2013-7331",
+      "CVE-2014-0130",
+      "CVE-2014-0160",
+      "CVE-2014-0196",
+      "CVE-2014-0322",
+      "CVE-2014-0496",
       "CVE-2014-0497",
+      "CVE-2014-0502",
       "CVE-2014-0546",
+      "CVE-2014-0780",
+      "CVE-2014-100005",
+      "CVE-2014-1761",
+      "CVE-2014-1776",
+      "CVE-2014-1812",
       "CVE-2014-2120",
+      "CVE-2014-2817",
+      "CVE-2014-3120",
+      "CVE-2014-3153",
+      "CVE-2014-3931",
+      "CVE-2014-4077",
+      "CVE-2014-4113",
+      "CVE-2014-4114",
+      "CVE-2014-4123",
+      "CVE-2014-4148",
+      "CVE-2014-4404",
       "CVE-2015-0311",
       "CVE-2015-0313",
       "CVE-2015-3043",
@@ -617,10 +692,10 @@
       "CVE-2026-109619",
       "CVE-2026-110447",
       "CVE-2026-110936",
-      "CVE-2026-111357",
       "CVE-2026-111497",
       "CVE-2026-111560",
       "CVE-2026-114625",
+      "CVE-2026-114713",
       "CVE-2026-115731",
       "CVE-2026-11645",
       "CVE-2026-116606",
@@ -814,13 +889,15 @@
       "cve",
       "nvd"
     ],
-    "updated_kev_entries": []
+    "updated_kev_entries": [
+      "CVE-2024-10441"
+    ]
   },
-  "collection_completed_at": "2026-11-22T16:04:26Z",
-  "collection_started_at": "2026-11-22T15:51:39Z",
+  "collection_completed_at": "2026-11-23T19:58:40Z",
+  "collection_started_at": "2026-11-23T19:45:53Z",
   "composite_risk_score": null,
   "consumer_note": "This snapshot is public vulnerability intelligence. status is collection outcome (ok, degraded, or failed), not freshness and not per-record completeness. records[].completeness describes extracted inventory completeness; a complete extraction does not prove complete real-world product affectedness. Freshness must be recomputed at viewing time. Confirmed exploitation, estimated probability, severity, product affectedness, and deployment exposure are separate signals.",
-  "generated_at": "2026-11-22T16:04:26Z",
+  "generated_at": "2026-11-23T19:58:40Z",
   "limits": {
     "max_cve_bytes": 3000000,
     "max_cve_enrichments": 3000,
@@ -21840,9 +21917,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:46:10Z",
-            "retrieved_at": "2026-11-02T17:46:10Z",
-            "source_timestamp": "2026-11-02T17:46:10.625",
+            "last_checked_at": "2026-11-23T19:46:21Z",
+            "retrieved_at": "2026-11-23T19:46:21Z",
+            "source_timestamp": "2026-11-23T19:46:21.818",
             "status": "ok",
             "upstream_modified_at": "2026-08-14T05:16:49.797"
           }
@@ -22509,9 +22586,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:46:16Z",
-            "retrieved_at": "2026-11-02T17:46:16Z",
-            "source_timestamp": "2026-11-02T17:46:17.028",
+            "last_checked_at": "2026-11-23T19:46:28Z",
+            "retrieved_at": "2026-11-23T19:46:28Z",
+            "source_timestamp": "2026-11-23T19:46:28.218",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:15:45.537"
           }
@@ -23587,9 +23664,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:46:23Z",
-            "retrieved_at": "2026-11-02T17:46:23Z",
-            "source_timestamp": "2026-11-02T17:46:23.747",
+            "last_checked_at": "2026-11-23T19:46:34Z",
+            "retrieved_at": "2026-11-23T19:46:34Z",
+            "source_timestamp": "2026-11-23T19:46:34.596",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:15:47.577"
           }
@@ -24384,9 +24461,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:46:30Z",
-            "retrieved_at": "2026-11-02T17:46:30Z",
-            "source_timestamp": "2026-11-02T17:46:30.432",
+            "last_checked_at": "2026-11-23T19:46:40Z",
+            "retrieved_at": "2026-11-23T19:46:40Z",
+            "source_timestamp": "2026-11-23T19:46:41.101",
             "status": "ok",
             "upstream_modified_at": "2026-10-02T14:55:30.687"
           }
@@ -25517,9 +25594,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:46:36Z",
-            "retrieved_at": "2026-11-02T17:46:36Z",
-            "source_timestamp": "2026-11-02T17:46:36.829",
+            "last_checked_at": "2026-11-23T19:46:47Z",
+            "retrieved_at": "2026-11-23T19:46:47Z",
+            "source_timestamp": "2026-11-23T19:46:47.482",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:16:52.753"
           }
@@ -26207,9 +26284,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:46:43Z",
-            "retrieved_at": "2026-11-02T17:46:43Z",
-            "source_timestamp": "2026-11-02T17:46:44.439",
+            "last_checked_at": "2026-11-23T19:46:53Z",
+            "retrieved_at": "2026-11-23T19:46:53Z",
+            "source_timestamp": "2026-11-23T19:46:53.941",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:16:57.020"
           }
@@ -26953,9 +27030,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:46:50Z",
-            "retrieved_at": "2026-11-02T17:46:50Z",
-            "source_timestamp": "2026-11-02T17:46:51.199",
+            "last_checked_at": "2026-11-23T19:47:00Z",
+            "retrieved_at": "2026-11-23T19:47:00Z",
+            "source_timestamp": "2026-11-23T19:47:00.457",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:18:02.793"
           }
@@ -27748,9 +27825,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:46:57Z",
-            "retrieved_at": "2026-11-02T17:46:57Z",
-            "source_timestamp": "2026-11-02T17:46:58.010",
+            "last_checked_at": "2026-11-23T19:47:06Z",
+            "retrieved_at": "2026-11-23T19:47:06Z",
+            "source_timestamp": "2026-11-23T19:47:06.876",
             "status": "ok",
             "upstream_modified_at": "2026-10-02T14:55:25.677"
           }
@@ -28463,9 +28540,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:47:04Z",
-            "retrieved_at": "2026-11-02T17:47:04Z",
-            "source_timestamp": "2026-11-02T17:47:04.413",
+            "last_checked_at": "2026-11-23T19:47:13Z",
+            "retrieved_at": "2026-11-23T19:47:13Z",
+            "source_timestamp": "2026-11-23T19:47:13.304",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:19:29.840"
           }
@@ -29201,9 +29278,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:47:10Z",
-            "retrieved_at": "2026-11-02T17:47:10Z",
-            "source_timestamp": "2026-11-02T17:47:10.819",
+            "last_checked_at": "2026-11-23T19:47:19Z",
+            "retrieved_at": "2026-11-23T19:47:19Z",
+            "source_timestamp": "2026-11-23T19:47:19.699",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:20:59.973"
           }
@@ -29811,9 +29888,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:47:48Z",
-            "retrieved_at": "2026-11-02T17:47:48Z",
-            "source_timestamp": "2026-11-02T17:47:48.282",
+            "last_checked_at": "2026-11-23T19:47:25Z",
+            "retrieved_at": "2026-11-23T19:47:25Z",
+            "source_timestamp": "2026-11-23T19:47:26.097",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:21:00.513"
           }
@@ -30337,9 +30414,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:47:54Z",
-            "retrieved_at": "2026-11-02T17:47:54Z",
-            "source_timestamp": "2026-11-02T17:47:54.823",
+            "last_checked_at": "2026-11-23T19:47:32Z",
+            "retrieved_at": "2026-11-23T19:47:32Z",
+            "source_timestamp": "2026-11-23T19:47:32.482",
             "status": "ok",
             "upstream_modified_at": "2026-10-02T14:55:20.233"
           }
@@ -31013,9 +31090,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:48:01Z",
-            "retrieved_at": "2026-11-02T17:48:01Z",
-            "source_timestamp": "2026-11-02T17:48:01.341",
+            "last_checked_at": "2026-11-23T19:47:38Z",
+            "retrieved_at": "2026-11-23T19:47:38Z",
+            "source_timestamp": "2026-11-23T19:47:38.853",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:21:41.330"
           }
@@ -31543,9 +31620,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:48:07Z",
-            "retrieved_at": "2026-11-02T17:48:07Z",
-            "source_timestamp": "2026-11-02T17:48:08.252",
+            "last_checked_at": "2026-11-23T19:47:45Z",
+            "retrieved_at": "2026-11-23T19:47:45Z",
+            "source_timestamp": "2026-11-23T19:47:45.237",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:22:00.630"
           }
@@ -32224,9 +32301,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:48:14Z",
-            "retrieved_at": "2026-11-02T17:48:14Z",
-            "source_timestamp": "2026-11-02T17:48:14.971",
+            "last_checked_at": "2026-11-23T19:47:51Z",
+            "retrieved_at": "2026-11-23T19:47:51Z",
+            "source_timestamp": "2026-11-23T19:47:51.606",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:22:36.323"
           }
@@ -33514,9 +33591,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:48:21Z",
-            "retrieved_at": "2026-11-02T17:48:21Z",
-            "source_timestamp": "2026-11-02T17:48:21.824",
+            "last_checked_at": "2026-11-23T19:47:57Z",
+            "retrieved_at": "2026-11-23T19:47:57Z",
+            "source_timestamp": "2026-11-23T19:47:57.986",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:23:28.500"
           }
@@ -34368,9 +34445,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:48:28Z",
-            "retrieved_at": "2026-11-02T17:48:28Z",
-            "source_timestamp": "2026-11-02T17:48:28.613",
+            "last_checked_at": "2026-11-23T19:48:04Z",
+            "retrieved_at": "2026-11-23T19:48:04Z",
+            "source_timestamp": "2026-11-23T19:48:04.398",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:23:47.610"
           }
@@ -35272,9 +35349,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:48:34Z",
-            "retrieved_at": "2026-11-02T17:48:34Z",
-            "source_timestamp": "2026-11-02T17:48:35.067",
+            "last_checked_at": "2026-11-23T19:48:10Z",
+            "retrieved_at": "2026-11-23T19:48:10Z",
+            "source_timestamp": "2026-11-23T19:48:10.788",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:23:53.780"
           }
@@ -35926,9 +36003,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:48:41Z",
-            "retrieved_at": "2026-11-02T17:48:41Z",
-            "source_timestamp": "2026-11-02T17:48:41.516",
+            "last_checked_at": "2026-11-23T19:48:17Z",
+            "retrieved_at": "2026-11-23T19:48:17Z",
+            "source_timestamp": "2026-11-23T19:48:17.202",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:24:36.107"
           }
@@ -36593,9 +36670,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:48:47Z",
-            "retrieved_at": "2026-11-02T17:48:47Z",
-            "source_timestamp": "2026-11-02T17:48:48.198",
+            "last_checked_at": "2026-11-23T19:48:23Z",
+            "retrieved_at": "2026-11-23T19:48:23Z",
+            "source_timestamp": "2026-11-23T19:48:23.657",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:24:36.353"
           }
@@ -37322,9 +37399,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:48:54Z",
-            "retrieved_at": "2026-11-02T17:48:54Z",
-            "source_timestamp": "2026-11-02T17:48:55.886",
+            "last_checked_at": "2026-11-23T19:48:29Z",
+            "retrieved_at": "2026-11-23T19:48:29Z",
+            "source_timestamp": "2026-11-23T19:48:30.039",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:24:42.707"
           }
@@ -37846,9 +37923,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:49:02Z",
-            "retrieved_at": "2026-11-02T17:49:02Z",
-            "source_timestamp": "2026-11-02T17:49:04.762",
+            "last_checked_at": "2026-11-23T19:48:36Z",
+            "retrieved_at": "2026-11-23T19:48:36Z",
+            "source_timestamp": "2026-11-23T19:48:36.419",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:26:33.823"
           }
@@ -38432,9 +38509,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:49:11Z",
-            "retrieved_at": "2026-11-02T17:49:11Z",
-            "source_timestamp": "2026-11-02T17:49:13.676",
+            "last_checked_at": "2026-11-23T19:48:42Z",
+            "retrieved_at": "2026-11-23T19:48:42Z",
+            "source_timestamp": "2026-11-23T19:48:42.786",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:26:34.420"
           }
@@ -39432,9 +39509,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:49:19Z",
-            "retrieved_at": "2026-11-02T17:49:19Z",
-            "source_timestamp": "2026-11-02T17:49:21.415",
+            "last_checked_at": "2026-11-23T19:48:49Z",
+            "retrieved_at": "2026-11-23T19:48:49Z",
+            "source_timestamp": "2026-11-23T19:48:49.158",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:27:44.460"
           }
@@ -40454,9 +40531,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:49:27Z",
-            "retrieved_at": "2026-11-02T17:49:27Z",
-            "source_timestamp": "2026-11-02T17:49:28.967",
+            "last_checked_at": "2026-11-23T19:48:55Z",
+            "retrieved_at": "2026-11-23T19:48:55Z",
+            "source_timestamp": "2026-11-23T19:48:55.559",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:27:44.830"
           }
@@ -40991,9 +41068,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:49:35Z",
-            "retrieved_at": "2026-11-02T17:49:35Z",
-            "source_timestamp": "2026-11-02T17:49:36.151",
+            "last_checked_at": "2026-11-23T19:49:01Z",
+            "retrieved_at": "2026-11-23T19:49:01Z",
+            "source_timestamp": "2026-11-23T19:49:02.066",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:30:11.197"
           }
@@ -41612,9 +41689,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:49:42Z",
-            "retrieved_at": "2026-11-02T17:49:42Z",
-            "source_timestamp": "2026-11-02T17:49:43.089",
+            "last_checked_at": "2026-11-23T19:49:08Z",
+            "retrieved_at": "2026-11-23T19:49:08Z",
+            "source_timestamp": "2026-11-23T19:49:08.482",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:30:18.967"
           }
@@ -42234,9 +42311,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:49:49Z",
-            "retrieved_at": "2026-11-02T17:49:49Z",
-            "source_timestamp": "2026-11-02T17:49:50.019",
+            "last_checked_at": "2026-11-23T19:49:14Z",
+            "retrieved_at": "2026-11-23T19:49:14Z",
+            "source_timestamp": "2026-11-23T19:49:14.915",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:30:35.373"
           }
@@ -42909,9 +42986,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:49:56Z",
-            "retrieved_at": "2026-11-02T17:49:56Z",
-            "source_timestamp": "2026-11-02T17:49:57.608",
+            "last_checked_at": "2026-11-23T19:49:21Z",
+            "retrieved_at": "2026-11-23T19:49:21Z",
+            "source_timestamp": "2026-11-23T19:49:21.513",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:31:23.203"
           }
@@ -43796,9 +43873,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:50:03Z",
-            "retrieved_at": "2026-11-02T17:50:03Z",
-            "source_timestamp": "2026-11-02T17:50:05.902",
+            "last_checked_at": "2026-11-23T19:49:27Z",
+            "retrieved_at": "2026-11-23T19:49:27Z",
+            "source_timestamp": "2026-11-23T19:49:27.899",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:33:14.020"
           }
@@ -45272,9 +45349,9 @@
           "nvd": {
             "completeness": "partial",
             "error": null,
-            "last_checked_at": "2026-11-02T17:50:12Z",
-            "retrieved_at": "2026-11-02T17:50:12Z",
-            "source_timestamp": "2026-11-02T17:50:12.936",
+            "last_checked_at": "2026-11-23T19:49:34Z",
+            "retrieved_at": "2026-11-23T19:49:34Z",
+            "source_timestamp": "2026-11-23T19:49:34.278",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:33:27.053"
           }
@@ -45764,9 +45841,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:50:19Z",
-            "retrieved_at": "2026-11-02T17:50:19Z",
-            "source_timestamp": "2026-11-02T17:50:20.794",
+            "last_checked_at": "2026-11-23T19:49:40Z",
+            "retrieved_at": "2026-11-23T19:49:40Z",
+            "source_timestamp": "2026-11-23T19:49:40.738",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:35:18.387"
           }
@@ -46607,9 +46684,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:50:27Z",
-            "retrieved_at": "2026-11-02T17:50:27Z",
-            "source_timestamp": "2026-11-02T17:50:27.172",
+            "last_checked_at": "2026-11-23T19:49:47Z",
+            "retrieved_at": "2026-11-23T19:49:47Z",
+            "source_timestamp": "2026-11-23T19:49:47.111",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:36:47.550"
           }
@@ -47565,9 +47642,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:50:33Z",
-            "retrieved_at": "2026-11-02T17:50:33Z",
-            "source_timestamp": "2026-11-02T17:50:33.708",
+            "last_checked_at": "2026-11-23T19:49:53Z",
+            "retrieved_at": "2026-11-23T19:49:53Z",
+            "source_timestamp": "2026-11-23T19:49:53.522",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:36:48.343"
           }
@@ -48132,9 +48209,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:50:39Z",
-            "retrieved_at": "2026-11-02T17:50:39Z",
-            "source_timestamp": "2026-11-02T17:50:41.366",
+            "last_checked_at": "2026-11-23T19:49:59Z",
+            "retrieved_at": "2026-11-23T19:49:59Z",
+            "source_timestamp": "2026-11-23T19:49:59.901",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:37:12.150"
           }
@@ -49333,9 +49410,9 @@
           "nvd": {
             "completeness": "partial",
             "error": null,
-            "last_checked_at": "2026-11-02T17:50:47Z",
-            "retrieved_at": "2026-11-02T17:50:47Z",
-            "source_timestamp": "2026-11-02T17:50:47.744",
+            "last_checked_at": "2026-11-23T19:50:06Z",
+            "retrieved_at": "2026-11-23T19:50:06Z",
+            "source_timestamp": "2026-11-23T19:50:06.304",
             "status": "ok",
             "upstream_modified_at": "2026-08-14T05:16:51.643"
           }
@@ -49825,9 +49902,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:50:54Z",
-            "retrieved_at": "2026-11-02T17:50:54Z",
-            "source_timestamp": "2026-11-02T17:50:54.816",
+            "last_checked_at": "2026-11-23T19:50:12Z",
+            "retrieved_at": "2026-11-23T19:50:12Z",
+            "source_timestamp": "2026-11-23T19:50:12.774",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:37:27.830"
           }
@@ -50584,9 +50661,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:51:01Z",
-            "retrieved_at": "2026-11-02T17:51:01Z",
-            "source_timestamp": "2026-11-02T17:51:01.487",
+            "last_checked_at": "2026-11-23T19:50:19Z",
+            "retrieved_at": "2026-11-23T19:50:19Z",
+            "source_timestamp": "2026-11-23T19:50:19.169",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:38:11.620"
           }
@@ -51309,9 +51386,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:51:07Z",
-            "retrieved_at": "2026-11-02T17:51:07Z",
-            "source_timestamp": "2026-11-02T17:51:08.066",
+            "last_checked_at": "2026-11-23T19:50:25Z",
+            "retrieved_at": "2026-11-23T19:50:25Z",
+            "source_timestamp": "2026-11-23T19:50:25.573",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:38:13.193"
           }
@@ -52020,9 +52097,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:51:14Z",
-            "retrieved_at": "2026-11-02T17:51:14Z",
-            "source_timestamp": "2026-11-02T17:51:15.091",
+            "last_checked_at": "2026-11-23T19:50:31Z",
+            "retrieved_at": "2026-11-23T19:50:31Z",
+            "source_timestamp": "2026-11-23T19:50:31.946",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:39:42.360"
           }
@@ -52500,9 +52577,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:51:21Z",
-            "retrieved_at": "2026-11-02T17:51:21Z",
-            "source_timestamp": "2026-11-02T17:51:21.543",
+            "last_checked_at": "2026-11-23T19:50:38Z",
+            "retrieved_at": "2026-11-23T19:50:38Z",
+            "source_timestamp": "2026-11-23T19:50:38.381",
             "status": "ok",
             "upstream_modified_at": "2026-10-01T20:17:14.953"
           }
@@ -53955,9 +54032,9 @@
           "nvd": {
             "completeness": "partial",
             "error": null,
-            "last_checked_at": "2026-11-02T17:51:27Z",
-            "retrieved_at": "2026-11-02T17:51:27Z",
-            "source_timestamp": "2026-11-02T17:51:27.946",
+            "last_checked_at": "2026-11-23T19:50:44Z",
+            "retrieved_at": "2026-11-23T19:50:44Z",
+            "source_timestamp": "2026-11-23T19:50:44.996",
             "status": "ok",
             "upstream_modified_at": "2026-08-06T05:16:33.940"
           }
@@ -55111,9 +55188,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:51:34Z",
-            "retrieved_at": "2026-11-02T17:51:34Z",
-            "source_timestamp": "2026-11-02T17:51:34.401",
+            "last_checked_at": "2026-11-23T19:50:51Z",
+            "retrieved_at": "2026-11-23T19:50:51Z",
+            "source_timestamp": "2026-11-23T19:50:51.439",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:40:22.147"
           }
@@ -55826,9 +55903,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:51:41Z",
-            "retrieved_at": "2026-11-02T17:51:41Z",
-            "source_timestamp": "2026-11-02T17:51:41.222",
+            "last_checked_at": "2026-11-23T19:50:57Z",
+            "retrieved_at": "2026-11-23T19:50:57Z",
+            "source_timestamp": "2026-11-23T19:50:57.816",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:40:25.993"
           }
@@ -56730,9 +56807,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:51:47Z",
-            "retrieved_at": "2026-11-02T17:51:47Z",
-            "source_timestamp": "2026-11-02T17:51:47.624",
+            "last_checked_at": "2026-11-23T19:51:04Z",
+            "retrieved_at": "2026-11-23T19:51:04Z",
+            "source_timestamp": "2026-11-23T19:51:04.199",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:40:26.290"
           }
@@ -57826,9 +57903,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:51:53Z",
-            "retrieved_at": "2026-11-02T17:51:53Z",
-            "source_timestamp": "2026-11-02T17:51:53.995",
+            "last_checked_at": "2026-11-23T19:51:10Z",
+            "retrieved_at": "2026-11-23T19:51:10Z",
+            "source_timestamp": "2026-11-23T19:51:10.654",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:40:29.923"
           }
@@ -58759,9 +58836,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:52:00Z",
-            "retrieved_at": "2026-11-02T17:52:00Z",
-            "source_timestamp": "2026-11-02T17:52:00.373",
+            "last_checked_at": "2026-11-23T19:51:16Z",
+            "retrieved_at": "2026-11-23T19:51:16Z",
+            "source_timestamp": "2026-11-23T19:51:17.032",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:40:50.083"
           }
@@ -59464,9 +59541,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:52:06Z",
-            "retrieved_at": "2026-11-02T17:52:06Z",
-            "source_timestamp": "2026-11-02T17:52:06.787",
+            "last_checked_at": "2026-11-23T19:51:23Z",
+            "retrieved_at": "2026-11-23T19:51:23Z",
+            "source_timestamp": "2026-11-23T19:51:23.406",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:41:39.477"
           }
@@ -60008,9 +60085,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:52:13Z",
-            "retrieved_at": "2026-11-02T17:52:13Z",
-            "source_timestamp": "2026-11-02T17:52:13.290",
+            "last_checked_at": "2026-11-23T19:51:29Z",
+            "retrieved_at": "2026-11-23T19:51:29Z",
+            "source_timestamp": "2026-11-23T19:51:30.050",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:42:40.677"
           }
@@ -61388,9 +61465,9 @@
           "nvd": {
             "completeness": "partial",
             "error": null,
-            "last_checked_at": "2026-11-02T17:52:19Z",
-            "retrieved_at": "2026-11-02T17:52:19Z",
-            "source_timestamp": "2026-11-02T17:52:19.698",
+            "last_checked_at": "2026-11-23T19:51:36Z",
+            "retrieved_at": "2026-11-23T19:51:36Z",
+            "source_timestamp": "2026-11-23T19:51:36.464",
             "status": "ok",
             "upstream_modified_at": "2026-08-06T05:16:34.310"
           }
@@ -62334,9 +62411,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:52:26Z",
-            "retrieved_at": "2026-11-02T17:52:26Z",
-            "source_timestamp": "2026-11-02T17:52:26.154",
+            "last_checked_at": "2026-11-23T19:51:42Z",
+            "retrieved_at": "2026-11-23T19:51:42Z",
+            "source_timestamp": "2026-11-23T19:51:42.839",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:45:43.277"
           }
@@ -63444,9 +63521,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:52:32Z",
-            "retrieved_at": "2026-11-02T17:52:32Z",
-            "source_timestamp": "2026-11-02T17:52:32.585",
+            "last_checked_at": "2026-11-23T19:51:49Z",
+            "retrieved_at": "2026-11-23T19:51:49Z",
+            "source_timestamp": "2026-11-23T19:51:49.212",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:45:58.897"
           }
@@ -63967,9 +64044,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:52:38Z",
-            "retrieved_at": "2026-11-02T17:52:38Z",
-            "source_timestamp": "2026-11-02T17:52:39.462",
+            "last_checked_at": "2026-11-23T19:51:55Z",
+            "retrieved_at": "2026-11-23T19:51:55Z",
+            "source_timestamp": "2026-11-23T19:51:55.659",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:46:05.460"
           }
@@ -64572,9 +64649,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:52:45Z",
-            "retrieved_at": "2026-11-02T17:52:45Z",
-            "source_timestamp": "2026-11-02T17:52:46.046",
+            "last_checked_at": "2026-11-23T19:52:01Z",
+            "retrieved_at": "2026-11-23T19:52:01Z",
+            "source_timestamp": "2026-11-23T19:52:02.032",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:46:10.790"
           }
@@ -65174,9 +65251,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:52:52Z",
-            "retrieved_at": "2026-11-02T17:52:52Z",
-            "source_timestamp": "2026-11-02T17:52:52.416",
+            "last_checked_at": "2026-11-23T19:52:08Z",
+            "retrieved_at": "2026-11-23T19:52:08Z",
+            "source_timestamp": "2026-11-23T19:52:08.401",
             "status": "ok",
             "upstream_modified_at": "2026-08-14T05:16:52.040"
           }
@@ -66046,9 +66123,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:52:58Z",
-            "retrieved_at": "2026-11-02T17:52:58Z",
-            "source_timestamp": "2026-11-02T17:52:59.002",
+            "last_checked_at": "2026-11-23T19:52:14Z",
+            "retrieved_at": "2026-11-23T19:52:14Z",
+            "source_timestamp": "2026-11-23T19:52:14.764",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:49:24.963"
           }
@@ -66745,9 +66822,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:53:05Z",
-            "retrieved_at": "2026-11-02T17:53:05Z",
-            "source_timestamp": "2026-11-02T17:53:05.526",
+            "last_checked_at": "2026-11-23T19:52:21Z",
+            "retrieved_at": "2026-11-23T19:52:21Z",
+            "source_timestamp": "2026-11-23T19:52:21.195",
             "status": "ok",
             "upstream_modified_at": "2026-10-02T14:55:14.407"
           }
@@ -67333,9 +67410,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:53:11Z",
-            "retrieved_at": "2026-11-02T17:53:11Z",
-            "source_timestamp": "2026-11-02T17:53:12.141",
+            "last_checked_at": "2026-11-23T19:52:27Z",
+            "retrieved_at": "2026-11-23T19:52:27Z",
+            "source_timestamp": "2026-11-23T19:52:27.590",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:49:47.163"
           }
@@ -67929,9 +68006,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:53:18Z",
-            "retrieved_at": "2026-11-02T17:53:18Z",
-            "source_timestamp": "2026-11-02T17:53:18.543",
+            "last_checked_at": "2026-11-23T19:52:33Z",
+            "retrieved_at": "2026-11-23T19:52:33Z",
+            "source_timestamp": "2026-11-23T19:52:33.997",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:49:47.607"
           }
@@ -68513,9 +68590,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:53:24Z",
-            "retrieved_at": "2026-11-02T17:53:24Z",
-            "source_timestamp": "2026-11-02T17:53:25.149",
+            "last_checked_at": "2026-11-23T19:52:40Z",
+            "retrieved_at": "2026-11-23T19:52:40Z",
+            "source_timestamp": "2026-11-23T19:52:40.373",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:49:47.907"
           }
@@ -69043,9 +69120,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:53:31Z",
-            "retrieved_at": "2026-11-02T17:53:31Z",
-            "source_timestamp": "2026-11-02T17:53:31.524",
+            "last_checked_at": "2026-11-23T19:52:46Z",
+            "retrieved_at": "2026-11-23T19:52:46Z",
+            "source_timestamp": "2026-11-23T19:52:46.756",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:49:48.073"
           }
@@ -69953,9 +70030,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:53:37Z",
-            "retrieved_at": "2026-11-02T17:53:37Z",
-            "source_timestamp": "2026-11-02T17:53:37.914",
+            "last_checked_at": "2026-11-23T19:52:53Z",
+            "retrieved_at": "2026-11-23T19:52:53Z",
+            "source_timestamp": "2026-11-23T19:52:53.131",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:49:49.060"
           }
@@ -70839,9 +70916,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:53:44Z",
-            "retrieved_at": "2026-11-02T17:53:44Z",
-            "source_timestamp": "2026-11-02T17:53:44.353",
+            "last_checked_at": "2026-11-23T19:52:59Z",
+            "retrieved_at": "2026-11-23T19:52:59Z",
+            "source_timestamp": "2026-11-23T19:52:59.497",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:49:49.270"
           }
@@ -71645,9 +71722,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:53:50Z",
-            "retrieved_at": "2026-11-02T17:53:50Z",
-            "source_timestamp": "2026-11-02T17:53:50.938",
+            "last_checked_at": "2026-11-23T19:53:05Z",
+            "retrieved_at": "2026-11-23T19:53:05Z",
+            "source_timestamp": "2026-11-23T19:53:05.917",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:49:49.607"
           }
@@ -72439,9 +72516,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:53:57Z",
-            "retrieved_at": "2026-11-02T17:53:57Z",
-            "source_timestamp": "2026-11-02T17:53:57.521",
+            "last_checked_at": "2026-11-23T19:53:12Z",
+            "retrieved_at": "2026-11-23T19:53:12Z",
+            "source_timestamp": "2026-11-23T19:53:12.303",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:49:50.320"
           }
@@ -73065,9 +73142,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:54:03Z",
-            "retrieved_at": "2026-11-02T17:54:03Z",
-            "source_timestamp": "2026-11-02T17:54:03.892",
+            "last_checked_at": "2026-11-23T19:53:18Z",
+            "retrieved_at": "2026-11-23T19:53:18Z",
+            "source_timestamp": "2026-11-23T19:53:18.679",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:51:13.833"
           }
@@ -73801,9 +73878,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:54:10Z",
-            "retrieved_at": "2026-11-02T17:54:10Z",
-            "source_timestamp": "2026-11-02T17:54:10.283",
+            "last_checked_at": "2026-11-23T19:53:24Z",
+            "retrieved_at": "2026-11-23T19:53:24Z",
+            "source_timestamp": "2026-11-23T19:53:25.068",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:51:15.717"
           }
@@ -74938,9 +75015,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:54:16Z",
-            "retrieved_at": "2026-11-02T17:54:16Z",
-            "source_timestamp": "2026-11-02T17:54:16.747",
+            "last_checked_at": "2026-11-23T19:53:31Z",
+            "retrieved_at": "2026-11-23T19:53:31Z",
+            "source_timestamp": "2026-11-23T19:53:31.442",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:51:53.300"
           }
@@ -76082,9 +76159,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:54:23Z",
-            "retrieved_at": "2026-11-02T17:54:23Z",
-            "source_timestamp": "2026-11-02T17:54:23.190",
+            "last_checked_at": "2026-11-23T19:53:37Z",
+            "retrieved_at": "2026-11-23T19:53:37Z",
+            "source_timestamp": "2026-11-23T19:53:37.834",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:51:55.617"
           }
@@ -76643,9 +76720,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:54:29Z",
-            "retrieved_at": "2026-11-02T17:54:29Z",
-            "source_timestamp": "2026-11-02T17:54:29.864",
+            "last_checked_at": "2026-11-23T19:53:44Z",
+            "retrieved_at": "2026-11-23T19:53:44Z",
+            "source_timestamp": "2026-11-23T19:53:44.237",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:52:44.150"
           }
@@ -77462,9 +77539,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:54:36Z",
-            "retrieved_at": "2026-11-02T17:54:36Z",
-            "source_timestamp": "2026-11-02T17:54:36.472",
+            "last_checked_at": "2026-11-23T19:53:50Z",
+            "retrieved_at": "2026-11-23T19:53:50Z",
+            "source_timestamp": "2026-11-23T19:53:50.618",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:53:01.530"
           }
@@ -78205,9 +78282,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:54:42Z",
-            "retrieved_at": "2026-11-02T17:54:42Z",
-            "source_timestamp": "2026-11-02T17:54:42.850",
+            "last_checked_at": "2026-11-23T19:53:56Z",
+            "retrieved_at": "2026-11-23T19:53:56Z",
+            "source_timestamp": "2026-11-23T19:53:56.993",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:53:20.027"
           }
@@ -79848,9 +79925,9 @@
           "nvd": {
             "completeness": "partial",
             "error": null,
-            "last_checked_at": "2026-11-02T17:54:49Z",
-            "retrieved_at": "2026-11-02T17:54:49Z",
-            "source_timestamp": "2026-11-02T17:54:49.225",
+            "last_checked_at": "2026-11-23T19:54:03Z",
+            "retrieved_at": "2026-11-23T19:54:03Z",
+            "source_timestamp": "2026-11-23T19:54:03.405",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:53:30.330"
           }
@@ -80870,9 +80947,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:54:55Z",
-            "retrieved_at": "2026-11-02T17:54:55Z",
-            "source_timestamp": "2026-11-02T17:54:55.753",
+            "last_checked_at": "2026-11-23T19:54:09Z",
+            "retrieved_at": "2026-11-23T19:54:09Z",
+            "source_timestamp": "2026-11-23T19:54:09.876",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:53:36.980"
           }
@@ -81583,9 +81660,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:55:02Z",
-            "retrieved_at": "2026-11-02T17:55:02Z",
-            "source_timestamp": "2026-11-02T17:55:02.360",
+            "last_checked_at": "2026-11-23T19:54:16Z",
+            "retrieved_at": "2026-11-23T19:54:16Z",
+            "source_timestamp": "2026-11-23T19:54:16.242",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:53:41.450"
           }
@@ -82471,9 +82548,9 @@
           "nvd": {
             "completeness": "partial",
             "error": null,
-            "last_checked_at": "2026-11-02T17:55:08Z",
-            "retrieved_at": "2026-11-02T17:55:08Z",
-            "source_timestamp": "2026-11-02T17:55:08.983",
+            "last_checked_at": "2026-11-23T19:54:22Z",
+            "retrieved_at": "2026-11-23T19:54:22Z",
+            "source_timestamp": "2026-11-23T19:54:22.606",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:53:41.697"
           }
@@ -83289,9 +83366,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:55:15Z",
-            "retrieved_at": "2026-11-02T17:55:15Z",
-            "source_timestamp": "2026-11-02T17:55:15.437",
+            "last_checked_at": "2026-11-23T19:54:28Z",
+            "retrieved_at": "2026-11-23T19:54:28Z",
+            "source_timestamp": "2026-11-23T19:54:28.975",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:53:52.700"
           }
@@ -84198,9 +84275,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:55:21Z",
-            "retrieved_at": "2026-11-02T17:55:21Z",
-            "source_timestamp": "2026-11-02T17:55:22.010",
+            "last_checked_at": "2026-11-23T19:54:35Z",
+            "retrieved_at": "2026-11-23T19:54:35Z",
+            "source_timestamp": "2026-11-23T19:54:35.370",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:54:37.740"
           }
@@ -84843,9 +84920,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:55:28Z",
-            "retrieved_at": "2026-11-02T17:55:28Z",
-            "source_timestamp": "2026-11-02T17:55:28.391",
+            "last_checked_at": "2026-11-23T19:54:41Z",
+            "retrieved_at": "2026-11-23T19:54:41Z",
+            "source_timestamp": "2026-11-23T19:54:41.742",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:54:55.737"
           }
@@ -85620,9 +85697,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:55:34Z",
-            "retrieved_at": "2026-11-02T17:55:34Z",
-            "source_timestamp": "2026-11-02T17:55:34.799",
+            "last_checked_at": "2026-11-23T19:54:48Z",
+            "retrieved_at": "2026-11-23T19:54:48Z",
+            "source_timestamp": "2026-11-23T19:54:48.118",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:55:35.730"
           }
@@ -86258,9 +86335,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:55:41Z",
-            "retrieved_at": "2026-11-02T17:55:41Z",
-            "source_timestamp": "2026-11-02T17:55:41.188",
+            "last_checked_at": "2026-11-23T19:54:54Z",
+            "retrieved_at": "2026-11-23T19:54:54Z",
+            "source_timestamp": "2026-11-23T19:54:54.515",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:55:58.240"
           }
@@ -86881,9 +86958,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:55:47Z",
-            "retrieved_at": "2026-11-02T17:55:47Z",
-            "source_timestamp": "2026-11-02T17:55:48.036",
+            "last_checked_at": "2026-11-23T19:55:00Z",
+            "retrieved_at": "2026-11-23T19:55:00Z",
+            "source_timestamp": "2026-11-23T19:55:00.901",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:55:58.700"
           }
@@ -87953,9 +88030,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:55:54Z",
-            "retrieved_at": "2026-11-02T17:55:54Z",
-            "source_timestamp": "2026-11-02T17:55:54.427",
+            "last_checked_at": "2026-11-23T19:55:07Z",
+            "retrieved_at": "2026-11-23T19:55:07Z",
+            "source_timestamp": "2026-11-23T19:55:07.580",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:55:58.860"
           }
@@ -90565,9 +90642,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:56:00Z",
-            "retrieved_at": "2026-11-02T17:56:00Z",
-            "source_timestamp": "2026-11-02T17:56:00.797",
+            "last_checked_at": "2026-11-23T19:55:13Z",
+            "retrieved_at": "2026-11-23T19:55:13Z",
+            "source_timestamp": "2026-11-23T19:55:14.020",
             "status": "ok",
             "upstream_modified_at": "2026-10-07T17:58:36.270"
           }
@@ -91597,9 +91674,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:56:07Z",
-            "retrieved_at": "2026-11-02T17:56:07Z",
-            "source_timestamp": "2026-11-02T17:56:07.274",
+            "last_checked_at": "2026-11-23T19:55:20Z",
+            "retrieved_at": "2026-11-23T19:55:20Z",
+            "source_timestamp": "2026-11-23T19:55:20.389",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:55:59.867"
           }
@@ -92494,9 +92571,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:56:13Z",
-            "retrieved_at": "2026-11-02T17:56:13Z",
-            "source_timestamp": "2026-11-02T17:56:13.863",
+            "last_checked_at": "2026-11-23T19:55:26Z",
+            "retrieved_at": "2026-11-23T19:55:26Z",
+            "source_timestamp": "2026-11-23T19:55:26.765",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:56:01.110"
           }
@@ -93006,9 +93083,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:56:20Z",
-            "retrieved_at": "2026-11-02T17:56:20Z",
-            "source_timestamp": "2026-11-02T17:56:20.241",
+            "last_checked_at": "2026-11-23T19:55:33Z",
+            "retrieved_at": "2026-11-23T19:55:33Z",
+            "source_timestamp": "2026-11-23T19:55:33.152",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:56:08.523"
           }
@@ -93592,9 +93669,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-02T17:56:26Z",
-            "retrieved_at": "2026-11-02T17:56:26Z",
-            "source_timestamp": "2026-11-02T17:56:26.606",
+            "last_checked_at": "2026-11-23T19:55:39Z",
+            "retrieved_at": "2026-11-23T19:55:39Z",
+            "source_timestamp": "2026-11-23T19:55:39.533",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:57:56.050"
           }
@@ -94207,9 +94284,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:45:11Z",
-            "retrieved_at": "2026-11-03T15:45:11Z",
-            "source_timestamp": "2026-11-03T15:45:11.526",
+            "last_checked_at": "2026-11-23T19:55:45Z",
+            "retrieved_at": "2026-11-23T19:55:45Z",
+            "source_timestamp": "2026-11-23T19:55:45.904",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:58:19.633"
           }
@@ -94793,9 +94870,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:45:17Z",
-            "retrieved_at": "2026-11-03T15:45:17Z",
-            "source_timestamp": "2026-11-03T15:45:18.009",
+            "last_checked_at": "2026-11-23T19:55:52Z",
+            "retrieved_at": "2026-11-23T19:55:52Z",
+            "source_timestamp": "2026-11-23T19:55:52.282",
             "status": "ok",
             "upstream_modified_at": "2026-06-16T23:58:32.217"
           }
@@ -95371,9 +95448,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:45:24Z",
-            "retrieved_at": "2026-11-03T15:45:24Z",
-            "source_timestamp": "2026-11-03T15:45:24.509",
+            "last_checked_at": "2026-11-23T19:55:58Z",
+            "retrieved_at": "2026-11-23T19:55:58Z",
+            "source_timestamp": "2026-11-23T19:55:58.657",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:00:14.617"
           }
@@ -96402,9 +96479,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:45:30Z",
-            "retrieved_at": "2026-11-03T15:45:30Z",
-            "source_timestamp": "2026-11-03T15:45:30.989",
+            "last_checked_at": "2026-11-23T19:56:04Z",
+            "retrieved_at": "2026-11-23T19:56:04Z",
+            "source_timestamp": "2026-11-23T19:56:05.029",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:01:46.240"
           }
@@ -97006,9 +97083,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:45:37Z",
-            "retrieved_at": "2026-11-03T15:45:37Z",
-            "source_timestamp": "2026-11-03T15:45:37.549",
+            "last_checked_at": "2026-11-23T19:56:11Z",
+            "retrieved_at": "2026-11-23T19:56:11Z",
+            "source_timestamp": "2026-11-23T19:56:11.702",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:02:21.133"
           }
@@ -99016,9 +99093,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:45:43Z",
-            "retrieved_at": "2026-11-03T15:45:43Z",
-            "source_timestamp": "2026-11-03T15:45:44.167",
+            "last_checked_at": "2026-11-23T19:56:18Z",
+            "retrieved_at": "2026-11-23T19:56:18Z",
+            "source_timestamp": "2026-11-23T19:56:18.130",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:02:24.467"
           }
@@ -100488,9 +100565,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:45:50Z",
-            "retrieved_at": "2026-11-03T15:45:50Z",
-            "source_timestamp": "2026-11-03T15:45:51.110",
+            "last_checked_at": "2026-11-23T19:56:24Z",
+            "retrieved_at": "2026-11-23T19:56:24Z",
+            "source_timestamp": "2026-11-23T19:56:24.518",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:02:29.250"
           }
@@ -101268,9 +101345,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:45:57Z",
-            "retrieved_at": "2026-11-03T15:45:57Z",
-            "source_timestamp": "2026-11-03T15:45:57.669",
+            "last_checked_at": "2026-11-23T19:56:30Z",
+            "retrieved_at": "2026-11-23T19:56:30Z",
+            "source_timestamp": "2026-11-23T19:56:30.894",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:02:47.407"
           }
@@ -101814,9 +101891,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:46:03Z",
-            "retrieved_at": "2026-11-03T15:46:03Z",
-            "source_timestamp": "2026-11-03T15:46:04.419",
+            "last_checked_at": "2026-11-23T19:56:37Z",
+            "retrieved_at": "2026-11-23T19:56:37Z",
+            "source_timestamp": "2026-11-23T19:56:37.263",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:03:09.010"
           }
@@ -102796,9 +102873,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:46:10Z",
-            "retrieved_at": "2026-11-03T15:46:10Z",
-            "source_timestamp": "2026-11-03T15:46:10.882",
+            "last_checked_at": "2026-11-23T19:56:43Z",
+            "retrieved_at": "2026-11-23T19:56:43Z",
+            "source_timestamp": "2026-11-23T19:56:43.629",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:03:09.170"
           }
@@ -103715,9 +103792,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:46:17Z",
-            "retrieved_at": "2026-11-03T15:46:17Z",
-            "source_timestamp": "2026-11-03T15:46:17.386",
+            "last_checked_at": "2026-11-23T19:56:49Z",
+            "retrieved_at": "2026-11-23T19:56:49Z",
+            "source_timestamp": "2026-11-23T19:56:50.009",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:03:09.860"
           }
@@ -104303,9 +104380,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:46:23Z",
-            "retrieved_at": "2026-11-03T15:46:23Z",
-            "source_timestamp": "2026-11-03T15:46:23.831",
+            "last_checked_at": "2026-11-23T19:56:56Z",
+            "retrieved_at": "2026-11-23T19:56:56Z",
+            "source_timestamp": "2026-11-23T19:56:56.405",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:03:15.103"
           }
@@ -104958,9 +105035,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:46:30Z",
-            "retrieved_at": "2026-11-03T15:46:30Z",
-            "source_timestamp": "2026-11-03T15:46:30.540",
+            "last_checked_at": "2026-11-23T19:57:02Z",
+            "retrieved_at": "2026-11-23T19:57:02Z",
+            "source_timestamp": "2026-11-23T19:57:02.786",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:03:37.613"
           }
@@ -105513,9 +105590,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:46:36Z",
-            "retrieved_at": "2026-11-03T15:46:36Z",
-            "source_timestamp": "2026-11-03T15:46:37.041",
+            "last_checked_at": "2026-11-23T19:57:09Z",
+            "retrieved_at": "2026-11-23T19:57:09Z",
+            "source_timestamp": "2026-11-23T19:57:09.206",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:04:00.147"
           }
@@ -106313,9 +106390,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:46:43Z",
-            "retrieved_at": "2026-11-03T15:46:43Z",
-            "source_timestamp": "2026-11-03T15:46:43.510",
+            "last_checked_at": "2026-11-23T19:57:15Z",
+            "retrieved_at": "2026-11-23T19:57:15Z",
+            "source_timestamp": "2026-11-23T19:57:15.598",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:05:31.070"
           }
@@ -107436,9 +107513,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:46:49Z",
-            "retrieved_at": "2026-11-03T15:46:49Z",
-            "source_timestamp": "2026-11-03T15:46:50.079",
+            "last_checked_at": "2026-11-23T19:57:21Z",
+            "retrieved_at": "2026-11-23T19:57:21Z",
+            "source_timestamp": "2026-11-23T19:57:21.989",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:05:32.593"
           }
@@ -108141,9 +108218,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:46:56Z",
-            "retrieved_at": "2026-11-03T15:46:56Z",
-            "source_timestamp": "2026-11-03T15:46:56.552",
+            "last_checked_at": "2026-11-23T19:57:28Z",
+            "retrieved_at": "2026-11-23T19:57:28Z",
+            "source_timestamp": "2026-11-23T19:57:28.605",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:05:35.860"
           }
@@ -108667,9 +108744,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:47:02Z",
-            "retrieved_at": "2026-11-03T15:47:02Z",
-            "source_timestamp": "2026-11-03T15:47:03.315",
+            "last_checked_at": "2026-11-23T19:57:34Z",
+            "retrieved_at": "2026-11-23T19:57:34Z",
+            "source_timestamp": "2026-11-23T19:57:34.965",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:06:05.827"
           }
@@ -109665,9 +109742,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:47:09Z",
-            "retrieved_at": "2026-11-03T15:47:09Z",
-            "source_timestamp": "2026-11-03T15:47:09.991",
+            "last_checked_at": "2026-11-23T19:57:41Z",
+            "retrieved_at": "2026-11-23T19:57:41Z",
+            "source_timestamp": "2026-11-23T19:57:41.344",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:07:12.597"
           }
@@ -110240,9 +110317,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:47:16Z",
-            "retrieved_at": "2026-11-03T15:47:16Z",
-            "source_timestamp": "2026-11-03T15:47:16.551",
+            "last_checked_at": "2026-11-23T19:57:47Z",
+            "retrieved_at": "2026-11-23T19:57:47Z",
+            "source_timestamp": "2026-11-23T19:57:47.707",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:07:37.603"
           }
@@ -111249,9 +111326,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:47:22Z",
-            "retrieved_at": "2026-11-03T15:47:22Z",
-            "source_timestamp": "2026-11-03T15:47:23.048",
+            "last_checked_at": "2026-11-23T19:57:53Z",
+            "retrieved_at": "2026-11-23T19:57:53Z",
+            "source_timestamp": "2026-11-23T19:57:54.090",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:07:40.877"
           }
@@ -111772,9 +111849,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:47:29Z",
-            "retrieved_at": "2026-11-03T15:47:29Z",
-            "source_timestamp": "2026-11-03T15:47:29.555",
+            "last_checked_at": "2026-11-23T19:58:00Z",
+            "retrieved_at": "2026-11-23T19:58:00Z",
+            "source_timestamp": "2026-11-23T19:58:00.568",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:09:09.423"
           }
@@ -112446,9 +112523,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:47:35Z",
-            "retrieved_at": "2026-11-03T15:47:35Z",
-            "source_timestamp": "2026-11-03T15:47:36.005",
+            "last_checked_at": "2026-11-23T19:58:06Z",
+            "retrieved_at": "2026-11-23T19:58:06Z",
+            "source_timestamp": "2026-11-23T19:58:06.948",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:09:23.740"
           }
@@ -113281,9 +113358,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:47:42Z",
-            "retrieved_at": "2026-11-03T15:47:42Z",
-            "source_timestamp": "2026-11-03T15:47:42.510",
+            "last_checked_at": "2026-11-23T19:58:13Z",
+            "retrieved_at": "2026-11-23T19:58:13Z",
+            "source_timestamp": "2026-11-23T19:58:13.344",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:09:27.350"
           }
@@ -114004,9 +114081,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:47:48Z",
-            "retrieved_at": "2026-11-03T15:47:48Z",
-            "source_timestamp": "2026-11-03T15:47:48.985",
+            "last_checked_at": "2026-11-23T19:58:19Z",
+            "retrieved_at": "2026-11-23T19:58:19Z",
+            "source_timestamp": "2026-11-23T19:58:19.713",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:09:27.550"
           }
@@ -114991,9 +115068,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:47:55Z",
-            "retrieved_at": "2026-11-03T15:47:55Z",
-            "source_timestamp": "2026-11-03T15:47:55.697",
+            "last_checked_at": "2026-11-23T19:58:25Z",
+            "retrieved_at": "2026-11-23T19:58:25Z",
+            "source_timestamp": "2026-11-23T19:58:26.093",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:09:28.370"
           }
@@ -115798,9 +115875,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:48:01Z",
-            "retrieved_at": "2026-11-03T15:48:01Z",
-            "source_timestamp": "2026-11-03T15:48:02.161",
+            "last_checked_at": "2026-11-23T19:58:32Z",
+            "retrieved_at": "2026-11-23T19:58:32Z",
+            "source_timestamp": "2026-11-23T19:58:32.477",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:09:30.150"
           }
@@ -116463,9 +116540,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-03T15:48:08Z",
-            "retrieved_at": "2026-11-03T15:48:08Z",
-            "source_timestamp": "2026-11-03T15:48:08.765",
+            "last_checked_at": "2026-11-23T19:58:38Z",
+            "retrieved_at": "2026-11-23T19:58:38Z",
+            "source_timestamp": "2026-11-23T19:58:38.848",
             "status": "ok",
             "upstream_modified_at": "2026-06-17T00:09:56.033"
           }
@@ -1429332,7 +1429409,7 @@
         "kev": {
           "date_added": "2026-11-18",
           "due_date": "2026-11-21",
-          "known_ransomware_campaign_use": "Unknown",
+          "known_ransomware_campaign_use": "Known",
           "notes": "https://www.synology.com/zh-tw/security/advisory/Synology_SA_24_20 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2024-10441",
           "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
           "source": "cisa_kev",
@@ -1429461,11 +1429538,11 @@
         "date_added": "2026-11-18",
         "due_date": "2026-11-21",
         "forensic_triage": "Yes",
-        "known_ransomware_campaign_use": "Unknown",
+        "known_ransomware_campaign_use": "Known",
         "listed": true,
         "notes": "https://www.synology.com/zh-tw/security/advisory/Synology_SA_24_20 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2024-10441",
         "product": "DiskStation Manager (DSM)",
-        "record_sha256": "a5baf9ee35006b3eecebbe7d48fdefb4e05b8220718384374369b43ee0dd4da4",
+        "record_sha256": "ea3fd79cab6f123cc9b29303e2d23991e83b785facc35a3e9ced053796e76579",
         "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
         "short_description": "Synology DSM contains an improper encoding or escaping of output vulnerability in the system plugin daemon in Synology BeeStation OS (BSM) that could allow a remote attacker to execute arbitrary code via unspecified vectors.",
         "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
@@ -1794081,9 +1794158,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-22T15:51:41Z",
-            "retrieved_at": "2026-11-22T15:51:41Z",
-            "source_timestamp": "2026-11-22T15:51:41.603",
+            "last_checked_at": "2026-11-23T19:45:56Z",
+            "retrieved_at": "2026-11-23T19:45:56Z",
+            "source_timestamp": "2026-11-23T19:45:56.143",
             "status": "ok",
             "upstream_modified_at": "2026-11-21T05:18:10.650"
           }
@@ -1890041,7 +1890118,7 @@
           "status": "available"
         },
         "assigner_short_name": "mitre",
-        "cached": true,
+        "cached": false,
         "cna_assertions": {
           "assessments": [
             {
@@ -1890120,7 +1890197,7 @@
         "cve_id": "CVE-2026-114713",
         "data_version": "5.2",
         "date_published": "2026-11-08T02:31:48.387Z",
-        "date_updated": "2026-11-14T04:56:44.537Z",
+        "date_updated": "2026-11-23T12:07:21.654Z",
         "description": "The labeled-response module in UnrealIRCd 6.0.0 before 6.2.7.1 does not escape the IRCv3 \"label\" message tag when echoing it into replies, which allows any user on a network with two or more linked servers to inject server-to-server commands that are executed with server authority.",
         "enrichment_availability": {
           "constructed_path_valid": true,
@@ -1890129,8 +1890206,8 @@
           "state": "available"
         },
         "error": null,
-        "etag": "W/\"e4094b6ea0b0575eac4d127e1bfffbf10525d5f5827c4be4397d84dafa4fbf45\"",
-        "last_checked_at": "2026-11-21T15:54:25Z",
+        "etag": "W/\"93ceddd6c765f2b5f08482da8a352bd4d6487b3175692d092be802a1346851e1\"",
+        "last_checked_at": "2026-11-23T19:45:55Z",
         "omitted_product_count": 0,
         "omitted_version_count": 0,
         "products": [
@@ -1890144,7 +1890221,7 @@
           }
         ],
         "record_page_url": "https://www.cve.org/CVERecord?id=CVE-2026-114713",
-        "record_sha256": "2c664984a8546e52ffd1de03de52082f1c02cb83f0c8c51c7eb798886f13d3cd",
+        "record_sha256": "6390399d637051e6d3a36a3dde7e54f8edfe54071e12c1186e7917a384c87075",
         "remediation_items": [
           {
             "attribution": "CVE List V5 CNA solutions",
@@ -1890159,7 +1890236,7 @@
             "text": "Add the following line to the configuration file of all servers until the patch or upgrade is applied: blacklist-module \"labeled-response\";"
           }
         ],
-        "retrieved_at": "2026-11-21T15:54:25Z",
+        "retrieved_at": "2026-11-23T19:45:55Z",
         "severity": {
           "base_score": 8.6,
           "base_severity": "HIGH",
@@ -1890309,7 +1890386,7 @@
         "descriptions": [
           {
             "source": "cve_cna",
-            "source_updated_at": "2026-11-14T04:56:44.537Z",
+            "source_updated_at": "2026-11-23T12:07:21.654Z",
             "text": "The labeled-response module in UnrealIRCd 6.0.0 before 6.2.7.1 does not escape the IRCv3 \"label\" message tag when echoing it into replies, which allows any user on a network with two or more linked servers to inject server-to-server commands that are executed with server authority."
           },
           {
@@ -1890323,7 +1890400,7 @@
           "cve_id": "CVE-2026-114713",
           "cve_published_at": "2026-11-08T02:31:48.387Z",
           "cve_status": "PUBLISHED",
-          "cve_updated_at": "2026-11-14T04:56:44.537Z",
+          "cve_updated_at": "2026-11-23T12:07:21.654Z",
           "source_identifiers": {
             "cisa_kev": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
             "cve_list_v5": "https://www.cve.org/CVERecord?id=CVE-2026-114713",
@@ -1890407,9 +1890484,9 @@
           "cve_list_v5": {
             "completeness": "available",
             "error": null,
-            "retrieved_at": "2026-11-21T15:54:25Z",
+            "retrieved_at": "2026-11-23T19:45:55Z",
             "status": "ok",
-            "upstream_modified_at": "2026-11-14T04:56:44.537Z"
+            "upstream_modified_at": "2026-11-23T12:07:21.654Z"
           },
           "nvd": {
             "completeness": "available",
@@ -1898758,9 +1898835,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-22T15:51:47Z",
-            "retrieved_at": "2026-11-22T15:51:47Z",
-            "source_timestamp": "2026-11-22T15:51:47.865",
+            "last_checked_at": "2026-11-23T19:46:02Z",
+            "retrieved_at": "2026-11-23T19:46:02Z",
+            "source_timestamp": "2026-11-23T19:46:02.541",
             "status": "ok",
             "upstream_modified_at": "2026-11-21T05:18:10.817"
           }
@@ -1902638,9 +1902715,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-22T15:51:54Z",
-            "retrieved_at": "2026-11-22T15:51:54Z",
-            "source_timestamp": "2026-11-22T15:51:54.159",
+            "last_checked_at": "2026-11-23T19:46:08Z",
+            "retrieved_at": "2026-11-23T19:46:08Z",
+            "source_timestamp": "2026-11-23T19:46:08.983",
             "status": "ok",
             "upstream_modified_at": "2026-11-21T05:18:11.013"
           }
@@ -2121492,9 +2121569,9 @@
           "nvd": {
             "completeness": "available",
             "error": null,
-            "last_checked_at": "2026-11-22T15:52:00Z",
-            "retrieved_at": "2026-11-22T15:52:00Z",
-            "source_timestamp": "2026-11-22T15:52:00.467",
+            "last_checked_at": "2026-11-23T19:46:15Z",
+            "retrieved_at": "2026-11-23T19:46:15Z",
+            "source_timestamp": "2026-11-23T19:46:15.424",
             "status": "ok",
             "upstream_modified_at": "2026-11-21T05:18:23.937"
           }
@@ -2160609,21 +2160686,21 @@
     }
   ],
   "schema_version": "1.0.0",
-  "snapshot_id": "20261122T160426Z_169f5dff4da6",
+  "snapshot_id": "20261123T195840Z_fea743470fe6",
   "sources": {
     "cve": {
-      "content_sha256": "19899fdee3764f02843de27874e7e96be14ec8b33ade1ccb0f1c8cec1d079112",
+      "content_sha256": "a3a52913e86d6e9e82204c2d482eb14086c60b8064cd9ed95a3ece0543155452",
       "error": "18 CVE records have truncated fields",
       "id": "cve-list-v5",
       "license": "CVE Program Terms of Use",
       "name": "CVE List V5",
-      "notes": "CVE is a registered trademark and the CVE List is copyright The MITRE Corporation. Use of CVE and the CVE List is subject to the CVE Program Terms of Use at https://www.cve.org/Legal/TermsOfUse. Any copy of CVE data must reproduce MITRE's copyright designation and that license. Incremental strategy=delta; fetched=0; reused=1790.",
+      "notes": "CVE is a registered trademark and the CVE List is copyright The MITRE Corporation. Use of CVE and the CVE List is subject to the CVE Program Terms of Use at https://www.cve.org/Legal/TermsOfUse. Any copy of CVE data must reproduce MITRE's copyright designation and that license. Incremental strategy=delta; fetched=1; reused=1789.",
       "parser_version": "1.0.0",
-      "retrieved_at": "2026-11-21T15:54:40Z",
+      "retrieved_at": "2026-11-23T19:45:55Z",
       "schema_version": "CVE Record Format 5.x (dataVersion on each record)",
       "source_published_at": "2025-10-21T18:43:58.429Z",
-      "source_revision": "2026-11-22T15:12:07.181Z",
-      "source_updated_at": "2026-11-21T04:55:22.428Z",
+      "source_revision": "2026-11-23T19:37:05.431Z",
+      "source_updated_at": "2026-11-23T12:07:21.654Z",
       "status": "degraded",
       "url": "https://github.com/CVEProject/cvelistV5"
     },
@@ -2160644,18 +2160721,18 @@
       "url": "https://www.first.org/epss"
     },
     "kev": {
-      "content_sha256": "12c9ca4c5350ecacdf22bdce91b4ffcf06b8c8dc9c69b8bfb4c1a21be7a5fe50",
+      "content_sha256": "776fdde0a5d4f412bfe8336ffb6da32294890a794cc374c5d4c72a99ae5db84c",
       "error": null,
       "id": "cisa-kev",
       "license": "CC0-1.0",
       "name": "CISA Known Exploited Vulnerabilities Catalog",
       "notes": "The CISA Known Exploited Vulnerabilities catalog is dedicated to the public domain under CC0 1.0. Use does not authorize use of the CISA logo or DHS seal and is not an endorsement by CISA or DHS. See https://www.cisa.gov/sites/default/files/licenses/kev/license.txt",
       "parser_version": "1.0.0",
-      "retrieved_at": "2026-11-22T15:51:40Z",
+      "retrieved_at": "2026-11-23T19:45:54Z",
       "schema_version": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities_schema.json",
-      "source_published_at": "2026-11-20T17:48:39.1516Z",
-      "source_revision": "2026.11.20",
-      "source_updated_at": "2026-11-20T17:48:39.1516Z",
+      "source_published_at": "2026-11-23T12:54:37.9646Z",
+      "source_revision": "2026.11.23",
+      "source_updated_at": "2026-11-23T12:54:37.9646Z",
       "status": "ok",
       "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
     },
@@ -2160665,9 +2160742,9 @@
       "id": "nvd",
       "license": "NVD-API-2.0",
       "name": "NVD CVE API 2.0",
-      "notes": "NVD CVE API 2.0 enrichment completed for the scheduled identifier set. Pending bounded backfill: 955 identifiers. This product uses the NVD API but is not endorsed or certified by the NVD. NVD data is provided as-is. See https://nvd.nist.gov/ and https://nvd.nist.gov/developers/vulnerabilities.",
+      "notes": "NVD CVE API 2.0 enrichment completed for the scheduled identifier set. Pending bounded backfill: 959 identifiers. This product uses the NVD API but is not endorsed or certified by the NVD. NVD data is provided as-is. See https://nvd.nist.gov/ and https://nvd.nist.gov/developers/vulnerabilities.",
       "parser_version": "1.0.0",
-      "retrieved_at": "2026-11-16T17:48:44Z",
+      "retrieved_at": "2026-11-22T16:01:20Z",
       "schema_version": "2.0",
       "source_published_at": null,
       "source_revision": "99fef7f998493c572adbecf511dcaa45724e72dcd84c527594f0d138bb5a46c7",
@@ -2160678,23 +2160755,23 @@
   },
   "status": "degraded",
   "summary": {
-    "bytes_transferred": 2218381,
-    "changed_cve_information": 789,
+    "bytes_transferred": 2210671,
+    "changed_cve_information": 864,
     "collector_commit_sha": "4e71d06091edffc6acd37f23861ecb49cfa74f14",
     "complete_records": 1772,
-    "cve_delta_log_sha256": "0523a4a6b62beb539cf044e73e8ddc6c6bea813d7394cc58869344e76f02f0ca",
-    "cve_delta_sha256": "a587420d4fef5d1a9ca17204f8e3411e91a0f1f2d256042f7b77d026a234cf97",
+    "cve_delta_log_sha256": "9c1e1492a3d09cdf1482729972e3b7637cf3f14fc70ddac4c3def53f13300c8e",
+    "cve_delta_sha256": "7d1bd72bfec5dc642e0e36d385ed352569ea420080857cc3c037c374f4cdc500",
     "cve_enriched_ok": 1790,
-    "cve_fetched": 0,
-    "cve_reused": 1790,
+    "cve_fetched": 1,
+    "cve_reused": 1789,
     "cve_strategy": "delta",
     "cve_unavailable": 0,
-    "duration_ms": 767081,
+    "duration_ms": 766700,
     "entry_build_error_count": 0,
     "entry_build_errors": [],
     "epss_changes": 0,
     "epss_enabled": false,
-    "http_gets": 123,
+    "http_gets": 124,
     "http_heads": 1,
     "intelligence": {
       "records_missing_nvd": 0,
@@ -2160705,7 +2160782,7 @@
       "records_with_fixed_version": 0,
       "records_with_vendor_advisory": 1451
     },
-    "kev_content_sha256": "12c9ca4c5350ecacdf22bdce91b4ffcf06b8c8dc9c69b8bfb4c1a21be7a5fe50",
+    "kev_content_sha256": "776fdde0a5d4f412bfe8336ffb6da32294890a794cc374c5d4c72a99ae5db84c",
     "kev_records": 1790,
     "new_kev_entries": 4,
     "nvd_api_key_configured": false,
@@ -2160713,8 +2160790,8 @@
     "nvd_failed_requests": 0,
     "nvd_fetched": 120,
     "nvd_ok": 1790,
-    "nvd_pending_backfill": 955,
-    "nvd_processing_ms": 763524,
+    "nvd_pending_backfill": 959,
+    "nvd_processing_ms": 762913,
     "nvd_rate_limited": 0,
     "nvd_records_refreshed": 120,
     "nvd_requests_attempted": 120,
@@ -2160724,6 +2160801,6 @@
     "removed_kev_entries": 0,
     "truncated_records": 18,
     "unavailable_records": 0,
-    "updated_kev_entries": 0
+    "updated_kev_entries": 1
   }
 }
