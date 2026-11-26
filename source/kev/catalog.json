@@ -1,17 +1,17 @@
 {
   "meta": {
-    "content_sha256": "3696d8a276b42379b7dba4a5ee2a109127c574f85819cf40ef304aad157740fa",
+    "content_sha256": "a76360009e4a65794a2b8073df5475f7a787a3bb83c3bfad2b0c3434a067631a",
     "error": null,
     "id": "cisa-kev",
     "license": "CC0-1.0",
     "name": "CISA Known Exploited Vulnerabilities Catalog",
     "notes": "The CISA Known Exploited Vulnerabilities catalog is dedicated to the public domain under CC0 1.0. Use does not authorize use of the CISA logo or DHS seal and is not an endorsement by CISA or DHS. See https://www.cisa.gov/sites/default/files/licenses/kev/license.txt",
     "parser_version": "1.0.0",
-    "retrieved_at": "2026-11-25T18:22:25Z",
+    "retrieved_at": "2026-11-26T18:03:43Z",
     "schema_version": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities_schema.json",
-    "source_published_at": "2026-11-25T14:22:29.6361Z",
+    "source_published_at": "2026-11-25T19:48:12.4344Z",
     "source_revision": "2026.11.25",
-    "source_updated_at": "2026-11-25T14:22:29.6361Z",
+    "source_updated_at": "2026-11-25T19:48:12.4344Z",
     "status": "ok",
     "url": "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"
   },
@@ -22710,6 +22710,48 @@
       "vulnerability_name": "Multiple Ruckus Wireless Products CSRF and RCE Vulnerability"
     },
     {
+      "cve_id": "CVE-2023-25914",
+      "cwes": [
+        "CWE-22"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-25",
+      "due_date": "2026-11-28",
+      "forensic_triage": "Yes",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://www.danfoss.com/en/service-and-support/coordinated-vulnerability-disclosure/danfoss-security-advisories/dsa-2023-08-01 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2023-25914",
+      "product": "AK-SM 800A Series",
+      "record_sha256": "99db3ce64d15cada36ca7f1242d093d05bb054cfd9e895f968af7a4f313b50e2",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Danfoss AK-SM 800A Series contains a path traversal vulnerability that could allow an attacker to access and read underlying server system files via the XML interface.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Danfoss",
+      "vulnerability_name": "Danfoss AK-SM 800A Series Path Traversal Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2023-25915",
+      "cwes": [
+        "CWE-20"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-25",
+      "due_date": "2026-11-28",
+      "forensic_triage": "Yes",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://www.danfoss.com/en/service-and-support/coordinated-vulnerability-disclosure/danfoss-security-advisories/dsa-2023-08-01 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2023-25915",
+      "product": "AK-SM 800A Series",
+      "record_sha256": "ffbd31d1ec920d11b7f19cf8e21121e44a22a0a818850fd563af36eddebe5165",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Danfoss AK-SM 800A Series contains an improper input validation vulnerability that could allow a remote attacker to run arbitrary commands on the affected system.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Danfoss",
+      "vulnerability_name": "Danfoss AK-SM 800A Series Improper Input Validation Vulnerability"
+    },
+    {
       "cve_id": "CVE-2023-26083",
       "cwes": [
         "CWE-401"
@@ -31137,6 +31179,27 @@
       "vulnerability_name": "Broadcom VMware Aria Operations and VMware Tools Privilege Defined with Unsafe Actions Vulnerability"
     },
     {
+      "cve_id": "CVE-2025-41450",
+      "cwes": [
+        "CWE-305"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-25",
+      "due_date": "2026-12-09",
+      "forensic_triage": "No",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://www.danfoss.com/en/service-and-support/coordinated-vulnerability-disclosure/danfoss-security-advisories/dsa-2025-03-01 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2025-41450",
+      "product": "AK-SM 800A Series",
+      "record_sha256": "e187576c6b6dbc3f75c58ec6811f39e19e5e5275722c0e58136cfdd1e579c1ad",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Danfoss AK-SM 800A Series contains an improper authentication vulnerability that could allow an attacker to generate a web report exposing sensitive information, including internal IP addresses, usernames, and store names.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Danfoss",
+      "vulnerability_name": "Danfoss AK-SM 800A Series Improper Authentication Vulnerability"
+    },
+    {
       "cve_id": "CVE-2025-42599",
       "cwes": [
         "CWE-121"
@@ -33747,6 +33810,133 @@
       "truncated_fields": [],
       "vendor_project": "Optimizely",
       "vulnerability_name": "Optimizely Web Experimentation External Control of Critical State Data Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2026-133275",
+      "cwes": [
+        "CWE-434"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-25",
+      "due_date": "2026-11-28",
+      "forensic_triage": "No",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://www.mitel.com/support/security-advisories/mitel-product-security-advisory-misa-2026-0012 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-133275",
+      "product": "MiCollab",
+      "record_sha256": "ab584cd3e32bb077133d00929d4c9b033c4ebb1eb7032247b2c0296764f4e861",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Mitel MiCollab contains an unrestricted upload of file with dangerous type vulnerability in the Audio, Web and Video Conferencing (AWV) component due to insufficient file type validation that could allow an unauthenticated attacker to upload arbitrary files.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Mitel",
+      "vulnerability_name": "Mitel MiCollab Unrestricted Upload of File with Dangerous Type Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2026-133303",
+      "cwes": [
+        "CWE-91"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-25",
+      "due_date": "2026-11-28",
+      "forensic_triage": "Yes",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://www.mitel.com/support/security-advisories/mitel-product-security-advisory-misa-2026-0012 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-133303",
+      "product": "MiCollab",
+      "record_sha256": "a5b454d24bdc820d3a2256a4b187c172a3d205e66c6e1f71033e00e6e325105b",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Mitel MiCollab contains an XML injection vulnerability in its Audio, Web, and Video Conferencing (AWV) component that could allow an unauthenticated attacker to execute arbitrary commands using pre-staged malicious content.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Mitel",
+      "vulnerability_name": "Mitel MiCollab XML Injection Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2026-133311",
+      "cwes": [
+        "CWE-1390"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-25",
+      "due_date": "2026-12-09",
+      "forensic_triage": "No",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://www.mitel.com/support/security-advisories/mitel-product-security-advisory-misa-2026-0012 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-133311",
+      "product": "MiCollab",
+      "record_sha256": "52d12d97f78d4b41a057725ddf5b6069dc42a146c35e3279331375408781bd7c",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Mitel MiCollab contains a weak authentication vulnerability in the Audio, Web and Video Conferencing (AWV) component that could allow an unauthenticated attacker to access sensitive information using a specific system-generated random identifier or pre-staged content.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Mitel",
+      "vulnerability_name": "Mitel MiCollab Weak Authentication Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2026-133323",
+      "cwes": [
+        "CWE-78"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-25",
+      "due_date": "2026-11-28",
+      "forensic_triage": "Yes",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://www.mitel.com/support/security-advisories/mitel-product-security-advisory-misa-2026-0012 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-133323",
+      "product": "MiCollab",
+      "record_sha256": "5d37c8368a79fd7d67919bd7aa6402b257b067e765ba86b93d1005637b74c082",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Mitel MiCollab contains an improper neutralization of special elements used in an OS command (OS command injection) vulnerability in its Audio, Web, and Video Conferencing (AWV) component that could allow an unauthenticated attacker to execute arbitrary system commands.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Mitel",
+      "vulnerability_name": "Mitel MiCollab OS Command Injection Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2026-133324",
+      "cwes": [
+        "CWE-636"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-25",
+      "due_date": "2026-11-28",
+      "forensic_triage": "No",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "https://www.mitel.com/support/security-advisories/mitel-product-security-advisory-misa-2026-0012 ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-133324",
+      "product": "MiCollab",
+      "record_sha256": "c06e6cc5b3a548f7a3f078c8250ddf3085834c91654ddc4cf867e88e33896cc3",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Mitel MiCollab contains a not failing securely vulnerability in the Audio, Web and Video Conferencing (AWV) component that could allow an unauthenticated attacker to bypass authentication controls and perform unauthorized actions.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Mitel",
+      "vulnerability_name": "Mitel MiCollab Not Failing Securely Vulnerability"
+    },
+    {
+      "cve_id": "CVE-2026-133469",
+      "cwes": [
+        "CWE-1287",
+        "CWE-287"
+      ],
+      "cwes_incomplete": false,
+      "date_added": "2026-11-25",
+      "due_date": "2026-11-28",
+      "forensic_triage": "Yes",
+      "known_ransomware_campaign_use": "Unknown",
+      "listed": true,
+      "notes": "This vulnerability affects an open-source component, third-party library, protocol, or proprietary implementation that could be used by different products. For more information, please see: https://docs.vates.tech/security-advisories/advisories/2026/vates-sa-2026-062/ ; BOD 26-04: https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk ; Forensics Triage Requirements: https://www.cisa.gov/news-events/directives/bod-26-04-implementation-guidance-prioritizing-security-updates-based-risk ; https://nvd.nist.gov/vuln/detail/CVE-2026-133469",
+      "product": "Xen Orchestra",
+      "record_sha256": "d08247496c33eec511101ddbb9faf32006febe6d13e9c5baff38255d49df51d2",
+      "required_action": "Apply mitigations in accordance with vendor instructions, ensuring compliance with CISA’s BOD 26-04 Prioritizing Security Updates Based on Risk (see URL in Notes) guidance and CISA’s “Forensics Triage Requirements” (see URL in Notes). Follow applicable BOD 26-04 guidance for cloud services or discontinue use of the product if mitigations are unavailable. Stakeholders are responsible for evaluating each asset's internet exposure and ensuring adherence to BOD 26-04 patching guidelines.",
+      "short_description": "Vates Xen Orchestra contains an improper validation of specified type of input vulnerability that could allow an unauthenticated attacker to bypass authentication and perform actions with administrative privileges via a specially crafted authentication token containing an empty JSON object.",
+      "source_url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "truncated_fields": [],
+      "vendor_project": "Vates",
+      "vulnerability_name": "Vates Xen Orchestra Improper Validation of Specified Type of Input Vulnerability"
     },
     {
       "cve_id": "CVE-2026-133968",
